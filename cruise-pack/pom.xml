@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.github.ci-cmg.cruise-pack</groupId>
+    <artifactId>JCruisePack-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>JCruisePack</artifactId>
+
+  <properties>
+    <node.version>v16.17.1</node.version>
+    <npm.version>8.15.0</npm.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>spring-boot-starter-logging</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.ci-cmg.cruise-pack</groupId>
+      <artifactId>cruise-pack-jaxb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>gov.loc</groupId>
+      <artifactId>bagit</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-jul</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}</directory>
+              <includes>
+                <include>node_modules/</include>
+                <include>dist/</include>
+                <include>coverage/</include>
+                <include>package.json</include>
+                <include>package-lock.json</include>
+                <include>icon.png</include>
+                <include>installsplash.png</include>
+                <include>splash.png</include>
+                <include>jdeploy/</include>
+                <include>jdeploy-bundle/</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>package.json</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <useDefaultDelimiters>true</useDefaultDelimiters>
+              <outputDirectory>${basedir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>package-resources</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>package.json</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>package-resource</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <outputDirectory>${basedir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>package-resources</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>icon.png</include>
+                    <include>installsplash.png</include>
+                    <include>splash.png</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <classifier>exe</classifier>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <configuration>
+          <nodeVersion>${node.version}</nodeVersion>
+          <npmVersion>${npm.version}</npmVersion>
+          <workingDirectory>${basedir}</workingDirectory>
+          <installDirectory>target/node-install</installDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install-node</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>set-cache</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>config set cache-folder target/npm-cache</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${basedir}</workingDirectory>
+              <arguments>run package</arguments>
+            </configuration>
+          </execution>
+        </executions>
+
+      </plugin>
+      <!--      <plugin>-->
+      <!--        <groupId>org.openjfx</groupId>-->
+      <!--        <artifactId>javafx-maven-plugin</artifactId>-->
+      <!--        <version>${javafx.maven.plugin.version}</version>-->
+      <!--        <configuration>-->
+      <!--          <mainClass>edu.colorado.cires.cruisepack.gui.Main</mainClass>-->
+      <!--        </configuration>-->
+      <!--      </plugin>-->
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-assembly-plugin</artifactId>-->
+<!--        <configuration>-->
+<!--          <tarLongFileMode>posix</tarLongFileMode>-->
+<!--          <appendAssemblyId>false</appendAssemblyId>-->
+<!--          <descriptors>-->
+<!--            <descriptor>src/assembly/dist.xml</descriptor>-->
+<!--          </descriptors>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>make-assembly</id>-->
+<!--            <phase>package</phase>-->
+<!--            <goals>-->
+<!--              <goal>single</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+    </plugins>
+  </build>
+
+</project>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" monitorInterval="30">
+
+  <Appenders>
+
+    <RollingRandomAccessFile
+      name="File"
+      fileName="${sys:cruisepack.home}/log/application.log"
+      filePattern="${sys:cruisepack.home}/log/application-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d{ISO8601} %5level %pid{-} --- [%15.15t] %c : %m%n%throwable</Pattern>
+      </PatternLayout>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingRandomAccessFile>
+  </Appenders>
+
+  <Loggers>
+
+    <Logger name="edu.colorado.cires.cruisepack" level="info" additivity="false">
+      <AppenderRef ref="File"/>
+    </Logger>
+
+    <Root level="warn">
+      <AppenderRef ref="File"/>
+    </Root>
+  </Loggers>
+
+</Configuration>

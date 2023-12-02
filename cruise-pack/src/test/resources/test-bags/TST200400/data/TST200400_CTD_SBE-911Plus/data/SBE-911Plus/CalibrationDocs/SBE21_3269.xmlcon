@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SBE_InstrumentConfiguration SB_ConfigCTD_FileVersion="7.23.0.2" >
+  <Instrument Type="4" >
+    <Name>SBE 21 Seacat Thermosalinograph</Name>
+    <!-- Remote temperature: 0 = none, 1 = SBE 3, 2 = SBE 38. -->
+    <RemoteTemperature>0</RemoteTemperature>
+    <ExternalVoltageChannels>0</ExternalVoltageChannels>
+    <SampleIntervalSeconds>3</SampleIntervalSeconds>
+    <NmeaPositionDataAdded>0</NmeaPositionDataAdded>
+    <NmeaDepthDataAdded>0</NmeaDepthDataAdded>
+    <NmeaTimeAdded>0</NmeaTimeAdded>
+    <NmeaDeviceConnectedToPC>0</NmeaDeviceConnectedToPC>
+    <ScanTimeAdded>0</ScanTimeAdded>
+    <SensorArray Size="2" >
+      <Sensor index="0" SensorID="55" >
+        <TemperatureSensor SensorID="55" >
+          <SerialNumber>3269</SerialNumber>
+          <CalibrationDate>06-Jan-18</CalibrationDate>
+          <UseG_J>1</UseG_J>
+          <A>0.00000000e+000</A>
+          <B>0.00000000e+000</B>
+          <C>0.00000000e+000</C>
+          <D>0.00000000e+000</D>
+          <F0_Old>0.000</F0_Old>
+          <G>4.21698555e-003</G>
+          <H>6.26504742e-004</H>
+          <I>1.87075328e-005</I>
+          <J>1.09019069e-006</J>
+          <F0>1000.000</F0>
+          <Slope>1.00000000</Slope>
+          <Offset>0.0000</Offset>
+        </TemperatureSensor>
+      </Sensor>
+      <Sensor index="1" SensorID="3" >
+        <ConductivitySensor SensorID="3" >
+          <SerialNumber>3269</SerialNumber>
+          <CalibrationDate>06-Jan-18</CalibrationDate>
+          <UseG_J>1</UseG_J>
+          <!-- Cell const and series R are applicable only for wide range sensors. -->
+          <SeriesR>0.0000</SeriesR>
+          <CellConst>2000.0000</CellConst>
+          <ConductivityType>0</ConductivityType>
+          <Coefficients equation="0" >
+            <A>0.00000000e+000</A>
+            <B>0.00000000e+000</B>
+            <C>0.00000000e+000</C>
+            <D>0.00000000e+000</D>
+            <M>0.0</M>
+            <CPcor>-9.57000000e-008</CPcor>
+          </Coefficients>
+          <Coefficients equation="1" >
+            <G>-4.21961073e+000</G>
+            <H>4.98000642e-001</H>
+            <I>-2.35133033e-004</I>
+            <J>3.81679324e-005</J>
+            <CPcor>-9.57000000e-008</CPcor>
+            <CTcor>3.2500e-006</CTcor>
+            <!-- WBOTC not applicable unless ConductivityType = 1. -->
+            <WBOTC>0.00000000e+000</WBOTC>
+          </Coefficients>
+          <Slope>1.00000000</Slope>
+          <Offset>0.00000</Offset>
+        </ConductivitySensor>
+      </Sensor>
+    </SensorArray>
+  </Instrument>
+</SBE_InstrumentConfiguration>

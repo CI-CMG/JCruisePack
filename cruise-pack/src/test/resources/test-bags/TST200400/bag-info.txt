@@ -1,0 +1,8 @@
+Source-Organization: AFSC
+Contact-Name: Chuck Anderson
+Contact-Phone: 303-497-4742
+Contact-Email: charles.anderson@noaa.gov
+External-Description: Test cruise alpha
+External-Identifier: CruiseID
+Cruise Name: CruiseID
+Bagging-Date: 2022-02-25 09:32:27.740754

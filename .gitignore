@@ -1,0 +1,16 @@
+target/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+
+### Mac OS ###
+.DS_Store
+
+cruise-pack/package.json
+cruise-pack/package-lock.json
+
+node_modules/
+jdeploy/
+jdeploy-bundle/
