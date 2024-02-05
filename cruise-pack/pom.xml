@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.github.ci-cmg.cruise-pack</groupId>
     <artifactId>JCruisePack-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>JCruisePack</artifactId>
@@ -33,6 +33,14 @@
       <artifactId>jaxb-impl</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.github.ci-cmg.cruise-pack</groupId>
       <artifactId>cruise-pack-jaxb</artifactId>
     </dependency>
@@ -41,18 +49,18 @@
       <artifactId>bagit</artifactId>
       <version>5.2.0</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-jul</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.apache.logging.log4j</groupId>-->
+<!--      <artifactId>log4j-jul</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.apache.logging.log4j</groupId>-->
+<!--      <artifactId>log4j-core</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>org.apache.logging.log4j</groupId>-->
+<!--      <artifactId>log4j-slf4j-impl</artifactId>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -176,12 +184,12 @@
               <arguments>config set cache-folder target/npm-cache</arguments>
             </configuration>
           </execution>
-          <execution>
-            <id>install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-          </execution>
+          <!--          <execution>-->
+          <!--            <id>install</id>-->
+          <!--            <goals>-->
+          <!--              <goal>npm</goal>-->
+          <!--            </goals>-->
+          <!--          </execution>-->
           <execution>
             <id>package</id>
             <phase>package</phase>
@@ -196,6 +204,28 @@
         </executions>
 
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <tarLongFileMode>posix</tarLongFileMode>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/assembly/dist.xml</descriptor>
+          </descriptors>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
       <!--      <plugin>-->
       <!--        <groupId>org.openjfx</groupId>-->
       <!--        <artifactId>javafx-maven-plugin</artifactId>-->
@@ -204,26 +234,78 @@
       <!--          <mainClass>edu.colorado.cires.cruisepack.gui.Main</mainClass>-->
       <!--        </configuration>-->
       <!--      </plugin>-->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-assembly-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <tarLongFileMode>posix</tarLongFileMode>-->
-<!--          <appendAssemblyId>false</appendAssemblyId>-->
-<!--          <descriptors>-->
-<!--            <descriptor>src/assembly/dist.xml</descriptor>-->
-<!--          </descriptors>-->
-<!--        </configuration>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>make-assembly</id>-->
-<!--            <phase>package</phase>-->
-<!--            <goals>-->
-<!--              <goal>single</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
+      <!--      <plugin>-->
+      <!--        <groupId>org.apache.maven.plugins</groupId>-->
+      <!--        <artifactId>maven-assembly-plugin</artifactId>-->
+      <!--        <configuration>-->
+      <!--          <tarLongFileMode>posix</tarLongFileMode>-->
+      <!--          <appendAssemblyId>false</appendAssemblyId>-->
+      <!--          <descriptors>-->
+      <!--            <descriptor>src/assembly/dist.xml</descriptor>-->
+      <!--          </descriptors>-->
+      <!--        </configuration>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <id>make-assembly</id>-->
+      <!--            <phase>package</phase>-->
+      <!--            <goals>-->
+      <!--              <goal>single</goal>-->
+      <!--            </goals>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+
+
+            <plugin>
+              <groupId>com.github.akman</groupId>
+              <artifactId>jpackage-maven-plugin</artifactId>
+              <version>0.1.5</version>
+              <executions>
+                <execution>
+                  <phase>verify</phase>
+                  <goals>
+                    <goal>jpackage</goal>
+                  </goals>
+                  <configuration>
+                    <type>IMAGE</type>
+                    <input>target/JCruisePack-${project.version}/stuff</input>
+                    <mainjar>JCruisePack-${project.version}-exe.jar</mainjar>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+
+      <plugin>
+        <groupId>org.panteleyev</groupId>
+        <artifactId>jpackage-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>jpackage</goal>
+            </goals>
+            <configuration>
+              <type>APP_IMAGE</type>
+              <name>ApplicationName</name>
+              <appVersion>1.0.0</appVersion>
+              <vendor>app.org</vendor>
+              <input>target/JCruisePack-${project.version}/stuff</input>
+              <mainJar>JCruisePack-${project.version}-exe.jar</mainJar>
+<!--              <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>-->
+              <!--              <module>${appModule}/${appMainClass}</module>-->
+              <!--              <modulePaths>-->
+              <!--                <modulePath>target/mods</modulePath>-->
+              <!--              </modulePaths>-->
+              <destination>target/dist</destination>
+<!--              <javaOptions>-->
+<!--                <option>&#45;&#45;enable-preview</option>-->
+<!--                <option>-Dfile.encoding=UTF-8</option>-->
+<!--              </javaOptions>-->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

@@ -2,8 +2,9 @@ package edu.colorado.cires.cruisepack.components;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.cruisepack.components.model.InstrumentDetail;
-import edu.colorado.cires.cruisepack.components.model.InstrumentStatus;
+import edu.colorado.cires.cruisepack.prototype.components.DatasetPacker;
+import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentDetail;
+import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentStatus;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,7 +16,6 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

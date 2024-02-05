@@ -4,22 +4,26 @@
     "devDependencies": {"jdeploy": "4.0.33"},
     "bin": {"cruisepack": "jdeploy-bundle/jdeploy.js"},
     "author": "${developer.name}",
-    "name": "@ci-cmg/JCruisePack",
+    "name": "@ci-cmg/jcruisepack",
     "description": "${project.description}",
     "scripts": {
         "package": "jdeploy package",
-        "deploy": "jdeploy deploy"
+        "deploy": "jdeploy deploy",
+        "jinstall": "jdeploy install jcruisepack"
     },
     "repository": "${homepage}",
     "version": "${project.version}",
     "jdeploy": {
-        "jdk": true,
+        "jdk": false,
         "javaVersion": "8",
         "jar": "target/JCruisePack-${project.version}-exe.jar",
         "title": "JCruisePack",
         "bundles": ["mac-x64", "mac-arm64", "win", "linux"],
         "installers" : ["mac-x64", "mac-arm64", "win", "linux"]
     },
+    "files": [
+        "jdeploy-bundle"
+    ],
     "dependencies": {
         "command-exists-promise": "^2.0.2",
         "node-fetch": "2.6.7",

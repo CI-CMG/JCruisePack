@@ -1,15 +1,12 @@
 package edu.colorado.cires.cruisepack.bag;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import gov.loc.repository.bagit.creator.BagCreator;
+import edu.colorado.cires.cruisepack.prototype.bag.Bagger;
 import gov.loc.repository.bagit.domain.Bag;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

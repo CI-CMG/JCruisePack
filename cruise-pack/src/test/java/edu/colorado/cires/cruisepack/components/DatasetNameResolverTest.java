@@ -2,8 +2,9 @@ package edu.colorado.cires.cruisepack.components;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.cruisepack.components.model.InstrumentDetail;
-import edu.colorado.cires.cruisepack.components.model.InstrumentStatus;
+import edu.colorado.cires.cruisepack.prototype.components.DatasetNameResolver;
+import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentDetail;
+import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentStatus;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
