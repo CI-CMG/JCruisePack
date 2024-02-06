@@ -1,9 +1,14 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -13,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PackagePanel extends JPanel {
+public class PackagePanel extends JPanel implements ReactiveView {
 
   private static final String CRUISE_ID_LABEL = "Cruise ID";
   private static final String SEGMENT_LABEL = "Segment or Leg";
@@ -28,7 +33,7 @@ public class PackagePanel extends JPanel {
 
   private final ProjectChooserPanel projectChooserPanel;
 
-  private final JTextField cruiseIdField = new JTextField();
+  private final JTextField cruiseIdField;
   private final JTextField segmentField = new JTextField();
   // TODO populate from data
   private final JComboBox<String> testList = new JComboBox<>(new String[]{"test", "real"});
@@ -48,8 +53,12 @@ public class PackagePanel extends JPanel {
   private final JTextField releaseDateField = new JTextField();
 
   @Autowired
-  public PackagePanel(ProjectChooserPanel projectChooserPanel) {
+  public PackagePanel(
+      ProjectChooserPanel projectChooserPanel,
+      PackageModel packageModel
+  ) {
     this.projectChooserPanel = projectChooserPanel;
+    cruiseIdField = new JTextField(packageModel.getCruiseId());
   }
 
   @PostConstruct
@@ -85,4 +94,14 @@ public class PackagePanel extends JPanel {
     add(releaseDateField, configureLayout(0, 11, 3));
   }
 
+  @Override
+  public void onChange(PropertyChangeEvent evt) {
+    switch (evt.getPropertyName()) {
+      case Events.UPDATE_CRUISE_ID:
+        updateTextField(cruiseIdField, evt);
+        break;
+      default:
+        break;
+    }
+  }
 }
