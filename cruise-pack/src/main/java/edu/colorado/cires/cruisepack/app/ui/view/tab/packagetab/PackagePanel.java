@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
@@ -41,21 +42,18 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final PackageModel packageModel;
   private final ProjectChooserPanel projectChooserPanel;
   private final ShipDatastore shipDatastore;
+  private final PortDatastore portDatastore;
 
   private final JTextField cruiseIdField = new JTextField();
   private final JTextField segmentField = new JTextField();
-  // TODO populate from data
   private final JComboBox<String> testList = new JComboBox<>(new String[]{"test", "real"});
   private final JTextField filePathField = new JTextField();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
   private final JComboBox<DropDownItem> shipList = new JComboBox<>();
-  // TODO populate from data
-  private final String[] ports = new String[]{"Aaiun, EH", "Aasiaat, GL"};
-  private final JComboBox<String> departurePortList = new JComboBox<>(ports);
+  private final JComboBox<DropDownItem> departurePortList = new JComboBox<>();
   private final JTextField departureDateField = new JTextField();
-  // TODO populate from data
   private final JComboBox<String> seaList = new JComboBox<>(new String[]{"Aegean Sea"});
-  private final JComboBox<String> arrivalPortList = new JComboBox<>(ports);
+  private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
   private final JTextField arrivalDateField = new JTextField();
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
   private final JTextField releaseDateField = new JTextField();
@@ -66,18 +64,17 @@ public class PackagePanel extends JPanel implements ReactiveView {
       ReactiveViewRegistry reactiveViewRegistry,
       PackageModel packageModel,
       ProjectChooserPanel projectChooserPanel,
-      ShipDatastore shipDatastore) {
+      ShipDatastore shipDatastore, PortDatastore portDatastore) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
     this.projectChooserPanel = projectChooserPanel;
     this.shipDatastore = shipDatastore;
+    this.portDatastore = portDatastore;
 
     // TODO set this in model
     testList.setSelectedIndex(0);
-    departurePortList.setSelectedIndex(0);
     seaList.setSelectedIndex(0);
-    arrivalPortList.setSelectedIndex(0);
   }
 
   @PostConstruct
@@ -90,8 +87,12 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private void initializeFields() {
     cruiseIdField.setText(packageModel.getCruiseId());
     shipList.setModel(new DefaultComboBoxModel<>(shipDatastore.getShipDropDowns().toArray(new DropDownItem[0])));
+    departurePortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
+    arrivalPortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
     // TODO set this in model
     shipList.setSelectedIndex(0);
+    departurePortList.setSelectedIndex(0);
+    arrivalPortList.setSelectedIndex(0);
   }
 
   private void setupLayout() {
