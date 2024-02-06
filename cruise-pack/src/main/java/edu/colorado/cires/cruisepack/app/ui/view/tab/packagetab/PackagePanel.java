@@ -3,14 +3,17 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -35,16 +38,17 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private final PackageController packageController;
   private final ReactiveViewRegistry reactiveViewRegistry;
+  private final PackageModel packageModel;
   private final ProjectChooserPanel projectChooserPanel;
+  private final ShipDatastore shipDatastore;
 
-  private final JTextField cruiseIdField;
+  private final JTextField cruiseIdField = new JTextField();
   private final JTextField segmentField = new JTextField();
   // TODO populate from data
   private final JComboBox<String> testList = new JComboBox<>(new String[]{"test", "real"});
   private final JTextField filePathField = new JTextField();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
-  // TODO populate from data
-  private final JComboBox<String> shipList = new JComboBox<>(new String[]{"Alaska Knight"});
+  private final JComboBox<DropDownItem> shipList = new JComboBox<>();
   // TODO populate from data
   private final String[] ports = new String[]{"Aaiun, EH", "Aasiaat, GL"};
   private final JComboBox<String> departurePortList = new JComboBox<>(ports);
@@ -61,15 +65,16 @@ public class PackagePanel extends JPanel implements ReactiveView {
       PackageController packageController,
       ReactiveViewRegistry reactiveViewRegistry,
       PackageModel packageModel,
-      ProjectChooserPanel projectChooserPanel
-  ) {
+      ProjectChooserPanel projectChooserPanel,
+      ShipDatastore shipDatastore) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
+    this.packageModel = packageModel;
     this.projectChooserPanel = projectChooserPanel;
-    cruiseIdField = new JTextField(packageModel.getCruiseId());
+    this.shipDatastore = shipDatastore;
+
     // TODO set this in model
     testList.setSelectedIndex(0);
-    shipList.setSelectedIndex(0);
     departurePortList.setSelectedIndex(0);
     seaList.setSelectedIndex(0);
     arrivalPortList.setSelectedIndex(0);
@@ -77,8 +82,16 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   @PostConstruct
   public void init() {
+    initializeFields();
     setupLayout();
     setupMvc();
+  }
+
+  private void initializeFields() {
+    cruiseIdField.setText(packageModel.getCruiseId());
+    shipList.setModel(new DefaultComboBoxModel<>(shipDatastore.getShipDropDowns().toArray(new DropDownItem[0])));
+    // TODO set this in model
+    shipList.setSelectedIndex(0);
   }
 
   private void setupLayout() {

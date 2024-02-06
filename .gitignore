@@ -14,3 +14,5 @@ cruise-pack/package-lock.json
 node_modules/
 jdeploy/
 jdeploy-bundle/
+
+application-local.properties

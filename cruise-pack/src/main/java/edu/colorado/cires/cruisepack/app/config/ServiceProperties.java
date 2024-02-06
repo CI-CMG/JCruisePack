@@ -7,10 +7,10 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @Configuration
-@ConfigurationProperties("cruisepack")
+@ConfigurationProperties("cruise-pack")
 public class ServiceProperties {
 
-//  @NotBlank
+  @NotBlank
   private String workDir;
 
   public String getWorkDir() {

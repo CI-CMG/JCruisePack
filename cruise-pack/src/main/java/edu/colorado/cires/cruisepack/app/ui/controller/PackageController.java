@@ -16,8 +16,7 @@ public class PackageController implements PropertyChangeListener {
   private final PackageModel packageModel;
 
   @Autowired
-  public PackageController(
-      ReactiveViewRegistry reactiveViewRegistry, PackageModel packageModel) {
+  public PackageController(ReactiveViewRegistry reactiveViewRegistry, PackageModel packageModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
   }
@@ -36,19 +35,5 @@ public class PackageController implements PropertyChangeListener {
     for (ReactiveView view : reactiveViewRegistry.getViews()) {
       view.onChange(evt);
     }
-/*
-    changing = true;
-    try {
-      for (BaseViewPanel view: registeredViews) {
-        view.onChange(evt);
-      }
-      registeredViews.removeAll(viewsToRemove);
-      registeredViews.addAll(viewsToAdd);
-      viewsToRemove.clear();
-      viewsToAdd.clear();
-    } finally {
-      changing = false;
-    }
- */
   }
 }
