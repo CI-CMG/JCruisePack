@@ -2,8 +2,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.port.Port;
-import edu.colorado.cires.cruisepack.xml.port.PortData;
+import edu.colorado.cires.cruisepack.xml.sea.Sea;
+import edu.colorado.cires.cruisepack.xml.sea.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -19,13 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PortDatastore {
+public class SeaDatastore {
 
   private final ServiceProperties serviceProperties;
-  private List<DropDownItem> portDropDowns;
+  private List<DropDownItem> seaDropDowns;
 
   @Autowired
-  public PortDatastore(ServiceProperties serviceProperties) {
+  public SeaDatastore(ServiceProperties serviceProperties) {
     this.serviceProperties = serviceProperties;
   }
 
@@ -33,24 +33,24 @@ public class PortDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path portFile = dataDir.resolve("ports.xml");
-    if (!Files.isRegularFile(portFile)) {
-      throw new IllegalStateException("Unable to read " + portFile);
+    Path seaFile = dataDir.resolve("seas.xml");
+    if (!Files.isRegularFile(seaFile)) {
+      throw new IllegalStateException("Unable to read " + seaFile);
     }
-    PortData portData;
-    try (Reader reader = Files.newBufferedReader(portFile, StandardCharsets.UTF_8)) {
-      portData = (PortData) JAXBContext.newInstance(PortData.class).createUnmarshaller().unmarshal(reader);
+    SeaData seaData;
+    try (Reader reader = Files.newBufferedReader(seaFile, StandardCharsets.UTF_8)) {
+      seaData = (SeaData) JAXBContext.newInstance(SeaData.class).createUnmarshaller().unmarshal(reader);
     } catch (IOException | JAXBException e) {
-      throw new IllegalStateException("Unable to parse " + portFile, e);
+      throw new IllegalStateException("Unable to parse " + seaFile, e);
     }
-    portDropDowns = portData.getPorts().getPorts().stream()
-        .filter(Port::isUse)
+    seaDropDowns = seaData.getSeas().getSeas().stream()
+        .filter(Sea::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))
         .collect(Collectors.toList());
   }
 
-  public List<DropDownItem> getPortDropDowns() {
-    return portDropDowns;
+  public List<DropDownItem> getSeaDropDowns() {
+    return seaDropDowns;
   }
 }

@@ -4,6 +4,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextFie
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
@@ -43,6 +44,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final ProjectChooserPanel projectChooserPanel;
   private final ShipDatastore shipDatastore;
   private final PortDatastore portDatastore;
+  private final SeaDatastore seaDatastore;
 
   private final JTextField cruiseIdField = new JTextField();
   private final JTextField segmentField = new JTextField();
@@ -52,7 +54,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final JComboBox<DropDownItem> shipList = new JComboBox<>();
   private final JComboBox<DropDownItem> departurePortList = new JComboBox<>();
   private final JTextField departureDateField = new JTextField();
-  private final JComboBox<String> seaList = new JComboBox<>(new String[]{"Aegean Sea"});
+  private final JComboBox<DropDownItem> seaList = new JComboBox<>();
   private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
   private final JTextField arrivalDateField = new JTextField();
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
@@ -64,17 +66,17 @@ public class PackagePanel extends JPanel implements ReactiveView {
       ReactiveViewRegistry reactiveViewRegistry,
       PackageModel packageModel,
       ProjectChooserPanel projectChooserPanel,
-      ShipDatastore shipDatastore, PortDatastore portDatastore) {
+      ShipDatastore shipDatastore, PortDatastore portDatastore, SeaDatastore seaDatastore) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
     this.projectChooserPanel = projectChooserPanel;
     this.shipDatastore = shipDatastore;
     this.portDatastore = portDatastore;
+    this.seaDatastore = seaDatastore;
 
     // TODO set this in model
     testList.setSelectedIndex(0);
-    seaList.setSelectedIndex(0);
   }
 
   @PostConstruct
@@ -89,10 +91,12 @@ public class PackagePanel extends JPanel implements ReactiveView {
     shipList.setModel(new DefaultComboBoxModel<>(shipDatastore.getShipDropDowns().toArray(new DropDownItem[0])));
     departurePortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
     arrivalPortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
+    seaList.setModel(new DefaultComboBoxModel<>(seaDatastore.getSeaDropDowns().toArray(new DropDownItem[0])));
     // TODO set this in model
     shipList.setSelectedIndex(0);
     departurePortList.setSelectedIndex(0);
     arrivalPortList.setSelectedIndex(0);
+    seaList.setSelectedIndex(0);
   }
 
   private void setupLayout() {

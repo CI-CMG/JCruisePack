@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SeaData xmlns="https://colorado.edu/cires/cruisepack/seas">
+  <DataVersion>1.0</DataVersion>
+  <Seas>
+    <Sea>
+      <Uuid>1b4147b8-c4f6-4f30-b002-79462262f94f</Uuid>
+      <Name>Adriatic Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>a727d1d2-6d04-45f7-b462-e724bf581dd5</Uuid>
+      <Name>Aegean Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>a6ad3d39-c8c3-4f16-a4b7-b9585f54cc57</Uuid>
+      <Name>Alboran Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>af887624-bacd-4202-b0cf-525051f5160f</Uuid>
+      <Name>Andaman or Burma Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>9b6f8afd-690e-444c-8834-d1c0a0d144ff</Uuid>
+      <Name>Arabian Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>ea825ec0-bd2c-4bb2-b8ad-310abcb07592</Uuid>
+      <Name>Arafura Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>dac9997d-b64a-494b-9349-bd0fb05c22bf</Uuid>
+      <Name>Arctic Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e05332dd-80e6-4631-a769-b16b4675f140</Uuid>
+      <Name>Baffin Bay</Name>
+    </Sea>
+    <Sea>
+      <Uuid>2f4e5df4-ee20-4d5c-9a9f-c5a935b6ac49</Uuid>
+      <Name>Balearic Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>1085b6ab-aab4-48cc-8a04-91a6e4eeb0fa</Uuid>
+      <Name>Bali Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>aa753e93-fe57-431c-ae6d-17139cac6e27</Uuid>
+      <Name>Baltic Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>dbbddd67-1026-4d52-a63f-6297d7dd9384</Uuid>
+      <Name>Banda Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>48114850-74d6-4fe5-9156-6dea5ac4cf66</Uuid>
+      <Name>Barentsz Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>1af3b3a9-1a98-44bd-be12-038786b09b64</Uuid>
+      <Name>Bass Strait</Name>
+    </Sea>
+    <Sea>
+      <Uuid>6b73a576-c267-4d66-ba65-9b328a86b64e</Uuid>
+      <Name>Bay of Bengal</Name>
+    </Sea>
+    <Sea>
+      <Uuid>0c7de2fb-83d3-4a70-a2d6-ffa17423008e</Uuid>
+      <Name>Bay of Biscay</Name>
+    </Sea>
+    <Sea>
+      <Uuid>b586d346-95bd-4742-b572-5b55bdae3dd0</Uuid>
+      <Name>Bay of Fundy</Name>
+    </Sea>
+    <Sea>
+      <Uuid>fd54bd6e-92fa-43cf-a3ff-c9f98228f3fa</Uuid>
+      <Name>Beaufort Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>6bb3afcf-492b-437f-bc67-68849abfb2f7</Uuid>
+      <Name>Bering Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>6ddf0745-96c1-47d4-b362-0fff320c9416</Uuid>
+      <Name>Bismarck Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>57dc3db9-9329-4d53-b513-b4d933609efc</Uuid>
+      <Name>Black Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>fcd60a9f-89a2-409d-ba39-d7583965620b</Uuid>
+      <Name>Bristol Channel</Name>
+    </Sea>
+    <Sea>
+      <Uuid>5cfb0fd8-75b0-4877-886c-d01fc87f7cce</Uuid>
+      <Name>Caribbean Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>b33a4c1d-e95e-4584-be41-5bcb21258fb5</Uuid>
+      <Name>Celebes Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e6d16abb-0ed5-42d2-8bdc-dd8797e63244</Uuid>
+      <Name>Celtic Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>f2df0bb3-0c64-4f04-8841-0948b9679cda</Uuid>
+      <Name>Ceram Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>d0fa0ab9-c0f0-42d8-8fa5-3ee2813d5a9b</Uuid>
+      <Name>Chukchi Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>d7b9073b-6cbc-43fd-833e-ed8918410094</Uuid>
+      <Name>Coral Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>bd3d2bb3-20dd-4d83-94c2-b6cf469b4663</Uuid>
+      <Name>Davis Strait</Name>
+    </Sea>
+    <Sea>
+      <Uuid>4c1b9fbb-c527-4a33-9eba-b8435225ce0e</Uuid>
+      <Name>East Siberian Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>171adadc-ad7c-4715-88e5-cecb9790cb34</Uuid>
+      <Name>Eastern China Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>32232b36-2df9-4c27-99fe-5bffea884759</Uuid>
+      <Name>English Channel</Name>
+    </Sea>
+    <Sea>
+      <Uuid>01e6fdd3-e5a0-4ab1-90f9-d87fbd11756b</Uuid>
+      <Name>Flores Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>43e505ed-2659-4d17-b972-647a4134030c</Uuid>
+      <Name>Great Australian Bight</Name>
+    </Sea>
+    <Sea>
+      <Uuid>758f03d6-d30d-43e4-935e-8c7c29f00baa</Uuid>
+      <Name>Greenland Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>becaa239-56e7-4acf-877a-faa21ea2b447</Uuid>
+      <Name>Gulf of Aden</Name>
+    </Sea>
+    <Sea>
+      <Uuid>9831f75f-ee9d-4346-bdff-597aa2be2920</Uuid>
+      <Name>Gulf of Alaska</Name>
+    </Sea>
+    <Sea>
+      <Uuid>d1793f11-7358-4f88-8bc1-7aef2c4b7f8b</Uuid>
+      <Name>Gulf of Aqaba</Name>
+    </Sea>
+    <Sea>
+      <Uuid>4395731f-4d04-4034-8865-6964ab348c7a</Uuid>
+      <Name>Gulf of Boni</Name>
+    </Sea>
+    <Sea>
+      <Uuid>91582803-eb9d-469e-b891-b25118984a41</Uuid>
+      <Name>Gulf of Bothnia</Name>
+    </Sea>
+    <Sea>
+      <Uuid>7b4df9b9-d63e-41e8-afab-630cbd9b704e</Uuid>
+      <Name>Gulf of California</Name>
+    </Sea>
+    <Sea>
+      <Uuid>3f80b87a-5f80-4200-adea-18a2ae2aec39</Uuid>
+      <Name>Gulf of Finland</Name>
+    </Sea>
+    <Sea>
+      <Uuid>31fa6d2c-2a64-4819-8432-e7efddcbc7cb</Uuid>
+      <Name>Gulf of Guinea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>cd0f892b-67d2-4313-9d7b-07be91aded7f</Uuid>
+      <Name>Gulf of Mexico</Name>
+    </Sea>
+    <Sea>
+      <Uuid>9ceb18f3-fadd-4810-829a-54f4941c0574</Uuid>
+      <Name>Gulf of Oman</Name>
+    </Sea>
+    <Sea>
+      <Uuid>a664f0e7-c90b-4d7f-baf1-ad2e25851ea3</Uuid>
+      <Name>Gulf of Riga</Name>
+    </Sea>
+    <Sea>
+      <Uuid>d40f336e-38a1-4954-9a09-7297ba2508ce</Uuid>
+      <Name>Gulf of St-Lawrence</Name>
+    </Sea>
+    <Sea>
+      <Uuid>f072f00b-90b8-43b7-b8d0-de2ad3ae5b7a</Uuid>
+      <Name>Gulf of Suez</Name>
+    </Sea>
+    <Sea>
+      <Uuid>1656dd7d-02ab-4446-9a1e-f0b64fe1eb10</Uuid>
+      <Name>Gulf of Thailand</Name>
+    </Sea>
+    <Sea>
+      <Uuid>6b322cac-ebdf-42a4-a72c-37b1411edbe9</Uuid>
+      <Name>Gulf of Tomini</Name>
+    </Sea>
+    <Sea>
+      <Uuid>851d6f2a-9fe8-4054-b85a-5b45e244e9f2</Uuid>
+      <Name>Halamahera Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>be77a696-a49c-4182-bd7f-a680eb25bd08</Uuid>
+      <Name>Hudson Bay</Name>
+    </Sea>
+    <Sea>
+      <Uuid>254f39c8-c74a-4bfd-bf6d-e7315616811b</Uuid>
+      <Name>Hudson Strait</Name>
+    </Sea>
+    <Sea>
+      <Uuid>a5de439e-693a-47b6-b736-b811c480be91</Uuid>
+      <Name>Indian Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>49c43f28-32dc-4406-abbd-b56cda076498</Uuid>
+      <Name>Inland Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e531d8ab-d68e-4786-a0a7-d4f3d9de52ea</Uuid>
+      <Name>Inner Seas off the West Coast of Scotland</Name>
+    </Sea>
+    <Sea>
+      <Uuid>69b4ca5d-d9f5-4f67-8b24-4333abe1608e</Uuid>
+      <Name>Ionian Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>4c7d1837-c2dd-4acc-b7db-7eb51c376a3c</Uuid>
+      <Name>Irish Sea and St. George's Channel</Name>
+    </Sea>
+    <Sea>
+      <Uuid>40b4d5d3-15a4-466d-9980-30e0983e952c</Uuid>
+      <Name>Japan Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>06280536-93b7-455f-998d-b32910274c11</Uuid>
+      <Name>Java Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>ae47e4ce-ba8e-4599-bd99-ac2fbb47e2e5</Uuid>
+      <Name>Kara Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>ae44d974-7bcc-433c-a477-711c065d53a9</Uuid>
+      <Name>Kattegat</Name>
+    </Sea>
+    <Sea>
+      <Uuid>9ca37625-83bc-4c08-990c-2c67d149c790</Uuid>
+      <Name>Labrador Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>7f4f5b78-dc52-412a-bdfd-489644341187</Uuid>
+      <Name>Laccadive Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>c692dbec-1a09-45c8-b745-4ce5585d1784</Uuid>
+      <Name>Laptev Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>74d31f10-5394-4ffe-aa13-5a6a0212d4b1</Uuid>
+      <Name>Ligurian Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>166f4b8e-0aa5-4d56-add0-6eacdde19428</Uuid>
+      <Name>Lincoln Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>5d2fcfda-ed93-466f-bc7e-788a35101a7d</Uuid>
+      <Name>Makassar Strait</Name>
+    </Sea>
+    <Sea>
+      <Uuid>28f72767-3646-473a-9696-2c357e8eab78</Uuid>
+      <Name>Malacca Strait</Name>
+    </Sea>
+    <Sea>
+      <Uuid>56efc11e-9e64-4da9-a07d-57d714028648</Uuid>
+      <Name>Mediterranean Sea - Eastern Basin</Name>
+    </Sea>
+    <Sea>
+      <Uuid>422b23e2-4df1-4005-875e-d664de53e004</Uuid>
+      <Name>Mediterranean Sea - Western Basin</Name>
+    </Sea>
+    <Sea>
+      <Uuid>fd945f83-7454-4038-8423-e6c8888b7fa9</Uuid>
+      <Name>Molukka Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>72461e47-0f35-4869-b8fd-a33b6511f469</Uuid>
+      <Name>Mozambique Channel</Name>
+    </Sea>
+    <Sea>
+      <Uuid>c8b478e1-ff34-42c5-a294-e706e1a87b2b</Uuid>
+      <Name>North Atlantic Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>7e48e4aa-bfe8-4560-924f-a55399d1240f</Uuid>
+      <Name>North Pacific Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>d8528ab8-4694-431d-b825-046c1796c88b</Uuid>
+      <Name>North Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>2db3c638-53e5-4215-b86f-b8fe13cfc81a</Uuid>
+      <Name>Northwestern Passages</Name>
+    </Sea>
+    <Sea>
+      <Uuid>831bf60b-90b7-4ab8-9020-ca314995d1ab</Uuid>
+      <Name>Norwegian Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>fca51893-fdaf-45ef-bcc1-63b47e51b4c6</Uuid>
+      <Name>Persian Gulf</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e677d26b-1491-47e8-b939-456b7682ec94</Uuid>
+      <Name>Philippine Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>f07406c5-b663-4bbf-a603-e8c2810b341a</Uuid>
+      <Name>Red Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>6f62ec91-0e50-45dd-8a1f-2e32d355ac33</Uuid>
+      <Name>Rio de La Plata</Name>
+    </Sea>
+    <Sea>
+      <Uuid>dadc9ee1-68c5-44a3-bdd5-65f967e60f4a</Uuid>
+      <Name>Savu Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>d69cc79d-80a7-413d-a1f3-0f92eb96baae</Uuid>
+      <Name>Sea of Azov</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e51a6e9b-cef2-491b-a1ce-a19f03220fab</Uuid>
+      <Name>Sea of Marmara</Name>
+    </Sea>
+    <Sea>
+      <Uuid>ce686913-509c-488f-848b-65a065a062e8</Uuid>
+      <Name>Sea of Okhotsk</Name>
+    </Sea>
+    <Sea>
+      <Uuid>cf0314c3-e32f-4ffc-b85d-59c4abcb87f5</Uuid>
+      <Name>Singapore Strait</Name>
+    </Sea>
+    <Sea>
+      <Uuid>a855ab4a-ab68-4d32-b508-ce46c0ca9cda</Uuid>
+      <Name>Skaggerak</Name>
+    </Sea>
+    <Sea>
+      <Uuid>4bab79cf-6f89-417c-bcd8-0a7941a4dda9</Uuid>
+      <Name>Solomon Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>221b4ffb-4895-4ba6-ad43-28048065964d</Uuid>
+      <Name>South Atlantic Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>ad564752-67f1-41be-b74f-75b22b2c695c</Uuid>
+      <Name>South China Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e0d74eef-a5d5-40c4-8482-3dd0d775d26a</Uuid>
+      <Name>South Pacific Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>bd5c06bd-b0f9-4b89-97e9-de471f91e49d</Uuid>
+      <Name>Southern Ocean</Name>
+    </Sea>
+    <Sea>
+      <Uuid>22395c88-f63f-40dc-93b9-9a96287b682d</Uuid>
+      <Name>Strait of Gibraltar</Name>
+    </Sea>
+    <Sea>
+      <Uuid>e2e0c4f9-8f3c-4b95-a6d8-494534e5b963</Uuid>
+      <Name>Sulu Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>129b43b5-51af-4dd3-b537-ad4a62ae6415</Uuid>
+      <Name>Tasman Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>4768dc79-d2d1-41a8-aeeb-46a2c26863dd</Uuid>
+      <Name>The Coastal Waters of Southeast Alaska and British Columbia</Name>
+    </Sea>
+    <Sea>
+      <Uuid>dcff8939-d938-4feb-922c-8a9612b5f059</Uuid>
+      <Name>Timor Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>cf62766b-ad7e-4fbc-bd3f-d4cf30bf3356</Uuid>
+      <Name>Tyrrhenian Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>a6f8064e-0bba-40d5-8115-14ad9ab36443</Uuid>
+      <Name>White Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>07d2d581-56ff-4457-aa75-8e47decb21dc</Uuid>
+      <Name>Yellow Sea</Name>
+    </Sea>
+    <Sea>
+      <Uuid>74d5c28c-77b0-4235-8430-eeca779cfc85</Uuid>
+      <Name>Lake Superior</Name>
+    </Sea>
+    <Sea>
+      <Uuid>30250c14-d554-4e59-8b23-603add743282</Uuid>
+      <Name>Lake Michigan</Name>
+    </Sea>
+    <Sea>
+      <Uuid>418ed5c7-fe82-4f73-b7b7-c56ce7f76074</Uuid>
+      <Name>Lake Huron</Name>
+    </Sea>
+    <Sea>
+      <Uuid>2ea5b0c5-d333-45ca-b1dc-dabf87cdb60a</Uuid>
+      <Name>Lake Erie</Name>
+    </Sea>
+    <Sea>
+      <Uuid>9c79b7bf-c396-4c98-9015-eeb648ca5381</Uuid>
+      <Name>Lake Ontario</Name>
+    </Sea>
+  </Seas>
+</SeaData>
