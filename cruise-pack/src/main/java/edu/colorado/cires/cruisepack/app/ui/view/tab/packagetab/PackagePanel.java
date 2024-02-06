@@ -4,8 +4,10 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextFie
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
@@ -31,6 +33,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private static final String ADDITIONAL_PROJECTS_LABEL = "Add Additional Project Menu";
   private static final String RELEASE_DATE_LABEL = "Default Public Release Date";
 
+  private final PackageController packageController;
+  private final ReactiveViewRegistry reactiveViewRegistry;
   private final ProjectChooserPanel projectChooserPanel;
 
   private final JTextField cruiseIdField;
@@ -54,21 +58,30 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   @Autowired
   public PackagePanel(
-      ProjectChooserPanel projectChooserPanel,
-      PackageModel packageModel
+      PackageController packageController,
+      ReactiveViewRegistry reactiveViewRegistry,
+      PackageModel packageModel,
+      ProjectChooserPanel projectChooserPanel
   ) {
+    this.packageController = packageController;
+    this.reactiveViewRegistry = reactiveViewRegistry;
     this.projectChooserPanel = projectChooserPanel;
     cruiseIdField = new JTextField(packageModel.getCruiseId());
-  }
-
-  @PostConstruct
-  public void init() {
+    // TODO set this in model
     testList.setSelectedIndex(0);
     shipList.setSelectedIndex(0);
     departurePortList.setSelectedIndex(0);
     seaList.setSelectedIndex(0);
     arrivalPortList.setSelectedIndex(0);
+  }
 
+  @PostConstruct
+  public void init() {
+    setupLayout();
+    setupMvc();
+  }
+
+  private void setupLayout() {
     setLayout(new GridBagLayout());
     add(new JLabel(CRUISE_ID_LABEL), configureLayout(0, 0));
     add(new JLabel(SEGMENT_LABEL), configureLayout(1, 0));
@@ -92,6 +105,11 @@ public class PackagePanel extends JPanel implements ReactiveView {
     add(newProjectButton, configureLayout(0, 9));
     add(new JLabel(RELEASE_DATE_LABEL), configureLayout(0, 10, 3));
     add(releaseDateField, configureLayout(0, 11, 3));
+  }
+
+  private void setupMvc() {
+    reactiveViewRegistry.register(this);
+    cruiseIdField.addActionListener((evt) -> packageController.setCruiseId(cruiseIdField.getText()));
   }
 
   @Override

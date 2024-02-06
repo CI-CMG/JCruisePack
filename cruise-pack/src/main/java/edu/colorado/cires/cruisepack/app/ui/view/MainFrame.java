@@ -22,7 +22,6 @@ public class MainFrame extends JFrame {
 
   @PostConstruct
   public void init() {
-    setTitle(TITLE);
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
     setMinimumSize(new Dimension(MIN_WIDTH, MAX_WIDTH));
     setTitle(TITLE);

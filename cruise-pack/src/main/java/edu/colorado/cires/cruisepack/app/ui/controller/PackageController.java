@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,14 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class PackageController implements PropertyChangeListener {
 
-  private final Collection<ReactiveView> reactiveViews;
+  private final ReactiveViewRegistry reactiveViewRegistry;
   private final PackageModel packageModel;
 
   @Autowired
   public PackageController(
-      Collection<ReactiveView> reactiveViews,
-      PackageModel packageModel) {
-    this.reactiveViews = reactiveViews;
+      ReactiveViewRegistry reactiveViewRegistry, PackageModel packageModel) {
+    this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
   }
 
@@ -33,7 +33,7 @@ public class PackageController implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    for (ReactiveView view : reactiveViews) {
+    for (ReactiveView view : reactiveViewRegistry.getViews()) {
       view.onChange(evt);
     }
 /*

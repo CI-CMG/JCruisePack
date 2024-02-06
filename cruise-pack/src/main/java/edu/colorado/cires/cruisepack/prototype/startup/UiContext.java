@@ -10,11 +10,11 @@ import edu.colorado.cires.cruisepack.prototype.ui.view.MainFrame;
 public class UiContext {
 
   public UiContext(InstrumentDatastore instrumentDatastore, DatasetDatastore datasetDatastore) {
-    DefaultController controller = new DefaultController();
-    MainFrame mainFrame = new MainFrame(controller);
-    DropDownModel dropDownModel = new DropDownModel(instrumentDatastore.getDropDowns(), datasetDatastore.getDatasetTypes());
-    controller.addModel(CruisePackModel.class, new CruisePackModel(dropDownModel, datasetDatastore, controller));
-    controller.addModel(DropDownModel.class, dropDownModel);
-    controller.addView(mainFrame);
+//    DefaultController controller = new DefaultController();
+//    MainFrame mainFrame = new MainFrame(controller);
+//    DropDownModel dropDownModel = new DropDownModel(instrumentDatastore.getDropDowns(), datasetDatastore.getDatasetTypes());
+//    controller.addModel(CruisePackModel.class, new CruisePackModel(dropDownModel, datasetDatastore, controller));
+//    controller.addModel(DropDownModel.class, dropDownModel);
+//    controller.addView(mainFrame);
   }
 }
