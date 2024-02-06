@@ -1,1237 +1,1617 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Instruments xmlns="https://colorado.edu/cires/cruisepack/instruments">
+<InstrumentData xmlns="https://colorado.edu/cires/cruisepack/instruments">
+  <DataVersion>1.0</DataVersion>
+  <InstrumentGroups>
+    <InstrumentGroup>
+      <DataType>ADCP</DataType>
+      <ShortType>ADCP</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>c93f9f10-70e0-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Ocean Surveyor ADCP</Name>
+          <ShortName>ADCP</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>4b64662b-0989-4ac3-9384-da7ed1add727</Uuid>
+          <Name>RDI BB-600</Name>
+          <ShortName>B-600</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>08606fa7-9b00-4720-b4b1-f392daeb69d0</Uuid>
+          <Name>RDI OS-75</Name>
+          <ShortName>OS-75</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-3193d84f-924f-4ed5-9886-51741c9a6221</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-82daeb8b-27d0-4840-868c-ef3c05e11fb2</Uuid>
+          <Name>Teledyne Pinnacle 45kHz</Name>
+          <ShortName>Pinnacle</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-04d38ebb-6be5-4552-a475-13640d57c5bc</Uuid>
+          <Name>Simrad EC-150</Name>
+          <ShortName>EC-150</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-55205791-1062-47db-8f39-8cc0596dcadb</Uuid>
+          <Name>Teledyne Workhorse Mariner 300kHz</Name>
+          <ShortName>Workhorse_Mariner</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-ecf4c094-fd14-4804-89ed-3f0a67a75887</Uuid>
+          <Name>RDI OS-75</Name>
+          <ShortName>OS-150</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>ADCP</DataType>
-    <ShortType>ADCP</ShortType>
-    <Instrument uuid="c93f9f10-70e0-11e0-a1f0-0800200c9a66">
-      <Name>Ocean Surveyor ADCP</Name>
-      <ShortName>ADCP</ShortName>
-    </Instrument>
-    <Instrument uuid="4b64662b-0989-4ac3-9384-da7ed1add727">
-      <Name>RDI BB-600</Name>
-      <ShortName>B-600</ShortName>
-    </Instrument>
-    <Instrument uuid="08606fa7-9b00-4720-b4b1-f392daeb69d0">
-      <Name>RDI OS-75</Name>
-      <ShortName>OS-75</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Teledyne Pinnacle 45kHz</Name>
-      <ShortName>Pinnacle</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Simrad EC-150</Name>
-      <ShortName>EC-150</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Teledyne Workhorse Mariner 300kHz</Name>
-      <ShortName>Workhorse_Mariner</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>RDI OS-75</Name>
-      <ShortName>OS-150</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>CTD</DataType>
+      <ShortType>CTD</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>834d7e0-70dd-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 19plus V2</Name>
+          <ShortName>SBE-19-V2</ShortName>
+          <FileExtensions>
+            <FileExtension>hex</FileExtension>
+            <FileExtension>dat</FileExtension>
+            <FileExtension>hdr</FileExtension>
+            <FileExtension>xmlcon</FileExtension>
+            <FileExtension>con</FileExtension>
+            <FileExtension>mrk</FileExtension>
+            <FileExtension>bl</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>a2c295d0-69c5-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>SBE 49 FastCAT</Name>
+          <ShortName>SBE-49</ShortName>
+          <FileExtensions>
+            <FileExtension>hex</FileExtension>
+            <FileExtension>dat</FileExtension>
+            <FileExtension>hdr</FileExtension>
+            <FileExtension>xmlcon</FileExtension>
+            <FileExtension>con</FileExtension>
+            <FileExtension>mrk</FileExtension>
+            <FileExtension>bl</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>689d7520-7819-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 9</Name>
+          <ShortName>SBE-9</ShortName>
+          <FileExtensions>
+            <FileExtension>hex</FileExtension>
+            <FileExtension>dat</FileExtension>
+            <FileExtension>hdr</FileExtension>
+            <FileExtension>xmlcon</FileExtension>
+            <FileExtension>con</FileExtension>
+            <FileExtension>mrk</FileExtension>
+            <FileExtension>bl</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>45080730-69c6-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>SBE 911plus</Name>
+          <ShortName>SBE-911Plus</ShortName>
+          <FileExtensions>
+            <FileExtension>hex</FileExtension>
+            <FileExtension>dat</FileExtension>
+            <FileExtension>hdr</FileExtension>
+            <FileExtension>xmlcon</FileExtension>
+            <FileExtension>con</FileExtension>
+            <FileExtension>mrk</FileExtension>
+            <FileExtension>bl</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-793cb922-4f9d-4822-bb42-15a898a91d57</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+          <FileExtensions>
+            <FileExtension>hex</FileExtension>
+            <FileExtension>dat</FileExtension>
+            <FileExtension>hdr</FileExtension>
+            <FileExtension>xmlcon</FileExtension>
+            <FileExtension>con</FileExtension>
+            <FileExtension>mrk</FileExtension>
+            <FileExtension>bl</FileExtension>
+          </FileExtensions>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>CTD</DataType>
-    <ShortType>CTD</ShortType>
-    <Instrument uuid="834d7e0-70dd-11e0-a1f0-0800200c9a66">
-      <Name>SBE 19plus V2</Name>
-      <ShortName>SBE-19-V2</ShortName>
-      <FileExtension>hex</FileExtension>
-      <FileExtension>dat</FileExtension>
-      <FileExtension>hdr</FileExtension>
-      <FileExtension>xmlcon</FileExtension>
-      <FileExtension>con</FileExtension>
-      <FileExtension>mrk</FileExtension>
-      <FileExtension>bl</FileExtension>
-    </Instrument>
-    <Instrument uuid="a2c295d0-69c5-11e0-ae3e-0800200c9a66">
-      <Name>SBE 49 FastCAT</Name>
-      <ShortName>SBE-49</ShortName>
-      <FileExtension>hex</FileExtension>
-      <FileExtension>dat</FileExtension>
-      <FileExtension>hdr</FileExtension>
-      <FileExtension>xmlcon</FileExtension>
-      <FileExtension>con</FileExtension>
-      <FileExtension>mrk</FileExtension>
-      <FileExtension>bl</FileExtension>
-    </Instrument>
-    <Instrument uuid="689d7520-7819-11e0-a1f0-0800200c9a66">
-      <Name>SBE 9</Name>
-      <ShortName>SBE-9</ShortName>
-      <FileExtension>hex</FileExtension>
-      <FileExtension>dat</FileExtension>
-      <FileExtension>hdr</FileExtension>
-      <FileExtension>xmlcon</FileExtension>
-      <FileExtension>con</FileExtension>
-      <FileExtension>mrk</FileExtension>
-      <FileExtension>bl</FileExtension>
-    </Instrument>
-    <Instrument uuid="45080730-69c6-11e0-ae3e-0800200c9a66">
-      <Name>SBE 911plus</Name>
-      <ShortName>SBE-911Plus</ShortName>
-      <FileExtension>hex</FileExtension>
-      <FileExtension>dat</FileExtension>
-      <FileExtension>hdr</FileExtension>
-      <FileExtension>xmlcon</FileExtension>
-      <FileExtension>con</FileExtension>
-      <FileExtension>mrk</FileExtension>
-      <FileExtension>bl</FileExtension>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-      <FileExtension>hex</FileExtension>
-      <FileExtension>dat</FileExtension>
-      <FileExtension>hdr</FileExtension>
-      <FileExtension>xmlcon</FileExtension>
-      <FileExtension>con</FileExtension>
-      <FileExtension>mrk</FileExtension>
-      <FileExtension>bl</FileExtension>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Gravity</DataType>
+      <ShortType>GRAV</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>temp-fd47dce0-c0eb-4d79-ac7c-fb9d0a13732e</Uuid>
+          <Name>ARPA-1 Vibrating String Accelerometer</Name>
+          <ShortName>ARPA-1</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-e53c4370-ea1c-4768-8245-eeac386e2a9f</Uuid>
+          <Name>Bell BGM2</Name>
+          <ShortName>BGM2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>c3f7efa2-cb32-46b7-a9ae-d8038c14960c</Uuid>
+          <Name>Bell BGM3</Name>
+          <ShortName>BGM3</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-89d915a5-da58-457f-b307-f50ca1a366b0</Uuid>
+          <Name>Bell BGM3-224</Name>
+          <ShortName>BGM3-224</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-2feff803-a291-4105-8bb5-e69b40d2f0a8</Uuid>
+          <Name>Bell BGM3-228</Name>
+          <ShortName>BGM3-228</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-90e41406-cbbf-4b0a-98cd-1dad1a150993</Uuid>
+          <Name>Bell BGM5</Name>
+          <ShortName>BGM5</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-21b1f61c-e13c-45f6-be72-b7850afa666c</Uuid>
+          <Name>Bell BGM6</Name>
+          <ShortName>BGM6</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-48ec5ae4-83ec-4c36-9561-d8d60dd9602e</Uuid>
+          <Name>Bell Gravimeter</Name>
+          <ShortName>Bell</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-58967023-6883-422c-90f2-3c86decfb48a</Uuid>
+          <Name>Bodenseewerk KSS30</Name>
+          <ShortName>KSS30</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a12b5918-351f-45de-b028-d91fabd696cb</Uuid>
+          <Name>Bodenseewerk KSS31</Name>
+          <ShortName>KSS31</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8a8a961f-96ae-415d-8a50-8e08801d53b6</Uuid>
+          <Name>Bodenseewerk KSS31-14</Name>
+          <ShortName>KSS31-14</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-0231b5b2-0a13-43fd-b59f-cc461806bbeb</Uuid>
+          <Name>Bodenseewerk KSS31-22</Name>
+          <ShortName>KSS31-22</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1196f394-baa4-470d-a8fb-ee0749746050</Uuid>
+          <Name>Bodenseewerk KSS31-25</Name>
+          <ShortName>KSS31-25</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-cb126499-78a1-42dc-b8f1-d3d649b6cdad</Uuid>
+          <Name>Bodenseewerk KSS31-26</Name>
+          <ShortName>KSS31-26</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-4d5bcb98-7754-4fa3-be15-e47d0b9a7016</Uuid>
+          <Name>Bodenseewerk KSS5</Name>
+          <ShortName>KSS5</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-c361f698-a47a-4d76-a1fc-fa06818a6290</Uuid>
+          <Name>Carson 6300</Name>
+          <ShortName>6300</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-ec4a4275-a815-44fd-ac53-3b6e103ebcaf</Uuid>
+          <Name>Graf-Askania 11</Name>
+          <ShortName>11</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-04f0e3b0-3c66-4dd3-b14e-d88d561f71f3</Uuid>
+          <Name>Graf-Askania 22 Gravimeter</Name>
+          <ShortName>22</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-25f88757-9cdf-47be-9807-49e42c209d55</Uuid>
+          <Name>Graf-Askania 23</Name>
+          <ShortName>23</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-432e8c58-f0e5-458d-a5f0-b5b01261d5e5</Uuid>
+          <Name>Graf-Askania Gravimeter</Name>
+          <ShortName>GF</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8a48dd0a-7ab2-4563-84e9-832bd46ebc78</Uuid>
+          <Name>Graf-Askania GSS2</Name>
+          <ShortName>GSS2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a0cba20b-4ee8-4cb4-b97f-92821aa9bedc</Uuid>
+          <Name>Graf-Askania GSS2-12</Name>
+          <ShortName>GSS2-12</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-d600c9a0-0329-457b-8684-9912611c743d</Uuid>
+          <Name>Graf-Askania GSS2-14</Name>
+          <ShortName>GSS2-14</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a2c75a42-0bd3-4fdf-b13e-5922250bb200</Uuid>
+          <Name>Graf-Askania GSS2-17</Name>
+          <ShortName>GSS2-17</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-0cfd93cc-ee72-46a1-a9c7-c88df5334fd1</Uuid>
+          <Name>Graf-Askania GSS2-22</Name>
+          <ShortName>GSS2-22</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1ac4e92c-6cc6-4a60-9cc6-aa95a4abc510</Uuid>
+          <Name>Graf-Askania GSS2-25</Name>
+          <ShortName>GSS2-25</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-ad50eee8-8f1f-4eb8-b90c-3a5199d2dcf1</Uuid>
+          <Name>Graf-Askania GSS2-26</Name>
+          <ShortName>GSS2-26</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-4016fd51-4731-403e-b164-12b824818fa9</Uuid>
+          <Name>Graf-Askania GSS2-31</Name>
+          <ShortName>GSS2-31</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-71350d62-41f7-45cc-a553-b279d8cda041</Uuid>
+          <Name>Graf-Askania GSS2-33</Name>
+          <ShortName>GSS2-33</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-cfa59be8-c819-44d7-a58d-65c24329a4ec</Uuid>
+          <Name>Graf-Askania GSS2-6</Name>
+          <ShortName>GSS2-6</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-f9b61b29-6666-4bc4-b888-5250f1e2c769</Uuid>
+          <Name>Graf-Askania GSS3-1</Name>
+          <ShortName>GSS3-1</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-6a3ecc55-b125-402b-93e4-effcbf4dab2c</Uuid>
+          <Name>Graf-Askania GSS3-53</Name>
+          <ShortName>GSS3-53</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-85f4f6f5-c78d-46ab-87df-cf4576d19dd2</Uuid>
+          <Name>Graf-Askania GSS3-55</Name>
+          <ShortName>GSS3-55</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-6322354d-1907-4e4e-ad8c-3b7237c7aca8</Uuid>
+          <Name>LaCoste and Romberg</Name>
+          <ShortName>LCR</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-59cd2df6-daa1-455d-994d-670aae606384</Uuid>
+          <Name>LaCoste and Romberg G112</Name>
+          <ShortName>G112</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-2e9a7f7c-94b9-48f4-aa11-7b3e390bbe5d</Uuid>
+          <Name>LaCoste and Romberg S105</Name>
+          <ShortName>S105</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-01b8883a-4ae7-4a2f-9eb6-4aa004c8e23d</Uuid>
+          <Name>LaCoste and Romberg S11</Name>
+          <ShortName>S11</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8cf34a21-c8c1-4768-a171-0eceb837d30f</Uuid>
+          <Name>LaCoste and Romberg S24</Name>
+          <ShortName>S24</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1dca2d03-ae02-40ed-b15c-191d979cd966</Uuid>
+          <Name>LaCoste and Romberg S33</Name>
+          <ShortName>S33</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-cc88484f-5b84-4716-a843-8f992e85119c</Uuid>
+          <Name>LaCoste and Romberg S36</Name>
+          <ShortName>S36</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-0d594d1a-136e-4d0b-9304-80e3e14863ae</Uuid>
+          <Name>LaCoste and Romberg S38</Name>
+          <ShortName>S38</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-e6d0c5e9-5d7c-4814-8340-fc1cdf942265</Uuid>
+          <Name>LaCoste and Romberg S40</Name>
+          <ShortName>S40</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-843505e3-bc62-4db5-89ff-d320d7d37d57</Uuid>
+          <Name>LaCoste and Romberg S42</Name>
+          <ShortName>S42</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-124d3204-e321-4098-938f-71b17ba7cecc</Uuid>
+          <Name>LaCoste and Romberg S51</Name>
+          <ShortName>S51</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-d24620a8-bd1f-4827-a669-b983ef8617fa</Uuid>
+          <Name>LaCoste and Romberg S53</Name>
+          <ShortName>S53</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-18740f88-3d40-493d-bf44-2f5726aeee6d</Uuid>
+          <Name>LaCoste and Romberg S57</Name>
+          <ShortName>S57</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-db71e595-7dbf-43e7-8655-4c1e81247f99</Uuid>
+          <Name>LaCoste and Romberg S63</Name>
+          <ShortName>S63</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-0362e27b-dacc-4b86-9c73-a32f28de014b</Uuid>
+          <Name>LaCoste and Romberg S71</Name>
+          <ShortName>S71</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1c9ce0de-6fca-4080-b106-71005215bc87</Uuid>
+          <Name>LaCoste and Romberg S76</Name>
+          <ShortName>S76</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-6a620345-bf1d-49c5-b0f5-bd9917142d07</Uuid>
+          <Name>LaCoste and Romberg S80</Name>
+          <ShortName>S80</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-008e2846-466c-4f59-b483-093cb28b63c2</Uuid>
+          <Name>LaCoste and Romberg S84</Name>
+          <ShortName>S84</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-72749e06-bd9f-438c-b11f-b2e9012f02a5</Uuid>
+          <Name>LaCoste and Romberg S86</Name>
+          <ShortName>S86</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a9ab4d9e-57e7-436a-a058-8cf8e79b6d3c</Uuid>
+          <Name>LaCoste and Romberg S9</Name>
+          <ShortName>S9</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-dbeb16ca-8fbc-49d0-ac4d-1d397ae34a42</Uuid>
+          <Name>LaCoste and Romberg SL2</Name>
+          <ShortName>SL2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-da14fa5a-4e0a-4494-a710-a7334e7b8513</Uuid>
+          <Name>NIPRORI-I</Name>
+          <ShortName>NIPRORI-I</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8c4f8244-0511-4929-a954-4b138af23fa2</Uuid>
+          <Name>NIPRORI-II</Name>
+          <ShortName>NIPRORI-II</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-4a48db9e-9ae6-426f-a912-260c0f7ab693</Uuid>
+          <Name>TSSG-H1</Name>
+          <ShortName>TSSG-H1</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-c0eb105f-ca1f-464c-9791-c707738ebf8f</Uuid>
+          <Name>TSSG-H2</Name>
+          <ShortName>TSSG-H2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-efe2fb86-51aa-4380-ae21-930b1eabdeef</Uuid>
+          <Name>TSSG-H3</Name>
+          <ShortName>TSSG-H3</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-b342a18a-3971-4f67-b2c8-511bb9641cd3</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-dc5b0801-9ed6-4d9b-8d71-f4630a17f847</Uuid>
+          <Name>Worden 114</Name>
+          <ShortName>114</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Gravity</DataType>
-    <ShortType>GRAV</ShortType>
-    <Instrument>
-      <Name>ARPA-1 Vibrating String Accelerometer</Name>
-      <ShortName>ARPA-1</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bell BGM2</Name>
-      <ShortName>BGM2</ShortName>
-    </Instrument>
-    <Instrument uuid="c3f7efa2-cb32-46b7-a9ae-d8038c14960c">
-      <Name>Bell BGM3</Name>
-      <ShortName>BGM3</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bell BGM3-224</Name>
-      <ShortName>BGM3-224</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bell BGM3-228</Name>
-      <ShortName>BGM3-228</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bell BGM5</Name>
-      <ShortName>BGM5</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bell BGM6</Name>
-      <ShortName>BGM6</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bell Gravimeter</Name>
-      <ShortName>Bell</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS30</Name>
-      <ShortName>KSS30</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS31</Name>
-      <ShortName>KSS31</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS31-14</Name>
-      <ShortName>KSS31-14</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS31-22</Name>
-      <ShortName>KSS31-22</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS31-25</Name>
-      <ShortName>KSS31-25</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS31-26</Name>
-      <ShortName>KSS31-26</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Bodenseewerk KSS5</Name>
-      <ShortName>KSS5</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Carson 6300</Name>
-      <ShortName>6300</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania 11</Name>
-      <ShortName>11</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania 22 Gravimeter</Name>
-      <ShortName>22</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania 23</Name>
-      <ShortName>23</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania Gravimeter</Name>
-      <ShortName>GF</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2</Name>
-      <ShortName>GSS2</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-12</Name>
-      <ShortName>GSS2-12</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-14</Name>
-      <ShortName>GSS2-14</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-17</Name>
-      <ShortName>GSS2-17</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-22</Name>
-      <ShortName>GSS2-22</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-25</Name>
-      <ShortName>GSS2-25</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-26</Name>
-      <ShortName>GSS2-26</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-31</Name>
-      <ShortName>GSS2-31</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-33</Name>
-      <ShortName>GSS2-33</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS2-6</Name>
-      <ShortName>GSS2-6</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS3-1</Name>
-      <ShortName>GSS3-1</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS3-53</Name>
-      <ShortName>GSS3-53</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Graf-Askania GSS3-55</Name>
-      <ShortName>GSS3-55</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg</Name>
-      <ShortName>LCR</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg G112</Name>
-      <ShortName>G112</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S105</Name>
-      <ShortName>S105</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S11</Name>
-      <ShortName>S11</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S24</Name>
-      <ShortName>S24</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S33</Name>
-      <ShortName>S33</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S36</Name>
-      <ShortName>S36</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S38</Name>
-      <ShortName>S38</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S40</Name>
-      <ShortName>S40</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S42</Name>
-      <ShortName>S42</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S51</Name>
-      <ShortName>S51</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S53</Name>
-      <ShortName>S53</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S57</Name>
-      <ShortName>S57</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S63</Name>
-      <ShortName>S63</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S71</Name>
-      <ShortName>S71</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S76</Name>
-      <ShortName>S76</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S80</Name>
-      <ShortName>S80</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S84</Name>
-      <ShortName>S84</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S86</Name>
-      <ShortName>S86</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg S9</Name>
-      <ShortName>S9</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>LaCoste and Romberg SL2</Name>
-      <ShortName>SL2</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>NIPRORI-I</Name>
-      <ShortName>NIPRORI-I</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>NIPRORI-II</Name>
-      <ShortName>NIPRORI-II</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>TSSG-H1</Name>
-      <ShortName>TSSG-H1</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>TSSG-H2</Name>
-      <ShortName>TSSG-H2</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>TSSG-H3</Name>
-      <ShortName>TSSG-H3</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Worden 114</Name>
-      <ShortName>114</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Magnetics</DataType>
+      <ShortType>MAG</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>temp-2395cb65-a4e0-424c-abea-b64cbbbfe32f</Uuid>
+          <Name>B.I. Sea Magnetometer</Name>
+          <ShortName>BISM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-08719fd4-61f5-4e45-89b0-7df35a9303f1</Uuid>
+          <Name>Barringer M244</Name>
+          <ShortName>M244</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-94d02728-14dc-45be-9f51-caa969eeb983</Uuid>
+          <Name>Barringer OM103</Name>
+          <ShortName>OM103</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-55bcc290-bafb-4106-ba5a-af78259df9cf</Uuid>
+          <Name>Barringer OM104</Name>
+          <ShortName>OM104</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-75e2b854-e343-4efb-a2bc-799bad71132c</Uuid>
+          <Name>Barringer Proton Precession Magnetometer</Name>
+          <ShortName>BPRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-9481e690-15aa-41ba-81d3-7522c759e0f4</Uuid>
+          <Name>Cambridge Consultants Proton Precession Magnetometer</Name>
+          <ShortName>CCPRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-b27b1839-a0fb-4d80-a42a-b692c5e1cf28</Uuid>
+          <Name>DSIR Proton Precession Magnetometer</Name>
+          <ShortName>DSIR-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1eadb652-dc85-40b6-968a-d0f8187328ce</Uuid>
+          <Name>ELSEC 7706</Name>
+          <ShortName>ELSEC-7706</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-4515140b-4249-4a31-bd18-ac5aed886778</Uuid>
+          <Name>ELSEC Proton Precession Magnetometer</Name>
+          <ShortName>ELSEC-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-90fc2fa8-73d5-471c-ba11-fc22d6001adb</Uuid>
+          <Name>G.S.C. 60-2</Name>
+          <ShortName>GSC-60-2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-b579c239-c698-4f32-a6f8-be9d8a380f71</Uuid>
+          <Name>G.S.C. Magnetometer</Name>
+          <ShortName>GSC-M</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-98a4598f-ad70-449a-9cb5-42e2d979c704</Uuid>
+          <Name>Geometrics G123</Name>
+          <ShortName>G123</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-65871598-50f6-4fec-8f8d-fa85786d3f91</Uuid>
+          <Name>Geometrics G301</Name>
+          <ShortName>G301</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-23796bd2-f414-4f60-8f42-0da12da7e10e</Uuid>
+          <Name>Geometrics G801</Name>
+          <ShortName>G801</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-372ff310-940b-4618-963f-ce0ef71d657d</Uuid>
+          <Name>Geometrics G801-3</Name>
+          <ShortName>G801-3</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-d7d24381-7fad-420f-b631-cddb89b26ee4</Uuid>
+          <Name>Geometrics G811</Name>
+          <ShortName>G811</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-c7aa7861-291e-4156-9963-19045327d03e</Uuid>
+          <Name>Geometrics G821</Name>
+          <ShortName>G821</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-52c99e53-641b-44cb-8f2b-76bd3d2b0d16</Uuid>
+          <Name>Geometrics G859</Name>
+          <ShortName>G859</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-2c4b9228-5011-4191-b029-fed5e99d7d23</Uuid>
+          <Name>Geometrics G866</Name>
+          <ShortName>G866</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-212e8643-fd45-4760-807a-4a7b0c99b00e</Uuid>
+          <Name>Geometrics G877</Name>
+          <ShortName>G877</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-3a6ed9dc-de2d-4474-a009-8fccd3c8529f</Uuid>
+          <Name>Geometrics G881</Name>
+          <ShortName>G881</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>0e1c3f9d-1abf-4925-ae05-b08c342bc62d</Uuid>
+          <Name>Geometrics G882</Name>
+          <ShortName>G882</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-6e26cc39-300f-4ee0-b004-8b026feea332</Uuid>
+          <Name>Geometrics G886</Name>
+          <ShortName>G886</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-7ff415dd-0d07-4d6e-97a1-80698b51894b</Uuid>
+          <Name>Geometrics Proton Precession Magnetometer</Name>
+          <ShortName>GPRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-6a0081c0-8a6c-4b94-88bc-f9f99e97165f</Uuid>
+          <Name>KM-2</Name>
+          <ShortName>KM-2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-5de5f056-73e4-4505-8949-a0387ecfde72</Uuid>
+          <Name>Kokusai Electronics PMM-100</Name>
+          <ShortName>PMM-100</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-dc43028b-be03-4e33-aea6-1c7534c421c3</Uuid>
+          <Name>Kokusai Electronics PMM-200</Name>
+          <ShortName>PMM-200</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a05336c5-fcc5-46f3-a276-1bb94a0acc09</Uuid>
+          <Name>Kokusai Electronics PMM-611G</Name>
+          <ShortName>PMM-611G</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-583d8eb6-aebc-4c3b-810b-13631bde3ee3</Uuid>
+          <Name>Kokusai Electronics PMM-711G</Name>
+          <ShortName>PMM-711G</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-fe9a0753-829d-4a3f-900c-665da56b4eb2</Uuid>
+          <Name>L-DGO MFG Proton Precession Magnetometer</Name>
+          <ShortName>L-DGO-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-071e0af4-1240-466b-aaa1-6bf1b4f91be2</Uuid>
+          <Name>MPM-1M</Name>
+          <ShortName>MPM-1M</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-6a424648-b4ff-4560-a9f3-adc061446b25</Uuid>
+          <Name>O.S.U. Proton Precession Magnetometer</Name>
+          <ShortName>OSU-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1ef90518-bcfb-49b5-ac3c-c2839e8b3d85</Uuid>
+          <Name>Peebles Proton Precession Magnetometer</Name>
+          <ShortName>P-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-d859fad0-5756-4228-a5a7-bdd0f109f20b</Uuid>
+          <Name>SeaSPY</Name>
+          <ShortName>SeaSPY</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-3acc6f59-f940-4c75-b435-2f1db34cd071</Uuid>
+          <Name>SeaSPY S009</Name>
+          <ShortName>SeaSPY-S009</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-af69fea8-b99c-4967-b80a-5ff4d3f64a2f</Uuid>
+          <Name>Serson Proton Precession Magnetometer</Name>
+          <ShortName>S-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-eaac4c20-8ee3-4f07-8395-cca677cff3bd</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-4267587c-e819-44c3-99b8-9cbd9c481b7c</Uuid>
+          <Name>Vacquier Fluxgate Magnetometer</Name>
+          <ShortName>Magnetics</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1472c2ca-f7b7-47b1-804b-194ddd456a3c</Uuid>
+          <Name>Varian 172</Name>
+          <ShortName>172</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a819a4fb-b6a2-46d8-b9b9-0d1e6b4168c5</Uuid>
+          <Name>Varian 173</Name>
+          <ShortName>173</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8e4dd0be-90a3-4a25-8de5-332f53fbe6cb</Uuid>
+          <Name>Varian 174</Name>
+          <ShortName>174</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-556d9dd5-2583-4273-87bb-b9c0e3d69a79</Uuid>
+          <Name>Varian Proton Precession Magnetometer</Name>
+          <ShortName>V-PRM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-058e3ecf-a2d9-44e2-ba0a-73ee93e374b8</Uuid>
+          <Name>Varian V4931</Name>
+          <ShortName>V4931</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8e5e355e-2943-4115-a452-0f079ef08014</Uuid>
+          <Name>Varian V4937</Name>
+          <ShortName>V4937</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-119ac61c-118e-4416-81c3-8ea12110ec67</Uuid>
+          <Name>Varian V4970</Name>
+          <ShortName>V4970</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-0b99cf4a-cb1a-4933-8a03-4557e4e14469</Uuid>
+          <Name>Varian V75</Name>
+          <ShortName>V75</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-e469c39d-af2d-4114-be28-17698aa3d79d</Uuid>
+          <Name>Varian V85</Name>
+          <ShortName>V85</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-63011dcb-b2a3-41d2-b72f-54dfe77cdfba</Uuid>
+          <Name>Vostok Proton Precession Magnetometer</Name>
+          <ShortName>Vo-PRM</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Magnetics</DataType>
-    <ShortType>MAG</ShortType>
-    <Instrument>
-      <Name>B.I. Sea Magnetometer</Name>
-      <ShortName>BISM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Barringer M244</Name>
-      <ShortName>M244</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Barringer OM103</Name>
-      <ShortName>OM103</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Barringer OM104</Name>
-      <ShortName>OM104</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Barringer Proton Precession Magnetometer</Name>
-      <ShortName>BPRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Cambridge Consultants Proton Precession Magnetometer</Name>
-      <ShortName>CCPRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>DSIR Proton Precession Magnetometer</Name>
-      <ShortName>DSIR-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>ELSEC 7706</Name>
-      <ShortName>ELSEC-7706</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>ELSEC Proton Precession Magnetometer</Name>
-      <ShortName>ELSEC-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>G.S.C. 60-2</Name>
-      <ShortName>GSC-60-2</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>G.S.C. Magnetometer</Name>
-      <ShortName>GSC-M</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G123</Name>
-      <ShortName>G123</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G301</Name>
-      <ShortName>G301</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G801</Name>
-      <ShortName>G801</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G801-3</Name>
-      <ShortName>G801-3</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G811</Name>
-      <ShortName>G811</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G821</Name>
-      <ShortName>G821</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G859</Name>
-      <ShortName>G859</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G866</Name>
-      <ShortName>G866</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G877</Name>
-      <ShortName>G877</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G881</Name>
-      <ShortName>G881</ShortName>
-    </Instrument>
-    <Instrument uuid="0e1c3f9d-1abf-4925-ae05-b08c342bc62d">
-      <Name>Geometrics G882</Name>
-      <ShortName>G882</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics G886</Name>
-      <ShortName>G886</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Geometrics Proton Precession Magnetometer</Name>
-      <ShortName>GPRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>KM-2</Name>
-      <ShortName>KM-2</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Kokusai Electronics PMM-100</Name>
-      <ShortName>PMM-100</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Kokusai Electronics PMM-200</Name>
-      <ShortName>PMM-200</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Kokusai Electronics PMM-611G</Name>
-      <ShortName>PMM-611G</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Kokusai Electronics PMM-711G</Name>
-      <ShortName>PMM-711G</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>L-DGO MFG Proton Precession Magnetometer</Name>
-      <ShortName>L-DGO-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>MPM-1M</Name>
-      <ShortName>MPM-1M</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>O.S.U. Proton Precession Magnetometer</Name>
-      <ShortName>OSU-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Peebles Proton Precession Magnetometer</Name>
-      <ShortName>P-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>SeaSPY</Name>
-      <ShortName>SeaSPY</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>SeaSPY S009</Name>
-      <ShortName>SeaSPY-S009</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Serson Proton Precession Magnetometer</Name>
-      <ShortName>S-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Vacquier Fluxgate Magnetometer</Name>
-      <ShortName>Magnetics</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian 172</Name>
-      <ShortName>172</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian 173</Name>
-      <ShortName>173</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian 174</Name>
-      <ShortName>174</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian Proton Precession Magnetometer</Name>
-      <ShortName>V-PRM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian V4931</Name>
-      <ShortName>V4931</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian V4937</Name>
-      <ShortName>V4937</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian V4970</Name>
-      <ShortName>V4970</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian V75</Name>
-      <ShortName>V75</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Varian V85</Name>
-      <ShortName>V85</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Vostok Proton Precession Magnetometer</Name>
-      <ShortName>Vo-PRM</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Multibeam Bathymetry</DataType>
+      <ShortType>MB-BATHY</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>f0fc1bcf-5b10-45cc-ab92-d201931a0927</Uuid>
+          <Name>Atlas Hydrosweep DS</Name>
+          <ShortName>Hydrosweep-DS</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>7318b3fd-823d-42a8-8a74-293c88256f87</Uuid>
+          <Name>Atlas Hydrosweep DS-2</Name>
+          <ShortName>Hydrosweep-DS2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>fd230f01-969c-42d7-82a9-59d073eeb58b</Uuid>
+          <Name>Bathymetric Swath Survey System</Name>
+          <ShortName>SWATH</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>e17dea34-e49d-48a8-9f7b-1321ef490947</Uuid>
+          <Name>Hollming ECHOS 625</Name>
+          <ShortName>ECHOS-625</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>b179371f-e5e9-4263-bdda-f9bcd4dd63ae</Uuid>
+          <Name>Hydrochart II</Name>
+          <ShortName>Hydrochart-II</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>46246745-3606-4b00-aa70-fc575fab6905</Uuid>
+          <Name>Kongsberg EM1000</Name>
+          <ShortName>EM1000</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>61648480-7010-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Kongsberg EM1002</Name>
+          <ShortName>EM1002</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>a97c8310-1f80-11e1-8bc2-0800200c9a66</Uuid>
+          <Name>Kongsberg EM12</Name>
+          <ShortName>EM12</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>53c0dd98-0e45-42a6-b80f-f67745cfda48</Uuid>
+          <Name>Kongsberg EM120</Name>
+          <ShortName>EM120</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>4a1dff53-e8c8-4b21-80b3-714be202be4f</Uuid>
+          <Name>Kongsberg EM121</Name>
+          <ShortName>EM121</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>9da1f3f0-9ec8-11e1-a8b0-0800200c9a66</Uuid>
+          <Name>Kongsberg EM122</Name>
+          <ShortName>EM122</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>3fc99253-bc2b-438f-8655-ffd5a825c260</Uuid>
+          <Name>Kongsberg EM2040</Name>
+          <ShortName>EM2040</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>0571007e-297c-430c-a9d2-b56a3f225f99</Uuid>
+          <Name>Kongsberg EM300</Name>
+          <ShortName>EM300</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>c77b0a7-7efd-4f26-9a25-d2aaca06c9ba</Uuid>
+          <Name>Kongsberg EM3000</Name>
+          <ShortName>EM3000</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>219b2972-68e0-4489-944d-9e57394de73d</Uuid>
+          <Name>Kongsberg EM3002</Name>
+          <ShortName>EM3002</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>794feae0-679a-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Kongsberg EM302</Name>
+          <ShortName>EM302</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>794feae0-679a-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Kongsberg EM304</Name>
+          <ShortName>EM304</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>20729752-cee0-49a6-abc4-319bd73a3429</Uuid>
+          <Name>Kongsberg EM710</Name>
+          <ShortName>EM710</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>b3b8173a-a613-4402-9e6a-2dccd57afaf8</Uuid>
+          <Name>Kongsberg EM712</Name>
+          <ShortName>EM712</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>58e5a865-3648-4e93-b4bd-770f98831387</Uuid>
+          <Name>Kongsberg EM950</Name>
+          <ShortName>EM960</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>450ae9c8-6238-4af0-a28e-f40a879b2306</Uuid>
+          <Name>R2Sonic 2022</Name>
+          <ShortName>R2Sonic-2022</ShortName>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>9a8d7fa0-701a-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Reson 7125</Name>
+          <ShortName>Reson7125</ShortName>
+          <FileExtensions>
+            <FileExtension>s7k</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>2e64d229-76a9-4291-b96b-78017ee36b58</Uuid>
+          <Name>Reson SeaBat 7101</Name>
+          <ShortName>Reson7101</ShortName>
+          <FileExtensions>
+            <FileExtension>s7k</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>590b1b5e-5b31-4656-b1fd-4d593294d15a</Uuid>
+          <Name>Reson SeaBat 8101</Name>
+          <ShortName>Reson8101</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>1dda6fcc-96ba-4534-86d0-2ae478b93c37</Uuid>
+          <Name>Reson SeaBat 8125</Name>
+          <ShortName>Reson8125</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>fcb839a-2ca3-4a5b-b2d3-311c12ae9720</Uuid>
+          <Name>Reson SeaBat 8150</Name>
+          <ShortName>Reson8150</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>1d0c3d6e-b80d-4a33-b654-8751879416f3</Uuid>
+          <Name>Reson SeaBat 8160</Name>
+          <ShortName>Reson8160</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>0b59cb2-f4f9-4c05-8b0a-96cf6a7b9286</Uuid>
+          <Name>Reson SeaBat 9001</Name>
+          <ShortName>Reson9001</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>51cbd678-c347-488b-92f3-2592eeb6abf5</Uuid>
+          <Name>Reson SeaBat 9003</Name>
+          <ShortName>Reson9003</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>cb2962f9-379b-4370-a271-54c903052ae8</Uuid>
+          <Name>Reson SeaBat T20-P</Name>
+          <ShortName>T20-P</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>6bda75ff-811b-4c1e-a627-640ce7b00263</Uuid>
+          <Name>SEA SWATHplus</Name>
+          <ShortName>SEA-SWATH+</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>0321741b-26e0-4346-a7fc-5e17ea125a5b</Uuid>
+          <Name>SeaBeam 1050</Name>
+          <ShortName>SeaBeam-1050</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>b948059f-0ecf-4558-b2ba-f971ff82658f</Uuid>
+          <Name>SeaBeam 1050D</Name>
+          <ShortName>SeaBeam-1050D</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>899ca068-e464-487f-b7b6-880e72f7eb27</Uuid>
+          <Name>SeaBeam 1180</Name>
+          <ShortName>SeaBeam-1180</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>761cfabd-0ab1-4ca5-94a8-a04776cfd91a</Uuid>
+          <Name>SeaBeam 2000</Name>
+          <ShortName>SeaBeam-2000</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>7877ab22-eab9-46da-baad-ff09e5e8445c</Uuid>
+          <Name>SeaBeam 2100</Name>
+          <ShortName>SeaBeam-2100</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>a4690e20-58ec-11e1-b86c-0800200c9a66</Uuid>
+          <Name>SeaBeam 2112</Name>
+          <ShortName>SeaBeam-2112</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>0b784cc8-413b-4470-b0bc-1fc404332e10</Uuid>
+          <Name>SeaBeam 2120</Name>
+          <ShortName>SeaBeam-2120</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>9634c8e-e7b1-4956-8762-4c383f91d8e7</Uuid>
+          <Name>SeaBeam 3012</Name>
+          <ShortName>SeaBeam-3012</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>9e873ca9-762c-4ae3-9955-1d2ce1f70316</Uuid>
+          <Name>SeaBeam 3012-P1</Name>
+          <ShortName>SeaBeam-3012-P1</ShortName>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>26fca400-154a-11e1-be50-0800200c9a66</Uuid>
+          <Name>Simrad ME70</Name>
+          <ShortName>ME70</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-7881e3b4-fb50-426b-80f6-82ead29ad081</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>temp-7881e3b4-fb50-426b-80f6-82ead29ad081</Uuid>
+          <Name>EdgeTech</Name>
+          <ShortName>EdgeTech</ShortName>
+          <FileExtensions>
+            <FileExtension>HSX</FileExtension>
+            <FileExtension>jsf</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>ec40663a-6b6b-414f-b381-b08020616c77</Uuid>
+          <Name>Kongsberg M3</Name>
+          <ShortName>M3</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>cb2962f9-379b-4370-a271-54c903052ae8</Uuid>
+          <Name>Reson SeaBat T20-P</Name>
+          <ShortName>T20-P</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>e03934d4-176f-42c1-a63e-1179cfb6b3d7</Uuid>
+          <Name>Reson SeaBat T50-P</Name>
+          <ShortName>T50-P</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-612e7e42-302c-4e14-95fb-1ffc1fa821cf</Uuid>
+          <Name>Norbit Winghead</Name>
+          <ShortName>Winghead</ShortName>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>969bc77a-9244-43fe-b1b8-d0c937017f5c</Uuid>
+          <Name>Kongsberg EM2040P</Name>
+          <ShortName>EM2040P</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>779e9e8b-b758-429c-90ab-a733a7cd48de</Uuid>
+          <Name>Kongsberg EM2040C</Name>
+          <ShortName>EM2040C</ShortName>
+          <FileExtensions>
+            <FileExtension>all</FileExtension>
+            <FileExtension>kmall</FileExtension>
+          </FileExtensions>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Multibeam Bathymetry</DataType>
-    <ShortType>MB-BATHY</ShortType>
-    <Instrument uuid="f0fc1bcf-5b10-45cc-ab92-d201931a0927">
-      <Name>Atlas Hydrosweep DS</Name>
-      <ShortName>Hydrosweep-DS</ShortName>
-    </Instrument>
-    <Instrument uuid="7318b3fd-823d-42a8-8a74-293c88256f87">
-      <Name>Atlas Hydrosweep DS-2</Name>
-      <ShortName>Hydrosweep-DS2</ShortName>
-    </Instrument>
-    <Instrument uuid="fd230f01-969c-42d7-82a9-59d073eeb58b">
-      <Name>Bathymetric Swath Survey System</Name>
-      <ShortName>SWATH</ShortName>
-    </Instrument>
-    <Instrument uuid="e17dea34-e49d-48a8-9f7b-1321ef490947">
-      <Name>Hollming ECHOS 625</Name>
-      <ShortName>ECHOS-625</ShortName>
-    </Instrument>
-    <Instrument uuid="b179371f-e5e9-4263-bdda-f9bcd4dd63ae">
-      <Name>Hydrochart II</Name>
-      <ShortName>Hydrochart-II</ShortName>
-    </Instrument>
-    <Instrument uuid="46246745-3606-4b00-aa70-fc575fab6905">
-      <Name>Kongsberg EM1000</Name>
-      <ShortName>EM1000</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="61648480-7010-11e0-a1f0-0800200c9a66">
-      <Name>Kongsberg EM1002</Name>
-      <ShortName>EM1002</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="a97c8310-1f80-11e1-8bc2-0800200c9a66">
-      <Name>Kongsberg EM12</Name>
-      <ShortName>EM12</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="53c0dd98-0e45-42a6-b80f-f67745cfda48">
-      <Name>Kongsberg EM120</Name>
-      <ShortName>EM120</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="4a1dff53-e8c8-4b21-80b3-714be202be4f">
-      <Name>Kongsberg EM121</Name>
-      <ShortName>EM121</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="9da1f3f0-9ec8-11e1-a8b0-0800200c9a66" flatten="true">
-      <Name>Kongsberg EM122</Name>
-      <ShortName>EM122</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="3fc99253-bc2b-438f-8655-ffd5a825c260" flatten="true">
-      <Name>Kongsberg EM2040</Name>
-      <ShortName>EM2040</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="0571007e-297c-430c-a9d2-b56a3f225f99" flatten="true">
-      <Name>Kongsberg EM300</Name>
-      <ShortName>EM300</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="c77b0a7-7efd-4f26-9a25-d2aaca06c9ba" flatten="true">
-      <Name>Kongsberg EM3000</Name>
-      <ShortName>EM3000</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="219b2972-68e0-4489-944d-9e57394de73d" flatten="true">
-      <Name>Kongsberg EM3002</Name>
-      <ShortName>EM3002</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="794feae0-679a-11e0-ae3e-0800200c9a66" flatten="true">
-      <Name>Kongsberg EM302</Name>
-      <ShortName>EM302</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="794feae0-679a-11e0-ae3e-0800200c9a66" flatten="true">
-      <Name>Kongsberg EM304</Name>
-      <ShortName>EM304</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="20729752-cee0-49a6-abc4-319bd73a3429" flatten="true">
-      <Name>Kongsberg EM710</Name>
-      <ShortName>EM710</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="b3b8173a-a613-4402-9e6a-2dccd57afaf8" flatten="true">
-      <Name>Kongsberg EM712</Name>
-      <ShortName>EM712</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="58e5a865-3648-4e93-b4bd-770f98831387" flatten="true">
-      <Name>Kongsberg EM950</Name>
-      <ShortName>EM960</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="450ae9c8-6238-4af0-a28e-f40a879b2306">
-      <Name>R2Sonic 2022</Name>
-      <ShortName>R2Sonic-2022</ShortName>
-    </Instrument>
-    <Instrument uuid="9a8d7fa0-701a-11e0-a1f0-0800200c9a66" flatten="true">
-      <Name>Reson 7125</Name>
-      <ShortName>Reson7125</ShortName>
-      <FileExtension>s7k</FileExtension>
-    </Instrument>
-    <Instrument uuid="2e64d229-76a9-4291-b96b-78017ee36b58" flatten="true">
-      <Name>Reson SeaBat 7101</Name>
-      <ShortName>Reson7101</ShortName>
-      <FileExtension>s7k</FileExtension>
-    </Instrument>
-    <Instrument uuid="590b1b5e-5b31-4656-b1fd-4d593294d15a">
-      <Name>Reson SeaBat 8101</Name>
-      <ShortName>Reson8101</ShortName>
-    </Instrument>
-    <Instrument uuid="1dda6fcc-96ba-4534-86d0-2ae478b93c37">
-      <Name>Reson SeaBat 8125</Name>
-      <ShortName>Reson8125</ShortName>
-    </Instrument>
-    <Instrument uuid="fcb839a-2ca3-4a5b-b2d3-311c12ae9720">
-      <Name>Reson SeaBat 8150</Name>
-      <ShortName>Reson8150</ShortName>
-    </Instrument>
-    <Instrument uuid="1d0c3d6e-b80d-4a33-b654-8751879416f3">
-      <Name>Reson SeaBat 8160</Name>
-      <ShortName>Reson8160</ShortName>
-    </Instrument>
-    <Instrument uuid="0b59cb2-f4f9-4c05-8b0a-96cf6a7b9286">
-      <Name>Reson SeaBat 9001</Name>
-      <ShortName>Reson9001</ShortName>
-    </Instrument>
-    <Instrument uuid="51cbd678-c347-488b-92f3-2592eeb6abf5">
-      <Name>Reson SeaBat 9003</Name>
-      <ShortName>Reson9003</ShortName>
-    </Instrument>
-    <Instrument uuid="cb2962f9-379b-4370-a271-54c903052ae8">
-      <Name>Reson SeaBat T20-P</Name>
-      <ShortName>T20-P</ShortName>
-    </Instrument>
-    <Instrument uuid="6bda75ff-811b-4c1e-a627-640ce7b00263">
-      <Name>SEA SWATHplus</Name>
-      <ShortName>SEA-SWATH+</ShortName>
-    </Instrument>
-    <Instrument uuid="0321741b-26e0-4346-a7fc-5e17ea125a5b">
-      <Name>SeaBeam 1050</Name>
-      <ShortName>SeaBeam-1050</ShortName>
-    </Instrument>
-    <Instrument uuid="b948059f-0ecf-4558-b2ba-f971ff82658f">
-      <Name>SeaBeam 1050D</Name>
-      <ShortName>SeaBeam-1050D</ShortName>
-    </Instrument>
-    <Instrument uuid="899ca068-e464-487f-b7b6-880e72f7eb27">
-      <Name>SeaBeam 1180</Name>
-      <ShortName>SeaBeam-1180</ShortName>
-    </Instrument>
-    <Instrument uuid="761cfabd-0ab1-4ca5-94a8-a04776cfd91a">
-      <Name>SeaBeam 2000</Name>
-      <ShortName>SeaBeam-2000</ShortName>
-    </Instrument>
-    <Instrument uuid="7877ab22-eab9-46da-baad-ff09e5e8445c">
-      <Name>SeaBeam 2100</Name>
-      <ShortName>SeaBeam-2100</ShortName>
-    </Instrument>
-    <Instrument uuid="a4690e20-58ec-11e1-b86c-0800200c9a66">
-      <Name>SeaBeam 2112</Name>
-      <ShortName>SeaBeam-2112</ShortName>
-    </Instrument>
-    <Instrument uuid="0b784cc8-413b-4470-b0bc-1fc404332e10">
-      <Name>SeaBeam 2120</Name>
-      <ShortName>SeaBeam-2120</ShortName>
-    </Instrument>
-    <Instrument uuid="9634c8e-e7b1-4956-8762-4c383f91d8e7">
-      <Name>SeaBeam 3012</Name>
-      <ShortName>SeaBeam-3012</ShortName>
-    </Instrument>
-    <Instrument uuid="9e873ca9-762c-4ae3-9955-1d2ce1f70316">
-      <Name>SeaBeam 3012-P1</Name>
-      <ShortName>SeaBeam-3012-P1</ShortName>
-    </Instrument>
-    <Instrument uuid="26fca400-154a-11e1-be50-0800200c9a66" flatten="true">
-      <Name>Simrad ME70</Name>
-      <ShortName>ME70</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument flatten="true">
-      <Name>EdgeTech</Name>
-      <ShortName>EdgeTech</ShortName>
-      <FileExtension>HSX</FileExtension>
-      <FileExtension>jsf</FileExtension>
-    </Instrument>
-    <Instrument uuid="ec40663a-6b6b-414f-b381-b08020616c77" flatten="true">
-      <Name>Kongsberg M3</Name>
-      <ShortName>M3</ShortName>
-    </Instrument>
-    <Instrument uuid="cb2962f9-379b-4370-a271-54c903052ae8">
-      <Name>Reson SeaBat T20-P</Name>
-      <ShortName>T20-P</ShortName>
-    </Instrument>
-    <Instrument uuid="e03934d4-176f-42c1-a63e-1179cfb6b3d7">
-      <Name>Reson SeaBat T50-P</Name>
-      <ShortName>T50-P</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Norbit Winghead</Name>
-      <ShortName>Winghead</ShortName>
-    </Instrument>
-    <Instrument uuid="969bc77a-9244-43fe-b1b8-d0c937017f5c" flatten="true">
-      <Name>Kongsberg EM2040P</Name>
-      <ShortName>EM2040P</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-    <Instrument uuid="779e9e8b-b758-429c-90ab-a733a7cd48de" flatten="true">
-      <Name>Kongsberg EM2040C</Name>
-      <ShortName>EM2040C</ShortName>
-      <FileExtension>all</FileExtension>
-      <FileExtension>kmall</FileExtension>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Navigation</DataType>
+      <ShortType>NAV</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>41f56f00-69d1-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>C-NAV 3050 GPS</Name>
+          <ShortName>NAV</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-612e7e42-302c-4e14-95fb-1ffc1fa821cf</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>563697f0-69f4-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Furuno GP-150 GPS</Name>
+          <ShortName>GP-150</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-612e7e42-302c-4e14-95fb-1ffc1fa821cf</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>91cba30-69c8-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Applanix POS/MV 320</Name>
+          <ShortName>POS-MV-320</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-bd33a80a-76e9-4e08-bef5-e58d3f589215</Uuid>
+          <Name>Applanix POS/MV</Name>
+          <ShortName>POS-MV</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-bf94fef8-f4da-422a-a424-9e1fdc88abd4</Uuid>
+          <Name>Seapath 380Plus</Name>
+          <ShortName>Seapath</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Navigation</DataType>
-    <ShortType>NAV</ShortType>
-    <Instrument uuid="41f56f00-69d1-11e0-ae3e-0800200c9a66">
-      <Name>C-NAV 3050 GPS</Name>
-      <ShortName>NAV</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument uuid="563697f0-69f4-11e0-ae3e-0800200c9a66">
-      <Name>Furuno GP-150 GPS</Name>
-      <ShortName>GP-150</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument uuid="91cba30-69c8-11e0-ae3e-0800200c9a66">
-      <Name>Applanix POS/MV 320</Name>
-      <ShortName>POS-MV-320</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Applanix POS/MV</Name>
-      <ShortName>POS-MV</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Seapath 380Plus</Name>
-      <ShortName>Seapath</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Other</DataType>
+      <ShortType>OTHER</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>temp-add2118e-ee79-4b82-b12e-9e97c1b6815e</Uuid>
+          <Name>Biological Data</Name>
+          <ShortName>OTHER</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>7f9db8e0-58ea-11e1-b86c-0800200c9a66</Uuid>
+          <Name>C-Band Doppler Radar</Name>
+          <ShortName>OTHER</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>83b0a3af-639c-42b7-857e-5195c154220a</Uuid>
+          <Name>ECO FLNTU Fluorometer</Name>
+          <ShortName>OTHER</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>633cd1d0-69cc-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Eppley Precision Infrared Radiometer</Name>
+          <ShortName>Eppley-PIR</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>42fcdba0-69cb-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Eppley Precision Spectral Pyranometer</Name>
+          <ShortName>Eppley-PSP</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>32923fb0-138d-11e5-b939-0800200c9a66</Uuid>
+          <Name>Reson SVP 70</Name>
+          <ShortName>SVP70</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>ad085710-67a3-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>RM Young 05106/05306B Wind Sensor</Name>
+          <ShortName>RM-Y-05106</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>d9b5d450-67a2-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>RM Young 41382VC Relative Humidity/Air Temperature Sensor</Name>
+          <ShortName>RM-Y-41382VC</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>c07f2060-67a0-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>RM Young 61202V</Name>
+          <ShortName>RM Y-61202V</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>b3d74130-702e-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 18</Name>
+          <ShortName>SBE-18</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>9779e920-703d-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 21 SeaCat Thermosalinograph</Name>
+          <ShortName>SBE-21</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>b4bc1c50-7818-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 25 Sealogger</Name>
+          <ShortName>SBE-25</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>bf258d00-69d3-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>SBE 32 Carousel Water Sampler</Name>
+          <ShortName>SBE-32</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>f487bd00-703c-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 38 Digital Oceanographic Thermometer</Name>
+          <ShortName>SBE-38</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>43aeca90-702e-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>SBE 43 Dissolved Oxygen Sensor</Name>
+          <ShortName>SBE-43</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>46d6e5b0-69c4-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>SBE 45 Micro TSG Thermosalinograph</Name>
+          <ShortName>SBE-45</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-a894b97e-2414-4fe6-85f3-4e6b8ee39019</Uuid>
+          <Name>SCS</Name>
+          <ShortName>SCS</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>b55d9fd0-703e-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Seapoint Chlorophyll Fluorometer</Name>
+          <ShortName>SCF</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>9f7405b0-70d9-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Seapoint Turbidity Meter</Name>
+          <ShortName>STM</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-81c2a265-246c-4c7b-abc3-f866e1b29bbe</Uuid>
+          <Name>Sound Speed Data</Name>
+          <ShortName>SS</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>daaa7980-70e2-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Turner 10AU Fluorometer</Name>
+          <ShortName>10AU</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-1e1dde37-cddc-4963-a8ec-e4c49f6cd346</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>80601c20-781a-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>WET Labs ECO Fluorometer</Name>
+          <ShortName>ECO-F</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-8678dcfa-5101-4413-ab6d-6abdcdfca6b0</Uuid>
+          <Name>Valeport SWiFT SVP</Name>
+          <ShortName>SWIFT</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Other</DataType>
-    <ShortType>OTHER</ShortType>
-    <Instrument>
-      <Name>Biological Data</Name>
-      <ShortName>OTHER</ShortName>
-    </Instrument>
-    <Instrument uuid="7f9db8e0-58ea-11e1-b86c-0800200c9a66">
-      <Name>C-Band Doppler Radar</Name>
-      <ShortName>OTHER</ShortName>
-    </Instrument>
-    <Instrument uuid="83b0a3af-639c-42b7-857e-5195c154220a">
-      <Name>ECO FLNTU Fluorometer</Name>
-      <ShortName>OTHER</ShortName>
-    </Instrument>
-    <Instrument uuid="633cd1d0-69cc-11e0-ae3e-0800200c9a66">
-      <Name>Eppley Precision Infrared Radiometer</Name>
-      <ShortName>Eppley-PIR</ShortName>
-    </Instrument>
-    <Instrument uuid="42fcdba0-69cb-11e0-ae3e-0800200c9a66">
-      <Name>Eppley Precision Spectral Pyranometer</Name>
-      <ShortName>Eppley-PSP</ShortName>
-    </Instrument>
-    <Instrument uuid="32923fb0-138d-11e5-b939-0800200c9a66">
-      <Name>Reson SVP 70</Name>
-      <ShortName>SVP70</ShortName>
-    </Instrument>
-    <Instrument uuid="ad085710-67a3-11e0-ae3e-0800200c9a66">
-      <Name>RM Young 05106/05306B Wind Sensor</Name>
-      <ShortName>RM-Y-05106</ShortName>
-    </Instrument>
-    <Instrument uuid="d9b5d450-67a2-11e0-ae3e-0800200c9a66">
-      <Name>RM Young 41382VC Relative Humidity/Air Temperature Sensor</Name>
-      <ShortName>RM-Y-41382VC</ShortName>
-    </Instrument>
-    <Instrument uuid="c07f2060-67a0-11e0-ae3e-0800200c9a66">
-      <Name>RM Young 61202V</Name>
-      <ShortName>RM Y-61202V</ShortName>
-    </Instrument>
-    <Instrument uuid="b3d74130-702e-11e0-a1f0-0800200c9a66">
-      <Name>SBE 18</Name>
-      <ShortName>SBE-18</ShortName>
-    </Instrument>
-    <Instrument uuid="9779e920-703d-11e0-a1f0-0800200c9a66">
-      <Name>SBE 21 SeaCat Thermosalinograph</Name>
-      <ShortName>SBE-21</ShortName>
-    </Instrument>
-    <Instrument uuid="b4bc1c50-7818-11e0-a1f0-0800200c9a66">
-      <Name>SBE 25 Sealogger</Name>
-      <ShortName>SBE-25</ShortName>
-    </Instrument>
-    <Instrument uuid="bf258d00-69d3-11e0-ae3e-0800200c9a66">
-      <Name>SBE 32 Carousel Water Sampler</Name>
-      <ShortName>SBE-32</ShortName>
-    </Instrument>
-    <Instrument uuid="f487bd00-703c-11e0-a1f0-0800200c9a66">
-      <Name>SBE 38 Digital Oceanographic Thermometer</Name>
-      <ShortName>SBE-38</ShortName>
-    </Instrument>
-    <Instrument uuid="43aeca90-702e-11e0-a1f0-0800200c9a66">
-      <Name>SBE 43 Dissolved Oxygen Sensor</Name>
-      <ShortName>SBE-43</ShortName>
-    </Instrument>
-    <Instrument uuid="46d6e5b0-69c4-11e0-ae3e-0800200c9a66">
-      <Name>SBE 45 Micro TSG Thermosalinograph</Name>
-      <ShortName>SBE-45</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>SCS</Name>
-      <ShortName>SCS</ShortName>
-    </Instrument>
-    <Instrument uuid="b55d9fd0-703e-11e0-a1f0-0800200c9a66">
-      <Name>Seapoint Chlorophyll Fluorometer</Name>
-      <ShortName>SCF</ShortName>
-    </Instrument>
-    <Instrument uuid="9f7405b0-70d9-11e0-a1f0-0800200c9a66">
-      <Name>Seapoint Turbidity Meter</Name>
-      <ShortName>STM</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Sound Speed Data</Name>
-      <ShortName>SS</ShortName>
-    </Instrument>
-    <Instrument uuid="daaa7980-70e2-11e0-a1f0-0800200c9a66">
-      <Name>Turner 10AU Fluorometer</Name>
-      <ShortName>10AU</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument uuid="80601c20-781a-11e0-a1f0-0800200c9a66">
-      <Name>WET Labs ECO Fluorometer</Name>
-      <ShortName>ECO-F</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Valeport SWiFT SVP</Name>
-      <ShortName>SWIFT</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Singlebeam Bathymetry</DataType>
+      <ShortType>SB-BATHY</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>69560dff-8352-436e-921d-1faeb8e4a279</Uuid>
+          <Name>Edgetech SB-216S</Name>
+          <ShortName>SB-216S</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>174979b0-700a-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Furuno FE700</Name>
+          <ShortName>FE700</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>dbc80feb-ec67-4e4f-8f2c-5ec14d9976e5</Uuid>
+          <Name>Knudsen 320B/P</Name>
+          <ShortName>320BP</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>da2821f4-b7bf-4c42-8be2-798786023a9a</Uuid>
+          <Name>Knudsen 320B/R</Name>
+          <ShortName>320BR</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>f7731df0-700c-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Knudsen CHIRP 3200</Name>
+          <ShortName>CHIRP-3200</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>13a77470-679e-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Knudsen CHIRP 3260</Name>
+          <ShortName>CHIRP-3260</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>f1e87f20-1f56-11e1-8bc2-0800200c9a66</Uuid>
+          <Name>Kongsberg EA400</Name>
+          <ShortName>EA400</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>55538c20-679d-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Kongsberg EA600</Name>
+          <ShortName>EA600</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>8a82cbd8-78cf-4143-a57d-8a57f63c1a2c</Uuid>
+          <Name>Kongsberg TOPAS PS-18</Name>
+          <ShortName>TOPAS PS-18</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>2a850686-5d71-422b-8e0d-9e09c47cfd38</Uuid>
+          <Name>L-3 ELAC LAZ 5100</Name>
+          <ShortName>L-3-ELAC-LAZ-5100</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>e50576ce-13bd-4490-9891-2cea2331a320</Uuid>
+          <Name>ODEC Bathy-2000 CHIRP</Name>
+          <ShortName>ODEC-2000-CHIRP</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-435c8f0d-1ce6-4822-8583-41979b2f522c</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-5e3d7ffe-426c-4684-bb1e-5ebca83dba4d</Uuid>
+          <Name>Airmar DT800</Name>
+          <ShortName>DT800</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-fcd9838b-c14f-48df-9d56-7c75809a7a02</Uuid>
+          <Name>Echotrac E20</Name>
+          <ShortName>E20</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Singlebeam Bathymetry</DataType>
-    <ShortType>SB-BATHY</ShortType>
-    <Instrument uuid="69560dff-8352-436e-921d-1faeb8e4a279">
-      <Name>Edgetech SB-216S</Name>
-      <ShortName>SB-216S</ShortName>
-    </Instrument>
-    <Instrument uuid="174979b0-700a-11e0-a1f0-0800200c9a66">
-      <Name>Furuno FE700</Name>
-      <ShortName>FE700</ShortName>
-    </Instrument>
-    <Instrument uuid="dbc80feb-ec67-4e4f-8f2c-5ec14d9976e5">
-      <Name>Knudsen 320B/P</Name>
-      <ShortName>320BP</ShortName>
-    </Instrument>
-    <Instrument uuid="da2821f4-b7bf-4c42-8be2-798786023a9a">
-      <Name>Knudsen 320B/R</Name>
-      <ShortName>320BR</ShortName>
-    </Instrument>
-    <Instrument uuid="f7731df0-700c-11e0-a1f0-0800200c9a66">
-      <Name>Knudsen CHIRP 3200</Name>
-      <ShortName>CHIRP-3200</ShortName>
-    </Instrument>
-    <Instrument uuid="13a77470-679e-11e0-ae3e-0800200c9a66">
-      <Name>Knudsen CHIRP 3260</Name>
-      <ShortName>CHIRP-3260</ShortName>
-    </Instrument>
-    <Instrument uuid="f1e87f20-1f56-11e1-8bc2-0800200c9a66">
-      <Name>Kongsberg EA400</Name>
-      <ShortName>EA400</ShortName>
-    </Instrument>
-    <Instrument uuid="55538c20-679d-11e0-ae3e-0800200c9a66">
-      <Name>Kongsberg EA600</Name>
-      <ShortName>EA600</ShortName>
-    </Instrument>
-    <Instrument uuid="8a82cbd8-78cf-4143-a57d-8a57f63c1a2c">
-      <Name>Kongsberg TOPAS PS-18</Name>
-      <ShortName>TOPAS PS-18</ShortName>
-    </Instrument>
-    <Instrument uuid="2a850686-5d71-422b-8e0d-9e09c47cfd38">
-      <Name>L-3 ELAC LAZ 5100</Name>
-      <ShortName>L-3-ELAC-LAZ-5100</ShortName>
-    </Instrument>
-    <Instrument uuid="e50576ce-13bd-4490-9891-2cea2331a320">
-      <Name>ODEC Bathy-2000 CHIRP</Name>
-      <ShortName>ODEC-2000-CHIRP</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Airmar DT800</Name>
-      <ShortName>DT800</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Echotrac E20</Name>
-      <ShortName>E20</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Sub Bottom</DataType>
+      <ShortType>SUB-BOTTOM</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>69560dff-8352-436e-921d-1faeb8e4a279</Uuid>
+          <Name>Edgetech SB-216S</Name>
+          <ShortName>SB-216S</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>f7731df0-700c-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Knudsen CHIRP 3200</Name>
+          <ShortName>CHIRP-3200</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>13a77470-679e-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Knudsen CHIRP 3260</Name>
+          <ShortName>CHIRP-3260</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>8a82cbd8-78cf-4143-a57d-8a57f63c1a2c</Uuid>
+          <Name>Kongsberg TOPAS PS-18</Name>
+          <ShortName>TOPAS PS-18</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>e50576ce-13bd-4490-9891-2cea2331a320</Uuid>
+          <Name>ODEC Bathy-2000 CHIRP</Name>
+          <ShortName>ODEC-2000-CHIRP</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-11d1081d-fd69-433a-a796-5cebdc250211</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Sub Bottom</DataType>
-    <ShortType>SUB-BOTTOM</ShortType>
-    <Instrument uuid="69560dff-8352-436e-921d-1faeb8e4a279">
-      <Name>Edgetech SB-216S</Name>
-      <ShortName>SB-216S</ShortName>
-    </Instrument>
-    <Instrument uuid="f7731df0-700c-11e0-a1f0-0800200c9a66">
-      <Name>Knudsen CHIRP 3200</Name>
-      <ShortName>CHIRP-3200</ShortName>
-    </Instrument>
-    <Instrument uuid="13a77470-679e-11e0-ae3e-0800200c9a66">
-      <Name>Knudsen CHIRP 3260</Name>
-      <ShortName>CHIRP-3260</ShortName>
-    </Instrument>
-    <Instrument uuid="8a82cbd8-78cf-4143-a57d-8a57f63c1a2c">
-      <Name>Kongsberg TOPAS PS-18</Name>
-      <ShortName>TOPAS PS-18</ShortName>
-    </Instrument>
-    <Instrument uuid="e50576ce-13bd-4490-9891-2cea2331a320">
-      <Name>ODEC Bathy-2000 CHIRP</Name>
-      <ShortName>ODEC-2000-CHIRP</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Water Column Sonar</DataType>
+      <ShortType>WCSD</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>f0fc1bcf-5b10-45cc-ab92-d201931a0927</Uuid>
+          <Name>Atlas Hydrosweep DS</Name>
+          <ShortName>Hydrosweep-DS</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>7318b3fd-823d-42a8-8a74-293c88256f87</Uuid>
+          <Name>Atlas Hydrosweep DS-2</Name>
+          <ShortName>Hydrosweep-DS-2</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>f5adaa25-49cb-44ec-995c-430a4e2318c7</Uuid>
+          <Name>AZFP</Name>
+          <ShortName>AZFP</ShortName>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>9da1f3f0-9ec8-11e1-a8b0-0800200c9a66</Uuid>
+          <Name>Kongsberg EM122</Name>
+          <ShortName>EM122</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>3fc99253-bc2b-438f-8655-ffd5a825c260</Uuid>
+          <Name>Kongsberg EM2040</Name>
+          <ShortName>EM2040</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>219b2972-68e0-4489-944d-9e57394de73d</Uuid>
+          <Name>Kongsberg EM3002</Name>
+          <ShortName>EM3002</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>794feae0-679a-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Kongsberg EM302</Name>
+          <ShortName>EM302</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>794feae0-679a-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Kongsberg EM304</Name>
+          <ShortName>EM304</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>20729752-cee0-49a6-abc4-319bd73a3429</Uuid>
+          <Name>Kongsberg EM710</Name>
+          <ShortName>EM710</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>b3b8173a-a613-4402-9e6a-2dccd57afaf8</Uuid>
+          <Name>Kongsberg EM712</Name>
+          <ShortName>EM712</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>9a8d7fa0-701a-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Reson 7125</Name>
+          <ShortName>Reson7125</ShortName>
+          <FileExtensions>
+            <FileExtension>s7k</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>2e64d229-76a9-4291-b96b-78017ee36b58</Uuid>
+          <Name>Reson SeaBat 7101</Name>
+          <ShortName>Reson7101</ShortName>
+          <FileExtensions>
+            <FileExtension>s7k</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>fef1c011-226e-4dd3-97a2-aae7afe86409</Uuid>
+          <Name>Simrad EK500 (BI500)</Name>
+          <ShortName>EK500-BI500</ShortName>
+          <FileExtensions>
+            <FileExtension>Data</FileExtension>
+            <FileExtension>Ping</FileExtension>
+            <FileExtension>Vlog</FileExtension>
+            <FileExtension>Info</FileExtension>
+            <FileExtension>Work</FileExtension>
+            <FileExtension>Snap</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>fef1c011-226e-4dd3-97a2-aae7afe86409</Uuid>
+          <Name>Simrad EK500 (ek5)</Name>
+          <ShortName>EK500-ek5</ShortName>
+          <FileExtensions>
+            <FileExtension>ek5</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>b7ae3f00-701c-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Simrad EK60</Name>
+          <ShortName>EK60</ShortName>
+          <FileExtensions>
+            <FileExtension>raw</FileExtension>
+            <FileExtension>bot</FileExtension>
+            <FileExtension>idx</FileExtension>
+            <FileExtension>out</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>b7ae3f00-701c-11e0-a1f0-0800200c9a66</Uuid>
+          <Name>Simrad EK60 (ek5)</Name>
+          <ShortName>EK60-ek5</ShortName>
+          <FileExtensions>
+            <FileExtension>ek5</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>cfc2ac19-b32a-4753-a934-efe8a57cc496</Uuid>
+          <Name>Simrad EK80</Name>
+          <ShortName>EK80</ShortName>
+          <FileExtensions>
+            <FileExtension>raw</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>3b711580-1f7f-11e1-8bc2-0800200c9a66</Uuid>
+          <Name>Simrad ES60</Name>
+          <ShortName>ES60</ShortName>
+          <FileExtensions>
+            <FileExtension>raw</FileExtension>
+            <FileExtension>bot</FileExtension>
+            <FileExtension>idx</FileExtension>
+            <FileExtension>out</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>26fca400-154a-11e1-be50-0800200c9a66</Uuid>
+          <Name>Simrad ME70</Name>
+          <ShortName>ME70</ShortName>
+          <FileExtensions>
+            <FileExtension>raw</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-3b9003a2-658a-47e4-9b22-be4da7b1daa7</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>ec40663a-6b6b-414f-b381-b08020616c77</Uuid>
+          <Name>Kongsberg M3</Name>
+          <ShortName>M3</ShortName>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>a14b3fc1-039d-4725-9f07-851170900fd1</Uuid>
+          <Name>Simrad WBT Mini</Name>
+          <ShortName>WBT</ShortName>
+          <FileExtensions>
+            <FileExtension>raw</FileExtension>
+            <FileExtension>idx</FileExtension>
+            <FileExtension>bot</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>69bc77a-9244-43fe-b1b8-d0c937017f5c</Uuid>
+          <Name>Kongsberg EM2040P</Name>
+          <ShortName>EM2040P</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+        <Instrument flatten="true">
+          <Uuid>779e9e8b-b758-429c-90ab-a733a7cd48de</Uuid>
+          <Name>Kongsberg EM2040C</Name>
+          <ShortName>EM2040C</ShortName>
+          <FileExtensions>
+            <FileExtension>wcd</FileExtension>
+            <FileExtension>kmwcd</FileExtension>
+          </FileExtensions>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Water Column Sonar</DataType>
-    <ShortType>WCSD</ShortType>
-    <Instrument uuid="f0fc1bcf-5b10-45cc-ab92-d201931a0927">
-      <Name>Atlas Hydrosweep DS</Name>
-      <ShortName>Hydrosweep-DS</ShortName>
-    </Instrument>
-    <Instrument uuid="7318b3fd-823d-42a8-8a74-293c88256f87">
-      <Name>Atlas Hydrosweep DS-2</Name>
-      <ShortName>Hydrosweep-DS-2</ShortName>
-    </Instrument>
-    <Instrument uuid="f5adaa25-49cb-44ec-995c-430a4e2318c7">
-      <Name>AZFP</Name>
-      <ShortName>AZFP</ShortName>
-    </Instrument>
-    <Instrument uuid="9da1f3f0-9ec8-11e1-a8b0-0800200c9a66" flatten="true">
-      <Name>Kongsberg EM122</Name>
-      <ShortName>EM122</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="3fc99253-bc2b-438f-8655-ffd5a825c260" flatten="true">
-      <Name>Kongsberg EM2040</Name>
-      <ShortName>EM2040</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="219b2972-68e0-4489-944d-9e57394de73d" flatten="true">
-      <Name>Kongsberg EM3002</Name>
-      <ShortName>EM3002</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="794feae0-679a-11e0-ae3e-0800200c9a66" flatten="true">
-      <Name>Kongsberg EM302</Name>
-      <ShortName>EM302</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="794feae0-679a-11e0-ae3e-0800200c9a66" flatten="true">
-      <Name>Kongsberg EM304</Name>
-      <ShortName>EM304</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="20729752-cee0-49a6-abc4-319bd73a3429" flatten="true">
-      <Name>Kongsberg EM710</Name>
-      <ShortName>EM710</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="b3b8173a-a613-4402-9e6a-2dccd57afaf8" flatten="true">
-      <Name>Kongsberg EM712</Name>
-      <ShortName>EM712</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="9a8d7fa0-701a-11e0-a1f0-0800200c9a66" flatten="true">
-      <Name>Reson 7125</Name>
-      <ShortName>Reson7125</ShortName>
-      <FileExtension>s7k</FileExtension>
-    </Instrument>
-    <Instrument uuid="2e64d229-76a9-4291-b96b-78017ee36b58" flatten="true">
-      <Name>Reson SeaBat 7101</Name>
-      <ShortName>Reson7101</ShortName>
-      <FileExtension>s7k</FileExtension>
-    </Instrument>
-    <Instrument uuid="fef1c011-226e-4dd3-97a2-aae7afe86409" flatten="true">
-      <Name>Simrad EK500 (BI500)</Name>
-      <ShortName>EK500-BI500</ShortName>
-      <FileExtension>Data</FileExtension>
-      <FileExtension>Ping</FileExtension>
-      <FileExtension>Vlog</FileExtension>
-      <FileExtension>Info</FileExtension>
-      <FileExtension>Work</FileExtension>
-      <FileExtension>Snap</FileExtension>
-    </Instrument>
-    <Instrument uuid="fef1c011-226e-4dd3-97a2-aae7afe86409" flatten="true">
-      <Name>Simrad EK500 (ek5)</Name>
-      <ShortName>EK500-ek5</ShortName>
-      <FileExtension>ek5</FileExtension>
-    </Instrument>
-    <Instrument uuid="b7ae3f00-701c-11e0-a1f0-0800200c9a66" flatten="true">
-      <Name>Simrad EK60</Name>
-      <ShortName>EK60</ShortName>
-      <FileExtension>raw</FileExtension>
-      <FileExtension>bot</FileExtension>
-      <FileExtension>idx</FileExtension>
-      <FileExtension>out</FileExtension>
-    </Instrument>
-    <Instrument uuid="b7ae3f00-701c-11e0-a1f0-0800200c9a66" flatten="true">
-      <Name>Simrad EK60 (ek5)</Name>
-      <ShortName>EK60-ek5</ShortName>
-      <FileExtension>ek5</FileExtension>
-    </Instrument>
-    <Instrument uuid="cfc2ac19-b32a-4753-a934-efe8a57cc496" flatten="true">
-      <Name>Simrad EK80</Name>
-      <ShortName>EK80</ShortName>
-      <FileExtension>raw</FileExtension>
-    </Instrument>
-    <Instrument uuid="3b711580-1f7f-11e1-8bc2-0800200c9a66" flatten="true">
-      <Name>Simrad ES60</Name>
-      <ShortName>ES60</ShortName>
-      <FileExtension>raw</FileExtension>
-      <FileExtension>bot</FileExtension>
-      <FileExtension>idx</FileExtension>
-      <FileExtension>out</FileExtension>
-    </Instrument>
-    <Instrument uuid="26fca400-154a-11e1-be50-0800200c9a66" flatten="true">
-      <Name>Simrad ME70</Name>
-      <ShortName>ME70</ShortName>
-      <FileExtension>raw</FileExtension>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument uuid="ec40663a-6b6b-414f-b381-b08020616c77">
-      <Name>Kongsberg M3</Name>
-      <ShortName>M3</ShortName>
-    </Instrument>
-    <Instrument uuid="a14b3fc1-039d-4725-9f07-851170900fd1" flatten="true">
-      <Name>Simrad WBT Mini</Name>
-      <ShortName>WBT</ShortName>
-      <FileExtension>raw</FileExtension>
-      <FileExtension>idx</FileExtension>
-      <FileExtension>bot</FileExtension>
-    </Instrument>
-    <Instrument uuid="69bc77a-9244-43fe-b1b8-d0c937017f5c" flatten="true">
-      <Name>Kongsberg EM2040P</Name>
-      <ShortName>EM2040P</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-    <Instrument uuid="779e9e8b-b758-429c-90ab-a733a7cd48de" flatten="true">
-      <Name>Kongsberg EM2040C</Name>
-      <ShortName>EM2040C</ShortName>
-      <FileExtension>wcd</FileExtension>
-      <FileExtension>kmwcd</FileExtension>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>XBT</DataType>
+      <ShortType>XBT</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>d2054ed0-69c2-11e0-ae3e-0800200c9a66</Uuid>
+          <Name>Sippican XBT/XSV</Name>
+          <ShortName>XBT</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-3c128ab3-4cd3-4277-85ad-6d937f50be5e</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>XBT</DataType>
-    <ShortType>XBT</ShortType>
-    <Instrument uuid="d2054ed0-69c2-11e0-ae3e-0800200c9a66">
-      <Name>Sippican XBT/XSV</Name>
-      <ShortName>XBT</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-  </InstrumentGroup>
+    <InstrumentGroup>
+      <DataType>Ancillary Data</DataType>
+      <ShortType>ANCILLARY</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>temp-590f4c71-97c2-4da1-b56c-6394ec30e290</Uuid>
+          <Name>Water Column Sonar Ancillary</Name>
+          <ShortName>WCSD</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-f9739eaf-5383-456e-bc76-e8940c5016be</Uuid>
+          <Name>XBT Ancillary</Name>
+          <ShortName>XBT</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-2939e55b-e501-4bb0-897a-47d2410b1364</Uuid>
+          <Name>Sub Bottom Ancillary</Name>
+          <ShortName>SubBottom</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-02895a59-2911-4d5c-aa96-e6bd4e6c1aff</Uuid>
+          <Name>Singlebeam Bathymetry Ancillary</Name>
+          <ShortName>SB-Bathy</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-e6c6ba74-cb95-42a8-b39f-36c1b291bb59</Uuid>
+          <Name>Navigation Ancillary</Name>
+          <ShortName>Nav</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-e2e3214a-2a5f-4cba-942c-19078c14653b</Uuid>
+          <Name>Multibeam Bathymetry Ancillary</Name>
+          <ShortName>MB</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-f07008b6-1e28-4e9a-8203-a2b472f13982</Uuid>
+          <Name>Magnetics Ancillary</Name>
+          <ShortName>Mag</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-3d65326b-7f6b-4eea-820f-79d968938e5d</Uuid>
+          <Name>Gravity Ancillary</Name>
+          <ShortName>Grav</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-87a56470-e853-49e9-9539-9a6129cf3b06</Uuid>
+          <Name>CTD Ancillary</Name>
+          <ShortName>CTD</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>temp-d8384de4-d85b-4f85-b9ba-18838c7754bd</Uuid>
+          <Name>ADCP Ancillary</Name>
+          <ShortName>ADCPA</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
 
-  <InstrumentGroup>
-    <DataType>Ancillary Data</DataType>
-    <ShortType>ANCILLARY</ShortType>
-    <Instrument>
-      <Name>Water Column Sonar Ancillary</Name>
-      <ShortName>WCSD</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>XBT Ancillary</Name>
-      <ShortName>XBT</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Sub Bottom Ancillary</Name>
-      <ShortName>SubBottom</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Singlebeam Bathymetry Ancillary</Name>
-      <ShortName>SB-Bathy</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Navigation Ancillary</Name>
-      <ShortName>Nav</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Multibeam Bathymetry Ancillary</Name>
-      <ShortName>MB</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Magnetics Ancillary</Name>
-      <ShortName>Mag</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>Gravity Ancillary</Name>
-      <ShortName>Grav</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>CTD Ancillary</Name>
-      <ShortName>CTD</ShortName>
-    </Instrument>
-    <Instrument>
-      <Name>ADCP Ancillary</Name>
-      <ShortName>ADCPA</ShortName>
-    </Instrument>
-  </InstrumentGroup>
-
-  <InstrumentGroup>
-    <DataType>Side Scan Sonar</DataType>
-    <ShortType>SIDE-SCAN</ShortType>
-    <Instrument>
-      <Name>Unlisted Instrument</Name>
-      <ShortName>Unlisted</ShortName>
-    </Instrument>
-    <Instrument uuid="7325a90a-fd76-4483-88f3-36ca47224de4">
-      <Name>EdgeTech 2205</Name>
-      <ShortName>Edgetech2500</ShortName>
-    </Instrument>
-    <Instrument uuid="8b92679f-f5c7-4bd9-b8c4-0aa8a8e00264">
-      <Name>Edgetech 2200</Name>
-      <ShortName>EdgeTech2200</ShortName>
-    </Instrument>
-    <Instrument uuid="2a99b7a6-52a9-4851-a69d-bd2e7b8a0540">
-      <Name>Marine Sonic ARC Scout</Name>
-      <ShortName>ARC_Scout</ShortName>
-    </Instrument>
-    <Instrument uuid="5e7e7a0b-2254-4324-898d-8c25566e7d84">
-      <Name>Sonardyne Solstice</Name>
-      <ShortName>SonarDyne</ShortName>
-    </Instrument>
-  </InstrumentGroup>
-
-</Instruments>
+    <InstrumentGroup>
+      <DataType>Side Scan Sonar</DataType>
+      <ShortType>SIDE-SCAN</ShortType>
+      <Instruments>
+        <Instrument>
+          <Uuid>temp-01b6d7f6-c0d5-41ba-b2da-a4d4cf3b5418</Uuid>
+          <Name>Unlisted Instrument</Name>
+          <ShortName>Unlisted</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>7325a90a-fd76-4483-88f3-36ca47224de4</Uuid>
+          <Name>EdgeTech 2205</Name>
+          <ShortName>Edgetech2500</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>8b92679f-f5c7-4bd9-b8c4-0aa8a8e00264</Uuid>
+          <Name>Edgetech 2200</Name>
+          <ShortName>EdgeTech2200</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>2a99b7a6-52a9-4851-a69d-bd2e7b8a0540</Uuid>
+          <Name>Marine Sonic ARC Scout</Name>
+          <ShortName>ARC_Scout</ShortName>
+        </Instrument>
+        <Instrument>
+          <Uuid>5e7e7a0b-2254-4324-898d-8c25566e7d84</Uuid>
+          <Name>Sonardyne Solstice</Name>
+          <ShortName>SonarDyne</ShortName>
+        </Instrument>
+      </Instruments>
+    </InstrumentGroup>
+  </InstrumentGroups>
+</InstrumentData>

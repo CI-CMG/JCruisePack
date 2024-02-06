@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ShipData xmlns="https://colorado.edu/cires/cruisepack/ships">
+  <DataVersion>1.0</DataVersion>
+  <Ships>
+    <Ship>
+      <Name>Alaska Knight</Name>
+      <Uuid>0d069136-2a5b-4bdd-889f-ef132972465f</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Albatross IV (AL)</Name>
+      <Uuid>c9ebe503-5a04-4a3f-9c72-12cd4cc11c64</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Argus</Name>
+      <Uuid>14aa4f40-23c6-11e4-8c21-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Armstrong (AR)</Name>
+      <Uuid>05e94496-2ecc-437d-b875-6c037c8236b5</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Atlantis (AT)</Name>
+      <Uuid>372959e0-9e98-11e1-a8b0-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Bell M. Shimada (SH)</Name>
+      <Uuid>dfe238e9-703a-451c-af6b-29ba1b192468</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Blazing Seven</Name>
+      <Uuid>1fadf650-8e55-4e17-b66b-e2e96347106f</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Brooks McCall</Name>
+      <Uuid>ffee1db0-cc2f-11e1-9b23-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Cape Fear</Name>
+      <Uuid>7fb77e40-9171-11e2-9e96-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Celtic Voyager</Name>
+      <Uuid>00f4aaaa-fdd0-45db-a153-4a7cd934edc0</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Chapman</Name>
+      <Uuid>48490020-5abd-11e4-8ed6-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Clearwater</Name>
+      <Uuid>896e5a71-5633-4742-b7b9-7fd2284ea49e</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Connell</Name>
+      <Uuid>d55be30d-bc59-435a-a08f-1c5ba664d2cc</Uuid>
+    </Ship>
+    <Ship>
+      <Name>David Starr Jordan</Name>
+      <Uuid>349ebfc3-d527-48bc-8712-05c85a2d260b</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Davidson</Name>
+      <Uuid>7e472278-bbff-4e8e-aebc-543e94dbd667</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Delaware II (DE)</Name>
+      <Uuid>8c13f64d-44b0-42d1-bb63-3704d66f1072</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Derek M. Baylis</Name>
+      <Uuid>a69e0d30-d852-11e2-a28f-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Endeavor (EN)</Name>
+      <Uuid>0deff19f-476f-4fc6-870e-8762ec9e01b3</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Endurance</Name>
+      <Uuid>0d51eab0-df56-11e2-a28f-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Falkor (FK)</Name>
+      <Uuid>391b3824-b82f-40c1-9a53-ef1cdfd9f0c6</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ferrel</Name>
+      <Uuid>849ffe40-5d1e-11e8-b566-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Frosti</Name>
+      <Uuid>bb7a7122-02dd-490c-b338-536186f71ee5</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Fugro Americas (FA)</Name>
+      <Uuid>da021fde-ee36-4901-a115-66b8f8854efd</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Fugro Brasilis (FB)</Name>
+      <Uuid>d54128a8-eac5-481a-8239-92eee1ac9367</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Fugro Discovery (FD)</Name>
+      <Uuid>64490799-bad1-48eb-939a-142f0f56b4d9</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Fugro Equator (EQT)</Name>
+      <Uuid>978be5dc-abe4-4599-80a5-114dae6affd6</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Fugro Searcher (FS)</Name>
+      <Uuid>c2641783-0b2e-4c3a-9d43-00503c317922</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Global Explorer ROV</Name>
+      <Uuid>df4861f0-9001-11e8-b568-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Gordon Gunter (GU)</Name>
+      <Uuid>84e3f970-a143-11e2-9e96-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Healy (HLY)</Name>
+      <Uuid>34f05ded-db71-43df-a373-cd927e900dd2</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Henry B. Bigelow (HB)</Name>
+      <Uuid>5db5f560-edf2-11e1-aff1-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Hercules</Name>
+      <Uuid>87dac0a0-23c4-11e4-8c21-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>John H. Martin</Name>
+      <Uuid>63b660be-0833-442a-9593-216173cf3107</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ka'imikai-o-Kanaloa</Name>
+      <Uuid>04448e10-8802-11e2-9e96-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Keary (KRY)</Name>
+      <Uuid>e134cc28-3f7a-4aa5-ad84-d7731773b2a1</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Keldysh</Name>
+      <Uuid>4d621d69-57fa-4407-a58a-f81774399703</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Kilo Moana (KM)</Name>
+      <Uuid>986a775b-ce54-4a37-b1ea-d6e19c781ead</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Kumu</Name>
+      <Uuid>b9b12bc0-8b76-46bd-9d5f-ea87a7ea70e1</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Marcus G. Langseth</Name>
+      <Uuid>4078bffb-03b7-4744-a856-2168b867d694</Uuid>
+    </Ship>
+    <Ship>
+      <Name>McArthur II</Name>
+      <Uuid>7b4be653-5fcc-4552-a7cd-8c06f0838503</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Melville</Name>
+      <Uuid>632f234e-e9a8-4683-8fdb-c3cff0ee5a68</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Miller Freeman (MF)</Name>
+      <Uuid>b1d09c6f-4ee6-44c5-9773-057ca3b28eb3</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Moana Wave</Name>
+      <Uuid>0a8ac4f4-e144-466d-a347-ce6887268df1</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Nancy Foster (NF)</Name>
+      <Uuid>1fa18100-70e3-11e0-a1f0-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Nautilus</Name>
+      <Uuid>c0ed39c0-225e-11e4-8c21-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>New Horizon</Name>
+      <Uuid>144476e7-5b6e-4f6c-bcd3-b0cbfd78067f</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Northern Resolution</Name>
+      <Uuid>ef8782f3-3fc0-4da2-945f-0be5c05eaed6</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ocean Explorer</Name>
+      <Uuid>915ae94f-b7cc-445a-aa65-1bc1ef9e3a8d</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ocean Starr</Name>
+      <Uuid>b350c99d-b305-45cd-86e2-ae4660655482</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Okeanos Explorer (EX)</Name>
+      <Uuid>66132cd0-6a9c-11e0-ae3e-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Oregon II (R2)</Name>
+      <Uuid>02d7c2c0-5ac1-11e4-8ed6-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Oscar Dyson (DY)</Name>
+      <Uuid>a24caa2a-1c39-41b9-ba7a-eede10ccc4f6</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Oscar Elton Sette (SE)</Name>
+      <Uuid>7150f90a-b04f-49bc-9b63-b232e6bdba1b</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Outer Limits</Name>
+      <Uuid>064cf16a-1502-4346-9b59-4d7e4eb5bd24</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Pacific Storm</Name>
+      <Uuid>722b6d30-d853-11e2-a28f-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Pisces (PC)</Name>
+      <Uuid>8ce0b2c0-19fa-11e1-bddb-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Point Sur</Name>
+      <Uuid>e12633e6-778b-43f2-92f0-35b4db0a7170</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Polar Stern</Name>
+      <Uuid>c5d4c7a4-b9ba-40de-8167-e683120f28f1</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Professor Khromov</Name>
+      <Uuid>b88ec950-6b4d-11e9-b475-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Professor Siedlecki</Name>
+      <Uuid>e458c00d-23c9-45c4-ab2a-7eae257936fd</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Reuben Lasker (RL)</Name>
+      <Uuid>12aa6b14-b49e-4e7e-8f36-5bfca5a4369b</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ridley Thomas</Name>
+      <Uuid>7ab071a4-73da-42eb-968b-f1c7139c37d1</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Riggs</Name>
+      <Uuid>d44c4a3d-5a72-48cb-9b81-27c902d5df2e</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Roger Revelle (RR)</Name>
+      <Uuid>c22b0610-ed58-11e1-aff1-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ronald H. Brown (RB)</Name>
+      <Uuid>062b8544-24f7-466a-b036-110a06e743a3</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Sally Ride (SR)</Name>
+      <Uuid>4ce4f37b-0b61-4d12-a6fa-c55e4f24656b</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Sea Scout</Name>
+      <Uuid>aa05556d-f6cf-4f99-8100-7cad173a1b91</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Sea Storm</Name>
+      <Uuid>0207e4ab-a35f-47e9-abb5-b30a69c48cb5</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Seward Johnson</Name>
+      <Uuid>1b919f80-7326-11e8-b567-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Seward Johnson II</Name>
+      <Uuid>0e4c37a0-1a3e-11e7-9598-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Sikuliaq (SKQ)</Name>
+      <Uuid>6b801b43-0548-4a8d-a960-867c07726ba8</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Southern Horizon</Name>
+      <Uuid>77dbe608-d478-4bc3-b461-5e20bfb107b0</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Surveyor (NOAA)</Name>
+      <Uuid>77553a10-dbbb-4d6e-bcc1-449c974a1250</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Thalassa</Name>
+      <Uuid>87f5cfcb-086a-4448-b5f0-3ee630702a7f</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Thomas G. Thompson</Name>
+      <Uuid>0595f190-8673-11e2-9e96-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Thomas Jefferson</Name>
+      <Uuid>9e3f6024-441a-4f59-991c-0360fed57d5a</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Unlisted Ship</Name>
+      <Uuid>9999</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Ventura II</Name>
+      <Uuid>02c844e2-6220-4486-9756-5f45cc8f4782</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Vesteraalen</Name>
+      <Uuid>a50e92c8-19e5-4e28-a4c2-eadc53ac1083</Uuid>
+    </Ship>
+    <Ship>
+      <Name>W.E. Ricker</Name>
+      <Uuid>6d883874-de1f-4a94-8ccf-5e9e1e39632b</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Weatherbird II</Name>
+      <Uuid>06608a40-b64e-11e1-afa6-0800200c9a66</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Yuzhmorgeologiya</Name>
+      <Uuid>6487ee42-def1-430f-958c-843a80abcb39</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Gerry Bordelon</Name>
+      <Uuid>2183361a-e802-4296-86b1-c501757ebb91</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Scott Petty</Name>
+      <Uuid>b2344277-1e8a-4dd3-a561-38a9a9c8978f</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Mantra</Name>
+      <Uuid>0b9bc680-4fe8-4f9e-b012-71304f1ef809</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Lake Itasca</Name>
+      <Uuid>580aaa4d-6e8d-4e53-b72c-f3c29b85b855</Uuid>
+    </Ship>
+    <Ship>
+      <Name>ASV BEN</Name>
+      <Uuid>None</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Saildrone Explorer</Name>
+      <Uuid>0e345747-60a6-4d98-957e-6c77c12c8eff</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Saildrone Voyager</Name>
+      <Uuid>87f3541b-4b13-4a3f-8c95-ed22f321f9a8</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Saildrone Surveyor</Name>
+      <Uuid>df021053-2c71-44e1-ac59-9bb1d88129cd</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Amy Gale</Name>
+      <Uuid>3dd829c5-7783-4075-a760-4f3aa3857482</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Echo</Name>
+      <Uuid>f55a5ae8-3866-4753-b780-46f535d417b3</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Lisa Marie</Name>
+      <Uuid>cdb66500-2cd9-4f62-9293-769df5f5c730</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Long Beach Carnage</Name>
+      <Uuid>5bfc3cc7-f6e7-4c00-a583-c87d34014928</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Professor Kaganovsky</Name>
+      <Uuid>6c3b39da-6d7f-4997-b754-969c09cf7fd8</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Pacific Legacy NO 1</Name>
+      <Uuid>d844511d-c2e4-4bd3-a084-9d564bccfc78</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Northwest Explorer</Name>
+      <Uuid>f53b3d91-ecae-4292-9105-d67e48d891bd</Uuid>
+    </Ship>
+    <Ship>
+      <Name>TINRO</Name>
+      <Uuid>97bcc9b2-5a49-4725-a716-ec70acd3c7c9</Uuid>
+    </Ship>
+    <Ship>
+      <Name>Sir John Franklin</Name>
+      <Uuid>4cee9022-3a87-4e9e-b37f-3f7a23828a92</Uuid>
+    </Ship>
+  </Ships>
+</ShipData>
