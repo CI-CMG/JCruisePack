@@ -13,11 +13,22 @@ public class ServiceProperties {
   @NotBlank
   private String workDir;
 
+  @NotBlank
+  private String lookAndFeel;
+
   public String getWorkDir() {
     return workDir;
   }
 
   public void setWorkDir(String workDir) {
     this.workDir = workDir;
+  }
+
+  public String getLookAndFeel() {
+    return lookAndFeel;
+  }
+
+  public void setLookAndFeel(String lookAndFeel) {
+    this.lookAndFeel = lookAndFeel;
   }
 }

@@ -75,7 +75,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
   private final DatePicker arrivalDateField = new DatePicker(configureDatePicker());
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
-  private final JTextField releaseDateField = new JTextField();
+  private final DatePicker releaseDateField = new DatePicker(configureDatePicker());
 
   @Autowired
   public PackagePanel(
