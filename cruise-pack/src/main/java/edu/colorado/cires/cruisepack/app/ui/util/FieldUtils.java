@@ -5,14 +5,19 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.beans.PropertyChangeEvent;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.function.Function;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 public final class FieldUtils {
 
   public static void updateTextField(JTextField textField, PropertyChangeEvent evt) {
+    updateTextField(textField, evt, e -> (String) e.getNewValue());
+  }
+
+  public static void updateTextField(JTextField textField, PropertyChangeEvent evt, Function<PropertyChangeEvent, String> transform) {
     String oldValue = textField.getText();
-    String newValue = (String) evt.getNewValue();
+    String newValue = transform.apply(evt);
     if (!Objects.equals(oldValue, newValue)) {
       textField.setText(newValue);
     }

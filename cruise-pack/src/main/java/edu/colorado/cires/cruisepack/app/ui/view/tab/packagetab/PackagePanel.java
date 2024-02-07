@@ -20,12 +20,15 @@ import jakarta.annotation.PostConstruct;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -73,10 +76,12 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final DatePicker arrivalDateField = new DatePicker(configureDatePicker());
   private final DatePicker releaseDateField = new DatePicker(configureDatePicker());
 
+  private final JTextField packageDirectoryField = new JTextField();
+  private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
+
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
   private final JComboBox<String> existingRecordList = new JComboBox<>(new String[]{"test", "real"});
-  private final JTextField filePathField = new JTextField();
-  private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
+
 
   @Autowired
   public PackagePanel(
@@ -124,6 +129,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     arrivalDateField.setDate(packageModel.getArrivalDate());
     releaseDateField.setDate(packageModel.getReleaseDate());
 
+
   }
 
   private void setupLayout() {
@@ -133,7 +139,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     add(new JLabel(CRUISE_ID_LABEL), configureLayout(0, 1)); add(new JLabel(SEGMENT_LABEL), configureLayout(1, 1)); add(new JLabel(EXISTING_RECORD_LABEL), configureLayout(2, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(cruiseIdField, configureLayout(0, 2)); add(segmentField, configureLayout(1, 2)); add(existingRecordList, configureLayout(2, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(DESTINATION_LABEL), configureLayout(0, 3, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(filePathField, configureLayout(0, 4, 2)); add(dirSelectButton, configureLayout(2, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(packageDirectoryField, configureLayout(0, 4, 2)); add(dirSelectButton, configureLayout(2, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(SHIP_LABEL), configureLayout(0, 5)); add(new JLabel(DEPARTURE_PORT_LABEL), configureLayout(1, 5)); add(new JLabel(DEPARTURE_DATE_LABEL), configureLayout(2, 5, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(shipList, configureLayout(0, 6)); add(departurePortList, configureLayout(1, 6)); add(departureDateField, configureLayout(2, 6, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_LABEL), configureLayout(1, 7)); add(new JLabel(ARRIVAL_DATE_LABEL), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
@@ -156,7 +162,22 @@ public class PackagePanel extends JPanel implements ReactiveView {
     departureDateField.addDateChangeListener((evt) -> packageController.setDepartureDate(evt.getNewDate()));
     arrivalDateField.addDateChangeListener((evt) -> packageController.setArrivalDate(evt.getNewDate()));
     releaseDateField.addDateChangeListener((evt) -> packageController.setReleaseDate(evt.getNewDate()));
+    dirSelectButton.addActionListener((evt) -> handleDirSelect());
+    packageDirectoryField.addActionListener((evt) -> handleDirValue(packageDirectoryField.getText()));
 
+  }
+
+  private void handleDirValue(String value) {
+    Path path = Paths.get(value);
+    packageController.setPackageDirectory(path.toAbsolutePath().normalize());
+  }
+
+  private void handleDirSelect() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+      packageController.setPackageDirectory(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+    }
   }
 
   @Override
@@ -188,6 +209,9 @@ public class PackagePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_RELEASE_DATE:
         updateDatePicker(releaseDateField, evt);
+        break;
+      case Events.UPDATE_PACKAGE_DIRECTORY:
+        updateTextField(packageDirectoryField, evt, e -> ((Path)e.getNewValue()).toAbsolutePath().normalize().toString());
         break;
       default:
         break;

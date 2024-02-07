@@ -11,7 +11,7 @@ public final class Events {
   public static final String UPDATE_DEPARTURE_DATE = "UPDATE_DEPARTURE_DATE";
   public static final String UPDATE_ARRIVAL_DATE = "UPDATE_ARRIVAL_DATE";
   public static final String UPDATE_RELEASE_DATE = "UPDATE_RELEASE_DATE";
-
+  public static final String UPDATE_PACKAGE_DIRECTORY = "UPDATE_PACKAGE_DIRECTORY";
 
   private Events() {
 

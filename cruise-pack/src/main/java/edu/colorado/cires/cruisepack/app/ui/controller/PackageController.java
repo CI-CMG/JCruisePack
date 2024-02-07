@@ -6,6 +6,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -59,12 +61,17 @@ public class PackageController implements PropertyChangeListener {
     packageModel.setReleaseDate(releaseDate);
   }
 
+  public void setPackageDirectory(Path packageDirectory) {
+    packageModel.setPackageDirectory(packageDirectory);
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     for (ReactiveView view : reactiveViewRegistry.getViews()) {
       view.onChange(evt);
     }
   }
+
 
 
 }

@@ -5,6 +5,8 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.io.File;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,7 @@ public class PackageModel extends PropertyChangeModel {
   private LocalDate departureDate = null;
   private LocalDate arrivalDate = null;
   private LocalDate releaseDate = null;
+  private Path packageDirectory = null;
 
   public String getCruiseId() {
     return cruiseId;
@@ -127,6 +130,18 @@ public class PackageModel extends PropertyChangeModel {
     if (!Objects.equals(releaseDate, oldReleaseDate)) {
       this.releaseDate = releaseDate;
       fireChangeEvent(Events.UPDATE_RELEASE_DATE, oldReleaseDate, releaseDate);
+    }
+  }
+
+  public Path getPackageDirectory() {
+    return packageDirectory;
+  }
+
+  public void setPackageDirectory(Path packageDirectory) {
+    Path oldPackageDirectory = this.packageDirectory;
+    if (!Objects.equals(packageDirectory, oldPackageDirectory)) {
+      this.packageDirectory = packageDirectory;
+      fireChangeEvent(Events.UPDATE_PACKAGE_DIRECTORY, oldPackageDirectory, packageDirectory);
     }
   }
 }
