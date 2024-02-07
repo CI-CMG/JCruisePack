@@ -34,6 +34,14 @@ public class PackageController implements PropertyChangeListener {
     packageModel.setSea(seaDd);
   }
 
+  public void setArrivalPort(DropDownItem arrivalPort) {
+    packageModel.setArrivalPort(arrivalPort);
+  }
+
+  public void setDeparturePort(DropDownItem departurePort) {
+    packageModel.setDeparturePort(departurePort);
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     for (ReactiveView view : reactiveViewRegistry.getViews()) {

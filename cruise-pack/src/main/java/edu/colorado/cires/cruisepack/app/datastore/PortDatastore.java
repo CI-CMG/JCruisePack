@@ -13,13 +13,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PortDatastore {
+
+  public static final DropDownItem UNSELECTED_PORT = new DropDownItem("", "Select Port");
+
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> portDropDowns;
@@ -43,11 +46,13 @@ public class PortDatastore {
     } catch (IOException | JAXBException e) {
       throw new IllegalStateException("Unable to parse " + portFile, e);
     }
-    portDropDowns = portData.getPorts().getPorts().stream()
+    portDropDowns = new ArrayList<>(portData.getPorts().getPorts().size() + 1);
+    portDropDowns.add(UNSELECTED_PORT);
+    portData.getPorts().getPorts().stream()
         .filter(Port::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))
-        .collect(Collectors.toList());
+        .forEach(portDropDowns::add);
   }
 
   public List<DropDownItem> getPortDropDowns() {

@@ -107,16 +107,18 @@ public class PackagePanel extends JPanel implements ReactiveView {
     cruiseIdField.setText(packageModel.getCruiseId());
 
     shipList.setModel(new DefaultComboBoxModel<>(shipDatastore.getShipDropDowns().toArray(new DropDownItem[0])));
+
     departurePortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
+    departurePortList.setSelectedItem(packageModel.getDeparturePort());
+
     arrivalPortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
+    arrivalPortList.setSelectedItem(packageModel.getArrivalPort());
 
     seaList.setModel(new DefaultComboBoxModel<>(seaDatastore.getSeaDropDowns().toArray(new DropDownItem[0])));
     seaList.setSelectedItem(packageModel.getSea());
 
     // TODO set this in model
     shipList.setSelectedIndex(0);
-    departurePortList.setSelectedIndex(0);
-    arrivalPortList.setSelectedIndex(0);
   }
 
   private void setupLayout() {
@@ -142,6 +144,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
     reactiveViewRegistry.register(this);
     cruiseIdField.addActionListener((evt) -> packageController.setCruiseId(cruiseIdField.getText()));
     seaList.addItemListener((evt) -> packageController.setSea((DropDownItem) evt.getItem()));
+    arrivalPortList.addItemListener((evt) -> packageController.setArrivalPort((DropDownItem) evt.getItem()));
+    departurePortList.addItemListener((evt) -> packageController.setDeparturePort((DropDownItem) evt.getItem()));
   }
 
   @Override
@@ -152,6 +156,13 @@ public class PackagePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_SEA:
         updateComboBox(seaList, evt);
+        break;
+      case Events.UPDATE_ARRIVAL_PORT:
+        updateComboBox(arrivalPortList, evt);
+        break;
+      case Events.UPDATE_DEPARTURE_PORT:
+        updateComboBox(departurePortList, evt);
+        break;
       default:
         break;
     }
