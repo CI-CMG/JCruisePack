@@ -19,9 +19,10 @@ public final class LayoutUtils {
 
   public static GridBagConstraints configureLayout(int x, int y, Integer width, Consumer<GridBagConstraints> customizer) {
     GridBagConstraints gridBagConstraints = new GridBagConstraints();
-    gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+    gridBagConstraints.fill = GridBagConstraints.BOTH;
     gridBagConstraints.gridx = x;
     gridBagConstraints.gridy = y;
+    gridBagConstraints.weightx = 1.0;
     if (width != null) {
       gridBagConstraints.gridwidth = width;
     }

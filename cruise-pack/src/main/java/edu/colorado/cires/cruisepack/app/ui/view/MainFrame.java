@@ -11,7 +11,7 @@ public class MainFrame extends JFrame {
 
   private static final String TITLE = "CruisePack";
   private static final int MIN_WIDTH = 800;
-  private static final int MAX_WIDTH = 800;
+  private static final int MIN_HEIGHT = 800;
 
   private final RootPanel rootPanel;
 
@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
   @PostConstruct
   public void init() {
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setMinimumSize(new Dimension(MIN_WIDTH, MAX_WIDTH));
+    setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
     setTitle(TITLE);
     add(rootPanel);
     pack();

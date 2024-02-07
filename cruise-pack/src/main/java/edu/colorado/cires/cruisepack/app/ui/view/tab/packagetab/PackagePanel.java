@@ -14,6 +14,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import javax.swing.DefaultComboBoxModel;
@@ -22,6 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -109,19 +111,19 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private void setupLayout() {
     setLayout(new GridBagLayout());
     // @formatter:off
-    add(new JLabel(CRUISE_ID_LABEL), configureLayout(0, 0)); add(new JLabel(SEGMENT_LABEL), configureLayout(1, 0)); add(new JLabel(EXISTING_RECORD_LABEL), configureLayout(2, 0));
-    add(cruiseIdField, configureLayout(0, 1)); add(segmentField, configureLayout(1, 1)); add(existingRecordList, configureLayout(2, 1));
-    add(new JLabel(EXISTING_RECORD_DESCRIPTION_LABEL), configureLayout(0, 2, 3));
-    add(new JLabel(DESTINATION_LABEL), configureLayout(0, 3, 3));
-    add(filePathField, configureLayout(0, 4, 2)); add(dirSelectButton, configureLayout(2, 4));
-    add(new JLabel(SHIP_LABEL), configureLayout(0, 5)); add(new JLabel(DEPARTURE_PORT_DATE_LABEL), configureLayout(1, 5, 2));
-    add(shipList, configureLayout(0, 6)); add(departurePortList, configureLayout(1, 6)); add(departureDateField, configureLayout(2, 6));
-    add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_DATE_LABEL), configureLayout(1, 7, 2));
-    add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8));
-    add(new JLabel(PROJECTS_LABEL), configureLayout(0, 9, 3));
-    add(projectChooserPanel, configureLayout(0, 10, 3, c -> c.ipady = 120));
-    add(newProjectButton, configureLayout(0, 11, 3));
-    add(new JLabel(RELEASE_DATE_LABEL), configureLayout(0, 12, 2)); add(releaseDateField, configureLayout(2, 12));
+    add(new JLabel(EXISTING_RECORD_DESCRIPTION_LABEL, null, SwingConstants.CENTER), configureLayout(0, 0, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.ipady = 20;}));
+    add(new JLabel(CRUISE_ID_LABEL), configureLayout(0, 1)); add(new JLabel(SEGMENT_LABEL), configureLayout(1, 1)); add(new JLabel(EXISTING_RECORD_LABEL), configureLayout(2, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(cruiseIdField, configureLayout(0, 2)); add(segmentField, configureLayout(1, 2)); add(existingRecordList, configureLayout(2, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(DESTINATION_LABEL), configureLayout(0, 3, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(filePathField, configureLayout(0, 4, 2)); add(dirSelectButton, configureLayout(2, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(SHIP_LABEL), configureLayout(0, 5)); add(new JLabel(DEPARTURE_PORT_DATE_LABEL), configureLayout(1, 5, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(shipList, configureLayout(0, 6)); add(departurePortList, configureLayout(1, 6)); add(departureDateField, configureLayout(2, 6, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_DATE_LABEL), configureLayout(1, 7, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(PROJECTS_LABEL), configureLayout(0, 9, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(projectChooserPanel, configureLayout(0, 10, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.weighty = 1.0;}));
+    add(newProjectButton, configureLayout(0, 11, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(RELEASE_DATE_LABEL, null, SwingConstants.TRAILING), configureLayout(0, 12, 2)); add(releaseDateField, configureLayout(2, 12, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     // @formatter:on
   }
 
