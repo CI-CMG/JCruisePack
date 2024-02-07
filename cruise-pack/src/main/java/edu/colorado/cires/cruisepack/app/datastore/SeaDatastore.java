@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeaDatastore {
+
+  public static final DropDownItem UNSELECTED_SEA = new DropDownItem("", "Select Sea Name");
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> seaDropDowns;
@@ -43,11 +46,13 @@ public class SeaDatastore {
     } catch (IOException | JAXBException e) {
       throw new IllegalStateException("Unable to parse " + seaFile, e);
     }
-    seaDropDowns = seaData.getSeas().getSeas().stream()
+    seaDropDowns = new ArrayList<>(seaData.getSeas().getSeas().size() + 1);
+    seaDropDowns.add(UNSELECTED_SEA);
+    seaData.getSeas().getSeas().stream()
         .filter(Sea::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))
-        .collect(Collectors.toList());
+        .forEach(seaDropDowns::add);
   }
 
   public List<DropDownItem> getSeaDropDowns() {
