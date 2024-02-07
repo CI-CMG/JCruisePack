@@ -4,6 +4,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBo
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
@@ -17,6 +19,10 @@ import jakarta.annotation.PostConstruct;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -30,6 +36,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class PackagePanel extends JPanel implements ReactiveView {
 
+
+  private static final String DATE_FORMAT = "yyyy-MM-dd";
+
   private static final String CRUISE_ID_LABEL = "Cruise ID";
   private static final String SEGMENT_LABEL = "Segment or Leg";
   private static final String EXISTING_RECORD_LABEL = "Load Existing Record";
@@ -38,8 +47,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private static final String SELECT_DIR_LABEL = "Select Directory";
   private static final String SHIP_LABEL = "Ship";
   private static final String SEA_LABEL = "IHO Sea Area";
-  private static final String DEPARTURE_PORT_DATE_LABEL = "Departure Port and Date";
-  private static final String ARRIVAL_PORT_DATE_LABEL = "Arrival Port and Date";
+  private static final String DEPARTURE_PORT_LABEL = "Departure Port";
+  private static final String DEPARTURE_DATE_LABEL = "Departure Date (YYYY-MM-DD)";
+  private static final String ARRIVAL_PORT_LABEL = "Arrival Port";
+  private static final String ARRIVAL_DATE_LABEL = "Arrival Date (YYYY-MM-DD)";
   private static final String PROJECTS_LABEL = "Projects";
   private static final String ADDITIONAL_PROJECTS_LABEL = "Add Additional Project Menu";
   private static final String RELEASE_DATE_LABEL = "Default Public Release Date";
@@ -59,10 +70,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
   private final JComboBox<DropDownItem> shipList = new JComboBox<>();
   private final JComboBox<DropDownItem> departurePortList = new JComboBox<>();
-  private final JTextField departureDateField = new JTextField();
+  private final DatePicker departureDateField = new DatePicker(configureDatePicker());
   private final JComboBox<DropDownItem> seaList = new JComboBox<>();
   private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
-  private final JTextField arrivalDateField = new JTextField();
+  private final DatePicker arrivalDateField = new DatePicker(configureDatePicker());
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
   private final JTextField releaseDateField = new JTextField();
 
@@ -116,9 +127,9 @@ public class PackagePanel extends JPanel implements ReactiveView {
     add(cruiseIdField, configureLayout(0, 2)); add(segmentField, configureLayout(1, 2)); add(existingRecordList, configureLayout(2, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(DESTINATION_LABEL), configureLayout(0, 3, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(filePathField, configureLayout(0, 4, 2)); add(dirSelectButton, configureLayout(2, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(SHIP_LABEL), configureLayout(0, 5)); add(new JLabel(DEPARTURE_PORT_DATE_LABEL), configureLayout(1, 5, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(SHIP_LABEL), configureLayout(0, 5)); add(new JLabel(DEPARTURE_PORT_LABEL), configureLayout(1, 5)); add(new JLabel(DEPARTURE_DATE_LABEL), configureLayout(2, 5, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(shipList, configureLayout(0, 6)); add(departurePortList, configureLayout(1, 6)); add(departureDateField, configureLayout(2, 6, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_DATE_LABEL), configureLayout(1, 7, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_LABEL), configureLayout(1, 7)); add(new JLabel(ARRIVAL_DATE_LABEL), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(PROJECTS_LABEL), configureLayout(0, 9, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(projectChooserPanel, configureLayout(0, 10, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.weighty = 1.0;}));
@@ -144,5 +155,12 @@ public class PackagePanel extends JPanel implements ReactiveView {
       default:
         break;
     }
+  }
+
+  private static DatePickerSettings configureDatePicker() {
+    DatePickerSettings datePickerSettings = new DatePickerSettings();
+    datePickerSettings.setFormatForDatesCommonEra(DATE_FORMAT);
+    datePickerSettings.setFormatsForParsing(new ArrayList<>(List.of(DateTimeFormatter.ofPattern(DATE_FORMAT))));
+    return datePickerSettings;
   }
 }

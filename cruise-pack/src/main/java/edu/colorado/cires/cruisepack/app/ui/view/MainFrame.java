@@ -11,7 +11,7 @@ public class MainFrame extends JFrame {
 
   private static final String TITLE = "CruisePack";
   private static final int MIN_WIDTH = 800;
-  private static final int MIN_HEIGHT = 800;
+  private static final int MIN_HEIGHT = 600;
 
   private final RootPanel rootPanel;
 
