@@ -6,6 +6,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,10 +43,28 @@ public class PackageController implements PropertyChangeListener {
     packageModel.setDeparturePort(departurePort);
   }
 
+  public void setSegment(String segment) {
+    packageModel.setSegment(segment);
+  }
+
+  public void setDepartureDate(LocalDate departureDate) {
+    packageModel.setDepartureDate(departureDate);
+  }
+
+  public void setArrivalDate(LocalDate arrivalDate) {
+    packageModel.setArrivalDate(arrivalDate);
+  }
+
+  public void setReleaseDate(LocalDate releaseDate) {
+    packageModel.setReleaseDate(releaseDate);
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     for (ReactiveView view : reactiveViewRegistry.getViews()) {
       view.onChange(evt);
     }
   }
+
+
 }

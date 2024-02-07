@@ -2,8 +2,10 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.time.LocalDate;
 import java.util.Objects;
 import org.springframework.stereotype.Component;
 
@@ -11,9 +13,14 @@ import org.springframework.stereotype.Component;
 public class PackageModel extends PropertyChangeModel {
 
   private String cruiseId = "";
+  private String segment = "";
   private DropDownItem sea = SeaDatastore.UNSELECTED_SEA;
   private DropDownItem arrivalPort = PortDatastore.UNSELECTED_PORT;
   private DropDownItem departurePort = PortDatastore.UNSELECTED_PORT;
+  private DropDownItem ship = ShipDatastore.UNSELECTED_SHIP;
+  private LocalDate departureDate = null;
+  private LocalDate arrivalDate = null;
+  private LocalDate releaseDate = null;
 
   public String getCruiseId() {
     return cruiseId;
@@ -60,6 +67,66 @@ public class PackageModel extends PropertyChangeModel {
     if (!Objects.equals(sea, oldSea)) {
       this.sea = sea;
       fireChangeEvent(Events.UPDATE_SEA, oldSea, sea);
+    }
+  }
+
+  public DropDownItem getShip() {
+    return ship;
+  }
+
+  public void setShip(DropDownItem ship) {
+    DropDownItem oldShip = this.ship;
+    if (!Objects.equals(ship, oldShip)) {
+      this.ship = ship;
+      fireChangeEvent(Events.UPDATE_SHIP, oldShip, ship);
+    }
+  }
+
+  public String getSegment() {
+    return segment;
+  }
+
+  public void setSegment(String segment) {
+    String oldSegment = this.segment;
+    if (!Objects.equals(segment, oldSegment)) {
+      this.segment = segment;
+      fireChangeEvent(Events.UPDATE_SEGMENT, oldSegment, segment);
+    }
+  }
+
+  public LocalDate getDepartureDate() {
+    return departureDate;
+  }
+
+  public void setDepartureDate(LocalDate departureDate) {
+    LocalDate oldDepartureDate = this.departureDate;
+    if (!Objects.equals(departureDate, oldDepartureDate)) {
+      this.departureDate = departureDate;
+      fireChangeEvent(Events.UPDATE_DEPARTURE_DATE, oldDepartureDate, departureDate);
+    }
+  }
+
+  public LocalDate getArrivalDate() {
+    return arrivalDate;
+  }
+
+  public void setArrivalDate(LocalDate arrivalDate) {
+    LocalDate oldArrivalDate = this.arrivalDate;
+    if (!Objects.equals(arrivalDate, oldArrivalDate)) {
+      this.arrivalDate = arrivalDate;
+      fireChangeEvent(Events.UPDATE_ARRIVAL_DATE, oldArrivalDate, arrivalDate);
+    }
+  }
+
+  public LocalDate getReleaseDate() {
+    return releaseDate;
+  }
+
+  public void setReleaseDate(LocalDate releaseDate) {
+    LocalDate oldReleaseDate = this.releaseDate;
+    if (!Objects.equals(releaseDate, oldReleaseDate)) {
+      this.releaseDate = releaseDate;
+      fireChangeEvent(Events.UPDATE_RELEASE_DATE, oldReleaseDate, releaseDate);
     }
   }
 }

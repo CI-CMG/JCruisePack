@@ -1,7 +1,9 @@
 package edu.colorado.cires.cruisepack.app.ui.util;
 
+import com.github.lgooddatepicker.components.DatePicker;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.beans.PropertyChangeEvent;
+import java.time.LocalDate;
 import java.util.Objects;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -13,6 +15,14 @@ public final class FieldUtils {
     String newValue = (String) evt.getNewValue();
     if (!Objects.equals(oldValue, newValue)) {
       textField.setText(newValue);
+    }
+  }
+
+  public static void updateDatePicker(DatePicker datePicker, PropertyChangeEvent evt) {
+    LocalDate oldValue = datePicker.getDate();
+    LocalDate newValue = (LocalDate) evt.getNewValue();
+    if (!Objects.equals(oldValue, newValue)) {
+      datePicker.setDate(newValue);
     }
   }
 

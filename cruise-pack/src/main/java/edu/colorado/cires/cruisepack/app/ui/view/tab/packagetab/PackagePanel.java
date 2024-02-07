@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -21,7 +22,6 @@ import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -65,17 +65,18 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private final JTextField cruiseIdField = new JTextField();
   private final JTextField segmentField = new JTextField();
+  private final JComboBox<DropDownItem> shipList = new JComboBox<>();
+  private final JComboBox<DropDownItem> departurePortList = new JComboBox<>();
+  private final JComboBox<DropDownItem> seaList = new JComboBox<>();
+  private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
+  private final DatePicker departureDateField = new DatePicker(configureDatePicker());
+  private final DatePicker arrivalDateField = new DatePicker(configureDatePicker());
+  private final DatePicker releaseDateField = new DatePicker(configureDatePicker());
+
+  private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
   private final JComboBox<String> existingRecordList = new JComboBox<>(new String[]{"test", "real"});
   private final JTextField filePathField = new JTextField();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
-  private final JComboBox<DropDownItem> shipList = new JComboBox<>();
-  private final JComboBox<DropDownItem> departurePortList = new JComboBox<>();
-  private final DatePicker departureDateField = new DatePicker(configureDatePicker());
-  private final JComboBox<DropDownItem> seaList = new JComboBox<>();
-  private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
-  private final DatePicker arrivalDateField = new DatePicker(configureDatePicker());
-  private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
-  private final DatePicker releaseDateField = new DatePicker(configureDatePicker());
 
   @Autowired
   public PackagePanel(
@@ -105,8 +106,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private void initializeFields() {
     cruiseIdField.setText(packageModel.getCruiseId());
+    segmentField.setText(packageModel.getSegment());
 
     shipList.setModel(new DefaultComboBoxModel<>(shipDatastore.getShipDropDowns().toArray(new DropDownItem[0])));
+    shipList.setSelectedItem(packageModel.getShip());
 
     departurePortList.setModel(new DefaultComboBoxModel<>(portDatastore.getPortDropDowns().toArray(new DropDownItem[0])));
     departurePortList.setSelectedItem(packageModel.getDeparturePort());
@@ -117,8 +120,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
     seaList.setModel(new DefaultComboBoxModel<>(seaDatastore.getSeaDropDowns().toArray(new DropDownItem[0])));
     seaList.setSelectedItem(packageModel.getSea());
 
-    // TODO set this in model
-    shipList.setSelectedIndex(0);
+    departureDateField.setDate(packageModel.getDepartureDate());
+    arrivalDateField.setDate(packageModel.getArrivalDate());
+    releaseDateField.setDate(packageModel.getReleaseDate());
+
   }
 
   private void setupLayout() {
@@ -142,10 +147,16 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private void setupMvc() {
     reactiveViewRegistry.register(this);
+
     cruiseIdField.addActionListener((evt) -> packageController.setCruiseId(cruiseIdField.getText()));
+    segmentField.addActionListener((evt) -> packageController.setSegment(segmentField.getText()));
     seaList.addItemListener((evt) -> packageController.setSea((DropDownItem) evt.getItem()));
     arrivalPortList.addItemListener((evt) -> packageController.setArrivalPort((DropDownItem) evt.getItem()));
     departurePortList.addItemListener((evt) -> packageController.setDeparturePort((DropDownItem) evt.getItem()));
+    departureDateField.addDateChangeListener((evt) -> packageController.setDepartureDate(evt.getNewDate()));
+    arrivalDateField.addDateChangeListener((evt) -> packageController.setArrivalDate(evt.getNewDate()));
+    releaseDateField.addDateChangeListener((evt) -> packageController.setReleaseDate(evt.getNewDate()));
+
   }
 
   @Override
@@ -153,6 +164,9 @@ public class PackagePanel extends JPanel implements ReactiveView {
     switch (evt.getPropertyName()) {
       case Events.UPDATE_CRUISE_ID:
         updateTextField(cruiseIdField, evt);
+        break;
+      case Events.UPDATE_SEGMENT:
+        updateTextField(segmentField, evt);
         break;
       case Events.UPDATE_SEA:
         updateComboBox(seaList, evt);
@@ -162,6 +176,18 @@ public class PackagePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_DEPARTURE_PORT:
         updateComboBox(departurePortList, evt);
+        break;
+      case Events.UPDATE_SHIP:
+        updateComboBox(shipList, evt);
+        break;
+      case Events.UPDATE_ARRIVAL_DATE:
+        updateDatePicker(arrivalDateField, evt);
+        break;
+      case Events.UPDATE_DEPARTURE_DATE:
+        updateDatePicker(departureDateField, evt);
+        break;
+      case Events.UPDATE_RELEASE_DATE:
+        updateDatePicker(releaseDateField, evt);
         break;
       default:
         break;
