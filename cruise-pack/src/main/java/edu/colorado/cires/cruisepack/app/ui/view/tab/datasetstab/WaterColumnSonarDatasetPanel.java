@@ -4,7 +4,7 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Water Column Sonar Data";
 
-  public WaterColumnSonarDatasetPanel() {
-    super(DATA_TYPE);
+  public WaterColumnSonarDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }

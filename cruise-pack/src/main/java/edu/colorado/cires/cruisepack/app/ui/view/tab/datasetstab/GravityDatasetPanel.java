@@ -4,7 +4,7 @@ public class GravityDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Gravity";
 
-  public GravityDatasetPanel() {
-    super(DATA_TYPE);
+  public GravityDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }

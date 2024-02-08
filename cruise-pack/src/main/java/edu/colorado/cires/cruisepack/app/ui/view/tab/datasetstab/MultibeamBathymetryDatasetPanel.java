@@ -4,7 +4,7 @@ public class MultibeamBathymetryDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Multibeam Bathymetry";
 
-  public MultibeamBathymetryDatasetPanel() {
-    super(DATA_TYPE);
+  public MultibeamBathymetryDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }

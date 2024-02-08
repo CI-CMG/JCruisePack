@@ -4,7 +4,7 @@ public class OtherDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Other";
 
-  public OtherDatasetPanel() {
-    super(DATA_TYPE);
+  public OtherDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }

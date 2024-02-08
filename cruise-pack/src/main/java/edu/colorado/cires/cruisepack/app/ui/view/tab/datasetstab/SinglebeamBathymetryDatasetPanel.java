@@ -4,7 +4,7 @@ public class SinglebeamBathymetryDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Singlebeam Bathymetry";
 
-  public SinglebeamBathymetryDatasetPanel() {
-    super(DATA_TYPE);
+  public SinglebeamBathymetryDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }

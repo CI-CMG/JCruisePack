@@ -4,7 +4,7 @@ public class NavigationDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Navigation";
 
-  public NavigationDatasetPanel() {
-    super(DATA_TYPE);
+  public NavigationDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }

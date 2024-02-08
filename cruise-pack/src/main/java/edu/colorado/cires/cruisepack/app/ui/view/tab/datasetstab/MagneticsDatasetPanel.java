@@ -4,7 +4,7 @@ public class MagneticsDatasetPanel extends DatasetPanel {
 
   private static final String DATA_TYPE = "Magnetics";
 
-  public MagneticsDatasetPanel() {
-    super(DATA_TYPE);
+  public MagneticsDatasetPanel(DatasetConfigurationPanel parent) {
+    super(DATA_TYPE, parent);
   }
 }
