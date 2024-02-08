@@ -22,9 +22,9 @@ public class ProjectChooserPanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final UiRefresher uiRefresher;
 
-  private List<ProjectRow> rows = new ArrayList<>();
+  private final List<ProjectRow> rows = new ArrayList<>();
 
-  private JPanel fluff = new JPanel();
+  private final JPanel fluff = new JPanel();
 
   @Autowired
   public ProjectChooserPanel(ReactiveViewRegistry reactiveViewRegistry, UiRefresher uiRefresher) {
