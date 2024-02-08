@@ -31,6 +31,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,7 +146,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_LABEL), configureLayout(1, 7)); add(new JLabel(ARRIVAL_DATE_LABEL), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(PROJECTS_LABEL), configureLayout(0, 9, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(projectChooserPanel, configureLayout(0, 10, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.weighty = 1.0;}));
+    add(new JScrollPane(projectChooserPanel), configureLayout(0, 10, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.weighty = 1.0;}));
     add(newProjectButton, configureLayout(0, 11, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(RELEASE_DATE_LABEL, null, SwingConstants.TRAILING), configureLayout(0, 12, 2)); add(releaseDateField, configureLayout(2, 12, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     // @formatter:on

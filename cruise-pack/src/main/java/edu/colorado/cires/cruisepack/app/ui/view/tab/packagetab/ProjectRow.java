@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
+import java.awt.Color;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,6 +31,8 @@ public class ProjectRow extends JPanel {
 
   private void setupLayout() {
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+    setBackground(Color.WHITE);
+    setBorder(BorderFactory.createEtchedBorder());
     add(removeButton);
     add(projectsList);
   }

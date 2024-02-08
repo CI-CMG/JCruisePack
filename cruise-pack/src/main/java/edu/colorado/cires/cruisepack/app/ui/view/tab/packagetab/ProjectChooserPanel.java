@@ -1,12 +1,17 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
+
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import jakarta.annotation.PostConstruct;
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
-import javax.swing.BoxLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +21,10 @@ public class ProjectChooserPanel extends JPanel implements ReactiveView {
 
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final UiRefresher uiRefresher;
+
+  private List<ProjectRow> rows = new ArrayList<>();
+
+  private JPanel fluff = new JPanel();
 
   @Autowired
   public ProjectChooserPanel(ReactiveViewRegistry reactiveViewRegistry, UiRefresher uiRefresher) {
@@ -34,9 +43,22 @@ public class ProjectChooserPanel extends JPanel implements ReactiveView {
 
   }
 
+  private void addFluff() {
+    add(fluff, configureLayout(0, rows.size(), c -> {
+      c.fill = GridBagConstraints.BOTH;
+      c.weighty = 1;
+      c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+  }
+
   private void setupLayout() {
-    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    fluff.setBackground(Color.WHITE);
+
+    setLayout(new GridBagLayout());
     setBackground(Color.WHITE);
+
+    addFluff();
+
   }
 
   private void setupMvc() {
@@ -51,12 +73,20 @@ public class ProjectChooserPanel extends JPanel implements ReactiveView {
   public void addRow() {
     ProjectRow row = new ProjectRow(this);
     row.init();
-    add(row);
+    remove(fluff);
+    add(row, configureLayout(0, rows.size(), c -> {
+      c.fill = GridBagConstraints.HORIZONTAL;
+      c.weighty = 0;
+      c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    rows.add(row);
+    addFluff();
     uiRefresher.refresh();
   }
 
   public void removeRow(ProjectRow row) {
     remove(row);
+    rows.remove(row);
     uiRefresher.refresh();
   }
 }
