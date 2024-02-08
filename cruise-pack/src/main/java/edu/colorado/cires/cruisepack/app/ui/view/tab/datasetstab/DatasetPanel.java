@@ -1,26 +1,38 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public abstract class DatasetPanel extends JPanel {
 
+  private final DatasetPanelHeader header;
 
-  private final String dataType;
-  private final DatasetConfigurationPanel parent;
-  private final DatasetContentPanel content = new DatasetContentPanel();
-
-  protected DatasetPanel(String dataType, DatasetConfigurationPanel parent) {
-    this.dataType = dataType;
-    this.parent = parent;
+  protected DatasetPanel(DropDownItem dataType) {
+    header = new DatasetPanelHeader(dataType.getValue());
   }
 
   public void init() {
+    initializeFields();
+    setupLayout();
+    setupMvc();
+  }
+
+  private void initializeFields() {
+    header.init();
+  }
+
+  private void setupLayout() {
     setLayout(new BorderLayout());
     setBackground(Color.WHITE);
     setBorder(BorderFactory.createEtchedBorder());
-    add(content, BorderLayout.NORTH);
+    add(header, BorderLayout.NORTH);
+  }
+
+  private void setupMvc() {
+
   }
 }
