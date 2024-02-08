@@ -22,11 +22,10 @@ public class ProjectRow extends JPanel {
     initializeFields();
     setupLayout();
     setupMvc();
-
   }
 
   private void initializeFields() {
-
+    projectsList.setEditable(true);
   }
 
   private void setupLayout() {
