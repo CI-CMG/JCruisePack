@@ -20,7 +20,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -79,7 +78,18 @@ public class OmicsPanel extends JPanel {
     JButton selectFileButton = new JButton("...");
     selectFileButton.addActionListener(e -> {
       JDialog dialog = new JDialog();
-      dialog.add(new JFileChooser());
+      
+      JFileChooser chooser = new JFileChooser();
+      chooser.addActionListener(a -> {
+        if (a.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
+          dialog.setVisible(false);
+          dialog.dispose();
+        } else if (a.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
+          System.out.println(chooser.getSelectedFile().getAbsolutePath());
+        }
+      });
+      dialog.add(chooser);
+
       dialog.pack();
       dialog.setVisible(true);
     });
