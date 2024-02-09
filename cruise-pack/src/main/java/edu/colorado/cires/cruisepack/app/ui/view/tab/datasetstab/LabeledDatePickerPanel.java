@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.app.ui.view.tab;
+package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 

@@ -2,7 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.wcsd;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
-import edu.colorado.cires.cruisepack.app.ui.view.tab.LabeledDatePickerPanel;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.LabeledDatePickerPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.LabeledComboBoxPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.LabeledFilePathPanel;
