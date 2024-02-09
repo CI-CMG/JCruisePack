@@ -9,16 +9,20 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-public class InstrumentComboBoxPanel extends JPanel {
+public class LabeledComboBoxPanel extends JPanel {
 
   private static final String INSTRUMENT_LABEL = "Instrument";
 
   private final JComboBox<DropDownItem> instrumentField = new JComboBox<>();
 
-  public InstrumentComboBoxPanel() {
+  public LabeledComboBoxPanel() {
+    this(INSTRUMENT_LABEL);
+  }
+
+  public LabeledComboBoxPanel(String title) {
     setLayout(new GridBagLayout());
     setBackground(Color.WHITE);
-    setBorder(BorderFactory.createTitledBorder(INSTRUMENT_LABEL));
+    setBorder(BorderFactory.createTitledBorder(title));
     add(instrumentField, configureLayout(0, 0));
   }
 }

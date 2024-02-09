@@ -13,9 +13,13 @@ public class CommentsTextAreaPanel extends JPanel {
   private final JTextArea commentsField = new JTextArea();
 
   public CommentsTextAreaPanel() {
+    this(COMMENTS_LABEL);
+  }
+
+  public CommentsTextAreaPanel(String title) {
     setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     setBackground(Color.WHITE);
-    setBorder(BorderFactory.createTitledBorder(COMMENTS_LABEL));
+    setBorder(BorderFactory.createTitledBorder(title));
     add(commentsField);
   }
 }

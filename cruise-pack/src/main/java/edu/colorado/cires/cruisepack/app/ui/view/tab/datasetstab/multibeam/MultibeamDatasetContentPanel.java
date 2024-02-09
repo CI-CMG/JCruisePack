@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.multibeam;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentComboBoxPanel;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.LabeledComboBoxPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevelRadioPanel;
 import java.awt.Color;
 import java.awt.GridBagLayout;
@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 class MultibeamDatasetContentPanel extends JPanel {
 
-  private final InstrumentComboBoxPanel instrumentPanel = new InstrumentComboBoxPanel();
+  private final LabeledComboBoxPanel instrumentPanel = new LabeledComboBoxPanel();
   private final ProcessingLevelRadioPanel buttonPanel = new ProcessingLevelRadioPanel();
   private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel();
 
