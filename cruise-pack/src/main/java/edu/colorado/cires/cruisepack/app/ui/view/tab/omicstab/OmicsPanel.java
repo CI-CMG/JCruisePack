@@ -7,6 +7,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,7 +16,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.PeopleList;
 
@@ -41,39 +43,82 @@ public class OmicsPanel extends JPanel {
 
   @PostConstruct
   public void init() {
-    setLayout(new BorderLayout(5, 5));
+    setLayout(new GridBagLayout());
 
     JPanel panel = new JPanel();
     panel.setLayout(new GridBagLayout());
-    panel.add(new JLabel("Omics sampling conducted?"), configureLayout(0, 0));
-    panel.add(new JRadioButton("Yes"), configureLayout(1, 0));
-    panel.add(new JRadioButton("No"), configureLayout(2, 0));
-    panel.add(new JComboBox<>(peopleList.getPeopleList()), configureLayout(3, 0));
+    JPanel omicsPersonPanel = new JPanel();
+    omicsPersonPanel.setLayout(new GridBagLayout());
+    omicsPersonPanel.add(new StatefulRadioButton("Omics sampling conducted?"), configureLayout(0, 0, c -> {
+      c.weightx = 0;
+      c.insets = new Insets(0, 0, 0, 100);
+    }));
+    omicsPersonPanel.add(new JComboBox<>(peopleList.getPeopleList()), configureLayout(1, 0, c -> {
+      c.weightx = 100;
+    }));
     JButton editPeopleButton = new JButton("Create/Edit People");
     editPeopleButton.addActionListener(e -> new EditPersonDialog(beanFactory, peopleList));
-    panel.add(editPeopleButton, configureLayout(4, 0, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    omicsPersonPanel.add(editPeopleButton, configureLayout(2, 0, c -> {
+      c.weightx = 0;
+    }));
+    panel.add(omicsPersonPanel, configureLayout(0, 0, c -> {
+      c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
 
-    panel.add(new JLabel("Sample Tracking Sheet"), configureLayout(0, 1));
-    panel.add(new JTextField(), configureLayout(1, 1));
-    JButton selectFileButton = new JButton("Select File");
+    JPanel trackingSheetNCBIAccessionPanel = new JPanel();
+    trackingSheetNCBIAccessionPanel.setLayout(new GridBagLayout());
+    JPanel trackingSheetPanel = new JPanel();
+    trackingSheetPanel.setLayout(new GridBagLayout());
+    trackingSheetPanel.add(new JLabel("Sample Tracking Sheet"), configureLayout(0, 0, c -> {
+      c.weightx = 0;
+    }));
+    trackingSheetPanel.add(new JTextField(), configureLayout(1, 0, c -> {
+      c.weightx = 100;
+    }));
+
+    JButton selectFileButton = new JButton("...");
     selectFileButton.addActionListener(e -> {
       JDialog dialog = new JDialog();
       dialog.add(new JFileChooser());
       dialog.pack();
       dialog.setVisible(true);
     });
-    panel.add(selectFileButton, configureLayout(2, 1));
-    panel.add(new JLabel("NCBI BioProject Accession:"), configureLayout(3, 1));
-    panel.add(new JTextField(), configureLayout(4, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    trackingSheetPanel.add(selectFileButton, configureLayout(2, 0, c -> {
+      c.weightx = 0;
+    }));
+    trackingSheetNCBIAccessionPanel.add(trackingSheetPanel, configureLayout(0, 0, c -> {
+      c.weightx = 50;
+      c.insets = new Insets(0, 0, 0, 100);
+    }));
+
+    JPanel ncbiaAccessionPanel = new JPanel();
+    ncbiaAccessionPanel.setLayout(new GridBagLayout());
+    ncbiaAccessionPanel.add(new JLabel("NCBI BioProject Accession"), configureLayout(0, 0, c -> {
+      c.weightx = 0;
+    }));
+    ncbiaAccessionPanel.add(new JTextField(), configureLayout(1, 0, c -> {
+      c.weightx = 100;
+    }));
+    trackingSheetNCBIAccessionPanel.add(ncbiaAccessionPanel, configureLayout(1, 0, c -> {
+      c.weightx = 50;
+    }));
+
+    panel.add(trackingSheetNCBIAccessionPanel, configureLayout(0, 1, c -> {
+      c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+
+    JPanel samplingTypesPanel = new JPanel();
+    samplingTypesPanel.setLayout(new BorderLayout());
+    samplingTypesPanel.setBorder(new TitledBorder("Sampling Types"));
 
     JPanel samplingTypes = new JPanel();
     samplingTypes.setLayout(new GridBagLayout());
-    samplingTypes.setBorder(new TitledBorder("Sampling Types"));
     samplingTypes.add(new JCheckBox("Water"), configureLayout(0, 0));
     samplingTypes.add(new JCheckBox("Soil/Sediment"), configureLayout(1, 0));
-    samplingTypes.add(new JCheckBox("Organic Tissue"), configureLayout(2, 0, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    samplingTypes.add(new JCheckBox("Organic Tissue"), configureLayout(2, 0));
+    samplingTypesPanel.add(samplingTypes, BorderLayout.LINE_START);
 
-    panel.add(samplingTypes, configureLayout(0, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    panel.add(samplingTypesPanel, configureLayout(0, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
 
     JPanel expectedAnalyses = new JPanel();
     expectedAnalyses.setLayout(new GridBagLayout());
@@ -95,11 +140,10 @@ public class OmicsPanel extends JPanel {
     panel.add(expectedAnalyses, configureLayout(0, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
 
     panel.add(new JLabel("Additional Omics Sampling Information"), configureLayout(0, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    panel.add(new JTextArea(), configureLayout(0, 5, c -> {
-      c.gridwidth = GridBagConstraints.REMAINDER;
-      c.ipady = 300;
+    panel.add(new JScrollPane(new JTextArea()), configureLayout(0, 5, c -> {
+      c.weighty = 100;
     }));
 
-    add(panel, BorderLayout.PAGE_START);
+    add(panel, configureLayout(0, 0, c -> c.weighty = 100));
   }
 }
