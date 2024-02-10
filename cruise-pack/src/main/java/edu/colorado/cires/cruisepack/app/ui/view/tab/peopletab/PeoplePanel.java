@@ -5,6 +5,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import jakarta.annotation.PostConstruct;
 
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -25,9 +27,6 @@ public class PeoplePanel extends JPanel {
   private static final String ADD_SCIENTIST_LABEL = "Add Scientist";
   private static final String ADD_SOURCE_ORG_LABEL = "Add Source Organization";
   private static final String ADD_FUNDING_ORG_LABEL = "Add Funding Organization";
-  private static final String SELECT_SCIENTIST_LABEL = "Select Scientist";
-  private static final String SELECT_SOURCE_ORG_LABEL = "Select Source Organization";
-  private static final String SELECT_FUNDING_ORG_LABEL = "Select Funding Organization";
   private static final String METADATA_AUTHOR_LABEL = "Metadata Author";
   private static final String CREATE_PEOPLE_LABEL = "Create / Edit People";
   private static final String CREATE_ORG_LABEL = "Create / Edit Organizations";
@@ -51,36 +50,49 @@ public class PeoplePanel extends JPanel {
     add(new AppendableTableWithSelections(
         peopleList.getPeopleList(),
         SCIENTISTS_LABEL,
-        ADD_SCIENTIST_LABEL,
-        SELECT_SCIENTIST_LABEL
-    ), configureLayout(0, 0));
+        ADD_SCIENTIST_LABEL
+    ), configureLayout(0, 0, c -> {
+      c.weighty = 100;
+      c.insets = new Insets(0, 0, 0, 20);
+    }));
     add(new AppendableTableWithSelections(
         organizationList.getOrganizationList(),
         SOURCE_ORG_LABEL,
-        ADD_SOURCE_ORG_LABEL,
-        SELECT_SOURCE_ORG_LABEL
-    ), configureLayout(1, 0));
+        ADD_SOURCE_ORG_LABEL
+    ), configureLayout(1, 0, c -> {
+      c.weighty = 100;
+      c.insets = new Insets(0, 0, 0, 20);
+    }));
     add(new AppendableTableWithSelections(
         organizationList.getOrganizationList(),
        FUNDING_ORG_LABEL,
-        ADD_FUNDING_ORG_LABEL,
-        SELECT_FUNDING_ORG_LABEL
+        ADD_FUNDING_ORG_LABEL
         
-    ), configureLayout(2, 0));
+    ), configureLayout(2, 0, c -> {
+      c.weighty = 100;
+    }));
     
     JButton editPeopleButton = new JButton(CREATE_PEOPLE_LABEL);
     editPeopleButton.addActionListener(e -> {
       new EditPersonDialog(beanFactory, peopleList);
     });
-    add(editPeopleButton, configureLayout(0, 2));
+    add(editPeopleButton, configureLayout(0, 2, c -> {
+      c.weighty = 0;
+    }));
     
     JButton editOrgButton = new JButton(CREATE_ORG_LABEL);
     editOrgButton.addActionListener(e -> {
       new EditOrgDialog(beanFactory, organizationList);
     });
-    add(editOrgButton, configureLayout(1, 2));
+    add(editOrgButton, configureLayout(1, 2, c -> {
+      c.weighty = 0;
+    }));
     
-    add(new JLabel(METADATA_AUTHOR_LABEL), configureLayout(2, 1));
-    add(new JComboBox<>(peopleList.getPeopleList()), configureLayout(2, 2));
+    add(new JLabel(METADATA_AUTHOR_LABEL), configureLayout(2, 1, c -> {
+      c.weighty = 0;
+    }));
+    add(new JComboBox<>(peopleList.getPeopleList()), configureLayout(2, 2, c -> {
+      c.weighty = 0;
+    }));
   }
 }
