@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OrganizationData xmlns="https://colorado.edu/cires/cruisepack/organizations">
+    <DataVersion>1.0</DataVersion>
+    <Organizations>
+        <Organization>
+            <Name>AFSC</Name>
+            <Street>7600 Sand Point Way N.E., Building 4 </Street>
+            <City>Seattle</City>
+            <State>WA</State>
+            <Zip>98115</Zip>
+            <Country>USA</Country>
+            <Phone>206-526-4000</Phone>
+            <Uuid>01082b23-154c-4c2d-bef7-5e35315d41e0</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>NEFSC</Name>
+            <Street>166 Water Street </Street>
+            <City>Woods Hole</City>
+            <State>MA</State>
+            <Zip>02543-1026</Zip>
+            <Country>USA</Country>
+            <Phone>508-495-2000</Phone>
+            <Uuid>ebd76260-2bad-4f23-ac30-62726422f231</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>NWFSC</Name>
+            <Street>2725 Montlake Boulevard East </Street>
+            <City>Seattle</City>
+            <State>WA</State>
+            <Zip>98112 </Zip>
+            <Country>USA</Country>
+            <Phone>206-860-3200 </Phone>
+            <Uuid>95bb98c1-36ce-462d-b9aa-2caef4fa0a40</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>PIFSC</Name>
+            <Street>2570 Dole Street</Street>
+            <City>Honolulu</City>
+            <State>HI</State>
+            <Zip>96822-2396</Zip>
+            <Country>USA</Country>
+            <Phone> 808-983-5300</Phone>
+            <Uuid>cafb6caa-03af-4c54-8c8f-b5dbfc5734bf</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>SEFSC</Name>
+            <Street>75 Virginia Beach Dr.</Street>
+            <City> Miami </City>
+            <State>FL</State>
+            <Zip>33149</Zip>
+            <Country>USA</Country>
+            <Phone>305-361-4200 </Phone>
+            <Uuid>7ab0c8aa-8a78-4112-98f7-c93cea679192</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>SWFSC</Name>
+            <Street>8901 La Jolla Shores Dr. </Street>
+            <City>La Jolla</City>
+            <State>CA</State>
+            <Zip>92037</Zip>
+            <Country>USA</Country>
+            <Phone>858-546-7000</Phone>
+            <Uuid>918a8687-8b33-4f70-b550-79a5273866fa</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>OER</Name>
+            <Street>SSMC3, 1315 East-West Highway, 10th Floor</Street>
+            <City>Silver Spring</City>
+            <State>MD</State>
+            <Zip>20910</Zip>
+            <Country>USA</Country>
+            <Email>ncddcmetadata@noaa.gov</Email>
+            <Phone>301-734-1000</Phone>
+            <Uuid>08D95C427FB128479945893256DADE37</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>Woods Hole</Name>
+            <Street>266 Woods Hole Road</Street>
+            <City>Woods Hole</City>
+            <State>MA</State>
+            <Zip>02543-1050</Zip>
+            <Country>USA</Country>
+            <Email>information@whoi.edu</Email>
+            <Phone>508-289-2252</Phone>
+            <Uuid>E125CE0B72B01442AAA4D711CAF3EB93</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>NERC</Name>
+            <Street>Polaris House, North Star Avenue</Street>
+            <City>Swindon</City>
+            <Zip>SN2 1EU</Zip>
+            <Country>UK</Country>
+            <Phone>01793 411500</Phone>
+            <Uuid>75d5e706-ca0f-4a53-9b09-752263669c8b</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>UNOLS</Name>
+            <Street>15 South Ferry Road</Street>
+            <City>Narragansett</City>
+            <State>RI</State>
+            <Zip>02882</Zip>
+            <Country>USA</Country>
+            <Email>office@unols.org</Email>
+            <Phone>401-874-6825</Phone>
+            <Uuid>900fba95-0b21-415c-96e3-2c8c0f82c5ca</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>ONMS</Name>
+            <Street>1305 East-West Highway</Street>
+            <City>Silver Spring</City>
+            <State>MD</State>
+            <Zip>20910</Zip>
+            <Country>USA</Country>
+            <Email>sanctuaries@noaa.gov</Email>
+            <Phone>301-713-3125</Phone>
+            <Uuid>1e78f564-ac17-4ebc-9a96-5caaecf7663b</Uuid>
+            <Use>true</Use>
+        </Organization>
+        <Organization>
+            <Name>U.S. National Science Foundation</Name>
+            <Street>4201 Wilson Blvd</Street>
+            <City>Arlington</City>
+            <State>VA</State>
+            <Zip>22230</Zip>
+            <Country>USA</Country>
+            <Email>info@nsf.gov</Email>
+            <Uuid>f30655c4-4ead-4af3-8247-29e3cdb064a8</Uuid>
+            <Use>true</Use>
+        </Organization>
+    </Organizations>
+</OrganizationData>
