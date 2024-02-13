@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.prototype.components.model;
+package edu.colorado.cires.cruisepack.app.service;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -14,17 +14,19 @@ public class InstrumentDetail {
   private final String shortName;
   private final Set<String> extensions;
   private final Path dataPath;
+  private final boolean flatten;
 
   private String dirName;
   private String bagName;
 
 
-  public InstrumentDetail(InstrumentStatus status, String instrument, String shortName, Set<String> extensions, Path dataPath) {
+  public InstrumentDetail(InstrumentStatus status, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten) {
     this.status = status;
     this.instrument = instrument;
     this.shortName = shortName;
     this.extensions = Collections.unmodifiableSet(new HashSet<>(extensions));
     this.dataPath = dataPath;
+    this.flatten = flatten;
   }
 
   public Path getDataPath() {
@@ -63,6 +65,10 @@ public class InstrumentDetail {
     return bagName;
   }
 
+  public boolean isFlatten() {
+    return flatten;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -71,15 +77,15 @@ public class InstrumentDetail {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    InstrumentDetail detail = (InstrumentDetail) o;
-    return status == detail.status && Objects.equals(instrument, detail.instrument) && Objects.equals(shortName, detail.shortName)
-        && Objects.equals(extensions, detail.extensions) && Objects.equals(dataPath, detail.dataPath) && Objects.equals(
-        dirName, detail.dirName) && Objects.equals(bagName, detail.bagName);
+    InstrumentDetail that = (InstrumentDetail) o;
+    return flatten == that.flatten && status == that.status && Objects.equals(instrument, that.instrument) && Objects.equals(
+        shortName, that.shortName) && Objects.equals(extensions, that.extensions) && Objects.equals(dataPath, that.dataPath)
+        && Objects.equals(dirName, that.dirName) && Objects.equals(bagName, that.bagName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(status, instrument, shortName, extensions, dataPath, dirName, bagName);
+    return Objects.hash(status, instrument, shortName, extensions, dataPath, flatten, dirName, bagName);
   }
 
   @Override
@@ -90,6 +96,7 @@ public class InstrumentDetail {
         ", shortName='" + shortName + '\'' +
         ", extensions=" + extensions +
         ", dataPath=" + dataPath +
+        ", flatten=" + flatten +
         ", dirName='" + dirName + '\'' +
         ", bagName='" + bagName + '\'' +
         '}';

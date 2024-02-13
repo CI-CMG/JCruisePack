@@ -1,10 +1,7 @@
-package edu.colorado.cires.cruisepack.components;
+package edu.colorado.cires.cruisepack.app.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.colorado.cires.cruisepack.prototype.components.DatasetPacker;
-import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentDetail;
-import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentStatus;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class DatasetPackerTest {
-
   private Path mainBagRootDir = Paths.get("target/TST200400");
 
   @BeforeEach
@@ -44,8 +40,8 @@ public class DatasetPackerTest {
         "longem122",
         "EM122",
         Collections.emptySet(),
-        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122")
-    );
+        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122"),
+        flatten);
     em122Raw.setDirName("EM122");
     em122Raw.setBagName("TST200400_MB-BATHY_EM122");
 
@@ -54,8 +50,8 @@ public class DatasetPackerTest {
         "longem122",
         "EM122",
         Collections.emptySet(),
-        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed")
-    );
+        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed"),
+        flatten);
     em122Processed.setDirName("EM122_processed");
     em122Processed.setBagName("TST200400_MB-BATHY_EM122");
 
@@ -64,8 +60,8 @@ public class DatasetPackerTest {
         "longem122",
         "EM122",
         Collections.emptySet(),
-        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1")
-    );
+        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1"),
+        flatten);
     em122Processed1.setDirName("EM122_processed-1");
     em122Processed1.setBagName("TST200400_MB-BATHY_EM122");
 
@@ -74,8 +70,8 @@ public class DatasetPackerTest {
         "longem122",
         "EM122",
         Collections.emptySet(),
-        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products")
-    );
+        Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products"),
+        flatten);
     em122Products.setDirName("EM122_products");
     em122Products.setBagName("TST200400_MB-BATHY_EM122");
 
@@ -100,5 +96,4 @@ public class DatasetPackerTest {
     assertEquals(expected, actual);
 
   }
-
 }

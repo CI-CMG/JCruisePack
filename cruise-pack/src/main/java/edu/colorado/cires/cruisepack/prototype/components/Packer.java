@@ -1,6 +1,8 @@
 package edu.colorado.cires.cruisepack.prototype.components;
 
-import edu.colorado.cires.cruisepack.prototype.components.model.InstrumentDetail;
+import edu.colorado.cires.cruisepack.app.service.DatasetNameResolver;
+import edu.colorado.cires.cruisepack.app.service.DatasetPacker;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import gov.loc.repository.bagit.domain.Bag;
 import java.io.IOException;
 import java.nio.file.Files;

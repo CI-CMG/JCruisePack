@@ -19,8 +19,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 public class CruisePack {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CruisePack.class);
-  private static final String SYSTEM_LNF = "system";
-  private static final String CROSS_PLATFORM_LNF = "cross-platform";
+  private static final String SYSTEM_LAF = "system";
+  private static final String CROSS_PLATFORM_LAF = "cross-platform";
 
   public static void main(String[] args) {
 
@@ -42,18 +42,18 @@ public class CruisePack {
 
   private static void setLookAndFeel(ServiceProperties serviceProperties) {
     LOGGER.info(
-        "Available LNF: {}",
+        "Available LAF: {}",
         Arrays.asList(UIManager.getInstalledLookAndFeels()).stream()
             .map(LookAndFeelInfo::getClassName)
             .collect(Collectors.toList()));
     String className;
     switch (serviceProperties.getLookAndFeel()) {
-      case SYSTEM_LNF:
-        LOGGER.info("Using system LNF");
+      case SYSTEM_LAF:
+        LOGGER.info("Using system LAF");
         className = UIManager.getSystemLookAndFeelClassName();
         break;
-      case CROSS_PLATFORM_LNF:
-        LOGGER.info("Using cross-platform LNF");
+      case CROSS_PLATFORM_LAF:
+        LOGGER.info("Using cross-platform LAF");
         className = UIManager.getCrossPlatformLookAndFeelClassName();
         break;
       default:
@@ -65,6 +65,6 @@ public class CruisePack {
     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
       throw new IllegalStateException("Unable to set look and feel for '" + serviceProperties.getLookAndFeel() + "'", e);
     }
-    LOGGER.info("Using LNF: {}", className);
+    LOGGER.info("Using LAF: {}", className);
   }
 }

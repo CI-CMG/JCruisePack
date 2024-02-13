@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.prototype.components.model;
+package edu.colorado.cires.cruisepack.app.service;
 
 public enum InstrumentStatus {
   RAW("Raw"),
