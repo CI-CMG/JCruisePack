@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class InstrumentDetail {
 
@@ -15,18 +16,20 @@ public class InstrumentDetail {
   private final Set<String> extensions;
   private final Path dataPath;
   private final boolean flatten;
+  private final Consumer<CustomInstrumentProcessingContext> customHandler;
 
   private String dirName;
   private String bagName;
 
 
-  public InstrumentDetail(InstrumentStatus status, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten) {
+  public InstrumentDetail(InstrumentStatus status, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten, Consumer<CustomInstrumentProcessingContext> customHandler) {
     this.status = status;
     this.instrument = instrument;
     this.shortName = shortName;
     this.extensions = Collections.unmodifiableSet(new HashSet<>(extensions));
     this.dataPath = dataPath;
     this.flatten = flatten;
+    this.customHandler = customHandler;
   }
 
   public Path getDataPath() {
@@ -67,6 +70,10 @@ public class InstrumentDetail {
 
   public boolean isFlatten() {
     return flatten;
+  }
+
+  public Consumer<CustomInstrumentProcessingContext> getCustomHandler() {
+    return customHandler;
   }
 
   @Override

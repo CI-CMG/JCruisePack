@@ -14,10 +14,9 @@ public class PackJob {
   private Map<String, List<InstrumentDetail>> instruments;
   private Path docsDir;
   private Path omicsFile;
-  private Path localDataDir;
+  private Path cruisePackDataDir;
+  private CruiseMetadata cruiseMetadata;
 
-  public PackJob() {
-  }
 
   public Instant getStartTime() {
     return startTime;
@@ -75,11 +74,19 @@ public class PackJob {
     this.omicsFile = omicsFile;
   }
 
-  public Path getLocalDataDir() {
-    return localDataDir;
+  public Path getCruisePackDataDir() {
+    return cruisePackDataDir;
   }
 
-  public void setLocalDataDir(Path localDataDir) {
-    this.localDataDir = localDataDir;
+  public void setCruisePackDataDir(Path cruisePackDataDir) {
+    this.cruisePackDataDir = cruisePackDataDir;
+  }
+
+  public CruiseMetadata getCruiseMetadata() {
+    return cruiseMetadata;
+  }
+
+  public void setCruiseMetadata(CruiseMetadata cruiseMetadata) {
+    this.cruiseMetadata = cruiseMetadata;
   }
 }
