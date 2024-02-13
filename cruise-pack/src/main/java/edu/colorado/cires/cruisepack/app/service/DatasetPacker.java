@@ -1,5 +1,10 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.copy;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterHidden;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.Instrument;
 import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.PackageInstrument;
@@ -7,7 +12,6 @@ import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,21 +37,7 @@ public class DatasetPacker {
   private static final String PEOPLE_XML = "people.xml";
   private static final String ORGANIZATIONS_XML = "organizations.xml";
 
-  private static void mkDir(Path dir) {
-    try {
-      Files.createDirectories(dir);
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to create directory " + dir, e);
-    }
-  }
 
-  private static void copy(Path source, Path target) {
-    try {
-      Files.copy(source, target);
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to copy file " + source + " to " + target, e);
-    }
-  }
 
   private static void copyLocalData(PackJob packJob, Path instrumentBagDataDir) {
     Path people = packJob.getCruisePackDataDir().resolve(LOCAL_DATA).resolve(PEOPLE_XML);
@@ -63,13 +53,7 @@ public class DatasetPacker {
     }
   }
 
-  private static boolean filterHidden(Path path) {
-    try {
-      return Files.isRegularFile(path) && !Files.isHidden(path);
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to read file " + path, e);
-    }
-  }
+
 
   private static boolean filterExtension(Path path, InstrumentDetail dataset) {
     if (!dataset.getExtensions().isEmpty() && InstrumentStatus.RAW == dataset.getStatus()) {
@@ -79,15 +63,7 @@ public class DatasetPacker {
     return true;
   }
 
-  private static boolean filterTimeSize(Path source, Path target) {
-    try {
-      return !Files.isRegularFile(target) ||
-          Files.getLastModifiedTime(source).toMillis() != Files.getLastModifiedTime(target).toMillis() ||
-          Files.size(source) != Files.size(target);
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to read file " + source + " or " + target, e);
-    }
-  }
+
 
   private static Path resolveFinalPath(Path datasetDir, Path sourceDataDir, Path sourceFile, InstrumentDetail dataset) {
     if (InstrumentStatus.RAW == dataset.getStatus() && dataset.isFlatten()){
@@ -165,12 +141,8 @@ public class DatasetPacker {
               Path sourceFile = file.toAbsolutePath().normalize();
               Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
               if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
-                try {
-                  Files.createDirectories(targetFile.getParent());
-                  FileUtils.copyFile(sourceFile.toFile(), targetFile.toFile(), true);
-                } catch (IOException e) {
-                  throw new RuntimeException("Unable to copy file: " + sourceFile, e);
-                }
+                mkDir(targetFile.getParent());
+                copy(sourceFile, targetFile);
               }
               return super.visitFile(file, attr);
             }

@@ -1,13 +1,20 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.copy;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterHidden;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
-import org.apache.commons.io.FileUtils;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,12 +22,20 @@ public class PackerService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerService.class);
 
+  private final ObjectMapper objectMapper;
+
+  @Autowired
+  public PackerService(ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
+
   public PackerHandle startPacking(PackJob packJob) {
     setDirNames(packJob);
-    rawCheck(packJob);
+//    rawCheck(packJob);
     copyDocs(packJob);
     copyOmics(packJob);
-    throw new UnsupportedOperationException();
+    packData(packJob);
+    return null; // TODO
   }
 
   /*
@@ -171,10 +186,10 @@ public class PackerService {
                         products_count = 1
    */
 
-  private void rawCheck(PackJob packJob) {
-    // TODO this check needs to be done up front before we get here
-    throw new UnsupportedOperationException();
-  }
+//  private void rawCheck(PackJob packJob) {
+//    // TODO this check needs to be done up front before we get here
+//    throw new UnsupportedOperationException();
+//  }
 
   /*
       def raw_check(self):
@@ -228,38 +243,35 @@ public class PackerService {
    */
 
   private void copyDocs(PackJob packJob) {
-    // TODO copy prep?
-    Path docsDir = packJob.getDocsDir();
-    if (docsDir != null) {
-      AtomicInteger count = new AtomicInteger(0);
-      try (Stream<Path> fileStream = Files.list(docsDir)) {
-        fileStream
-            .filter(path -> {
-              try {
-                return !Files.isHidden(path);
-              } catch (IOException e) {
-                throw new IllegalStateException("Unable to read file " + path, e);
-              }
-            })
-            .map(Path::toFile)
-            .forEach(file -> {
-              try {
-                Path data = packJob.getBagPath().resolve("data");
-                Files.createDirectories(data);
-                if (file.isDirectory()) {
-                  FileUtils.copyDirectoryToDirectory(file, data.toFile());
-                } else {
-                  FileUtils.copyFileToDirectory(file, data.toFile());
-                }
-                count.incrementAndGet();
-              } catch (IOException e) {
-                throw new RuntimeException("Unable to move file for re-bagging:  " + file, e);
-              }
-            });
+    if (packJob.getDocsDir() != null) {
+      Path docsDir = packJob.getDocsDir().toAbsolutePath().normalize();
+      Path data = packJob.getBagPath().resolve("data");
+      Path targetDocs = data.resolve("docs").toAbsolutePath().normalize();
+      try {
+        Files.walkFileTree(docsDir, new SimpleFileVisitor<>() {
+
+          @Override
+          public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+            if (Files.isHidden(dir)) {
+              return FileVisitResult.SKIP_SUBTREE;
+            }
+            return super.preVisitDirectory(dir, attr);
+          }
+
+          @Override
+          public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+            Path sourceFile = file.toAbsolutePath().normalize();
+            Path targetFile = targetDocs.resolve(docsDir.relativize(sourceFile));
+            if (filterHidden(sourceFile) && filterTimeSize(sourceFile, targetFile)) {
+              mkDir(targetFile.getParent());
+              copy(sourceFile, targetFile);
+            }
+            return super.visitFile(file, attr);
+          }
+        });
       } catch (IOException e) {
-        throw new IllegalStateException("Unable to copy documents", e);
+        throw new IllegalStateException("Unable to process documents " + docsDir, e);
       }
-      LOGGER.info("{} document files copied", count.get());
     }
   }
 
@@ -284,14 +296,13 @@ public class PackerService {
    */
 
   private void copyOmics(PackJob packJob) {
-    Path omicsFile = packJob.getOmicsFile();
-    if (omicsFile != null) {
-      Path omicsDir = packJob.getBagPath().resolve("data").resolve("omics");
-      try {
-        Files.createDirectories(omicsDir);
-        FileUtils.copyFileToDirectory(omicsFile.toFile(), omicsDir.toFile());
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to copy omics file", e);
+    if (packJob.getOmicsFile() != null) {
+      Path omicsFile = packJob.getOmicsFile().toAbsolutePath().normalize();
+      Path omicsDir = packJob.getBagPath().resolve("data").resolve("omics").toAbsolutePath().normalize();
+      Path targetFile = omicsDir.resolve(omicsFile.getFileName());
+      if (filterHidden(omicsFile)) {
+        mkDir(omicsDir);
+        copy(omicsFile, targetFile);
       }
     }
   }
@@ -318,8 +329,7 @@ public class PackerService {
    */
 
   private void packData(PackJob packJob) {
-
-    throw new UnsupportedOperationException();
+    DatasetPacker.pack(objectMapper, packJob);
   }
 
   /*
