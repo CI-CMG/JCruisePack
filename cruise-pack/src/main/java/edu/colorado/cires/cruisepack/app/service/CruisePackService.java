@@ -34,34 +34,34 @@ public class CruisePackService {
   }
 
   public void packData(PackJobInput packJobInput) {
-    PackJob packJob = new PackJob();
-    packJob.setStartTime(Instant.now());
-    if (overwriteCheck()) {
-      if (saveData(packJobInput, packJob)) {
-        Progress progress = new Progress();
-        progress.setTotalFiles(fileCount(packJobInput, packJob));
-        if (validate(packJobInput, packJob)) {
-          CruiseMetadata cruiseMetadata = getCruiseMetadata(packJobInput, packJob);
-          validateCruiseMetadata(cruiseMetadata);
-          appendInstrumentData(cruiseMetadata);
-          packJob.setMasterBagName(packJob.getPackageId()); // TODO is this correct?
-          packJob.setBagPath(packJobInput.getDestinationPath().resolve(packJob.getMasterBagName()));
-          //TODO this validation should happen before anything else
-          Bag mainBag;
-          if (hasExistingBag(packJob)) {
-            mainBag = openBag(packJob.getBagPath());
-          } else {
-            mainBag = newBag(packJob.getBagPath());
-          }
-          metadataService.exportMetadata(mainBag, cruiseMetadata);
-          Instruments instruments = getInstruments();
-          packJob.setInstruments(instruments);
-          PackerHandle  packerHandle = packerService.startPacking(packJob);
-          packerStatusService.trackPacker(packerHandle);
-        }
-      }
-
-    }
+//    PackJob packJob = new PackJob();
+//    packJob.setStartTime(Instant.now());
+//    if (overwriteCheck()) {
+//      if (saveData(packJobInput, packJob)) {
+//        Progress progress = new Progress();
+//        progress.setTotalFiles(fileCount(packJobInput, packJob));
+//        if (validate(packJobInput, packJob)) {
+//          CruiseMetadata cruiseMetadata = getCruiseMetadata(packJobInput, packJob);
+//          validateCruiseMetadata(cruiseMetadata);
+//          appendInstrumentData(cruiseMetadata);
+//          packJob.setMasterBagName(packJob.getPackageId()); // TODO is this correct?
+//          packJob.setBagPath(packJobInput.getDestinationPath().resolve(packJob.getMasterBagName()));
+//          //TODO this validation should happen before anything else
+//          Bag mainBag;
+//          if (hasExistingBag(packJob)) {
+//            mainBag = openBag(packJob.getBagPath());
+//          } else {
+//            mainBag = newBag(packJob.getBagPath());
+//          }
+//          metadataService.exportMetadata(mainBag, cruiseMetadata);
+//          Instruments instruments = getInstruments();
+//          packJob.setInstruments(instruments);
+//          PackerHandle  packerHandle = packerService.startPacking(packJob);
+//          packerStatusService.trackPacker(packerHandle);
+//        }
+//      }
+//
+//    }
   }
 
   /*
@@ -746,9 +746,9 @@ public class CruisePackService {
     throw new UnsupportedOperationException();
   }
 
-  private Instruments getInstruments() {
-    throw new UnsupportedOperationException();
-  }
+//  private Instruments getInstruments() {
+//    throw new UnsupportedOperationException();
+//  }
   /*
   def get_instruments_dic(self):
         """Create dictionary of instruments with data to be packaged.

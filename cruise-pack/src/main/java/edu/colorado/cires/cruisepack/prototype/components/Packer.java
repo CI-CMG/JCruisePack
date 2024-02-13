@@ -40,7 +40,7 @@ public class Packer {
     rawCheck();
     copyDocs();
     copyOmics();
-    DatasetPacker.pack(mainBag.getRootDir(), instruments);
+//    DatasetPacker.pack(mainBag.getRootDir(), instruments);
   }
 
   private void rawCheck() {
