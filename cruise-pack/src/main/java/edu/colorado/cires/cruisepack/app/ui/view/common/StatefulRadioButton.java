@@ -2,7 +2,6 @@ package edu.colorado.cires.cruisepack.app.ui.view.common;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.BoxLayout;
@@ -46,7 +45,7 @@ public class StatefulRadioButton extends JPanel {
         add(panel, configureLayout(0, 0));
     }
 
-    private void setSelectedValue(boolean value) {
+    public void setSelectedValue(Boolean value) {
         selectedValue = value;
 
         if (value) {
