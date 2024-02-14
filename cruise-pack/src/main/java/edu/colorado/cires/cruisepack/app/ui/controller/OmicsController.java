@@ -2,9 +2,6 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Path;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +35,7 @@ public class OmicsController implements PropertyChangeListener {
         omicsModel.setContact(contact);
     }
 
-    public void setSampleTrackingSheet(Path sampleTrackingSheet) {
+    public void setSampleTrackingSheet(String sampleTrackingSheet) {
         omicsModel.setSampleTrackingSheet(sampleTrackingSheet);
     }
 
@@ -46,12 +43,68 @@ public class OmicsController implements PropertyChangeListener {
         omicsModel.setBioProjectAccession(bioProjectAccession);
     }
 
-    public void setSamplingTypes(List<String> samplingTypes) {
-        omicsModel.setSamplingTypes(samplingTypes);
+    public void setWaterSamplingType(Boolean waterSamplingType) {
+        omicsModel.setWaterSamplingType(waterSamplingType);
     }
 
-    public void setExpectedAnalyses(List<String> expectedAnalyses) {
-        omicsModel.setExpectedAnalyses(expectedAnalyses);
+    public void setSoilSedimentSamplingType(Boolean soilSedimentSamplingType) {
+        omicsModel.setSoilSedimentSamplingType(soilSedimentSamplingType);
+    }
+
+    public void setOrganicTissueSamplingType(Boolean organicTissueSamplingType) {
+        omicsModel.setOrganicTissueSamplingType(organicTissueSamplingType);
+    }
+
+    public void setBarcodingExpectedAnalysis(Boolean barcodingExpectedAnalysis) {
+        omicsModel.setBarcodingExpectedAnalysis(barcodingExpectedAnalysis);
+    }
+
+    public void setGenomicsExpectedAnalysis(Boolean genomicsExpectedAnalysis) {
+        omicsModel.setGenomicsExpectedAnalysis(genomicsExpectedAnalysis);
+    }
+
+    public void setTranscriptomicsExpectedAnalysis(Boolean transcriptomicsExpectedAnalysis) {
+        omicsModel.setTranscriptomicsExpectedAnalysis(transcriptomicsExpectedAnalysis);
+    }
+
+    public void setProteomicsExpectedAnalysis(Boolean proteomicsExpectedAnalysis) {
+        omicsModel.setProteomicsExpectedAnalysis(proteomicsExpectedAnalysis);
+    }
+
+    public void setMetabolomicsExpectedAnalysis(Boolean metabolomicsExpectedAnalysis) {
+        omicsModel.setMetabolomicsExpectedAnalysis(metabolomicsExpectedAnalysis);
+    }
+
+    public void setEpigeneticsExpectedAnalysis(Boolean epigeneticsExpectedAnalysis) {
+        omicsModel.setEpigeneticsExpectedAnalysis(epigeneticsExpectedAnalysis);
+    }
+
+    public void setOtherExpectedAnalysis(Boolean otherExpectedAnalysis) {
+        omicsModel.setOtherExpectedAnalysis(otherExpectedAnalysis);
+    }
+
+    public void setMetaBarcodingExpectedAnalysis(Boolean metabarcodingExpectedAnalysis) {
+        omicsModel.setMetaBarcodingExpectedAnalysis(metabarcodingExpectedAnalysis);
+    }
+
+    public void setMetaGenomicsExpectedAnalysis(Boolean metaGenomicsExpectedAnalysis) {
+        omicsModel.setMetaGenomicsExpectedAnalysis(metaGenomicsExpectedAnalysis);
+    }
+
+    public void setMetatranscriptomicsExpectedAnalysis(Boolean metatranscriptomicsExpectedAnalysis) {
+        omicsModel.setMetatranscriptomicsExpectedAnalysis(metatranscriptomicsExpectedAnalysis);
+    }
+
+    public void setMetaproteomicsExpectedAnalysis(Boolean metaproteomicsExpectedAnalysis) {
+        omicsModel.setMetaproteomicsExpectedAnalysis(metaproteomicsExpectedAnalysis);
+    }
+
+    public void setMetametabolomicsExpectedAnalysis(Boolean metametabolomicsExpectedAnalysis) {
+        omicsModel.setMetametabolomicsExpectedAnalysis(metametabolomicsExpectedAnalysis);
+    }
+
+    public void setMicrobiomeExpectedAnalysis(Boolean microbiomeExpectedAnalysis) {
+        omicsModel.setMicrobiomeExpectedAnalysis(microbiomeExpectedAnalysis);
     }
 
     public void setAdditionalSamplingInformation(String additionalSamplingInformation) {

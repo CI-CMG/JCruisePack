@@ -18,7 +18,7 @@ public class RadioButtonFormField extends StatefulRadioButton {
     @Override
     public void setSelectedValue(Boolean value) {
         valueSetter.accept(value);
-        super.setSelectedValue(value);
+        // super.setSelectedValue(value);
     }
     
 }

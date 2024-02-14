@@ -169,7 +169,7 @@ public class OrgForm extends JPanel {
             emailFormField.setText(null);
             orcidID.setText(null);
             uuidTextField.setText(null);
-            useRadioButton.setSelectedValue(false);
+            // useRadioButton.setSelectedValue(false);
         });
         clearSaveButtonsPannel.add(clearButton, configureLayout(0, 0, c -> {
             c.weightx = 0;

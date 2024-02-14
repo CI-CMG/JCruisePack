@@ -3,91 +3,208 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class OmicsModel extends PropertyChangeModel {
 
-  private boolean samplingConducted = false;
-  private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
-  private Path sampleTrackingSheet = null;
-  private String bioProjectAccession = null;
-  private List<String> samplingTypes = new ArrayList<>(0);
-  private List<String> expectedAnalyses = new ArrayList<>(0);
-  private String additionalSamplingInformation = null;
-
-  public boolean isSamplingConducted() {
-    return samplingConducted;
-  }
-
-  public void setSamplingConducted(boolean samplingConducted) {
-    setIfChanged(Events.UPDATE_OMICS_SAMPLING_CONDUCTED, samplingConducted, () -> this.samplingConducted, (nv) -> this.samplingConducted = nv);
-  }
-
-  public DropDownItem getContact() {
-    return contact;
-  }
-
-  public void setContact(DropDownItem contact) {
-    setIfChanged(Events.UPDATE_OMICS_CONTACT, contact, () -> this.contact, (nv) -> this.contact = nv);
-  }
-
-  public Path getSampleTrackingSheet() {
-    return sampleTrackingSheet;
-  }
-
-  public void setSampleTrackingSheet(Path sampleTrackingSheet) {
-    setIfChanged(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET, sampleTrackingSheet, () -> this.sampleTrackingSheet,
-        (nv) -> this.sampleTrackingSheet = nv);
-  }
-
-  public String getBioProjectAccession() {
-    return bioProjectAccession;
-  }
-
-  public void setBioProjectAccession(String bioProjectAccession) {
-    bioProjectAccession = normalizeString(bioProjectAccession);
-    setIfChanged(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, bioProjectAccession, () -> this.bioProjectAccession,
-        (nv) -> this.bioProjectAccession = nv);
-  }
-
-  public List<String> getSamplingTypes() {
-    return samplingTypes;
-  }
-
-  public void setSamplingTypes(List<String> samplingTypes) {
-    List<String> oldSamplingTypes = List.copyOf(this.samplingTypes);
-    if (!(new HashSet<>(oldSamplingTypes).equals(new HashSet<>(samplingTypes)))) {
-      this.samplingTypes = samplingTypes;
-      fireChangeEvent(Events.UPDATE_OMICS_SAMPLING_TYPES, oldSamplingTypes, samplingTypes);
+    private boolean samplingConducted = false;
+    private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
+    private String sampleTrackingSheet = "";
+    private String bioProjectAccession = "";
+    private SamplingTypesModel samplingTypes = new SamplingTypesModel();
+    private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
+    private String additionalSamplingInformation = "";
+    
+    public boolean isSamplingConducted() {
+        return samplingConducted;
     }
-  }
-
-  public List<String> getExpectedAnalyses() {
-    return expectedAnalyses;
-  }
-
-  public void setExpectedAnalyses(List<String> expectedAnalyses) {
-    List<String> oldExpectedAnalyses = List.copyOf(this.expectedAnalyses);
-    if (!(new HashSet<>(oldExpectedAnalyses).equals(new HashSet<>(expectedAnalyses)))) {
-      this.expectedAnalyses = expectedAnalyses;
-      fireChangeEvent(Events.UPDATE_OMICS_EXPECTED_ANALYSES, oldExpectedAnalyses, expectedAnalyses);
+    public void setSamplingConducted(boolean samplingConducted) {
+        boolean oldSamplingConducted = this.samplingConducted;
+        if (oldSamplingConducted != samplingConducted) {
+            this.samplingConducted = samplingConducted;
+            fireChangeEvent(Events.UPDATE_OMICS_SAMPLING_CONDUCTED, oldSamplingConducted, samplingConducted);
+        }
+        this.samplingConducted = samplingConducted;
     }
-  }
+    public DropDownItem getContact() {
+        return contact;
+    }
+    public void setContact(DropDownItem contact) {
+        DropDownItem oldContact = this.contact;
+        if (!Objects.equals(contact, oldContact)) {
+            this.contact = contact;
+            fireChangeEvent(Events.UPDATE_OMICS_CONTACT, oldContact, contact);
+        }
+    }
+    public String getSampleTrackingSheet() {
+        return sampleTrackingSheet;
+    }
+    public void setSampleTrackingSheet(String sampleTrackingSheet) {
+        String oldSampleTrackingSheet = this.sampleTrackingSheet;
+        if (!oldSampleTrackingSheet.equals(sampleTrackingSheet)) {
+            this.sampleTrackingSheet = sampleTrackingSheet;
+            fireChangeEvent(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET, oldSampleTrackingSheet, sampleTrackingSheet);
+        }
+    }
+    public String getBioProjectAccession() {
+        return bioProjectAccession;
+    }
+    public void setBioProjectAccession(String bioProjectAccession) {
+        String oldBioProjectAccession = this.bioProjectAccession;
+        if (!oldBioProjectAccession.equals(bioProjectAccession)) {
+            this.bioProjectAccession = bioProjectAccession;
+            fireChangeEvent(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, oldBioProjectAccession, bioProjectAccession);
+        }
+    }
 
-  public String getAdditionalSamplingInformation() {
-    return additionalSamplingInformation;
-  }
+    public SamplingTypesModel getSamplingTypes() {
+        return samplingTypes;
+    }
 
-  public void setAdditionalSamplingInformation(String additionalSamplingInformation) {
-    additionalSamplingInformation = normalizeString(additionalSamplingInformation);
-    setIfChanged(Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION, additionalSamplingInformation, () -> this.additionalSamplingInformation,
-        (nv) -> this.additionalSamplingInformation = nv);
-  }
+    public void setWaterSamplingType(boolean waterSamplingType) {
+        boolean oldWaterSamplingType = this.samplingTypes.isWater();
+        if (oldWaterSamplingType != waterSamplingType) {
+            this.samplingTypes.setWater(waterSamplingType);
+            fireChangeEvent(Events.UPDATE_OMICS_WATER_SAMPLING_TYPE, oldWaterSamplingType, waterSamplingType);
+        }
+    }
 
+    public void setSoilSedimentSamplingType(boolean soilSedimentSamplingType) {
+        boolean oldSoilSedimentSamplingType = this.samplingTypes.isSoilSediment();
+        if (oldSoilSedimentSamplingType != soilSedimentSamplingType) {
+            this.samplingTypes.setSoilSediment(soilSedimentSamplingType);
+            fireChangeEvent(Events.UPDATE_OMICS_SOIL_SEDIMENT_SAMPLING_TYPE, oldSoilSedimentSamplingType, soilSedimentSamplingType);
+        }
+    }
+
+    public void setOrganicTissueSamplingType(boolean organicTissueSamplingType) {
+        boolean oldOrganicTissueSamplingType = this.samplingTypes.isOrganicTissue();
+        if (oldOrganicTissueSamplingType != organicTissueSamplingType) {
+            this.samplingTypes.setOrganicTissue(organicTissueSamplingType);
+            fireChangeEvent(Events.UPDATE_OMICS_ORGANIC_TISSUE_SAMPLING_TYPE, oldOrganicTissueSamplingType, organicTissueSamplingType);
+        }
+    }
+
+    public ExpectedAnalysesModel getExpectedAnalyses() {
+        return expectedAnalyses;
+    }
+
+    public void setBarcodingExpectedAnalysis(boolean barcodingExpectedAnalysis) {
+        boolean oldBarcodingExpectedAnalysis = this.expectedAnalyses.isBarcoding();
+        if (oldBarcodingExpectedAnalysis != barcodingExpectedAnalysis) {
+            this.expectedAnalyses.setBarcoding(barcodingExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_BARCODING_EXPECTED_ANALYSIS, oldBarcodingExpectedAnalysis, barcodingExpectedAnalysis);
+        }
+    }
+
+    public void setGenomicsExpectedAnalysis(boolean genomicsExpectedAnalysis) {
+        boolean oldGenomicsExpectedAnalysis = this.expectedAnalyses.isGenomics();
+        if (oldGenomicsExpectedAnalysis != genomicsExpectedAnalysis) {
+            this.expectedAnalyses.setGenomics(genomicsExpectedAnalysis);
+        fireChangeEvent(Events.UPDATE_OMICS_GENOMICS_EXPECTED_ANALYSIS, oldGenomicsExpectedAnalysis, genomicsExpectedAnalysis);
+        }
+    }
+
+    public void setTranscriptomicsExpectedAnalysis(boolean transcriptomicsExpectedAnalysis) {
+        boolean oldTranscriptomicsExpectedAnalysis = this.expectedAnalyses.isTranscriptomics();
+        if (oldTranscriptomicsExpectedAnalysis != transcriptomicsExpectedAnalysis) {
+            this.expectedAnalyses.setTranscriptomics(transcriptomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_TRANSCRIPTOMICS_EXPECTED_ANALYSIS, oldTranscriptomicsExpectedAnalysis, transcriptomicsExpectedAnalysis);
+        }
+    }
+
+    public void setProteomicsExpectedAnalysis(boolean proteomicsExpectedAnalysis) {
+        boolean oldProteomicsExpectedAnalysis = this.expectedAnalyses.isProteomics();
+        if (oldProteomicsExpectedAnalysis != proteomicsExpectedAnalysis) {
+            this.expectedAnalyses.setProteomics(proteomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_PROTEOMICS_EXPECTED_ANALYSIS, oldProteomicsExpectedAnalysis, proteomicsExpectedAnalysis);
+        }
+    }
+
+    public void setMetabolomicsExpectedAnalysis(boolean metabolomicsExpectedAnalysis) {
+        boolean oldMetabolomicsExpectedAnalysis = this.expectedAnalyses.isMetabolomics();
+        if (oldMetabolomicsExpectedAnalysis != metabolomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetabolomics(metabolomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METABOLOMICS_EXPECTED_ANALYSIS, oldMetabolomicsExpectedAnalysis, metabolomicsExpectedAnalysis);
+        }
+    }
+
+    public void setEpigeneticsExpectedAnalysis(boolean epigeneticsExpectedAnalysis) {
+        boolean oldEpigeneticsExpectedAnalysis = this.expectedAnalyses.isEpigenetics();
+        if (oldEpigeneticsExpectedAnalysis != epigeneticsExpectedAnalysis) {
+            this.expectedAnalyses.setEpigenetics(epigeneticsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_EPIGENETICS_EXPECTED_ANALYSIS, oldEpigeneticsExpectedAnalysis, epigeneticsExpectedAnalysis);
+        }
+    }
+
+    public void setOtherExpectedAnalysis(boolean otherExpectedAnalysis) {
+        boolean oldOtherExpectedAnalysis = this.expectedAnalyses.isOther();
+        if (oldOtherExpectedAnalysis != otherExpectedAnalysis) {
+            this.expectedAnalyses.setOther(otherExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_OTHER_EXPECTED_ANALYSIS, oldOtherExpectedAnalysis, otherExpectedAnalysis);
+        }
+    }
+
+    public void setMetaBarcodingExpectedAnalysis(boolean metabarcodingExpectedAnalysis) {
+        boolean oldMetaborcodingExpectedAnalysis = this.expectedAnalyses.isMetabarcoding();
+        if (oldMetaborcodingExpectedAnalysis != metabarcodingExpectedAnalysis) {
+            this.expectedAnalyses.setMetabarcoding(metabarcodingExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METABARCODING_EXPECTED_ANALYSIS, oldMetaborcodingExpectedAnalysis, metabarcodingExpectedAnalysis);
+        }
+    }
+
+    public void setMetaGenomicsExpectedAnalysis(boolean metaGenomicsExpectedAnalysis) {
+        boolean oldMetaGenomicsExpectedAnalysis = this.expectedAnalyses.isMetagenomics();
+        if (oldMetaGenomicsExpectedAnalysis != metaGenomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetagenomics(metaGenomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METAGENOMICS_EXPECTED_ANALYSIS, oldMetaGenomicsExpectedAnalysis, metaGenomicsExpectedAnalysis);
+        }
+    }
+
+    public void setMetatranscriptomicsExpectedAnalysis(boolean metatranscriptomicsExpectedAnalysis) {
+        boolean oldMetatranscriptomicsExpectedAnalysis = this.expectedAnalyses.isMetatranscriptomics();
+        if (oldMetatranscriptomicsExpectedAnalysis != metatranscriptomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetatranscriptomics(metatranscriptomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METATRANSCRIPTOMICS_EXPECTED_ANALYSIS, oldMetatranscriptomicsExpectedAnalysis, metatranscriptomicsExpectedAnalysis);
+        }
+    }
+
+    public void setMetaproteomicsExpectedAnalysis(boolean metaproteomicsExpectedAnalysis) {
+        boolean oldMetaproteomicsExpectedAnalysis = this.expectedAnalyses.isMetaproteomics();
+        if (oldMetaproteomicsExpectedAnalysis != metaproteomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetaproteomics(metaproteomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METAPROTEOMICS_EXPECTED_ANALYSIS, oldMetaproteomicsExpectedAnalysis, metaproteomicsExpectedAnalysis);
+        }
+    }
+
+    public void setMetametabolomicsExpectedAnalysis(boolean metametabolomicsExpectedAnalysis) {
+        boolean oldMetametabolomicsExpectedAnalysis = this.expectedAnalyses.isMetametabolomics();
+        if (oldMetametabolomicsExpectedAnalysis != metametabolomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetametabolomics(metametabolomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METAMETABOLOMICS_EXPECTED_ANALYSIS, oldMetametabolomicsExpectedAnalysis, metametabolomicsExpectedAnalysis);
+        }
+    }
+
+    public void setMicrobiomeExpectedAnalysis(boolean microbiomeExpectedAnalysis) {
+        boolean oldMicrobiomeExpectedAnalysis = this.expectedAnalyses.isMicrobiome();
+        if (oldMicrobiomeExpectedAnalysis != microbiomeExpectedAnalysis) {
+            this.expectedAnalyses.setMicrobiome(microbiomeExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_MICROBIOME_EXPECTED_ANALYSIS, oldMicrobiomeExpectedAnalysis, microbiomeExpectedAnalysis);
+        }
+    }
+
+    public String getAdditionalSamplingInformation() {
+        return additionalSamplingInformation;
+    }
+    public void setAdditionalSamplingInformation(String additionalSamplingInformation) {
+        String oldAdditionalSamplingInformation = this.additionalSamplingInformation;
+        if (!oldAdditionalSamplingInformation.equals(additionalSamplingInformation)) {
+            this.additionalSamplingInformation = additionalSamplingInformation;
+            fireChangeEvent(Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION, oldAdditionalSamplingInformation, additionalSamplingInformation);
+        }
+    }
 
 }

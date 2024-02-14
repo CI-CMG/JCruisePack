@@ -3,6 +3,8 @@ package edu.colorado.cires.cruisepack.app.ui.view.common;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -15,6 +17,7 @@ public class StatefulRadioButton extends JPanel {
     private final String label;
     private final JRadioButton yesButton = new JRadioButton("Yes");
     private final JRadioButton noButton = new JRadioButton("No");
+    private final List<ValueChangeListener<Boolean>> listeners = new ArrayList<>(0);
     
 
     public StatefulRadioButton(String label) {
@@ -22,7 +25,13 @@ public class StatefulRadioButton extends JPanel {
         init();
     }
 
-    
+    public void addValueChangeListener(ValueChangeListener<Boolean> valueChangeListener) {
+        listeners.add(valueChangeListener);
+    }
+
+    public void removeValueChangeListener(ValueChangeListener<Boolean> valueChangeListener) {
+        listeners.remove(valueChangeListener);
+    }
 
     private void init() {
         setLayout(new GridBagLayout());
@@ -31,18 +40,24 @@ public class StatefulRadioButton extends JPanel {
         panel.add(new JLabel(label));
 
         yesButton.addActionListener(e -> {
-            setSelectedValue(yesButton.isSelected());
+            handleChange(yesButton.isSelected());
         });
 
         panel.add(yesButton);
 
         noButton.addActionListener(e -> {
-            setSelectedValue(!noButton.isSelected());
+            handleChange(!noButton.isSelected());
         });
 
         panel.add(noButton);
 
         add(panel, configureLayout(0, 0));
+    }
+
+    private void handleChange(boolean value) {
+        for (ValueChangeListener<Boolean> listener : listeners) {
+            listener.handleChange(value);
+        }
     }
 
     public void setSelectedValue(Boolean value) {
