@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 
 import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.function.Function;
@@ -16,11 +17,33 @@ import javax.swing.JTextField;
 
 public final class FieldUtils {
 
+  public static void updatePathField(JTextField textField, PropertyChangeEvent evt) {
+    updateTextField(textField, evt, e -> {
+      Path path = (Path) e.getNewValue();
+      if (path == null) {
+        return null;
+      }
+      return path.toAbsolutePath().normalize().toString();
+    });
+  }
+
   public static void updateTextField(JTextField textField, PropertyChangeEvent evt) {
     updateTextField(textField, evt, e -> (String) e.getNewValue());
   }
 
+  public static void updateTextField(JTextArea textField, PropertyChangeEvent evt) {
+    updateTextField(textField, evt, e -> (String) e.getNewValue());
+  }
+
   public static void updateTextField(JTextField textField, PropertyChangeEvent evt, Function<PropertyChangeEvent, String> transform) {
+    String oldValue = textField.getText();
+    String newValue = transform.apply(evt);
+    if (!Objects.equals(oldValue, newValue)) {
+      textField.setText(newValue);
+    }
+  }
+
+  public static void updateTextField(JTextArea textField, PropertyChangeEvent evt, Function<PropertyChangeEvent, String> transform) {
     String oldValue = textField.getText();
     String newValue = transform.apply(evt);
     if (!Objects.equals(oldValue, newValue)) {

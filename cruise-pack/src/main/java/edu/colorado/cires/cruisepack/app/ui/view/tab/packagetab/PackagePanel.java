@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -16,6 +17,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -155,8 +157,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
 
-    cruiseIdField.addActionListener((evt) -> packageController.setCruiseId(cruiseIdField.getText()));
-    segmentField.addActionListener((evt) -> packageController.setSegment(segmentField.getText()));
+    cruiseIdField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> packageController.setCruiseId(cruiseIdField.getText()));
+    segmentField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> packageController.setSegment(segmentField.getText()));
     seaList.addItemListener((evt) -> packageController.setSea((DropDownItem) evt.getItem()));
     arrivalPortList.addItemListener((evt) -> packageController.setArrivalPort((DropDownItem) evt.getItem()));
     departurePortList.addItemListener((evt) -> packageController.setDeparturePort((DropDownItem) evt.getItem()));
@@ -164,7 +166,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     arrivalDateField.addDateChangeListener((evt) -> packageController.setArrivalDate(evt.getNewDate()));
     releaseDateField.addDateChangeListener((evt) -> packageController.setReleaseDate(evt.getNewDate()));
     dirSelectButton.addActionListener((evt) -> handleDirSelect());
-    packageDirectoryField.addActionListener((evt) -> handleDirValue(packageDirectoryField.getText()));
+    packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
     newProjectButton.addActionListener((evt) -> projectChooserPanel.addRow());
 
   }
@@ -213,7 +215,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
         updateDatePicker(releaseDateField, evt);
         break;
       case Events.UPDATE_PACKAGE_DIRECTORY:
-        updateTextField(packageDirectoryField, evt, e -> ((Path)e.getNewValue()).toAbsolutePath().normalize().toString());
+        updatePathField(packageDirectoryField, evt);
         break;
       default:
         break;

@@ -34,6 +34,22 @@ public class CruiseInformationController implements PropertyChangeListener {
     cruiseInformationModel.setDocumentsPathError(documentsPathError);
   }
 
+  public void setCruiseTitle(String cruiseTitle) {
+    cruiseInformationModel.setCruiseTitle(cruiseTitle);
+  }
+
+  public void setCruiseTitleError(String cruiseTitleError) {
+    cruiseInformationModel.setCruiseTitleError(cruiseTitleError);
+  }
+
+  public void setCruisePurpose(String cruisePurpose) {
+    cruiseInformationModel.setCruisePurpose(cruisePurpose);
+  }
+
+  public void setCruiseDescription(String cruiseDescription) {
+    cruiseInformationModel.setCruiseDescription(cruiseDescription);
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     for (ReactiveView view : reactiveViewRegistry.getViews()) {

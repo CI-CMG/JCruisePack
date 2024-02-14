@@ -13,11 +13,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PackagingValidationService {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(PackagingValidationService.class);
 
   private final Validator validator;
   private final PackageModel packageModel;
@@ -53,12 +57,17 @@ public class PackagingValidationService {
   }
 
   private void updateOmicsErrors(Set<ConstraintViolation<OmicsModel>> omicsViolations) {
+    LOGGER.warn("omics {}", omicsViolations);
+    // TODO
   }
 
   private void updateCruiseInformationErrors(Set<ConstraintViolation<CruiseInformationModel>> cruiseInformationViolations) {
+    LOGGER.warn("cruise information {}", cruiseInformationViolations);
+    // TODO
   }
 
   private void updatePackageErrors(Set<ConstraintViolation<PackageModel>> packageViolations) {
+    LOGGER.warn("package {}", packageViolations);
     // TODO
   }
 

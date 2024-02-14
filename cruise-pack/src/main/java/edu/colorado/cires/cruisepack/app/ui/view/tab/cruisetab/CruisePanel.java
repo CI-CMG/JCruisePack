@@ -1,9 +1,20 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.cruisetab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.ui.controller.CruiseInformationController;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -12,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CruisePanel extends JPanel {
+public class CruisePanel extends JPanel implements ReactiveView {
 
   private static final String CRUISE_TITLE_LABEL = "Cruise Title";
   private static final String CRUISE_PURPOSE_LABEL = "Cruise Purpose";
@@ -23,10 +34,17 @@ public class CruisePanel extends JPanel {
   private final JTextArea cruiseDescriptionField = new JTextArea();
 
   private final CruiseDocumentsPanel cruiseDocumentsPanel;
+  private final CruiseInformationModel cruiseInformationModel;
+  private final ReactiveViewRegistry reactiveViewRegistry;
+  private final CruiseInformationController cruiseInformationController;
 
   @Autowired
-  public CruisePanel(CruiseDocumentsPanel cruiseDocumentsPanel) {
+  public CruisePanel(CruiseDocumentsPanel cruiseDocumentsPanel, CruiseInformationModel cruiseInformationModel,
+      ReactiveViewRegistry reactiveViewRegistry, CruiseInformationController cruiseInformationController) {
     this.cruiseDocumentsPanel = cruiseDocumentsPanel;
+    this.cruiseInformationModel = cruiseInformationModel;
+    this.reactiveViewRegistry = reactiveViewRegistry;
+    this.cruiseInformationController = cruiseInformationController;
   }
 
   @PostConstruct
@@ -39,5 +57,33 @@ public class CruisePanel extends JPanel {
     add(new JLabel(CRUISE_DESCRIPTION_LABEL), configureLayout(0, 4));
     add(cruiseDescriptionField, configureLayout(0, 5, c -> c.ipady = 200));
     add(cruiseDocumentsPanel, configureLayout(0, 6));
+
+    cruiseTitleField.setText(cruiseInformationModel.getCruiseTitle());
+    cruisePurposeField.setText(cruiseInformationModel.getCruisePurpose());
+    cruiseDescriptionField.setText(cruiseInformationModel.getCruiseDescription());
+
+    reactiveViewRegistry.register(this);
+
+    cruiseTitleField.getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> cruiseInformationController.setCruiseTitle(cruiseTitleField.getText()));
+    cruisePurposeField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> cruiseInformationController.setCruisePurpose(cruisePurposeField.getText()));
+    cruiseDescriptionField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> cruiseInformationController.setCruiseDescription(cruiseDescriptionField.getText()));
+
+  }
+
+  @Override
+  public void onChange(PropertyChangeEvent evt) {
+    switch (evt.getPropertyName()) {
+      case Events.UPDATE_CRUISE_TITLE:
+        updateTextField(cruiseTitleField, evt);
+        break;
+      case Events.UPDATE_CRUISE_PURPOSE:
+        updateTextField(cruisePurposeField, evt);
+        break;
+      case Events.UPDATE_CRUISE_DESCRIPTION:
+        updateTextField(cruiseDescriptionField, evt);
+        break;
+      default:
+        break;
+    }
   }
 }

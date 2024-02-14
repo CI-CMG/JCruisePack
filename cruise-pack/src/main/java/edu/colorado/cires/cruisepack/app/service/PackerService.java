@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,14 @@ public class PackerService {
     footerControlController.setSaveButtonEnabled(false);
     footerControlController.setStopButtonEnabled(false);
     try {
-      validationService.validate().ifPresent(this::startPackingThread);
+      Optional<PackJob> maybePackJob = validationService.validate();
+      if (maybePackJob.isPresent()) {
+        startPackingThread(maybePackJob.get());
+      } else {
+        footerControlController.setPackageButtonEnabled(true);
+        footerControlController.setSaveButtonEnabled(true);
+        footerControlController.setStopButtonEnabled(false);
+      }
     } catch (Exception e) {
       footerControlController.setPackageButtonEnabled(true);
       footerControlController.setSaveButtonEnabled(true);
