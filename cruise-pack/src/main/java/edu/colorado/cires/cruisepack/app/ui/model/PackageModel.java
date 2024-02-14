@@ -5,17 +5,20 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import java.io.File;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.Objects;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PackageModel extends PropertyChangeModel {
 
-  private String cruiseId = "";
-  private String segment = "";
+  @NotBlank //TODO add more validation, length, underscores, etc?
+  private String cruiseId = null;
+  private String cruiseIdError = null;
+
+  private String segment = null;
   private DropDownItem sea = SeaDatastore.UNSELECTED_SEA;
   private DropDownItem arrivalPort = PortDatastore.UNSELECTED_PORT;
   private DropDownItem departurePort = PortDatastore.UNSELECTED_PORT;
@@ -23,18 +26,17 @@ public class PackageModel extends PropertyChangeModel {
   private LocalDate departureDate = null;
   private LocalDate arrivalDate = null;
   private LocalDate releaseDate = null;
+
+  @NotNull //TODO add more validation, path exists, space?
   private Path packageDirectory = null;
+  private String packageDirectoryError = null;
 
   public String getCruiseId() {
     return cruiseId;
   }
 
   public void setCruiseId(String cruiseId) {
-    String oldCruiseId = this.cruiseId;
-    if (!Objects.equals(cruiseId, oldCruiseId)) {
-      this.cruiseId = cruiseId;
-      fireChangeEvent(Events.UPDATE_CRUISE_ID, oldCruiseId, cruiseId);
-    }
+    setIfChanged(Events.UPDATE_CRUISE_ID, cruiseId, () -> this.cruiseId, (nv) -> this.cruiseId = nv);
   }
 
   public DropDownItem getSea() {
@@ -46,11 +48,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setArrivalPort(DropDownItem arrivalPort) {
-    DropDownItem oldArrivalPort = this.arrivalPort;
-    if (!Objects.equals(arrivalPort, oldArrivalPort)) {
-      this.arrivalPort = arrivalPort;
-      fireChangeEvent(Events.UPDATE_ARRIVAL_PORT, oldArrivalPort, arrivalPort);
-    }
+    setIfChanged(Events.UPDATE_ARRIVAL_PORT, arrivalPort, () -> this.arrivalPort, (nv) -> this.arrivalPort = nv);
   }
 
   public DropDownItem getDeparturePort() {
@@ -58,19 +56,11 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setDeparturePort(DropDownItem departurePort) {
-    DropDownItem oldDeparturePort = this.departurePort;
-    if (!Objects.equals(departurePort, oldDeparturePort)) {
-      this.departurePort = departurePort;
-      fireChangeEvent(Events.UPDATE_DEPARTURE_PORT, oldDeparturePort, departurePort);
-    }
+    setIfChanged(Events.UPDATE_DEPARTURE_PORT, departurePort, () -> this.departurePort, (nv) -> this.departurePort = nv);
   }
 
   public void setSea(DropDownItem sea) {
-    DropDownItem oldSea = this.sea;
-    if (!Objects.equals(sea, oldSea)) {
-      this.sea = sea;
-      fireChangeEvent(Events.UPDATE_SEA, oldSea, sea);
-    }
+    setIfChanged(Events.UPDATE_SEA, sea, () -> this.sea, (nv) -> this.sea = nv);
   }
 
   public DropDownItem getShip() {
@@ -78,11 +68,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setShip(DropDownItem ship) {
-    DropDownItem oldShip = this.ship;
-    if (!Objects.equals(ship, oldShip)) {
-      this.ship = ship;
-      fireChangeEvent(Events.UPDATE_SHIP, oldShip, ship);
-    }
+    setIfChanged(Events.UPDATE_SHIP, ship, () -> this.ship, (nv) -> this.ship = nv);
   }
 
   public String getSegment() {
@@ -90,11 +76,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setSegment(String segment) {
-    String oldSegment = this.segment;
-    if (!Objects.equals(segment, oldSegment)) {
-      this.segment = segment;
-      fireChangeEvent(Events.UPDATE_SEGMENT, oldSegment, segment);
-    }
+    setIfChanged(Events.UPDATE_SEGMENT, segment, () -> this.segment, (nv) -> this.segment = nv);
   }
 
   public LocalDate getDepartureDate() {
@@ -102,11 +84,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setDepartureDate(LocalDate departureDate) {
-    LocalDate oldDepartureDate = this.departureDate;
-    if (!Objects.equals(departureDate, oldDepartureDate)) {
-      this.departureDate = departureDate;
-      fireChangeEvent(Events.UPDATE_DEPARTURE_DATE, oldDepartureDate, departureDate);
-    }
+    setIfChanged(Events.UPDATE_DEPARTURE_DATE, departureDate, () -> this.departureDate, (nv) -> this.departureDate = nv);
   }
 
   public LocalDate getArrivalDate() {
@@ -114,11 +92,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setArrivalDate(LocalDate arrivalDate) {
-    LocalDate oldArrivalDate = this.arrivalDate;
-    if (!Objects.equals(arrivalDate, oldArrivalDate)) {
-      this.arrivalDate = arrivalDate;
-      fireChangeEvent(Events.UPDATE_ARRIVAL_DATE, oldArrivalDate, arrivalDate);
-    }
+    setIfChanged(Events.UPDATE_ARRIVAL_DATE, arrivalDate, () -> this.arrivalDate, (nv) -> this.arrivalDate = nv);
   }
 
   public LocalDate getReleaseDate() {
@@ -126,11 +100,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setReleaseDate(LocalDate releaseDate) {
-    LocalDate oldReleaseDate = this.releaseDate;
-    if (!Objects.equals(releaseDate, oldReleaseDate)) {
-      this.releaseDate = releaseDate;
-      fireChangeEvent(Events.UPDATE_RELEASE_DATE, oldReleaseDate, releaseDate);
-    }
+    setIfChanged(Events.UPDATE_RELEASE_DATE, releaseDate, () -> this.releaseDate, (nv) -> this.releaseDate = nv);
   }
 
   public Path getPackageDirectory() {
@@ -138,10 +108,24 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setPackageDirectory(Path packageDirectory) {
-    Path oldPackageDirectory = this.packageDirectory;
-    if (!Objects.equals(packageDirectory, oldPackageDirectory)) {
-      this.packageDirectory = packageDirectory;
-      fireChangeEvent(Events.UPDATE_PACKAGE_DIRECTORY, oldPackageDirectory, packageDirectory);
-    }
+    setIfChanged(Events.UPDATE_PACKAGE_DIRECTORY, packageDirectory, () -> this.packageDirectory, (nv) -> this.packageDirectory = nv);
+  }
+
+  public String getCruiseIdError() {
+    return cruiseIdError;
+  }
+
+  public void setCruiseIdError(String cruiseIdError) {
+    setIfChanged(Events.UPDATE_CRUISE_ID_ERROR, cruiseIdError, () -> this.cruiseIdError, (nv) -> this.cruiseIdError = nv);
+
+  }
+
+  public String getPackageDirectoryError() {
+    return packageDirectoryError;
+  }
+
+  public void setPackageDirectoryError(String packageDirectoryError) {
+    setIfChanged(Events.UPDATE_PACKAGE_DIRECTORY_ERROR, packageDirectoryError, () -> this.packageDirectoryError, (nv) -> this.packageDirectoryError = nv);
+
   }
 }

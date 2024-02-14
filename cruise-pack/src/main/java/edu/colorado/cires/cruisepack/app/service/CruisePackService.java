@@ -14,15 +14,12 @@ public class CruisePackService {
   private final CruiseDataDatastore cruiseDataDatastore;
   private final MetadataService metadataService;
   private final PackerService packerService;
-  private final PackerStatusService packerStatusService;
 
   @Autowired
-  public CruisePackService(CruiseDataDatastore cruiseDataDatastore, MetadataService metadataService, PackerService packerService,
-      PackerStatusService packerStatusService) {
+  public CruisePackService(CruiseDataDatastore cruiseDataDatastore, MetadataService metadataService, PackerService packerService) {
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.metadataService = metadataService;
     this.packerService = packerService;
-    this.packerStatusService = packerStatusService;
   }
 
   private Bag newBag(Path path) {

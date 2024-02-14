@@ -6,6 +6,7 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filt
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -23,19 +24,47 @@ public class PackerService {
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerService.class);
 
   private final ObjectMapper objectMapper;
+  private final PackagingValidationService validationService;
+  private final FooterControlController footerControlController;
 
   @Autowired
-  public PackerService(ObjectMapper objectMapper) {
+  public PackerService(ObjectMapper objectMapper, PackagingValidationService validationService, FooterControlController footerControlController) {
     this.objectMapper = objectMapper;
+    this.validationService = validationService;
+    this.footerControlController = footerControlController;
   }
 
-  public PackerHandle startPacking(PackJob packJob) {
-    setDirNames(packJob);
-//    rawCheck(packJob);
-    copyDocs(packJob);
-    copyOmics(packJob);
-    packData(packJob);
-    return null; // TODO
+  public void startPacking() {
+    footerControlController.setPackageButtonEnabled(false);
+    footerControlController.setSaveButtonEnabled(false);
+    footerControlController.setStopButtonEnabled(false);
+    try {
+      validationService.validate().ifPresent(this::startPackingThread);
+    } catch (Exception e) {
+      footerControlController.setPackageButtonEnabled(true);
+      footerControlController.setSaveButtonEnabled(true);
+      footerControlController.setStopButtonEnabled(false);
+      LOGGER.warn("An error occurred while initiating pack job", e);
+    }
+  }
+
+  private void startPackingThread(PackJob packJob) {
+    // TODO put in queue?
+    new Thread(() -> {
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+//      setDirNames(packJob);
+////    rawCheck(packJob);
+//      copyDocs(packJob);
+//      copyOmics(packJob);
+//      packData(packJob);
+      footerControlController.setPackageButtonEnabled(true);
+      footerControlController.setSaveButtonEnabled(true);
+      footerControlController.setStopButtonEnabled(false);
+    }).start();
   }
 
   /*

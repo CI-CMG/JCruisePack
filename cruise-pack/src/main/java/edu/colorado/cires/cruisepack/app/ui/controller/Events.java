@@ -2,7 +2,9 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 
 public final class Events {
 
+  // Package
   public static final String UPDATE_CRUISE_ID = "UPDATE_CRUISE_ID";
+  public static final String UPDATE_CRUISE_ID_ERROR = "UPDATE_CRUISE_ID_ERROR";
   public static final String UPDATE_SEA = "UPDATE_SEA";
   public static final String UPDATE_ARRIVAL_PORT = "UPDATE_ARRIVAL_PORT";
   public static final String UPDATE_DEPARTURE_PORT = "UPDATE_DEPARTURE_PORT";
@@ -12,6 +14,13 @@ public final class Events {
   public static final String UPDATE_ARRIVAL_DATE = "UPDATE_ARRIVAL_DATE";
   public static final String UPDATE_RELEASE_DATE = "UPDATE_RELEASE_DATE";
   public static final String UPDATE_PACKAGE_DIRECTORY = "UPDATE_PACKAGE_DIRECTORY";
+  public static final String UPDATE_PACKAGE_DIRECTORY_ERROR = "UPDATE_PACKAGE_DIRECTORY_ERROR";
+
+  // Footer Control
+  public static final String UPDATE_STOP_BUTTON_ENABLED = "UPDATE_STOP_BUTTON_ENABLED";
+  public static final String UPDATE_SAVE_BUTTON_ENABLED = "UPDATE_SAVE_BUTTON_ENABLED";
+  public static final String UPDATE_PACKAGE_BUTTON_ENABLED = "UPDATE_PACKAGE_BUTTON_ENABLED";
+
 
   // PeopleModel
   public static final String UPDATE_SCIENTISTS = "UPDATE_SCIENTISTS";
