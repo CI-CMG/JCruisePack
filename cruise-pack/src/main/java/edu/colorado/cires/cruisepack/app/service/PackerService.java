@@ -6,6 +6,7 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filt
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -23,12 +24,14 @@ public class PackerService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerService.class);
 
+  private final ServiceProperties serviceProperties;
   private final ObjectMapper objectMapper;
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
 
   @Autowired
-  public PackerService(ObjectMapper objectMapper, PackagingValidationService validationService, FooterControlController footerControlController) {
+  public PackerService(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackagingValidationService validationService, FooterControlController footerControlController) {
+    this.serviceProperties = serviceProperties;
     this.objectMapper = objectMapper;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
@@ -44,7 +47,7 @@ public class PackerService {
       footerControlController.setPackageButtonEnabled(true);
       footerControlController.setSaveButtonEnabled(true);
       footerControlController.setStopButtonEnabled(false);
-      LOGGER.warn("An error occurred while initiating pack job", e);
+      LOGGER.error("An error occurred while initiating pack job", e);
     }
   }
 
@@ -52,19 +55,27 @@ public class PackerService {
     // TODO put in queue?
     new Thread(() -> {
       try {
-        Thread.sleep(5000);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
 //      setDirNames(packJob);
 ////    rawCheck(packJob);
-//      copyDocs(packJob);
-//      copyOmics(packJob);
+        resetBagDirs(packJob);
+      copyDocs(packJob);
+      copyOmics(packJob);
 //      packData(packJob);
-      footerControlController.setPackageButtonEnabled(true);
-      footerControlController.setSaveButtonEnabled(true);
-      footerControlController.setStopButtonEnabled(false);
+
+      } catch (Exception e) {
+        LOGGER.error("An error occurred while packing", e);
+      } finally {
+        footerControlController.setPackageButtonEnabled(true);
+        footerControlController.setSaveButtonEnabled(true);
+        footerControlController.setStopButtonEnabled(false);
+      }
     }).start();
+  }
+
+  private void resetBagDirs(PackJob packJob) {
+    mkDir(packJob.getPackageDirectory().resolve(packJob.getPackageId()));
+    // if there is an existing bag, move everything in data dir up to top level in preparation for packing
+    // TODO
   }
 
   /*
@@ -113,7 +124,9 @@ public class PackerService {
    */
 
   private void setDirNames(PackJob packJob) {
-    DatasetNameResolver.setDirNamesOnInstruments(packJob.getMasterBagName(), packJob.getInstruments());
+    throw new UnsupportedOperationException();
+    //TODO
+//    DatasetNameResolver.setDirNamesOnInstruments(packJob.getMasterBagName(), packJob.getInstruments());
   }
 
   /*
@@ -272,10 +285,9 @@ public class PackerService {
    */
 
   private void copyDocs(PackJob packJob) {
-    if (packJob.getDocsDir() != null) {
-      Path docsDir = packJob.getDocsDir().toAbsolutePath().normalize();
-      Path data = packJob.getBagPath().resolve("data");
-      Path targetDocs = data.resolve("docs").toAbsolutePath().normalize();
+    if (packJob.getDocumentsPath() != null) {
+      Path docsDir = packJob.getDocumentsPath().toAbsolutePath().normalize();
+      Path targetDocs = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("docs").toAbsolutePath().normalize();
       try {
         Files.walkFileTree(docsDir, new SimpleFileVisitor<>() {
 
@@ -325,9 +337,9 @@ public class PackerService {
    */
 
   private void copyOmics(PackJob packJob) {
-    if (packJob.getOmicsFile() != null) {
-      Path omicsFile = packJob.getOmicsFile().toAbsolutePath().normalize();
-      Path omicsDir = packJob.getBagPath().resolve("data").resolve("omics").toAbsolutePath().normalize();
+    if (packJob.getOmicsSampleTrackingSheetPath() != null) {
+      Path omicsFile = packJob.getOmicsSampleTrackingSheetPath().toAbsolutePath().normalize();
+      Path omicsDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("omics").toAbsolutePath().normalize();
       Path targetFile = omicsDir.resolve(omicsFile.getFileName());
       if (filterHidden(omicsFile)) {
         mkDir(omicsDir);
@@ -358,7 +370,7 @@ public class PackerService {
    */
 
   private void packData(PackJob packJob) {
-    DatasetPacker.pack(objectMapper, packJob);
+    DatasetPacker.pack(serviceProperties, objectMapper, packJob);
   }
 
   /*

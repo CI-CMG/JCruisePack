@@ -25,7 +25,10 @@ public class PackageModel extends PropertyChangeModel {
   private DropDownItem ship = ShipDatastore.UNSELECTED_SHIP;
   private LocalDate departureDate = null;
   private LocalDate arrivalDate = null;
+
+  @NotNull //TODO validate in the future
   private LocalDate releaseDate = null;
+  private String releaseDateError = null;
 
   @NotNull //TODO add more validation, path exists, space?
   private Path packageDirectory = null;
@@ -36,6 +39,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setCruiseId(String cruiseId) {
+    cruiseId = normalizeString(cruiseId);
     setIfChanged(Events.UPDATE_CRUISE_ID, cruiseId, () -> this.cruiseId, (nv) -> this.cruiseId = nv);
   }
 
@@ -76,6 +80,7 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setSegment(String segment) {
+    segment = normalizeString(segment);
     setIfChanged(Events.UPDATE_SEGMENT, segment, () -> this.segment, (nv) -> this.segment = nv);
   }
 
@@ -126,6 +131,13 @@ public class PackageModel extends PropertyChangeModel {
 
   public void setPackageDirectoryError(String packageDirectoryError) {
     setIfChanged(Events.UPDATE_PACKAGE_DIRECTORY_ERROR, packageDirectoryError, () -> this.packageDirectoryError, (nv) -> this.packageDirectoryError = nv);
+  }
 
+  public String getReleaseDateError() {
+    return releaseDateError;
+  }
+
+  public void setReleaseDateError(String releaseDateError) {
+    setIfChanged(Events.UPDATE_RELEASE_DATE_ERROR, releaseDateError, () -> this.releaseDateError, (nv) -> this.releaseDateError = nv);
   }
 }

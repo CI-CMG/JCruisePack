@@ -272,14 +272,9 @@ public class CruisePackService {
    */
 
   private void newPackage(PackJobInput input, PackJob packJob) {
-    String packageId = input.getCruiseId().trim();
-    if (StringUtils.isNotBlank(input.getSegmentId())) {
-      packageId = packageId + "_" + input.getSegmentId().trim();
-    }
-    packJob.setPackageId(packageId);
 
-    if (cruiseDataDatastore.packageIdExists(packageId)) {
-      throw new CruisePackValidationException("The package name '" + packageId + "' already exists");
+    if (cruiseDataDatastore.packageIdExists(packJob.getPackageId())) {
+      throw new CruisePackValidationException("The package name '" + packJob.getPackageId() + "' already exists");
     }
 
     cruiseDataDatastore.save(packJob);

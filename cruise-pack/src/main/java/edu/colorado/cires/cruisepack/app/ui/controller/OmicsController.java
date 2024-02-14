@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class OmicsController implements PropertyChangeListener {
         omicsModel.setContact(contact);
     }
 
-    public void setSampleTrackingSheet(String sampleTrackingSheet) {
+    public void setSampleTrackingSheet(Path sampleTrackingSheet) {
         omicsModel.setSampleTrackingSheet(sampleTrackingSheet);
     }
 

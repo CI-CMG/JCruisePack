@@ -13,6 +13,7 @@ public final class Events {
   public static final String UPDATE_DEPARTURE_DATE = "UPDATE_DEPARTURE_DATE";
   public static final String UPDATE_ARRIVAL_DATE = "UPDATE_ARRIVAL_DATE";
   public static final String UPDATE_RELEASE_DATE = "UPDATE_RELEASE_DATE";
+  public static final String UPDATE_RELEASE_DATE_ERROR = "UPDATE_RELEASE_DATE_ERROR";
   public static final String UPDATE_PACKAGE_DIRECTORY = "UPDATE_PACKAGE_DIRECTORY";
   public static final String UPDATE_PACKAGE_DIRECTORY_ERROR = "UPDATE_PACKAGE_DIRECTORY_ERROR";
 
@@ -36,6 +37,15 @@ public final class Events {
   public static final String UPDATE_OMICS_SAMPLING_TYPES = "UPDATE_OMICS_SAMPLING_TYPES";
   public static final String UPDATE_OMICS_EXPECTED_ANALYSES = "UPDATE_OMICS_EXPECTED_ANALYSES";
   public static final String UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION = "UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION";
+
+  // Cruise Information
+  public static final String UPDATE_CRUISE_TITLE = "UPDATE_CRUISE_TITLE";
+  public static final String UPDATE_CRUISE_TITLE_ERROR = "UPDATE_CRUISE_TITLE_ERROR";
+  public static final String UPDATE_CRUISE_PURPOSE = "UPDATE_CRUISE_PURPOSE";
+  public static final String UPDATE_CRUISE_DESCRIPTION = "UPDATE_CRUISE_DESCRIPTION";
+  public static final String UPDATE_DOCS_DIRECTORY = "UPDATE_DOCS_DIRECTORY";
+  public static final String UPDATE_DOCS_DIRECTORY_ERROR = "UPDATE_DOCS_DIRECTORY_ERROR";
+
 
   private Events() {
 

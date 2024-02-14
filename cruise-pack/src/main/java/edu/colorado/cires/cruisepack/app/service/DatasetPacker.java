@@ -6,6 +6,7 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filt
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.Instrument;
 import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.PackageInstrument;
 import gov.loc.repository.bagit.creator.BagCreator;
@@ -39,9 +40,10 @@ public class DatasetPacker {
 
 
 
-  private static void copyLocalData(PackJob packJob, Path instrumentBagDataDir) {
-    Path people = packJob.getCruisePackDataDir().resolve(LOCAL_DATA).resolve(PEOPLE_XML);
-    Path organizations = packJob.getCruisePackDataDir().resolve(LOCAL_DATA).resolve(ORGANIZATIONS_XML);
+  private static void copyLocalData(ServiceProperties serviceProperties, PackJob packJob, Path instrumentBagDataDir) {
+    Path systemLocalData = Paths.get(serviceProperties.getWorkDir()).resolve(LOCAL_DATA);
+    Path people = systemLocalData.resolve(PEOPLE_XML);
+    Path organizations = systemLocalData.resolve(ORGANIZATIONS_XML);
     Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);
     if (Files.isRegularFile(people)) {
       mkDir(localData);
@@ -104,68 +106,71 @@ public class DatasetPacker {
     return packageMetadata;
   }
 
-  public static void pack(ObjectMapper objectMapper, PackJob packJob) {
-    Path mainBagDataDir = packJob.getBagPath().resolve("data").toAbsolutePath().normalize();
+  public static void pack(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackJob packJob) {
+//    Path mainBagDataDir = packJob.getBagPath().resolve("data").toAbsolutePath().normalize();
+    Path mainBagDataDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).toAbsolutePath().normalize();
 
-    writeMetadata(objectMapper, packJob.getCruiseMetadata(), mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
+    //TODO
+//    writeMetadata(objectMapper, packJob.getCruiseMetadata(), mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
 
-    for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
-      String instrumentBagName = instruments.get(0).getBagName();
-      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
-
-      mkDir(instrumentBagRootDir);
-
-      copyLocalData(packJob, instrumentBagRootDir);
-
-      for (InstrumentDetail dataset : instruments) {
-        Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
-        Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
-
-        CruiseMetadata packageMetadata = getPackageMetadata(packJob.getCruiseMetadata(), dataset);
-        writeMetadata(objectMapper, packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
-
-
-        try {
-          Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
-
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
-              if (Files.isHidden(dir)) {
-                return FileVisitResult.SKIP_SUBTREE;
-              }
-              return super.preVisitDirectory(dir, attr);
-            }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
-              Path sourceFile = file.toAbsolutePath().normalize();
-              Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
-              if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
-                mkDir(targetFile.getParent());
-                copy(sourceFile, targetFile);
-              }
-              return super.visitFile(file, attr);
-            }
-          });
-        } catch (IOException e) {
-          throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
-        }
-
-//        if (dataset.getCustomHandler() != null) {
-//          CustomInstrumentProcessingContext customProcessingContext = new CustomInstrumentProcessingContext(packJob, dataset, mainBagDataDir,
-//              datasetBagRootDir);
+    //TODO
+//    for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
+//      String instrumentBagName = instruments.get(0).getBagName();
+//      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
 //
-//          dataset.getCustomHandler().accept(customProcessingContext);
+//      mkDir(instrumentBagRootDir);
+//
+//      copyLocalData(serviceProperties, packJob, instrumentBagRootDir);
+//
+//      for (InstrumentDetail dataset : instruments) {
+//        Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
+//        Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
+//
+//        CruiseMetadata packageMetadata = getPackageMetadata(packJob.getCruiseMetadata(), dataset);
+//        writeMetadata(objectMapper, packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
+//
+//
+//        try {
+//          Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
+//
+//            @Override
+//            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+//              if (Files.isHidden(dir)) {
+//                return FileVisitResult.SKIP_SUBTREE;
+//              }
+//              return super.preVisitDirectory(dir, attr);
+//            }
+//
+//            @Override
+//            public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+//              Path sourceFile = file.toAbsolutePath().normalize();
+//              Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
+//              if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
+//                mkDir(targetFile.getParent());
+//                copy(sourceFile, targetFile);
+//              }
+//              return super.visitFile(file, attr);
+//            }
+//          });
+//        } catch (IOException e) {
+//          throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
 //        }
-      }
-
-      try {
-        BagCreator.bagInPlace(instrumentBagRootDir, Arrays.asList(StandardSupportedAlgorithms.MD5), false);
-      } catch (NoSuchAlgorithmException | IOException e) {
-        throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
-      }
-
-    }
+//
+////        if (dataset.getCustomHandler() != null) {
+////          CustomInstrumentProcessingContext customProcessingContext = new CustomInstrumentProcessingContext(packJob, dataset, mainBagDataDir,
+////              datasetBagRootDir);
+////
+////          dataset.getCustomHandler().accept(customProcessingContext);
+////        }
+//      }
+//
+//      try {
+//        BagCreator.bagInPlace(instrumentBagRootDir, Arrays.asList(StandardSupportedAlgorithms.MD5), false);
+//      } catch (NoSuchAlgorithmException | IOException e) {
+//        throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
+//      }
+//
+//    }
   }
 
 //  private static Bag makeInternalBag(Path mainBagRootDir, String bagName) {

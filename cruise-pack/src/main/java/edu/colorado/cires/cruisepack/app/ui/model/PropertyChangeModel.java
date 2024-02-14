@@ -39,4 +39,15 @@ public abstract class PropertyChangeModel {
       fireChangeEvent(event, oldValue, newValue);
     }
   }
+
+  protected String normalizeString(String value) {
+    if (value == null) {
+      return value;
+    }
+    value = value.trim();
+    if (value.isEmpty()) {
+      return null;
+    }
+    return value;
+  }
 }

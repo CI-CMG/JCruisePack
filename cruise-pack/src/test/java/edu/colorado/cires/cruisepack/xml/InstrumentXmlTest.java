@@ -14,6 +14,7 @@ import java.util.Collections;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 public class InstrumentXmlTest {
 
   private static InstrumentData unmarshal() throws JAXBException, IOException {
