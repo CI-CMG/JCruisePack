@@ -4,24 +4,45 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import java.awt.Color;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-public class AppendableTableWithSelections extends JPanel {
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+
+public class AppendableTableWithSelections extends JComponent {
   
-  private final String[] valueList;
   private final String tableHeader;
   private final String addText;
+  private final DropDownItem defaultValue;
+  private final List<DropDownItem> options;
 
-  public AppendableTableWithSelections(String[] valueList, String tableHeader, String addText) {
-    this.valueList = valueList;
+  private final JPanel listingValuesPannel = new JPanel();
+  private final List<ValuesChangedListener> listeners = new ArrayList<>(0);
+
+  public AppendableTableWithSelections(String tableHeader, String addText, DropDownItem defaultValue, List<DropDownItem> options) {
     this.tableHeader = tableHeader;
     this.addText = addText;
-    
+    this.defaultValue = defaultValue;
+    this.options = options;
     init();
+  }
+
+  public void addValuesChangedListener(ValuesChangedListener listener) {
+    listeners.add(listener);
+  }
+
+  public void removeValuedChangedListener(ValuesChangedListener listener) {
+    listeners.remove(listener);
   }
   
   
@@ -37,10 +58,8 @@ public class AppendableTableWithSelections extends JPanel {
     JPanel listingPanel = new JPanel();
     listingPanel.setBackground(new Color(Color.WHITE.getRGB()));
     listingPanel.setLayout(new GridBagLayout());
-    JPanel listingValuesPannel = new JPanel();
     listingValuesPannel.setLayout(new GridBagLayout());
     listingValuesPannel.setBackground(new Color(Color.WHITE.getRGB()));
-    listingValuesPannel.add(new JComboBox<>(valueList), configureLayout(0, 0));
     JPanel fillPanel = new JPanel();
     fillPanel.setBackground(new Color(Color.WHITE.getRGB()));
 
@@ -57,14 +76,54 @@ public class AppendableTableWithSelections extends JPanel {
 
     JButton addButton = new JButton(addText);
     addButton.addActionListener(e -> {
-      listingValuesPannel.add(new JComboBox<>(valueList), configureLayout(0, listingValuesPannel.getComponents().length));
-      revalidate();
+      handleAddChange();
     });
     panel.add(addButton, configureLayout(0, 2, c -> {
       c.weighty = 0;
     }));
 
     add(panel, configureLayout(0, 0, c -> c.weighty = 100));
+  }
+
+  private void handleUpdateChange() {
+    List<DropDownItem> items = getDropDowns();
+
+    for (ValuesChangedListener listener : listeners) {
+      listener.handleValuesChanged(items);
+    }
+  }
+
+  private void handleAddChange() {
+    List<DropDownItem> items = getDropDowns();
+
+    items.add(defaultValue);
+
+    for (ValuesChangedListener listener : listeners) {
+      listener.handleValuesChanged(items);
+    }
+  }
+
+  private List<DropDownItem> getDropDowns() {
+    return Arrays.stream(this.listingValuesPannel.getComponents())
+    .map(c -> (JComboBox<?>) c)
+    .map(c -> (DropDownItem) c.getSelectedItem())
+    .collect(Collectors.toList());
+  }
+
+  public void redrawComboboxes(List<DropDownItem> dropDownItems) {
+    listingValuesPannel.removeAll();
+
+    for (DropDownItem item : dropDownItems) {
+      JComboBox<DropDownItem> comboBox = new JComboBox<>();
+      comboBox.setModel(new DefaultComboBoxModel<>(options.toArray(new DropDownItem[0])));
+      comboBox.setSelectedItem(item);
+
+      comboBox.addItemListener((e) -> handleUpdateChange());
+
+      listingValuesPannel.add(comboBox, configureLayout(0, listingValuesPannel.getComponents().length));
+    }
+
+    revalidate();
   }
 
 }

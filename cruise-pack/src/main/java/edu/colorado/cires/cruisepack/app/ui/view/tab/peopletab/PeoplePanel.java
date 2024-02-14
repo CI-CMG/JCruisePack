@@ -1,12 +1,16 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateAppendableTable;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import jakarta.annotation.PostConstruct;
 
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -15,11 +19,19 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatasore;
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.PeopleController;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditOrgDialog;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 
 @Component
-public class PeoplePanel extends JPanel {
+public class PeoplePanel extends JPanel implements ReactiveView {
 
   private static final String SCIENTISTS_LABEL = "Scientists";
   private static final String SOURCE_ORG_LABEL = "Source Organizations";
@@ -34,41 +46,55 @@ public class PeoplePanel extends JPanel {
   private final PeopleList peopleList;
   private final OrganizationList organizationList;
   private final BeanFactory beanFactory;
+  private final ReactiveViewRegistry reactiveViewRegistry;
+  private final PersonDatastore personDatastore;
+  private final PeopleController peopleController;
+  private final PeopleModel peopleModel;
+
+  private final JComboBox<DropDownItem> metadataAuthorField = new JComboBox<>();
+  private final AppendableTableWithSelections scientistsField;
+  private final AppendableTableWithSelections sourceOrganizationsField;
+  private final AppendableTableWithSelections fundingOrganizationsField;
 
 
   @Autowired
-  public PeoplePanel(PeopleList peopleList, OrganizationList organizationList, BeanFactory beanFactory) {
+  public PeoplePanel(PeopleList peopleList, OrganizationList organizationList, BeanFactory beanFactory, ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatasore organizationDatasore) {
     this.peopleList = peopleList;
     this.organizationList = organizationList;
     this.beanFactory = beanFactory;
+    this.reactiveViewRegistry = reactiveViewRegistry;
+    this.personDatastore = personDatastore;
+    this.peopleController = peopleController;
+    this.peopleModel = peopleModel;
+    this.scientistsField = new AppendableTableWithSelections(SCIENTISTS_LABEL, ADD_SCIENTIST_LABEL, PersonDatastore.UNSELECTED_PERSON, personDatastore.getPersonDropDowns());
+    this.sourceOrganizationsField = new AppendableTableWithSelections(SOURCE_ORG_LABEL, ADD_SOURCE_ORG_LABEL, OrganizationDatasore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
+    this.fundingOrganizationsField = new AppendableTableWithSelections(FUNDING_ORG_LABEL, ADD_FUNDING_ORG_LABEL, OrganizationDatasore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
   }
 
 
   @PostConstruct
   public void init() {
+    initializeFields();
+    setupLayout();
+    setupMvc();
+  }
+
+  private void initializeFields() {
+    metadataAuthorField.setModel(new DefaultComboBoxModel<>(personDatastore.getPersonDropDowns().toArray(new DropDownItem[0])));
+    metadataAuthorField.setSelectedItem(peopleModel.getMetadataAuthor());
+  }
+
+  private void setupLayout() {
     setLayout(new GridBagLayout());
-    add(new AppendableTableWithSelections(
-        peopleList.getPeopleList(),
-        SCIENTISTS_LABEL,
-        ADD_SCIENTIST_LABEL
-    ), configureLayout(0, 0, c -> {
+    add(scientistsField, configureLayout(0, 0, c -> {
       c.weighty = 100;
       c.insets = new Insets(0, 0, 0, 20);
     }));
-    add(new AppendableTableWithSelections(
-        organizationList.getOrganizationList(),
-        SOURCE_ORG_LABEL,
-        ADD_SOURCE_ORG_LABEL
-    ), configureLayout(1, 0, c -> {
+    add(sourceOrganizationsField, configureLayout(1, 0, c -> {
       c.weighty = 100;
       c.insets = new Insets(0, 0, 0, 20);
     }));
-    add(new AppendableTableWithSelections(
-        organizationList.getOrganizationList(),
-       FUNDING_ORG_LABEL,
-        ADD_FUNDING_ORG_LABEL
-        
-    ), configureLayout(2, 0, c -> {
+    add(fundingOrganizationsField, configureLayout(2, 0, c -> {
       c.weighty = 100;
     }));
     
@@ -91,8 +117,38 @@ public class PeoplePanel extends JPanel {
     add(new JLabel(METADATA_AUTHOR_LABEL), configureLayout(2, 1, c -> {
       c.weighty = 0;
     }));
-    add(new JComboBox<>(peopleList.getPeopleList()), configureLayout(2, 2, c -> {
+    add(metadataAuthorField, configureLayout(2, 2, c -> {
       c.weighty = 0;
     }));
+  }
+
+  private void setupMvc() {
+    reactiveViewRegistry.register(this);
+
+    metadataAuthorField.addItemListener((e) -> peopleController.setMetadataAuthor((DropDownItem) e.getItem()));
+    scientistsField.addValuesChangedListener((i) -> peopleController.setScientists(i));
+    sourceOrganizationsField.addValuesChangedListener((i) -> peopleController.setSourceOrganizations(i));
+    fundingOrganizationsField.addValuesChangedListener((i) -> peopleController.setFundingOrganizations(i));
+  }
+
+
+  @Override
+  public void onChange(PropertyChangeEvent evt) {
+    switch (evt.getPropertyName()) {
+      case Events.UPDATE_SCIENTISTS:
+        updateAppendableTable(scientistsField, evt);
+        break;
+      case Events.UPDATE_SOURCE_ORGANIZATIONS:
+        updateAppendableTable(sourceOrganizationsField, evt);
+        break;
+      case Events.UPDATE_FUNDING_ORGANIZATIONS:
+        updateAppendableTable(fundingOrganizationsField, evt);
+        break;
+      case Events.UPDATE_METADATA_AUTHOR:
+        updateComboBox(metadataAuthorField, evt);
+        break;
+      default:
+        break;
+    }
   }
 }

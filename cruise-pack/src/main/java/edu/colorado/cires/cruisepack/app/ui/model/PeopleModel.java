@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.privatejgoodies.common.base.Objects;
 
-import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatasore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -15,9 +15,9 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 @Component
 public class PeopleModel extends PropertyChangeModel {
 
-    private List<DropDownItem> scientists = List.of(PersonDatastore.UNSELECTED_PERSON);
-    private List<DropDownItem> sourceOrganizations = List.of(OrganizationDatasore.UNSELECTED_ORGANIZATION);
-    private List<DropDownItem> fundingOrganizations = List.of(OrganizationDatasore.UNSELECTED_ORGANIZATION);
+    private List<DropDownItem> scientists = new ArrayList<>(0);
+    private List<DropDownItem> sourceOrganizations = new ArrayList<>(0);
+    private List<DropDownItem> fundingOrganizations = new ArrayList<>(0);
     private DropDownItem metadataAuthor = PersonDatastore.UNSELECTED_PERSON;
     
     public List<DropDownItem> getScientists() {
@@ -26,8 +26,8 @@ public class PeopleModel extends PropertyChangeModel {
     public void setScientists(List<DropDownItem> scientists) {
         List<DropDownItem> oldScientists = List.copyOf(this.scientists);
         if (!(
-            scientists.stream().map(DropDownItem::getId).collect(Collectors.toSet()).equals(
-                oldScientists.stream().map(DropDownItem::getId).collect(Collectors.toSet())
+            scientists.stream().map(DropDownItem::getId).collect(Collectors.toList()).equals(
+                oldScientists.stream().map(DropDownItem::getId).collect(Collectors.toList())
             )
         )) {
             this.scientists = scientists;
@@ -40,8 +40,8 @@ public class PeopleModel extends PropertyChangeModel {
     public void setSourceOrganizations(List<DropDownItem> sourceOrganizations) {
         List<DropDownItem> oldSourceOrganizations = List.copyOf(this.sourceOrganizations);
         if (!(
-            sourceOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toSet()).equals(
-                oldSourceOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toSet())
+            sourceOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toList()).equals(
+                oldSourceOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toList())
             )
         )) {
             this.sourceOrganizations = sourceOrganizations;
@@ -55,8 +55,8 @@ public class PeopleModel extends PropertyChangeModel {
     public void setFundingOrganizations(List<DropDownItem> fundingOrganizations) {
         List<DropDownItem> oldFundingOrganizatons = List.copyOf(this.fundingOrganizations);
         if (!(
-            fundingOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toSet()).equals(
-                oldFundingOrganizatons.stream().map(DropDownItem::getId).collect(Collectors.toSet())
+            fundingOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toList()).equals(
+                oldFundingOrganizatons.stream().map(DropDownItem::getId).collect(Collectors.toList())
             )
         )) {
             this.fundingOrganizations = fundingOrganizations;

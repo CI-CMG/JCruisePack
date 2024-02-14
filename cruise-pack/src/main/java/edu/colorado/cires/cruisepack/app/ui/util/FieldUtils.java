@@ -3,7 +3,9 @@ package edu.colorado.cires.cruisepack.app.ui.util;
 import com.github.lgooddatepicker.components.DatePicker;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.AppendableTableWithSelections;
 
+import java.util.List;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -89,6 +91,10 @@ public final class FieldUtils {
     if (!Objects.equals(oldValue, newValue)) {
       comboBox.setSelectedItem(newValue);
     }
+  }
+
+  public static void updateAppendableTable(AppendableTableWithSelections appendableTable, PropertyChangeEvent evt) {
+    appendableTable.redrawComboboxes((List<DropDownItem>) evt.getNewValue());
   }
 
   private FieldUtils() {
