@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import org.springframework.stereotype.Component;
@@ -12,8 +13,8 @@ public class OmicsModel extends PropertyChangeModel {
 
     private boolean samplingConducted = false;
     private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
-    private String sampleTrackingSheet = "";
-    private String bioProjectAccession = "";
+    private Path sampleTrackingSheet = null;
+    private String bioProjectAccession = null;
     private SamplingTypesModel samplingTypes = new SamplingTypesModel();
     private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
     private String additionalSamplingInformation = "";
@@ -39,11 +40,11 @@ public class OmicsModel extends PropertyChangeModel {
             fireChangeEvent(Events.UPDATE_OMICS_CONTACT, oldContact, contact);
         }
     }
-    public String getSampleTrackingSheet() {
+    public Path getSampleTrackingSheet() {
         return sampleTrackingSheet;
     }
-    public void setSampleTrackingSheet(String sampleTrackingSheet) {
-        String oldSampleTrackingSheet = this.sampleTrackingSheet;
+    public void setSampleTrackingSheet(Path sampleTrackingSheet) {
+        Path oldSampleTrackingSheet = this.sampleTrackingSheet;
         if (!oldSampleTrackingSheet.equals(sampleTrackingSheet)) {
             this.sampleTrackingSheet = sampleTrackingSheet;
             fireChangeEvent(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET, oldSampleTrackingSheet, sampleTrackingSheet);

@@ -8,11 +8,8 @@ import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,8 @@ public class PackagingValidationService {
   private final FooterControlController footerControlController;
 
   @Autowired
-  public PackagingValidationService(Validator validator, PackageModel packageModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, PackageController packageController,
+  public PackagingValidationService(Validator validator, PackageModel packageModel, OmicsModel omicsModel,
+      CruiseInformationModel cruiseInformationModel, PackageController packageController,
       FooterControlController footerControlController) {
     this.validator = validator;
     this.packageModel = packageModel;
@@ -91,8 +89,9 @@ public class PackagingValidationService {
         .setOmicsContactUuid(resolveDropDownItemUuid(omicsModel.getContact()))
         .setOmicsSampleTrackingSheetPath(omicsModel.getSampleTrackingSheet())
         .setOmicsBioProjectAccession(omicsModel.getBioProjectAccession())
-        .setOmicsSamplingTypes(omicsModel.getSamplingTypes())
-        .setOmicsExpectedAnalyses(omicsModel.getExpectedAnalyses())
+        //TODO
+//        .setOmicsSamplingTypes(omicsModel.getSamplingTypes())
+//        .setOmicsExpectedAnalyses(omicsModel.getExpectedAnalyses())
         .setOmicsAdditionalSamplingInformation(omicsModel.getAdditionalSamplingInformation())
         .setPackageId(resolvePackageId())
         .build();

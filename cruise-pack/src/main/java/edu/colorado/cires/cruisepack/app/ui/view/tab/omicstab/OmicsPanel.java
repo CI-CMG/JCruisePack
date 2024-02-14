@@ -1,25 +1,35 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.omicstab;
 
-import jakarta.annotation.PostConstruct;
-
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateCheckBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefulRadioButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextArea;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.OmicsController;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
+import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.PeopleList;
+import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,22 +42,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.JTextComponent;
-
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.controller.OmicsController;
-import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
-import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.PeopleList;
 
 @Component
 public class OmicsPanel extends JPanel implements ReactiveView {
@@ -103,11 +100,16 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     setupMvc();
   }
 
+  private void handleDirValue(String value) {
+    Path path = Paths.get(value);
+    omicsController.setSampleTrackingSheet(path.toAbsolutePath().normalize());
+  }
+
   private void initializeFields() {
     samplingConductedField.setSelectedValue(omicsModel.isSamplingConducted());
     contactField.setModel(new DefaultComboBoxModel<>(personDatastore.getPersonDropDowns().toArray(new DropDownItem[0])));
     contactField.setSelectedItem(omicsModel.getContact());
-    trackingSheetField.setText(omicsModel.getSampleTrackingSheet());
+    trackingSheetField.setText(omicsModel.getSampleTrackingSheet() == null ? null : omicsModel.getSampleTrackingSheet().toAbsolutePath().normalize().toString());
     bioProjectAcessionField.setText(omicsModel.getBioProjectAccession());
     waterField.setSelected(omicsModel.getSamplingTypes().isWater());
     soilSedimentField.setSelected(omicsModel.getSamplingTypes().isSoilSediment());
@@ -249,8 +251,8 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
     samplingConductedField.addValueChangeListener((v) -> omicsController.setSamplingConducted(v));
     contactField.addItemListener((e) -> omicsController.setContact((DropDownItem) e.getItem()));
-    trackingSheetField.addKeyListener(createKeyAdapter(omicsController::setSampleTrackingSheet));
-    bioProjectAcessionField.addKeyListener(createKeyAdapter(omicsController::setBioProjectAccession));
+    trackingSheetField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(trackingSheetField.getText()));
+    bioProjectAcessionField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> omicsController.setBioProjectAccession(bioProjectAcessionField.getText()));
     waterField.addItemListener(createItemListener(omicsController::setWaterSamplingType));
     soilSedimentField.addItemListener(createItemListener(omicsController::setSoilSedimentSamplingType));
     organicTissueField.addItemListener(createItemListener(omicsController::setOrganicTissueSamplingType));
@@ -267,7 +269,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     metaproteomicsField.addItemListener(createItemListener(omicsController::setMetaproteomicsExpectedAnalysis));
     metametabolomicsField.addItemListener(createItemListener(omicsController::setMetametabolomicsExpectedAnalysis));
     microbiomeField.addItemListener(createItemListener(omicsController::setMicrobiomeExpectedAnalysis));
-    additionalSamplingInformationField.addKeyListener(createKeyAdapter(omicsController::setAdditionalSamplingInformation));
+    additionalSamplingInformationField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> omicsController.setAdditionalSamplingInformation(additionalSamplingInformationField.getText()));
   }
 
   private ItemListener createItemListener(Consumer<Boolean> consumer) {
@@ -275,16 +277,6 @@ public class OmicsPanel extends JPanel implements ReactiveView {
       @Override
       public void itemStateChanged(ItemEvent e) {
         consumer.accept(e.getStateChange() == 1);
-      }
-    };
-  }
-
-  private KeyAdapter createKeyAdapter(Consumer<String> consumer) {
-    return new KeyAdapter() {
-      @Override
-      public void keyReleased(KeyEvent keyEvent) {
-        JTextComponent textComponent = (JTextComponent) keyEvent.getComponent();
-        consumer.accept(textComponent.getText());
       }
     };
   }
@@ -299,7 +291,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
         updateComboBox(contactField, evt);
         break;
       case Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET:
-        updateTextField(trackingSheetField, evt);
+        updatePathField(trackingSheetField, evt);
         break;
       case Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION:
         updateTextField(bioProjectAcessionField, evt);

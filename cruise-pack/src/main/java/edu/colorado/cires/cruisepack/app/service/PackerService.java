@@ -8,12 +8,14 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDi
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
+import edu.colorado.cires.cruisepack.prototype.bag.Bagger;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +71,7 @@ public class PackerService {
       copyDocs(packJob);
       copyOmics(packJob);
 //      packData(packJob);
-
+      packMainBag(packJob);
       } catch (Exception e) {
         LOGGER.error("An error occurred while packing", e);
       } finally {
@@ -78,6 +80,14 @@ public class PackerService {
         footerControlController.setStopButtonEnabled(false);
       }
     }).start();
+  }
+
+  private void packMainBag(PackJob packJob) {
+    try {
+      Bagger.bagInPlace(packJob.getPackageDirectory().resolve(packJob.getPackageId()));
+    } catch (NoSuchAlgorithmException | IOException e) {
+      throw new IllegalStateException("Unable to create main bag, ", e);
+    }
   }
 
   private void resetBagDirs(PackJob packJob) {

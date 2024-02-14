@@ -132,6 +132,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     arrivalDateField.setDate(packageModel.getArrivalDate());
     releaseDateField.setDate(packageModel.getReleaseDate());
 
+    packageDirectoryField.setText(packageModel.getPackageDirectory() == null ? null : packageModel.getPackageDirectory().toAbsolutePath().normalize().toString());
 
   }
 
