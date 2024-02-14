@@ -24,54 +24,25 @@ public class PeopleModel extends PropertyChangeModel {
         return scientists;
     }
     public void setScientists(List<DropDownItem> scientists) {
-        List<DropDownItem> oldScientists = List.copyOf(this.scientists);
-        if (!(
-            scientists.stream().map(DropDownItem::getId).collect(Collectors.toList()).equals(
-                oldScientists.stream().map(DropDownItem::getId).collect(Collectors.toList())
-            )
-        )) {
-            this.scientists = scientists;
-            fireChangeEvent(Events.UPDATE_SCIENTISTS, oldScientists, scientists);
-        }
+        setIfChanged(Events.UPDATE_SCIENTISTS, scientists, () -> this.scientists, (s) -> this.scientists = s);
     }
     public List<DropDownItem> getSourceOrganizations() {
         return sourceOrganizations;
     }
     public void setSourceOrganizations(List<DropDownItem> sourceOrganizations) {
-        List<DropDownItem> oldSourceOrganizations = List.copyOf(this.sourceOrganizations);
-        if (!(
-            sourceOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toList()).equals(
-                oldSourceOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toList())
-            )
-        )) {
-            this.sourceOrganizations = sourceOrganizations;
-            fireChangeEvent(Events.UPDATE_SOURCE_ORGANIZATIONS, oldSourceOrganizations, sourceOrganizations);
-        }
-        this.sourceOrganizations = sourceOrganizations;
+        setIfChanged(Events.UPDATE_SOURCE_ORGANIZATIONS, sourceOrganizations, () -> this.sourceOrganizations, (o) -> this.sourceOrganizations = o);
     }
     public List<DropDownItem> getFundingOrganizations() {
         return fundingOrganizations;
     }
     public void setFundingOrganizations(List<DropDownItem> fundingOrganizations) {
-        List<DropDownItem> oldFundingOrganizatons = List.copyOf(this.fundingOrganizations);
-        if (!(
-            fundingOrganizations.stream().map(DropDownItem::getId).collect(Collectors.toList()).equals(
-                oldFundingOrganizatons.stream().map(DropDownItem::getId).collect(Collectors.toList())
-            )
-        )) {
-            this.fundingOrganizations = fundingOrganizations;
-            fireChangeEvent(Events.UPDATE_FUNDING_ORGANIZATIONS, oldFundingOrganizatons, fundingOrganizations);
-        }
+        setIfChanged(Events.UPDATE_FUNDING_ORGANIZATIONS, fundingOrganizations, () -> this.fundingOrganizations, (o) -> this.fundingOrganizations = o);
     }
     public DropDownItem getMetadataAuthor() {
         return metadataAuthor;
     }
     public void setMetadataAuthor(DropDownItem metadataAuthor) {
-        DropDownItem oldMetadataAuthor = this.metadataAuthor;
-        if (!Objects.equals(metadataAuthor, oldMetadataAuthor)) {
-            this.metadataAuthor = metadataAuthor;
-            fireChangeEvent(Events.UPDATE_METADATA_AUTHOR, oldMetadataAuthor, metadataAuthor);
-        }
+        setIfChanged(Events.UPDATE_METADATA_AUTHOR, metadataAuthor, () -> this.metadataAuthor, (a) -> this.metadataAuthor = a);
     }
 
     
