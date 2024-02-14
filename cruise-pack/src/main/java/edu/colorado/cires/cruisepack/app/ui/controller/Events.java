@@ -13,6 +13,12 @@ public final class Events {
   public static final String UPDATE_RELEASE_DATE = "UPDATE_RELEASE_DATE";
   public static final String UPDATE_PACKAGE_DIRECTORY = "UPDATE_PACKAGE_DIRECTORY";
 
+  // PeopleModel
+  public static final String UPDATE_SCIENTISTS = "UPDATE_SCIENTISTS";
+  public static final String UPDATE_SOURCE_ORGANIZATIONS = "UPDATE_SOURCE_ORGANIZATIONS";
+  public static final String UPDATE_FUNDING_ORGANIZATIONS = "UPDATE_FUNDING_ORGANIZATIONS";
+  public static final String UPDATE_METADATA_AUTHOR = "UPDATE_METADATA_AUTHOR";
+
   private Events() {
 
   }
