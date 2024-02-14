@@ -17,48 +17,32 @@ public class OmicsModel extends PropertyChangeModel {
     private String bioProjectAccession = null;
     private SamplingTypesModel samplingTypes = new SamplingTypesModel();
     private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
-    private String additionalSamplingInformation = "";
+    private String additionalSamplingInformation = null;
     
     public boolean isSamplingConducted() {
         return samplingConducted;
     }
     public void setSamplingConducted(boolean samplingConducted) {
-        boolean oldSamplingConducted = this.samplingConducted;
-        if (oldSamplingConducted != samplingConducted) {
-            this.samplingConducted = samplingConducted;
-            fireChangeEvent(Events.UPDATE_OMICS_SAMPLING_CONDUCTED, oldSamplingConducted, samplingConducted);
-        }
-        this.samplingConducted = samplingConducted;
+        setIfChanged(Events.UPDATE_OMICS_SAMPLING_CONDUCTED, samplingConducted, () -> this.samplingConducted, (nv) -> this.samplingConducted = nv);
     }
     public DropDownItem getContact() {
         return contact;
     }
     public void setContact(DropDownItem contact) {
-        DropDownItem oldContact = this.contact;
-        if (!Objects.equals(contact, oldContact)) {
-            this.contact = contact;
-            fireChangeEvent(Events.UPDATE_OMICS_CONTACT, oldContact, contact);
-        }
+        setIfChanged(Events.UPDATE_OMICS_CONTACT, contact, () -> this.contact, (nv) -> this.contact = nv);
     }
     public Path getSampleTrackingSheet() {
         return sampleTrackingSheet;
     }
     public void setSampleTrackingSheet(Path sampleTrackingSheet) {
-        Path oldSampleTrackingSheet = this.sampleTrackingSheet;
-        if (!oldSampleTrackingSheet.equals(sampleTrackingSheet)) {
-            this.sampleTrackingSheet = sampleTrackingSheet;
-            fireChangeEvent(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET, oldSampleTrackingSheet, sampleTrackingSheet);
-        }
+        setIfChanged(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET, sampleTrackingSheet, () -> this.sampleTrackingSheet, (nv) -> this.sampleTrackingSheet = nv);
     }
     public String getBioProjectAccession() {
         return bioProjectAccession;
     }
     public void setBioProjectAccession(String bioProjectAccession) {
-        String oldBioProjectAccession = this.bioProjectAccession;
-        if (!oldBioProjectAccession.equals(bioProjectAccession)) {
-            this.bioProjectAccession = bioProjectAccession;
-            fireChangeEvent(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, oldBioProjectAccession, bioProjectAccession);
-        }
+        bioProjectAccession = normalizeString(bioProjectAccession);
+        setIfChanged(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, bioProjectAccession, () -> this.bioProjectAccession, (nv) -> this.bioProjectAccession = nv);
     }
 
     public SamplingTypesModel getSamplingTypes() {
@@ -201,11 +185,8 @@ public class OmicsModel extends PropertyChangeModel {
         return additionalSamplingInformation;
     }
     public void setAdditionalSamplingInformation(String additionalSamplingInformation) {
-        String oldAdditionalSamplingInformation = this.additionalSamplingInformation;
-        if (!oldAdditionalSamplingInformation.equals(additionalSamplingInformation)) {
-            this.additionalSamplingInformation = additionalSamplingInformation;
-            fireChangeEvent(Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION, oldAdditionalSamplingInformation, additionalSamplingInformation);
-        }
+        additionalSamplingInformation = normalizeString(additionalSamplingInformation);
+        setIfChanged(Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION, additionalSamplingInformation, () -> this.additionalSamplingInformation, (nv) -> this.additionalSamplingInformation = nv);
     }
 
 }

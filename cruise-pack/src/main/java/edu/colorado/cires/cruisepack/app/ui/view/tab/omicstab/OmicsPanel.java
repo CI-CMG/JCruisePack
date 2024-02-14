@@ -100,7 +100,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     setupMvc();
   }
 
-  private void handleDirValue(String value) {
+  private void handlePathValue(String value) {
     Path path = Paths.get(value);
     omicsController.setSampleTrackingSheet(path.toAbsolutePath().normalize());
   }
@@ -128,6 +128,14 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     metametabolomicsField.setSelected(omicsModel.getExpectedAnalyses().isMetametabolomics());
     microbiomeField.setSelected(omicsModel.getExpectedAnalyses().isMicrobiome());
     additionalSamplingInformationField.setText(omicsModel.getAdditionalSamplingInformation());
+  }
+
+  private void handleFileSelect() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+      omicsController.setSampleTrackingSheet(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+    }
   }
 
   private void setupLayout() {
@@ -165,23 +173,8 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     }));
 
     JButton selectFileButton = new JButton("...");
-    selectFileButton.addActionListener(e -> {
-      JDialog dialog = new JDialog();
-      
-      JFileChooser chooser = new JFileChooser();
-      chooser.addActionListener(a -> {
-        if (a.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
-          dialog.setVisible(false);
-          dialog.dispose();
-        } else if (a.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
-          System.out.println(chooser.getSelectedFile().getAbsolutePath());
-        }
-      });
-      dialog.add(chooser);
+    selectFileButton.addActionListener((evt) -> handleFileSelect());
 
-      dialog.pack();
-      dialog.setVisible(true);
-    });
     trackingSheetPanel.add(selectFileButton, configureLayout(2, 0, c -> {
       c.weightx = 0;
     }));
@@ -251,7 +244,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
     samplingConductedField.addValueChangeListener((v) -> omicsController.setSamplingConducted(v));
     contactField.addItemListener((e) -> omicsController.setContact((DropDownItem) e.getItem()));
-    trackingSheetField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(trackingSheetField.getText()));
+    trackingSheetField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handlePathValue(trackingSheetField.getText()));
     bioProjectAcessionField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> omicsController.setBioProjectAccession(bioProjectAcessionField.getText()));
     waterField.addItemListener(createItemListener(omicsController::setWaterSamplingType));
     soilSedimentField.addItemListener(createItemListener(omicsController::setSoilSedimentSamplingType));
