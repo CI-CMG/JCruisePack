@@ -17,6 +17,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.GravityDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
@@ -55,12 +56,24 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
   @Override
   public void init() {
     super.init();
-    commentsPanel.getCommentsField().setText(model.getComments());
+    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
+    commentsPanel.getCommentsField().setText(model.getComments());
+    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
+    obsRatePanel.getField().setText(model.getObservationRate());
+    departureTiePanel.getField().setText(model.getDepartureTie());
+    arrivalTiePanel.getField().setText(model.getArrivalTie());
+    driftPanel.getField().setText(model.getDriftPerDay());
 
-    commentsPanel.getCommentsField().getDocument()
-        .addDocumentListener((SimpleDocumentListener) (evt) -> controller.setComments(commentsPanel.getCommentsField().getText()));
+    instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));
+    commentsPanel.getCommentsField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setComments(commentsPanel.getCommentsField().getText()));
+    correctionModelPanel.getInstrumentField().addItemListener((evt) -> controller.setCorrectionModel((DropDownItem) evt.getItem()));
+    obsRatePanel.getField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setObservationRate(obsRatePanel.getField().getText()));
+    departureTiePanel.getField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setDepartureTie(departureTiePanel.getField().getText()));
+    arrivalTiePanel.getField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setArrivalTie(arrivalTiePanel.getField().getText()));
+    driftPanel.getField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setDriftPerDay(driftPanel.getField().getText()));
+
   }
 
   @Override

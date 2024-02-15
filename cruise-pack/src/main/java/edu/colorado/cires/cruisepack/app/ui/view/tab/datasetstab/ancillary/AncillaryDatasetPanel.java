@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ancillary;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_COMMENTS;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -9,6 +10,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.AncillaryDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
@@ -36,10 +38,11 @@ public class AncillaryDatasetPanel extends DatasetPanel<AncillaryDatasetInstrume
   @Override
   public void init() {
     super.init();
+    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     commentsPanel.getCommentsField().setText(model.getComments());
 
-    commentsPanel.getCommentsField().getDocument()
-        .addDocumentListener((SimpleDocumentListener) (evt) -> controller.setComments(commentsPanel.getCommentsField().getText()));
+    instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
+    commentsPanel.getCommentsField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setComments(commentsPanel.getCommentsField().getText()));
   }
 
   @Override
