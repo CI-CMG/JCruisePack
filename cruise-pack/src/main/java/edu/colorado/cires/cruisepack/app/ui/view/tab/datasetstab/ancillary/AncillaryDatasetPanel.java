@@ -1,20 +1,73 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ancillary;
 
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
+import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
+
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.ui.controller.dataset.AncillaryDatasetInstrumentController;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.LabeledComboBoxPanel;
+import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
 import javax.swing.JPanel;
 
-class AncillaryDatasetPanel {
-//    extends DatasetPanel {
+public class AncillaryDatasetPanel extends DatasetPanel<AncillaryDatasetInstrumentModel, AncillaryDatasetInstrumentController> {
 
-//  public AncillaryDatasetPanel(DropDownItem dataType) {
-//    super(dataType);
-//  }
-//
-//  @Override
-//  protected JPanel createAndInitializeContentPanel() {
-//    AncillaryDatasetContentPanel panel = new AncillaryDatasetContentPanel();
-//    panel.init();
-//    return panel;
-//  }
+  public static final String INSTRUMENT_SHORT_CODE = "ANCILLARY";
+
+  private static final String INSTRUMENT_TITLE = "Ancillary Data Type";
+  private static final String COMMENTS_TITLE = "Ancillary Data Details";
+
+  private final LabeledComboBoxPanel instrumentPanel = new LabeledComboBoxPanel(INSTRUMENT_TITLE);
+  private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel(COMMENTS_TITLE);
+
+  public AncillaryDatasetPanel(AncillaryDatasetInstrumentModel model, AncillaryDatasetInstrumentController controller,
+      InstrumentDatastore instrumentDatastore) {
+    super(model, controller, instrumentDatastore);
+  }
+
+  @Override
+  public void init() {
+    super.init();
+    commentsPanel.getCommentsField().setText(model.getComments());
+
+    commentsPanel.getCommentsField().getDocument()
+        .addDocumentListener((SimpleDocumentListener) (evt) -> controller.setComments(commentsPanel.getCommentsField().getText()));
+  }
+
+  @Override
+  protected String getInstrumentShortCode() {
+    return INSTRUMENT_SHORT_CODE;
+  }
+
+  @Override
+  protected JPanel createAndInitializeContentPanel() {
+    JPanel panel = new JPanel();
+    panel.setLayout(new GridBagLayout());
+    panel.setBackground(Color.WHITE);
+    panel.add(instrumentPanel, configureLayout(0, 0));
+    panel.add(commentsPanel, configureLayout(0, 1));
+    return panel;
+  }
+
+  @Override
+  protected void customOnChange(PropertyChangeEvent evt) {
+    switch (evt.getPropertyName()) {
+      case UPDATE_INSTRUMENT:
+        updateComboBox(instrumentPanel.getInstrumentField(), evt);
+        break;
+      case UPDATE_COMMENTS:
+        updateTextField(commentsPanel.getCommentsField(), evt);
+        break;
+      default:
+        break;
+    }
+  }
 }

@@ -16,4 +16,8 @@ public class LabeledTextFieldPanel extends JPanel {
     setBorder(BorderFactory.createTitledBorder(title));
     add(field);
   }
+
+  public JTextField getField() {
+    return field;
+  }
 }
