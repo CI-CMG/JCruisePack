@@ -6,15 +6,16 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFac
 import org.springframework.stereotype.Component;
 
 @Component
-public class OtherDatasetPanelFactory implements DatasetPanelFactory {
+public class OtherDatasetPanelFactory {
+//    implements DatasetPanelFactory {
 
-  @Override
-  public String getInstrumentGroupShortCode() {
-    return "OTHER";
-  }
-
-  @Override
-  public DatasetPanel createPanel(DropDownItem dataType) {
-    return new OtherDatasetPanel(dataType);
-  }
+//  @Override
+//  public String getInstrumentGroupShortCode() {
+//    return "OTHER";
+//  }
+//
+//  @Override
+//  public DatasetPanel createPanel(DropDownItem dataType) {
+//    return new OtherDatasetPanel(dataType);
+//  }
 }

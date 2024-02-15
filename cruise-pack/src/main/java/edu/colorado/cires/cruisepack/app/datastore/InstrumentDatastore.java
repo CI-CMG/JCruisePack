@@ -56,4 +56,8 @@ public class InstrumentDatastore {
   public List<DropDownItem> getDatasetTypeDropDowns() {
     return datasetTypeDropDowns;
   }
+
+  public String getNameForShortCode(String shortCode) {
+    return datasetTypeDropDowns.stream().filter(dd -> shortCode.equals(dd.getId())).map(DropDownItem::getValue).findFirst().orElse(null);
+  }
 }

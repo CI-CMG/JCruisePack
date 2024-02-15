@@ -25,4 +25,8 @@ public class LabeledComboBoxPanel extends JPanel {
     setBorder(BorderFactory.createTitledBorder(title));
     add(instrumentField, configureLayout(0, 0));
   }
+
+  public JComboBox<DropDownItem> getInstrumentField() {
+    return instrumentField;
+  }
 }

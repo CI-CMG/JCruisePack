@@ -4,16 +4,17 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import javax.swing.JPanel;
 
-class GravityDatasetPanel extends DatasetPanel {
+class GravityDatasetPanel {
+//    extends DatasetPanel {
 
-  public GravityDatasetPanel(DropDownItem dataType) {
-    super(dataType);
-  }
-
-  @Override
-  protected JPanel createAndInitializeContentPanel() {
-    GravityDatasetContentPanel panel = new GravityDatasetContentPanel();
-    panel.init();
-    return panel;
-  }
+//  public GravityDatasetPanel(DropDownItem dataType) {
+//    super(dataType);
+//  }
+//
+//  @Override
+//  protected JPanel createAndInitializeContentPanel() {
+//    GravityDatasetContentPanel panel = new GravityDatasetContentPanel();
+//    panel.init();
+//    return panel;
+//  }
 }

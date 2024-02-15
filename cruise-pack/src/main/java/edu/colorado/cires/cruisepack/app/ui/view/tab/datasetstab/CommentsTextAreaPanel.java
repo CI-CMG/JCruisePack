@@ -22,4 +22,8 @@ public class CommentsTextAreaPanel extends JPanel {
     setBorder(BorderFactory.createTitledBorder(title));
     add(commentsField);
   }
+
+  public JTextArea getCommentsField() {
+    return commentsField;
+  }
 }

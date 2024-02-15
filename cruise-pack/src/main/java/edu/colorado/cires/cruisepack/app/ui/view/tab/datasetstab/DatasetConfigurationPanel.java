@@ -99,8 +99,7 @@ public class DatasetConfigurationPanel extends JPanel {
         InstrumentDatastore.UNSELECTED_DATASET_TYPE);
 
     if (dataType != null && !dataType.equals(InstrumentDatastore.UNSELECTED_DATASET_TYPE)) {
-      DatasetPanel row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
-      row.init();
+      DatasetPanel<?, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
       remove(fluff);
       add(row, configureLayout(0, rows.size(), c -> {
         c.fill = GridBagConstraints.HORIZONTAL;

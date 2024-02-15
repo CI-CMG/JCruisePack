@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.AppendableTableWithSelections;
 
+import java.util.Enumeration;
 import java.util.List;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
@@ -12,6 +13,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.function.Function;
 
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
@@ -35,6 +38,31 @@ public final class FieldUtils {
 
   public static void updateTextField(JTextArea textField, PropertyChangeEvent evt) {
     updateTextField(textField, evt, e -> (String) e.getNewValue());
+  }
+
+  public static String getSelectedButtonText(ButtonGroup buttonGroup) {
+    for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+      AbstractButton button = buttons.nextElement();
+      if (button.isSelected()) {
+        return button.getText();
+      }
+    }
+    return null;
+  }
+
+  public static void setSelectedButton(ButtonGroup buttonGroup, String text) {
+    for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements();) {
+      AbstractButton button = buttons.nextElement();
+      button.setSelected(Objects.equals(text, button.getText()));
+    }
+  }
+
+  public static void updateRadioButtonGroup(ButtonGroup buttonGroup, PropertyChangeEvent evt) {
+    String oldValue = getSelectedButtonText(buttonGroup);
+    String newValue = (String) evt.getNewValue();
+    if (!Objects.equals(oldValue, newValue)) {
+      setSelectedButton(buttonGroup, newValue);
+    }
   }
 
   public static void updateTextField(JTextField textField, PropertyChangeEvent evt, Function<PropertyChangeEvent, String> transform) {

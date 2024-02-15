@@ -33,6 +33,6 @@ public class DatasetPanelFactoryResolver {
         .filter(dpf -> dpf.getInstrumentGroupShortCode().equals(dataType.getId()))
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("Unable to find panel factory for type: " + dataType))
-        .createPanel(dataType);
+        .createPanel();
   }
 }

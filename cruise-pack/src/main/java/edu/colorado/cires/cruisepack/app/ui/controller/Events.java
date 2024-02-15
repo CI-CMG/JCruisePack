@@ -60,6 +60,9 @@ public final class Events {
   public static final String UPDATE_DOCS_DIRECTORY = "UPDATE_DOCS_DIRECTORY";
   public static final String UPDATE_DOCS_DIRECTORY_ERROR = "UPDATE_DOCS_DIRECTORY_ERROR";
 
+  // Datasets
+  public static final String UPDATE_DATASET_LIST = "UPDATE_DATASET_LIST";
+  public static final String UPDATE_DATASET_DATA_PREFIX = "UPDATE_DATASET_DATA_";
 
   private Events() {
 

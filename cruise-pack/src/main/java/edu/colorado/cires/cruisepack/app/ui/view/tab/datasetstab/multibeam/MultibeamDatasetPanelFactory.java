@@ -6,15 +6,16 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFac
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultibeamDatasetPanelFactory implements DatasetPanelFactory {
+public class MultibeamDatasetPanelFactory {
+//    implements DatasetPanelFactory {
 
-  @Override
-  public String getInstrumentGroupShortCode() {
-    return "MB-BATHY";
-  }
-
-  @Override
-  public DatasetPanel createPanel(DropDownItem dataType) {
-    return new MultibeamDatasetPanel(dataType);
-  }
+//  @Override
+//  public String getInstrumentGroupShortCode() {
+//    return "MB-BATHY";
+//  }
+//
+//  @Override
+//  public DatasetPanel createPanel(DropDownItem dataType) {
+//    return new MultibeamDatasetPanel(dataType);
+//  }
 }
