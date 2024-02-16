@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.omicstab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateCheckBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefulRadioButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextArea;
@@ -21,6 +22,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.PeopleList;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -34,7 +36,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -82,6 +83,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JCheckBox microbiomeField = new JCheckBox("Microbiome");
 
   private final JTextArea additionalSamplingInformationField = new JTextArea();
+  private final JLabel additionalSamplingInformationErrorLabel = new JLabel();
 
   @Autowired
   public OmicsPanel(PeopleList peopleList, BeanFactory beanFactory, OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry) {
@@ -128,6 +130,8 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     metametabolomicsField.setSelected(omicsModel.getExpectedAnalyses().isMetametabolomics());
     microbiomeField.setSelected(omicsModel.getExpectedAnalyses().isMicrobiome());
     additionalSamplingInformationField.setText(omicsModel.getAdditionalSamplingInformation());
+    additionalSamplingInformationErrorLabel.setText("");
+    additionalSamplingInformationErrorLabel.setForeground(new Color(Color.RED.getRGB()));
   }
 
   private void handleFileSelect() {
@@ -231,7 +235,12 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
     panel.add(expectedAnalyses, configureLayout(0, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
 
-    panel.add(new JLabel("Additional Omics Sampling Information"), configureLayout(0, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    JPanel additionalSamplingInformationLabelPanel = new JPanel();
+    additionalSamplingInformationLabelPanel.setLayout(new BorderLayout(10, 0));
+    additionalSamplingInformationLabelPanel.add(new JLabel("Additional Omics Sampling Information"), BorderLayout.LINE_START);
+    additionalSamplingInformationLabelPanel.add(additionalSamplingInformationErrorLabel, BorderLayout.CENTER);
+
+    panel.add(additionalSamplingInformationLabelPanel, configureLayout(0, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     panel.add(new JScrollPane(additionalSamplingInformationField), configureLayout(0, 5, c -> {
       c.weighty = 100;
     }));
@@ -340,6 +349,8 @@ public class OmicsPanel extends JPanel implements ReactiveView {
       case Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION:
         updateTextArea(additionalSamplingInformationField, evt);
         break;
+      case Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION_ERROR:
+        updateLabelText(additionalSamplingInformationErrorLabel, evt);
       default:
         break;
     }
