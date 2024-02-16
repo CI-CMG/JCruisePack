@@ -24,6 +24,7 @@ public class OmicsModel extends PropertyChangeModel {
     private String sampleTrackingSheetError = null;
     @NotBlank
     private String bioProjectAccession = null;
+    private String bioProjectAcessionError = null;
     @ValidSamplingTypes
     private SamplingTypesModel samplingTypes = new SamplingTypesModel();
     @ValidExpectedAnalyses
@@ -223,5 +224,13 @@ public class OmicsModel extends PropertyChangeModel {
     
     public void setSampleTrackingSheetError(String sampleTrackingSheetError) {
         setIfChanged(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET_ERROR, sampleTrackingSheetError, () -> this.sampleTrackingSheetError, (e) -> this.sampleTrackingSheetError = e);
+    }
+    
+    public String getBioProjectAcessionError() {
+        return bioProjectAcessionError;
+    }
+    
+    public void setBioProjectAcessionError(String bioProjectAcessionError) {
+        setIfChanged(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION_ERROR, bioProjectAcessionError, () -> this.bioProjectAcessionError, (e) -> this.bioProjectAcessionError = e);
     }
 }

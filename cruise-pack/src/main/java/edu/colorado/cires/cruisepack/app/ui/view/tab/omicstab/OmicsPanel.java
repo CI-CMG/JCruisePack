@@ -65,6 +65,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JTextField trackingSheetField = new JTextField();
   private final JLabel trackingSheetErrorLabel = createErrorLabel();
   private final JTextField bioProjectAcessionField = new JTextField();
+  private final JLabel bioProjectAccessionErrorLabel = createErrorLabel();
   
   // Sampling types
   private final JCheckBox waterField = new JCheckBox("Water");
@@ -194,7 +195,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
     JPanel ncbiaAccessionPanel = new JPanel();
     ncbiaAccessionPanel.setLayout(new GridBagLayout());
-    ncbiaAccessionPanel.add(new JLabel("NCBI BioProject Accession"), configureLayout(0, 0, c -> {
+    ncbiaAccessionPanel.add(createLabelWithErrorPanel("NCBI BioProject Accession", bioProjectAccessionErrorLabel), configureLayout(0, 0, c -> {
       c.weightx = 0;
     }));
     ncbiaAccessionPanel.add(bioProjectAcessionField, configureLayout(1, 0, c -> {
@@ -308,6 +309,9 @@ public class OmicsPanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION:
         updateTextField(bioProjectAcessionField, evt);
+        break;
+      case Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION_ERROR:
+        updateLabelText(bioProjectAccessionErrorLabel, evt);
         break;
       case Events.UPDATE_OMICS_WATER_SAMPLING_TYPE:
         updateCheckBox(waterField, evt);
