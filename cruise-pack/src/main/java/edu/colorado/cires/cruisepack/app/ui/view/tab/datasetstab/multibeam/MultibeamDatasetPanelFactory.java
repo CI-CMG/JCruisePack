@@ -1,21 +1,39 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.multibeam;
 
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.ui.controller.dataset.MultibeamDatasetInstrumentController;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MultibeamDatasetPanelFactory {
-//    implements DatasetPanelFactory {
+public class MultibeamDatasetPanelFactory extends
+    DatasetPanelFactory<MultibeamDatasetInstrumentModel, MultibeamDatasetInstrumentController, MultibeamDatasetPanel> {
 
-//  @Override
-//  public String getInstrumentGroupShortCode() {
-//    return "MB-BATHY";
-//  }
-//
-//  @Override
-//  public DatasetPanel createPanel(DropDownItem dataType) {
-//    return new MultibeamDatasetPanel(dataType);
-//  }
+
+  @Autowired
+  public MultibeamDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
+    super(instrumentDatastore);
+  }
+
+  @Override
+  public String getInstrumentGroupShortCode() {
+    return MultibeamDatasetPanel.INSTRUMENT_SHORT_CODE;
+  }
+
+  @Override
+  protected MultibeamDatasetInstrumentModel createModel() {
+    return new MultibeamDatasetInstrumentModel();
+  }
+
+  @Override
+  protected MultibeamDatasetInstrumentController createController(MultibeamDatasetInstrumentModel model) {
+    return new MultibeamDatasetInstrumentController(model);
+  }
+
+  @Override
+  protected MultibeamDatasetPanel createView(MultibeamDatasetInstrumentModel model, MultibeamDatasetInstrumentController controller) {
+    return new MultibeamDatasetPanel(model, controller, instrumentDatastore);
+  }
 }
