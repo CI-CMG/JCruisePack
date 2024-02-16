@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.omicstab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateCheckBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -59,6 +60,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
   private final StatefulRadioButton samplingConductedField = new StatefulRadioButton("Omics sampling conducted?");
   private final JComboBox<DropDownItem> contactField = new JComboBox<>();
+  private final JLabel contactErrorLabel = createErrorLabel();
   private final JTextField trackingSheetField = new JTextField();
   private final JTextField bioProjectAcessionField = new JTextField();
   
@@ -153,12 +155,13 @@ public class OmicsPanel extends JPanel implements ReactiveView {
       c.weightx = 0;
       c.insets = new Insets(0, 0, 0, 100);
     }));
-    omicsPersonPanel.add(contactField, configureLayout(1, 0, c -> {
+    omicsPersonPanel.add(contactErrorLabel, configureLayout(1, 0, c -> { c.weightx = 0; c.insets = new Insets(0, 0, 0, 5); }));
+    omicsPersonPanel.add(contactField, configureLayout(2, 0, c -> {
       c.weightx = 100;
     }));
     JButton editPeopleButton = new JButton("Create/Edit People");
     editPeopleButton.addActionListener(e -> new EditPersonDialog(beanFactory, peopleList));
-    omicsPersonPanel.add(editPeopleButton, configureLayout(2, 0, c -> {
+    omicsPersonPanel.add(editPeopleButton, configureLayout(3, 0, c -> {
       c.weightx = 0;
     }));
     panel.add(omicsPersonPanel, configureLayout(0, 0, c -> {
@@ -291,6 +294,9 @@ public class OmicsPanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_OMICS_CONTACT:
         updateComboBox(contactField, evt);
+        break;
+      case Events.UPDATE_OMICS_CONTACT_ERROR:
+        updateLabelText(contactErrorLabel, evt);
         break;
       case Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET:
         updatePathField(trackingSheetField, evt);
