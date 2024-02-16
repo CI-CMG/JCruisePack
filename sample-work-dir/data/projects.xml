@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProjectData xmlns="https://colorado.edu/cires/cruisepack/projects">
+    <DataVersion>1.0</DataVersion>
+    <Projects>
+        <Project>
+            <Uuid>f01fc58b-cb46-45f0-b76b-a51a2ddef20b</Uuid>
+            <Name>Project number one</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>bc2c5b1c-1fdc-4247-8286-35bed2ad47f4</Uuid>
+            <Name>Project number two</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>aa045796-b42b-4dd5-91a0-b14e319d3176</Uuid>
+            <Name>My new project</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>710bd82c-9e4d-4262-9a1f-ce95ede08445</Uuid>
+            <Name>My new project 2</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>4cc7c998-9375-43d3-8f95-9d5705025953</Uuid>
+            <Name>Autumn Bottom Trawl-Acoustics Survey</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>f5191a88-a164-4aec-bd7d-562a3e33de2a</Uuid>
+            <Name>Spring Bottom Trawl-Acoustics Survey</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>cd791bba-2f0a-4f5d-a02c-e718f7828fd5</Uuid>
+            <Name>AMAPPS</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>36364910-bc05-4a86-8769-75eb248fd707</Uuid>
+            <Name>Northeast Deepwater Coral Habitats</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>6546622c-de7b-4f66-bde5-69fc3c67d573</Uuid>
+            <Name>Mespolagic DEEP -SEA</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>f3136550-826a-448b-9308-7980ea07f598</Uuid>
+            <Name>Spring Multispecies Bottom Trawl Survey</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>f3192174-51c5-4fce-8be3-0174305ed761</Uuid>
+            <Name>ECOMON</Name>
+            <Use>true</Use>
+        </Project>
+        <Project>
+            <Uuid>6ca88997-0d44-4c70-aea6-f591187050d9</Uuid>
+            <Name>another new project</Name>
+            <Use>true</Use>
+        </Project>
+    </Projects>
+</ProjectData>
