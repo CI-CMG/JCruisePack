@@ -53,9 +53,6 @@ public class PackagingValidationService {
       PackageController packageController,
       FooterControlController footerControlController,
       InstrumentDatastore instrumentDatastore,
-      CruiseInformationModel cruiseInformationModel,
-      PackageController packageController,
-      FooterControlController footerControlController,
       PeopleModel peopleModel) {
     this.validator = validator;
     this.packageModel = packageModel;

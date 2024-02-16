@@ -1,19 +1,29 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.copy;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterHidden;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.Instrument;
 import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.PackageInstrument;
+import gov.loc.repository.bagit.creator.BagCreator;
+import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
