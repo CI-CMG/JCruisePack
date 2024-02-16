@@ -4,6 +4,9 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPortDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSeaDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidShipDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,20 +20,33 @@ public class PackageModel extends PropertyChangeModel {
   @NotBlank //TODO add more validation, length, underscores, etc?
   private String cruiseId = null;
   private String cruiseIdError = null;
-
+  @NotBlank // TODO: Remove after testing, this can be null
   private String segment = null;
+  private String segmentError = null;
+  @ValidSeaDropDownItem
   private DropDownItem sea = SeaDatastore.UNSELECTED_SEA;
+  private String seaError = null;
+  @ValidPortDropDownItem
   private DropDownItem arrivalPort = PortDatastore.UNSELECTED_PORT;
+  private String arrivalPortError = null;
+  @ValidPortDropDownItem
   private DropDownItem departurePort = PortDatastore.UNSELECTED_PORT;
+  private String departurePortError = null;
+  @ValidShipDropDownItem
   private DropDownItem ship = ShipDatastore.UNSELECTED_SHIP;
+  private String shipError = null;
+  @NotNull(message = "must not be blank")
   private LocalDate departureDate = null;
+  private String departureDateError = null;
+  @NotNull(message = "must not be blank")
   private LocalDate arrivalDate = null;
+  private String arrivalDateError = null;
 
-  @NotNull //TODO validate in the future
+  @NotNull(message = "must not be blank") //TODO validate in the future
   private LocalDate releaseDate = null;
   private String releaseDateError = null;
 
-  @NotNull //TODO add more validation, path exists, space?
+  @NotNull(message = "must not be blank") //TODO add more validation, path exists, space?
   private Path packageDirectory = null;
   private String packageDirectoryError = null;
 
@@ -82,6 +98,14 @@ public class PackageModel extends PropertyChangeModel {
   public void setSegment(String segment) {
     segment = normalizeString(segment);
     setIfChanged(Events.UPDATE_SEGMENT, segment, () -> this.segment, (nv) -> this.segment = nv);
+  }
+
+  public String getSegmentError() {
+    return segmentError;
+  }
+
+  public void setSegmentError(String segmentError) {
+    setIfChanged(Events.UPDATE_SEGMENT_ERROR, segmentError, () -> this.segmentError, (e) -> this.segmentError = e);
   }
 
   public LocalDate getDepartureDate() {
@@ -140,4 +164,55 @@ public class PackageModel extends PropertyChangeModel {
   public void setReleaseDateError(String releaseDateError) {
     setIfChanged(Events.UPDATE_RELEASE_DATE_ERROR, releaseDateError, () -> this.releaseDateError, (nv) -> this.releaseDateError = nv);
   }
+
+public String getSeaError() {
+    return seaError;
+}
+
+public void setSeaError(String seaError) {
+    setIfChanged(Events.UPDATE_SEA_ERROR, seaError, () -> this.seaError, (e) -> this.seaError = e);
+}
+
+public String getArrivalPortError() {
+    return arrivalPortError;
+}
+
+public void setArrivalPortError(String arrivalPortError) {
+    setIfChanged(Events.UPDATE_ARRIVAL_PORT_ERROR, arrivalPortError, () -> this.arrivalPortError, (e) -> this.arrivalPortError = e);
+}
+
+public String getDeparturePortError() {
+    return departurePortError;
+}
+
+public void setDeparturePortError(String departurePortError) {
+    setIfChanged(Events.UPDATE_DEPARTURE_PORT_ERROR, departurePortError, () -> this.departurePortError, (e) -> this.departurePortError = e);
+}
+
+public String getShipError() {
+    return shipError;
+}
+
+public void setShipError(String shipError) {
+    setIfChanged(Events.UPDATE_SHIP_ERROR, shipError, () -> this.shipError, (e) -> this.shipError = e);
+}
+
+public String getDepartureDateError() {
+  return departureDateError;
+}
+
+public void setDepartureDateError(String departureDateError) {
+  setIfChanged(Events.UPDATE_DEPARTURE_DATE_ERROR, departureDateError, () -> this.departureDateError, (e) -> this.departureDateError = e);
+}
+
+public String getArrivalDateError() {
+  return arrivalDateError;
+}
+
+public void setArrivalDateError(String arrivalDateError) {
+  setIfChanged(Events.UPDATE_ARRIVAL_DATE_ERROR, arrivalDateError, () -> this.arrivalDateError, (e) -> this.arrivalDateError = e);
+}
+
+
+  
 }

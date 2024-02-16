@@ -2,22 +2,33 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import java.nio.file.Path;
-import java.util.Objects;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+import java.nio.file.Path;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OmicsModel extends PropertyChangeModel {
 
     private boolean samplingConducted = false;
+    @ValidPersonDropDownItem
     private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
+    @NotNull
     private Path sampleTrackingSheet = null;
+    @NotBlank
     private String bioProjectAccession = null;
+    @ValidSamplingTypes
     private SamplingTypesModel samplingTypes = new SamplingTypesModel();
+    @ValidExpectedAnalyses
     private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
+    @NotBlank
     private String additionalSamplingInformation = null;
+    private String additionalSamplingInformationError = "";
     
     public boolean isSamplingConducted() {
         return samplingConducted;
@@ -187,6 +198,14 @@ public class OmicsModel extends PropertyChangeModel {
     public void setAdditionalSamplingInformation(String additionalSamplingInformation) {
         additionalSamplingInformation = normalizeString(additionalSamplingInformation);
         setIfChanged(Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION, additionalSamplingInformation, () -> this.additionalSamplingInformation, (nv) -> this.additionalSamplingInformation = nv);
+    }
+
+    public String getAdditionalSamplingInformationError() {
+        return additionalSamplingInformationError;
+    }
+
+    public void setAdditionalSamplingInformationError(String additionalSamplingInformationError) {
+        setIfChanged(Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION_ERROR, additionalSamplingInformationError, () -> this.additionalSamplingInformationError, (e) -> this.additionalSamplingInformationError = e);
     }
 
 }
