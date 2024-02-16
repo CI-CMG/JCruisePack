@@ -24,7 +24,7 @@ public class MultibeamDatasetPanelFactory extends
 
   @Override
   protected MultibeamDatasetInstrumentModel createModel() {
-    return new MultibeamDatasetInstrumentModel();
+    return new MultibeamDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

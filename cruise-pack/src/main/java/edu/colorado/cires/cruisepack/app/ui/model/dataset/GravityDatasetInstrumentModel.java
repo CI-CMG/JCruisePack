@@ -1,7 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
@@ -24,6 +27,23 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   private String departureTie; //TODO make this only accept floating point numbers
   private String arrivalTie; //TODO make this only accept floating point numbers
   private String driftPerDay; //TODO make this only accept floating point numbers
+
+  public GravityDatasetInstrumentModel(String instrumentGroupShortCode) {
+    super(instrumentGroupShortCode);
+  }
+
+  @Override
+  public Optional<DropDownItem> getSelectedInstrument() {
+    if (instrument == null || StringUtils.isBlank(instrument.getId())) {
+      return Optional.empty();
+    }
+    return Optional.of(instrument);
+  }
+
+  @Override
+  protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
+    return InstrumentStatus.forValue(processingLevel);
+  }
 
   public DropDownItem getInstrument() {
     return instrument;

@@ -23,7 +23,7 @@ public class CtdDatasetPanelFactory extends DatasetPanelFactory<CtdDatasetInstru
 
   @Override
   protected CtdDatasetInstrumentModel createModel() {
-    return new CtdDatasetInstrumentModel();
+    return new CtdDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

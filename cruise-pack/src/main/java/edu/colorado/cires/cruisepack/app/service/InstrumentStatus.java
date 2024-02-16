@@ -14,4 +14,13 @@ public enum InstrumentStatus {
   public String getStrValue() {
     return strValue;
   }
+
+  public static InstrumentStatus forValue(String strValue) {
+    for (InstrumentStatus instrumentStatus : InstrumentStatus.values()) {
+      if (instrumentStatus.getStrValue().equals(strValue)) {
+        return instrumentStatus;
+      }
+    }
+    return null;
+  }
 }

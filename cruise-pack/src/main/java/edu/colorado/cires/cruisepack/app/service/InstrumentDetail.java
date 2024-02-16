@@ -3,12 +3,18 @@ package edu.colorado.cires.cruisepack.app.service;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class InstrumentDetail {
 
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static Builder builder(InstrumentDetail src) {
+    return new Builder(src);
+  }
 
   private final InstrumentStatus status;
   private final String instrument;
@@ -16,28 +22,20 @@ public class InstrumentDetail {
   private final Set<String> extensions;
   private final Path dataPath;
   private final boolean flatten;
-  private final Consumer<CustomInstrumentProcessingContext> customHandler;
+  private final String dirName;
+  private final String bagName;
+  //  private final Consumer<CustomInstrumentProcessingContext> customHandler;
 
-  private String dirName;
-  private String bagName;
-
-
-  public InstrumentDetail(InstrumentStatus status, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten, Consumer<CustomInstrumentProcessingContext> customHandler) {
+  private InstrumentDetail(InstrumentStatus status, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten,
+      String dirName, String bagName) {
     this.status = status;
     this.instrument = instrument;
     this.shortName = shortName;
-    this.extensions = Collections.unmodifiableSet(new HashSet<>(extensions));
+    this.extensions = extensions;
     this.dataPath = dataPath;
     this.flatten = flatten;
-    this.customHandler = customHandler;
-  }
-
-  public Path getDataPath() {
-    return dataPath;
-  }
-
-  public Set<String> getExtensions() {
-    return extensions;
+    this.dirName = dirName;
+    this.bagName = bagName;
   }
 
   public InstrumentStatus getStatus() {
@@ -48,64 +46,102 @@ public class InstrumentDetail {
     return instrument;
   }
 
-  public void setDirName(String dirName) {
-    this.dirName = dirName;
-  }
-
-  public String getDirName() {
-    return dirName;
-  }
-
   public String getShortName() {
     return shortName;
   }
 
-  public void setBagName(String bagName) {
-    this.bagName = bagName;
+  public Set<String> getExtensions() {
+    return extensions;
   }
 
-  public String getBagName() {
-    return bagName;
+  public Path getDataPath() {
+    return dataPath;
   }
 
   public boolean isFlatten() {
     return flatten;
   }
 
-  public Consumer<CustomInstrumentProcessingContext> getCustomHandler() {
-    return customHandler;
+  public String getDirName() {
+    return dirName;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+  public String getBagName() {
+    return bagName;
+  }
+
+  public static class Builder {
+
+    private InstrumentStatus status;
+    private String instrument;
+    private String shortName;
+    private Set<String> extensions = new HashSet<>();
+    private Path dataPath;
+    private boolean flatten;
+    private String dirName;
+    private String bagName;
+
+    private Builder() {
+
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    private Builder(InstrumentDetail src) {
+      status = src.status;
+      instrument = src.instrument;
+      shortName = src.shortName;
+      extensions = src.extensions;
+      dataPath = src.dataPath;
+      flatten = src.flatten;
+      dirName = src.dirName;
+      bagName = src.bagName;
     }
-    InstrumentDetail that = (InstrumentDetail) o;
-    return flatten == that.flatten && status == that.status && Objects.equals(instrument, that.instrument) && Objects.equals(
-        shortName, that.shortName) && Objects.equals(extensions, that.extensions) && Objects.equals(dataPath, that.dataPath)
-        && Objects.equals(dirName, that.dirName) && Objects.equals(bagName, that.bagName);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(status, instrument, shortName, extensions, dataPath, flatten, dirName, bagName);
-  }
+    public Builder setStatus(InstrumentStatus status) {
+      this.status = status;
+      return this;
+    }
 
-  @Override
-  public String toString() {
-    return "InstrumentDetail{" +
-        "status=" + status +
-        ", instrument='" + instrument + '\'' +
-        ", shortName='" + shortName + '\'' +
-        ", extensions=" + extensions +
-        ", dataPath=" + dataPath +
-        ", flatten=" + flatten +
-        ", dirName='" + dirName + '\'' +
-        ", bagName='" + bagName + '\'' +
-        '}';
+    public Builder setInstrument(String instrument) {
+      this.instrument = instrument;
+      return this;
+    }
+
+    public Builder setShortName(String shortName) {
+      this.shortName = shortName;
+      return this;
+    }
+
+    public Builder setExtensions(Set<String> extensions) {
+      if (extensions == null) {
+        extensions = new HashSet<>();
+      }
+      this.extensions = Collections.unmodifiableSet(new LinkedHashSet<>(extensions));
+      return this;
+    }
+
+    public Builder setDataPath(Path dataPath) {
+      this.dataPath = dataPath;
+      return this;
+    }
+
+    public Builder setFlatten(boolean flatten) {
+      this.flatten = flatten;
+      return this;
+    }
+
+    public Builder setDirName(String dirName) {
+      this.dirName = dirName;
+      return this;
+    }
+
+    public Builder setBagName(String bagName) {
+      this.bagName = bagName;
+      return this;
+    }
+
+    public InstrumentDetail build() {
+      return new InstrumentDetail(status, instrument, shortName, extensions, dataPath, flatten,
+          dirName, bagName);
+    }
   }
 }

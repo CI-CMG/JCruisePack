@@ -1,7 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 public class AncillaryDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
@@ -11,6 +14,23 @@ public class AncillaryDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   // TODO move this to datasource
   private DropDownItem instrument;
   private String comments;
+
+  public AncillaryDatasetInstrumentModel(String instrumentGroupShortCode) {
+    super(instrumentGroupShortCode);
+  }
+
+  @Override
+  public Optional<DropDownItem> getSelectedInstrument() {
+    if (instrument == null || StringUtils.isBlank(instrument.getId())) {
+      return Optional.empty();
+    }
+    return Optional.of(instrument);
+  }
+
+  @Override
+  protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
+    return InstrumentStatus.RAW;
+  }
 
   public DropDownItem getInstrument() {
     return instrument;

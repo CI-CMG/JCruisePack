@@ -23,7 +23,7 @@ public class GravityDatasetPanelFactory extends
 
   @Override
   protected GravityDatasetInstrumentModel createModel() {
-    return new GravityDatasetInstrumentModel();
+    return new GravityDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

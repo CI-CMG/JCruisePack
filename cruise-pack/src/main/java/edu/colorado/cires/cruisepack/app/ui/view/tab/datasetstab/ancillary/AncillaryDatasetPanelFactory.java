@@ -24,7 +24,7 @@ public class AncillaryDatasetPanelFactory extends
 
   @Override
   protected AncillaryDatasetInstrumentModel createModel() {
-    return new AncillaryDatasetInstrumentModel();
+    return new AncillaryDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

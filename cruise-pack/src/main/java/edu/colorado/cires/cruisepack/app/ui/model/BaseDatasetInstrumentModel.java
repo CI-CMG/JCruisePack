@@ -1,7 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
+import edu.colorado.cires.cruisepack.app.service.InstrumentNameHolder;
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
 
@@ -10,7 +15,11 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
 
   private LocalDate publicReleaseDate;
   private Path dataPath;
+  protected final String instrumentGroupShortCode;
 
+  protected BaseDatasetInstrumentModel(String instrumentGroupShortCode) {
+    this.instrumentGroupShortCode = instrumentGroupShortCode;
+  }
 
   public LocalDate getPublicReleaseDate() {
     return publicReleaseDate;
@@ -26,6 +35,17 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
 
   public void setDataPath(Path dataPath) {
     setIfChanged(UPDATE_DATA_PATH, dataPath, () -> this.dataPath, (nv) -> this.dataPath = nv);
+  }
+
+  protected abstract Optional<DropDownItem> getSelectedInstrument();
+  protected abstract InstrumentStatus getSelectedInstrumentProcessingLevel();
+
+  public Optional<InstrumentDetailPackageKey> getPackageKey() {
+    return getSelectedInstrument().map(dd -> new InstrumentDetailPackageKey(instrumentGroupShortCode, dd.getId()));
+  }
+
+  public Optional<InstrumentNameHolder> getInstrumentNameHolder() {
+    return getSelectedInstrument().map(dd -> new InstrumentNameHolder(dd.getValue(), dd.getId(), getSelectedInstrumentProcessingLevel(), dataPath));
   }
 
 }

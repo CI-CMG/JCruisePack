@@ -23,7 +23,7 @@ public class AdcpDatasetPanelFactory extends DatasetPanelFactory<AdcpDatasetInst
 
   @Override
   protected AdcpDatasetInstrumentModel createModel() {
-    return new AdcpDatasetInstrumentModel();
+    return new AdcpDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

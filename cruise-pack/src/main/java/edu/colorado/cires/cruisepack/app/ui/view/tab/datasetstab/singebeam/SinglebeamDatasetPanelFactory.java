@@ -23,7 +23,7 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
 
   @Override
   protected SinglebeamDatasetInstrumentModel createModel() {
-    return new SinglebeamDatasetInstrumentModel();
+    return new SinglebeamDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

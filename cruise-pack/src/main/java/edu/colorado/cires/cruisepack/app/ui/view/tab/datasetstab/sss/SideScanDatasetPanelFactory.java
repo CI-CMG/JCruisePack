@@ -24,7 +24,7 @@ public class SideScanDatasetPanelFactory extends
 
   @Override
   protected SideScanDatasetInstrumentModel createModel() {
-    return new SideScanDatasetInstrumentModel();
+    return new SideScanDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

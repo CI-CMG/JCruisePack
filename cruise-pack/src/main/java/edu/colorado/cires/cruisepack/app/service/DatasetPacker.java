@@ -96,81 +96,70 @@ public class DatasetPacker {
   }
 
   public static void pack(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackJob packJob) {
-//    Path mainBagDataDir = packJob.getBagPath().resolve("data").toAbsolutePath().normalize();
     Path mainBagDataDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).toAbsolutePath().normalize();
 
     //TODO
 //    writeMetadata(objectMapper, packJob.getCruiseMetadata(), mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
 
-    //TODO
-//    for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
-//      String instrumentBagName = instruments.get(0).getBagName();
-//      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
-//
-//      mkDir(instrumentBagRootDir);
-//
-//      copyLocalData(serviceProperties, packJob, instrumentBagRootDir);
-//
-//      for (InstrumentDetail dataset : instruments) {
-//        Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
-//        Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
-//
+    for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
+      String instrumentBagName = instruments.get(0).getBagName();
+      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
+
+      mkDir(instrumentBagRootDir);
+
+      copyLocalData(serviceProperties, packJob, instrumentBagRootDir);
+
+      for (InstrumentDetail dataset : instruments) {
+        Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
+        Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
+
+        //TODO
 //        CruiseMetadata packageMetadata = getPackageMetadata(packJob.getCruiseMetadata(), dataset);
 //        writeMetadata(objectMapper, packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
-//
-//
-//        try {
-//          Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
-//
-//            @Override
-//            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
-//              if (Files.isHidden(dir)) {
-//                return FileVisitResult.SKIP_SUBTREE;
-//              }
-//              return super.preVisitDirectory(dir, attr);
-//            }
-//
-//            @Override
-//            public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
-//              Path sourceFile = file.toAbsolutePath().normalize();
-//              Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
-//              if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
-//                mkDir(targetFile.getParent());
-//                copy(sourceFile, targetFile);
-//              }
-//              return super.visitFile(file, attr);
-//            }
-//          });
-//        } catch (IOException e) {
-//          throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
-//        }
-//
-////        if (dataset.getCustomHandler() != null) {
-////          CustomInstrumentProcessingContext customProcessingContext = new CustomInstrumentProcessingContext(packJob, dataset, mainBagDataDir,
-////              datasetBagRootDir);
-////
-////          dataset.getCustomHandler().accept(customProcessingContext);
-////        }
-//      }
-//
-//      try {
-//        BagCreator.bagInPlace(instrumentBagRootDir, Arrays.asList(StandardSupportedAlgorithms.MD5), false);
-//      } catch (NoSuchAlgorithmException | IOException e) {
-//        throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
-//      }
-//
-//    }
-  }
 
-//  private static Bag makeInternalBag(Path mainBagRootDir, String bagName) {
+
+        try {
+          Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+              if (Files.isHidden(dir)) {
+                return FileVisitResult.SKIP_SUBTREE;
+              }
+              return super.preVisitDirectory(dir, attr);
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+              Path sourceFile = file.toAbsolutePath().normalize();
+              Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
+              if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
+                mkDir(targetFile.getParent());
+                copy(sourceFile, targetFile);
+              }
+              return super.visitFile(file, attr);
+            }
+          });
+        } catch (IOException e) {
+          throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
+        }
+
+        //TODO
+//        if (dataset.getCustomHandler() != null) {
+//          CustomInstrumentProcessingContext customProcessingContext = new CustomInstrumentProcessingContext(packJob, dataset, mainBagDataDir,
+//              datasetBagRootDir);
 //
-//    //TODO will there ever be an existing bag
-//    try {
-//      return Bagger.readOrCreateBag(mainBagRootDir.resolve("data").resolve(bagName));
-//    } catch (MaliciousPathException | UnparsableVersionException | UnsupportedAlgorithmException | InvalidBagitFileFormatException | IOException |
-//             NoSuchAlgorithmException e) {
-//      throw new RuntimeException("Unable to open or create internal bag " + bagName, e);
-//    }
-//  }
+//          dataset.getCustomHandler().accept(customProcessingContext);
+//        }
+      }
+
+      try {
+        BagCreator.bagInPlace(instrumentBagRootDir, Arrays.asList(StandardSupportedAlgorithms.MD5), false);
+      } catch (NoSuchAlgorithmException | IOException e) {
+        throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
+      }
+
+    }
+  }
 
 }

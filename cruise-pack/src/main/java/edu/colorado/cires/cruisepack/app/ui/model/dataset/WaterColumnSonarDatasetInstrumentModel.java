@@ -1,9 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
@@ -20,9 +24,15 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   private String processingLevel = "Raw";
   private String comments;
   private DropDownItem calibrationState;
+  @NotNull
   private Path calibrationReportPath;
+  private String calibrationReportPathError;
   private Path calibrationDataPath;
   private LocalDate calibrationDate;
+
+  public WaterColumnSonarDatasetInstrumentModel(String instrumentGroupShortCode) {
+    super(instrumentGroupShortCode);
+  }
 
   public DropDownItem getInstrument() {
     return instrument;
@@ -79,4 +89,18 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   public void setCalibrationDate(LocalDate calibrationDate) {
     setIfChanged(UPDATE_CALIBRATION_DATE, calibrationDate, () -> this.calibrationDate, (nv) -> this.calibrationDate = nv);
   }
+
+  @Override
+  public Optional<DropDownItem> getSelectedInstrument() {
+    if (instrument == null || StringUtils.isBlank(instrument.getId())) {
+      return Optional.empty();
+    }
+    return Optional.of(instrument);
+  }
+
+  @Override
+  protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
+    return InstrumentStatus.forValue(processingLevel);
+  }
+
 }

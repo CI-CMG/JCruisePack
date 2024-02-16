@@ -24,7 +24,7 @@ public class SubBottomDatasetPanelFactory extends
 
   @Override
   protected SubBottomDatasetInstrumentModel createModel() {
-    return new SubBottomDatasetInstrumentModel();
+    return new SubBottomDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

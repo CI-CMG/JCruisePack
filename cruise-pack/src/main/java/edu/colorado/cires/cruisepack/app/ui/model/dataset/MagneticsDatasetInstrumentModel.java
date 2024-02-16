@@ -1,7 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
@@ -22,6 +25,23 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   private String sampleRate;
   private String towDistance;
   private String sensorDepth;
+
+  public MagneticsDatasetInstrumentModel(String instrumentGroupShortCode) {
+    super(instrumentGroupShortCode);
+  }
+
+  @Override
+  public Optional<DropDownItem> getSelectedInstrument() {
+    if (instrument == null || StringUtils.isBlank(instrument.getId())) {
+      return Optional.empty();
+    }
+    return Optional.of(instrument);
+  }
+
+  @Override
+  protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
+    return InstrumentStatus.forValue(processingLevel);
+  }
 
   public DropDownItem getInstrument() {
     return instrument;

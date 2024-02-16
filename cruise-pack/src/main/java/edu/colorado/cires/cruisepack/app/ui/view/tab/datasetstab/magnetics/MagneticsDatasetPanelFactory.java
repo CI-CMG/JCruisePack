@@ -23,7 +23,7 @@ public class MagneticsDatasetPanelFactory extends
 
   @Override
   protected MagneticsDatasetInstrumentModel createModel() {
-    return new MagneticsDatasetInstrumentModel();
+    return new MagneticsDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

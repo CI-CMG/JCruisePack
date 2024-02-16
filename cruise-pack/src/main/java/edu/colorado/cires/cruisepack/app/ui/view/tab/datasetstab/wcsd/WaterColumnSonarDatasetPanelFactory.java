@@ -24,7 +24,7 @@ public class WaterColumnSonarDatasetPanelFactory extends
 
   @Override
   protected WaterColumnSonarDatasetInstrumentModel createModel() {
-    return new WaterColumnSonarDatasetInstrumentModel();
+    return new WaterColumnSonarDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

@@ -23,7 +23,7 @@ public class OtherDatasetPanelFactory extends DatasetPanelFactory<OtherDatasetIn
 
   @Override
   protected OtherDatasetInstrumentModel createModel() {
-    return new OtherDatasetInstrumentModel();
+    return new OtherDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

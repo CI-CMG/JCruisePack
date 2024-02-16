@@ -1,7 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 
 public class MultibeamDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
@@ -13,6 +16,23 @@ public class MultibeamDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   private DropDownItem instrument;
   private String processingLevel = "Raw";
   private String comments;
+
+  public MultibeamDatasetInstrumentModel(String instrumentGroupShortCode) {
+    super(instrumentGroupShortCode);
+  }
+
+  @Override
+  public Optional<DropDownItem> getSelectedInstrument() {
+    if (instrument == null || StringUtils.isBlank(instrument.getId())) {
+      return Optional.empty();
+    }
+    return Optional.of(instrument);
+  }
+
+  @Override
+  protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
+    return InstrumentStatus.forValue(processingLevel);
+  }
 
   public DropDownItem getInstrument() {
     return instrument;

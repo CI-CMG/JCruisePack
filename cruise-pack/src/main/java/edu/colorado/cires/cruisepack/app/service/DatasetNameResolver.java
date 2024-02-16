@@ -8,21 +8,18 @@ import java.util.Set;
 
 public class DatasetNameResolver {
 
-  public static void setDirNamesOnInstruments(String mainName, Map<String, List<InstrumentDetail>> instruments) {
-    for (Entry<String, List<InstrumentDetail>> entry : instruments.entrySet()) {
-      String pkg = entry.getKey();
-      List<InstrumentDetail> details = entry.getValue();
+  public static void setDirNamesOnInstruments(String mainName, Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> instruments) {
+    for (Entry<InstrumentDetailPackageKey, List<InstrumentNameHolder>> entry : instruments.entrySet()) {
+      List<InstrumentNameHolder> details = entry.getValue();
       if (details.size() == 1) {
-        setSimpleDetailInfo(mainName, details.get(0), pkg);
+        setSimpleDetailInfo(mainName, details.get(0), entry.getKey());
       } else {
-        setUniqueDetailInfo(mainName, details, pkg);
+        setUniqueDetailInfo(mainName, details, entry.getKey());
       }
     }
   }
 
-  private static void setUniqueDetailInfo(String mainName, List<InstrumentDetail> details, String pkg) {
-    //TODO limit to 2?
-    String[] packageParts = pkg.split("_", 2);
+  private static void setUniqueDetailInfo(String mainName, List<InstrumentNameHolder> details, InstrumentDetailPackageKey pkg) {
 
     Set<String> instruments = new HashSet<>();
     Set<String> processed = new HashSet<>();
@@ -34,20 +31,20 @@ public class DatasetNameResolver {
     String name = null;
     String bagName = null;
 
-    for (InstrumentDetail dataset : details) {
+    for (InstrumentNameHolder dataset : details) {
       String dirName;
       if (!instruments.contains(dataset.getInstrument())) {
         instruments.add(dataset.getInstrument());
 
-        if (packageParts.length == 2 && packageParts[0].equals(packageParts[1])){
+        if (pkg.getInstrumentGroupShortType().equals(pkg.getInstrumentShortCode())) {
           name = dataset.getInstrument().replaceAll(" ", "_");
-          bagName = mainName + "_" + packageParts[0] + "_" + name;
+          bagName = mainName + "_" + pkg.getInstrumentGroupShortType() + "_" + name;
         } else {
           name = dataset.getShortName();
           bagName = mainName + "_" + pkg;
         }
 
-        switch (dataset.getStatus()){
+        switch (dataset.getStatus()) {
           case RAW:
             dirName = name;
             rawCount = 1;
@@ -67,7 +64,7 @@ public class DatasetNameResolver {
         }
 
       } else {
-        switch (dataset.getStatus()){
+        switch (dataset.getStatus()) {
           case RAW:
             if (rawCount == 0) {
               dirName = name;
@@ -104,9 +101,9 @@ public class DatasetNameResolver {
     }
   }
 
-  private static void setSimpleDetailInfo(String mainName,InstrumentDetail dataset, String pkg) {
+  private static void setSimpleDetailInfo(String mainName, InstrumentNameHolder dataset, InstrumentDetailPackageKey pkg) {
     String dirName;
-    switch (dataset.getStatus()){
+    switch (dataset.getStatus()) {
       case RAW:
         dirName = dataset.getShortName();
         break;
@@ -120,12 +117,10 @@ public class DatasetNameResolver {
         throw new IllegalStateException("Unsupported status: " + dataset.getStatus());
     }
 
-    //TODO limiting to 2.  is this correct?
-    String[] packageParts = pkg.split("_", 2);
 
     String bagName;
-    if (packageParts.length == 2 && packageParts[0].equals(packageParts[1])){
-      bagName = mainName + "_" + packageParts[0];
+    if (pkg.getInstrumentGroupShortType().equals(pkg.getInstrumentGroupShortType())) {
+      bagName = mainName + "_" + pkg.getInstrumentGroupShortType();
     } else {
       bagName = mainName + "_" + pkg;
     }

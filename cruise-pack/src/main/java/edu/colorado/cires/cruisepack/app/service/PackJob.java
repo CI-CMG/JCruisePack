@@ -4,7 +4,10 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class PackJob {
 
@@ -42,11 +45,13 @@ public class PackJob {
 
   private final String packageId;
 
+  private final Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments;
+
   private PackJob(String cruiseId, String segment, String seaUuid, String arrivalPortUuid, String departurePortUuid, String shipUuid,
       LocalDate departureDate, LocalDate arrivalDate, LocalDate releaseDate, Path packageDirectory, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, Path documentsPath, boolean omicsSamplingConducted, String omicsContactUuid, Path omicsSampleTrackingSheetPath,
       String omicsBioProjectAccession, List<String> omicsSamplingTypes, List<String> omicsExpectedAnalyses, String omicsAdditionalSamplingInformation,
-      String packageId) {
+      String packageId, Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments) {
     this.cruiseId = cruiseId;
     this.segment = segment;
     this.seaUuid = seaUuid;
@@ -69,6 +74,7 @@ public class PackJob {
     this.omicsExpectedAnalyses = omicsExpectedAnalyses;
     this.omicsAdditionalSamplingInformation = omicsAdditionalSamplingInformation;
     this.packageId = packageId;
+    this.instruments = instruments;
   }
 
   public String getCruiseId() {
@@ -159,7 +165,12 @@ public class PackJob {
     return packageId;
   }
 
+  public Map<InstrumentDetailPackageKey, List<InstrumentDetail>> getInstruments() {
+    return instruments;
+  }
+
   public static class Builder {
+
     private String cruiseId;
     private String segment;
     private String seaUuid;
@@ -178,10 +189,11 @@ public class PackJob {
     private String omicsContactUuid;
     private Path omicsSampleTrackingSheetPath;
     private String omicsBioProjectAccession;
-    private List<String> omicsSamplingTypes;
-    private List<String> omicsExpectedAnalyses;
+    private List<String> omicsSamplingTypes = Collections.emptyList();
+    private List<String> omicsExpectedAnalyses = Collections.emptyList();
     private String omicsAdditionalSamplingInformation;
     private String packageId;
+    private Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments = Collections.emptyMap();
 
     private Builder() {
 
@@ -210,6 +222,7 @@ public class PackJob {
       omicsExpectedAnalyses = src.omicsExpectedAnalyses;
       omicsAdditionalSamplingInformation = src.omicsAdditionalSamplingInformation;
       packageId = src.packageId;
+      instruments = src.instruments;
     }
 
     public Builder setCruiseId(String cruiseId) {
@@ -304,7 +317,7 @@ public class PackJob {
 
     public Builder setOmicsSamplingTypes(List<String> omicsSamplingTypes) {
       if (omicsSamplingTypes == null) {
-        omicsSamplingTypes = new ArrayList<>(0);
+        omicsSamplingTypes = Collections.emptyList();
       }
       this.omicsSamplingTypes = Collections.unmodifiableList(omicsSamplingTypes);
       return this;
@@ -312,7 +325,7 @@ public class PackJob {
 
     public Builder setOmicsExpectedAnalyses(List<String> omicsExpectedAnalyses) {
       if (omicsExpectedAnalyses == null) {
-        omicsExpectedAnalyses = new ArrayList<>(0);
+        omicsExpectedAnalyses = Collections.emptyList();
       }
       this.omicsExpectedAnalyses = Collections.unmodifiableList(omicsExpectedAnalyses);
       return this;
@@ -328,96 +341,26 @@ public class PackJob {
       return this;
     }
 
+    public Builder setInstruments(Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments) {
+      if (instruments == null) {
+        instruments = Collections.emptyMap();
+      }
+      Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new LinkedHashMap<>();
+      for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : instruments.entrySet()) {
+        if (!entry.getValue().isEmpty()) {
+          map.put(entry.getKey(), Collections.unmodifiableList(new ArrayList<>(entry.getValue())));
+        }
+      }
+      this.instruments = Collections.unmodifiableMap(map);
+      return this;
+    }
+
     public PackJob build() {
       return new PackJob(
           cruiseId, segment, seaUuid, arrivalPortUuid, departurePortUuid, shipUuid,
           departureDate, arrivalDate, releaseDate, packageDirectory, cruiseTitle, cruisePurpose, cruiseDescription, documentsPath,
           omicsSamplingConducted, omicsContactUuid, omicsSampleTrackingSheetPath, omicsBioProjectAccession, omicsSamplingTypes, omicsExpectedAnalyses,
-          omicsAdditionalSamplingInformation, packageId);
+          omicsAdditionalSamplingInformation, packageId, instruments);
     }
   }
-
-//  private String packageId;
-//  private String masterBagName;
-//  private Path bagPath;
-//  private Map<String, List<InstrumentDetail>> instruments;
-//  private Path docsDir;
-//  private Path omicsFile;
-//  private Path cruisePackDataDir;
-//  private CruiseMetadata cruiseMetadata;
-
-
-//  public Instant getStartTime() {
-//    return startTime;
-//  }
-//
-//  public void setStartTime(Instant startTime) {
-//    this.startTime = startTime;
-//  }
-//
-//  public String getPackageId() {
-//    return packageId;
-//  }
-//
-//  public void setPackageId(String packageId) {
-//    this.packageId = packageId;
-//  }
-//
-//  public String getMasterBagName() {
-//    return masterBagName;
-//  }
-//
-//  public void setMasterBagName(String masterBagName) {
-//    this.masterBagName = masterBagName;
-//  }
-//
-//  public Path getBagPath() {
-//    return bagPath;
-//  }
-//
-//  public void setBagPath(Path bagPath) {
-//    this.bagPath = bagPath;
-//  }
-//
-//  public Map<String, List<InstrumentDetail>> getInstruments() {
-//    return instruments;
-//  }
-//
-//  public void setInstruments(Map<String, List<InstrumentDetail>> instruments) {
-//    this.instruments = instruments;
-//  }
-//
-//  public Path getDocsDir() {
-//    return docsDir;
-//  }
-//
-//  public void setDocsDir(Path docsDir) {
-//    this.docsDir = docsDir;
-//  }
-//
-//  public Path getOmicsFile() {
-//    return omicsFile;
-//  }
-//
-//  public void setOmicsFile(Path omicsFile) {
-//    this.omicsFile = omicsFile;
-//  }
-//
-//  public Path getCruisePackDataDir() {
-//    return cruisePackDataDir;
-//  }
-//
-//  public void setCruisePackDataDir(Path cruisePackDataDir) {
-//    this.cruisePackDataDir = cruisePackDataDir;
-//  }
-//
-//  public CruiseMetadata getCruiseMetadata() {
-//    return cruiseMetadata;
-//  }
-//
-//  public void setCruiseMetadata(CruiseMetadata cruiseMetadata) {
-//    this.cruiseMetadata = cruiseMetadata;
-//  }
-
-
 }

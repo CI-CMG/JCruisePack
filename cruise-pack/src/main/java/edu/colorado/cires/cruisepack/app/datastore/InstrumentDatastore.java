@@ -1,8 +1,13 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import edu.colorado.cires.cruisepack.xml.instrument.InstrumentData;
+import edu.colorado.cires.cruisepack.xml.instrument.InstrumentGroup;
+import edu.colorado.cires.cruisepack.xml.instrument.InstrumentGroupList;
+import edu.colorado.cires.cruisepack.xml.instrument.InstrumentList;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -14,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +31,7 @@ public class InstrumentDatastore {
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> datasetTypeDropDowns;
+  private InstrumentData instrumentData;
 
   @Autowired
   public InstrumentDatastore(ServiceProperties serviceProperties) {
@@ -39,7 +46,6 @@ public class InstrumentDatastore {
     if (!Files.isRegularFile(instrumentFile)) {
       throw new IllegalStateException("Unable to read " + instrumentFile);
     }
-    InstrumentData instrumentData;
     try (Reader reader = Files.newBufferedReader(instrumentFile, StandardCharsets.UTF_8)) {
       instrumentData = (InstrumentData) JAXBContext.newInstance(InstrumentData.class).createUnmarshaller().unmarshal(reader);
     } catch (IOException | JAXBException e) {
@@ -51,6 +57,31 @@ public class InstrumentDatastore {
         .sorted((s1, s2) -> s1.getDataType().compareToIgnoreCase(s2.getDataType()))
         .map(instrumentGroup -> new DropDownItem(instrumentGroup.getShortType(), instrumentGroup.getDataType()))
         .forEach(datasetTypeDropDowns::add);
+  }
+
+  public Optional<Instrument> getInstrument(InstrumentDetailPackageKey key) {
+    InstrumentGroupList instrumentGroupList = instrumentData.getInstrumentGroups();
+    if (instrumentGroupList != null) {
+      List<InstrumentGroup> instrumentGroups = instrumentGroupList.getInstrumentGroups();
+      if (instrumentGroups != null) {
+        Optional<InstrumentGroup> maybeGroup = instrumentGroups.stream()
+            .filter(ig -> ig.getShortType().equals(key.getInstrumentGroupShortType()))
+            .findFirst();
+        if(maybeGroup.isPresent()) {
+          InstrumentGroup ig = maybeGroup.get();
+          InstrumentList instrumentList = ig.getInstruments();
+          if (instrumentList != null) {
+            List<Instrument> instruments = instrumentList.getInstruments();
+            if (instruments != null) {
+              return instruments.stream()
+                  .filter(instrument -> instrument.getShortName().equals(key.getInstrumentShortCode()))
+                  .findFirst();
+            }
+          }
+        }
+      }
+    }
+    return Optional.empty();
   }
 
   public List<DropDownItem> getDatasetTypeDropDowns() {

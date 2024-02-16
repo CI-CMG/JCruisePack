@@ -16,6 +16,9 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +36,8 @@ public class PackerService {
   private final FooterControlController footerControlController;
 
   @Autowired
-  public PackerService(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackagingValidationService validationService, FooterControlController footerControlController) {
+  public PackerService(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackagingValidationService validationService,
+      FooterControlController footerControlController) {
     this.serviceProperties = serviceProperties;
     this.objectMapper = objectMapper;
     this.validationService = validationService;
@@ -65,13 +69,12 @@ public class PackerService {
     // TODO put in queue?
     new Thread(() -> {
       try {
-//      setDirNames(packJob);
 ////    rawCheck(packJob);
         resetBagDirs(packJob);
-      copyDocs(packJob);
-      copyOmics(packJob);
-//      packData(packJob);
-      packMainBag(packJob);
+        copyDocs(packJob);
+        copyOmics(packJob);
+        packData(packJob);
+        packMainBag(packJob);
       } catch (Exception e) {
         LOGGER.error("An error occurred while packing", e);
       } finally {
@@ -139,111 +142,6 @@ public class PackerService {
 
         # Close the main manifest file after packing is complete.
         self.main_manifest.close()
-   */
-
-  private void setDirNames(PackJob packJob) {
-    throw new UnsupportedOperationException();
-    //TODO
-//    DatasetNameResolver.setDirNamesOnInstruments(packJob.getMasterBagName(), packJob.getInstruments());
-  }
-
-  /*
-  def get_dir_names(self):
-        """ Add data directory name to each instruments details in
-        self.instruments.
-
-        Add the appropriate directory name for the instrument package. The
-        directory name depends on whether there are more than one instrument
-        of a type whether there the data are raw or processed,
-
-        """
-        for package, details in self.instruments.items():
-            package_parts = package.split('_')
-
-            # If there is only one instrument for the data type then
-            # directory naming and bag naming is easy.
-            if len(details) == 1:
-                if details[0]['status'] == 'Raw':
-                    details[0]['dir_name'] = details[0]['short_name']
-                elif details[0]['status'] == 'Processed':
-                    details[0]['dir_name'] = (details[0]['short_name']
-                                              + '_processed')
-                else:
-                    details[0]['dir_name'] = (details[0]['short_name']
-                                             + '_products')
-
-                if package_parts[0] == package_parts[1]:
-                    details[0]['bag_name'] = '_'.join([self.main_name,
-                                                       package_parts[0]])
-                else:
-                    details[0]['bag_name'] = '_'.join([self.main_name, package])
-
-                continue
-
-            # Otherwise it gets complicated. For instruments with unique
-            # short names we use that as the name root, otherwise we use the
-            # long instrument name to get unique data directory names.
-            datasets = []
-            processed = []
-            products = []
-            raw_count = 0
-            processed_count = 0
-            products_count = 0
-            bag_name = ''
-            name = ''
-
-            for dataset in details:
-                if dataset['instrument'] in datasets:
-                    dataset['bag_name'] = bag_name
-                    if dataset['status'] == 'Raw':
-                        if raw_count == 0:
-                            dataset['dir_name'] = name
-                        else:
-                            dataset['dir_name'] = '{0}-{1}'.format(
-                                                        name, raw_count)
-                        raw_count += 1
-                    elif dataset['status'] == 'Processed':
-                        if dataset['instrument'] in processed:
-                            dataset['dir_name'] = (
-                                '{0}_processed-{1}'.format(
-                                                 name, processed_count))
-                        else:
-                            dataset['dir_name'] = name+'_processed'
-                            processed.append(dataset['instrument'])
-                        processed_count += 1
-                    else:
-                        if dataset['instrument'] in products:
-                            dataset['dir_name'] = (
-                                '{0}_products-{1}'.format(
-                                                 name, products_count))
-                        else:
-                            dataset['dir_name'] = name+'_products'
-                            products.append(dataset['instrument'])
-                        products_count += 1
-                else:
-                    datasets.append(dataset['instrument'])
-
-                    if package_parts[0] == package_parts[1]:
-                        name = dataset['instrument'].replace(' ', '_')
-                        bag_name = '_'.join([self.main_name,
-                                             package_parts[0], name])
-                    else:
-                        name = dataset['short_name']
-                        bag_name = '_'.join([self.main_name, package])
-
-                    dataset['bag_name'] = bag_name
-
-                    if dataset['status'] == 'Raw':
-                        dataset['dir_name'] = name
-                        raw_count = 1
-                    elif dataset['status'] == 'Processed':
-                        dataset['dir_name'] = name + '_processed'
-                        processed.append(dataset['instrument'])
-                        processed_count = 1
-                    else:
-                        dataset['dir_name'] = name+'_products'
-                        products.append(dataset['instrument'])
-                        products_count = 1
    */
 
 //  private void rawCheck(PackJob packJob) {

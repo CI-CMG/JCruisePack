@@ -24,7 +24,7 @@ public class NavigationDatasetPanelFactory extends
 
   @Override
   protected NavigationDatasetInstrumentModel createModel() {
-    return new NavigationDatasetInstrumentModel();
+    return new NavigationDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override

@@ -23,7 +23,7 @@ public class XbtDatasetPanelFactory extends DatasetPanelFactory<XbtDatasetInstru
 
   @Override
   protected XbtDatasetInstrumentModel createModel() {
-    return new XbtDatasetInstrumentModel();
+    return new XbtDatasetInstrumentModel(getInstrumentGroupShortCode());
   }
 
   @Override
