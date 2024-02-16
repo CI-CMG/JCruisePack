@@ -30,6 +30,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.AppendableTableWithSelections;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditOrgDialog;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 

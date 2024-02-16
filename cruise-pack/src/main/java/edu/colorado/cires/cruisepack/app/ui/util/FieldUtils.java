@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.util;
 import com.github.lgooddatepicker.components.DatePicker;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.AppendableTableWithSelections;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.AppendableTableWithSelections;
 
 import java.util.Enumeration;
 import java.util.List;

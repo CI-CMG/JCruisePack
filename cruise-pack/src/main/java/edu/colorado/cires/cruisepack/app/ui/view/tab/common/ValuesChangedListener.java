@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab;
+package edu.colorado.cires.cruisepack.app.ui.view.tab.common;
 
 import java.util.List;
 
