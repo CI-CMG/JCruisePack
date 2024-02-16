@@ -95,6 +95,8 @@ public class PackagingValidationService {
     String contactError = null;
     String sampleTrackingSheetError = null;
     String bioProjectAccessionError = null;
+    String samplingTypesError = null;
+    String expectedAnalysesError = null;
 
     for (ConstraintViolation<OmicsModel> violation : omicsViolations) {
       String propertyPath = violation.getPropertyPath().toString();
@@ -107,6 +109,10 @@ public class PackagingValidationService {
         sampleTrackingSheetError = message;
       } else if (propertyPath.startsWith("bioProjectAccession")) {
         bioProjectAccessionError = message;
+      } else if (propertyPath.startsWith("expectedAnalyses")) {
+        expectedAnalysesError = message;
+      } else if (propertyPath.startsWith("samplingTypes")) {
+        samplingTypesError = message;
       }
     }
 
@@ -114,6 +120,8 @@ public class PackagingValidationService {
     omicsModel.setContactError(contactError);
     omicsModel.setSampleTrackingSheetError(sampleTrackingSheetError);
     omicsModel.setBioProjectAcessionError(bioProjectAccessionError);
+    omicsModel.setExpectedAnalysesError(expectedAnalysesError);
+    omicsModel.setSamplingTypesError(samplingTypesError);
   }
 
   private void updateCruiseInformationErrors(Set<ConstraintViolation<CruiseInformationModel>> cruiseInformationViolations) {

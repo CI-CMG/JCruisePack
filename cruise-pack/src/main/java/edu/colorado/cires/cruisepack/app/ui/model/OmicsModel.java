@@ -27,8 +27,10 @@ public class OmicsModel extends PropertyChangeModel {
     private String bioProjectAcessionError = null;
     @ValidSamplingTypes
     private SamplingTypesModel samplingTypes = new SamplingTypesModel();
+    private String samplingTypesError = null;
     @ValidExpectedAnalyses
     private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
+    private String expectedAnalysesError = null;
     @NotBlank
     private String additionalSamplingInformation = null;
     private String additionalSamplingInformationError = "";
@@ -233,4 +235,22 @@ public class OmicsModel extends PropertyChangeModel {
     public void setBioProjectAcessionError(String bioProjectAcessionError) {
         setIfChanged(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION_ERROR, bioProjectAcessionError, () -> this.bioProjectAcessionError, (e) -> this.bioProjectAcessionError = e);
     }
+    
+    public String getSamplingTypesError() {
+        return samplingTypesError;
+    }
+    
+    public void setSamplingTypesError(String samplingTypesError) {
+        setIfChanged(Events.UPDATE_OMICS_SAMPLING_TYPES_ERROR, samplingTypesError, () -> this.samplingTypesError, (e) -> this.samplingTypesError = e);
+    }
+    
+    public String getExpectedAnalysesError() {
+        return expectedAnalysesError;
+    }
+    
+    public void setExpectedAnalysesError(String expectedAnalysesError) {
+        setIfChanged(Events.UPDATE_OMICS_EXPECTED_ANALYSES_ERROR, expectedAnalysesError, () -> this.expectedAnalysesError, (e) -> this.expectedAnalysesError = e);
+    }
+
+    
 }

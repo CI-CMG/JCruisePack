@@ -71,7 +71,8 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JCheckBox waterField = new JCheckBox("Water");
   private final JCheckBox soilSedimentField = new JCheckBox("Soil/Sediment");
   private final JCheckBox organicTissueField = new JCheckBox("Organic Tissue");
-
+  private final JLabel samplingTypesErrorLabel = createErrorLabel();
+  
   // Expected analyses
   private final JCheckBox barcodingField = new JCheckBox("Barcoding");
   private final JCheckBox genomicsField = new JCheckBox("Genomics");
@@ -86,6 +87,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JCheckBox metaproteomicsField = new JCheckBox("Metaproteomics");
   private final JCheckBox metametabolomicsField = new JCheckBox("Metametabolomics");
   private final JCheckBox microbiomeField = new JCheckBox("Microbiome");
+  private final JLabel expectedAnalysesErrorLabel = createErrorLabel();
 
   private final JTextArea additionalSamplingInformationField = new JTextArea();
   private final JLabel additionalSamplingInformationErrorLabel = new JLabel();
@@ -215,9 +217,10 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
     JPanel samplingTypes = new JPanel();
     samplingTypes.setLayout(new GridBagLayout());
-    samplingTypes.add(waterField, configureLayout(0, 0));
-    samplingTypes.add(soilSedimentField, configureLayout(1, 0));
-    samplingTypes.add(organicTissueField, configureLayout(2, 0));
+    samplingTypes.add(samplingTypesErrorLabel, configureLayout(0, 0, c -> c.insets = new Insets(0, 5, 0, 0)));
+    samplingTypes.add(waterField, configureLayout(0, 1));
+    samplingTypes.add(soilSedimentField, configureLayout(1, 1));
+    samplingTypes.add(organicTissueField, configureLayout(2, 1));
     samplingTypesPanel.add(samplingTypes, BorderLayout.LINE_START);
 
     panel.add(samplingTypesPanel, configureLayout(0, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
@@ -225,19 +228,20 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     JPanel expectedAnalyses = new JPanel();
     expectedAnalyses.setLayout(new GridBagLayout());
     expectedAnalyses.setBorder(new TitledBorder("Expected Analyses"));
-    expectedAnalyses.add(barcodingField, configureLayout(0, 0));
-    expectedAnalyses.add(genomicsField, configureLayout(1, 0));
-    expectedAnalyses.add(transcriptomicsField, configureLayout(2, 0));
-    expectedAnalyses.add(proteomicsField, configureLayout(3, 0));
-    expectedAnalyses.add(metabolomicsField, configureLayout(4, 0, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    expectedAnalyses.add(epigeneticsField, configureLayout(0, 1));
-    expectedAnalyses.add(otherField, configureLayout(1, 1));
-    expectedAnalyses.add(metabarcodingField, configureLayout(2, 1));
-    expectedAnalyses.add(metagenomicsField, configureLayout(3, 1));
-    expectedAnalyses.add(metatranscriptomicsField, configureLayout(4, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    expectedAnalyses.add(metaproteomicsField, configureLayout(0, 2));
-    expectedAnalyses.add(metametabolomicsField, configureLayout(1, 2));
-    expectedAnalyses.add(microbiomeField, configureLayout(2, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    expectedAnalyses.add(expectedAnalysesErrorLabel, configureLayout(0, 0, c -> c.insets = new Insets(0, 5, 0, 0)));
+    expectedAnalyses.add(barcodingField, configureLayout(0, 1));
+    expectedAnalyses.add(genomicsField, configureLayout(1, 1));
+    expectedAnalyses.add(transcriptomicsField, configureLayout(2, 1));
+    expectedAnalyses.add(proteomicsField, configureLayout(3, 1));
+    expectedAnalyses.add(metabolomicsField, configureLayout(4, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    expectedAnalyses.add(epigeneticsField, configureLayout(0, 2));
+    expectedAnalyses.add(otherField, configureLayout(1, 2));
+    expectedAnalyses.add(metabarcodingField, configureLayout(2, 2));
+    expectedAnalyses.add(metagenomicsField, configureLayout(3, 2));
+    expectedAnalyses.add(metatranscriptomicsField, configureLayout(4, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    expectedAnalyses.add(metaproteomicsField, configureLayout(0, 3));
+    expectedAnalyses.add(metametabolomicsField, configureLayout(1, 3));
+    expectedAnalyses.add(microbiomeField, configureLayout(2, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
 
     panel.add(expectedAnalyses, configureLayout(0, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
 
@@ -366,6 +370,12 @@ public class OmicsPanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_OMICS_ADDITIONAL_SAMPLING_INFORMATION_ERROR:
         updateLabelText(additionalSamplingInformationErrorLabel, evt);
+        break;
+      case Events.UPDATE_OMICS_SAMPLING_TYPES_ERROR:
+        updateLabelText(samplingTypesErrorLabel, evt);
+        break;
+      case Events.UPDATE_OMICS_EXPECTED_ANALYSES_ERROR:
+        updateLabelText(expectedAnalysesErrorLabel, evt);
       default:
         break;
     }
