@@ -129,6 +129,32 @@
     <InstrumentGroup>
       <DataType>Gravity</DataType>
       <ShortType>GRAV</ShortType>
+      <AdditionalFields>
+        <AdditionalField>
+          <Type>CORRECTION_MODEL</Type>
+          <AdditionalFieldOptions>
+            <AdditionalFieldOption>
+              <DisplayValue>Unknown</DisplayValue>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>IAG-67</DisplayValue>
+              <Code>IAG-67</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>IAG-80</DisplayValue>
+              <Code>IAG-80</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>International 1930</DisplayValue>
+              <Code>International 1930</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Other</DisplayValue>
+              <Code>Other</Code>
+            </AdditionalFieldOption>
+          </AdditionalFieldOptions>
+        </AdditionalField>
+      </AdditionalFields>
       <Instruments>
         <Instrument>
           <Uuid>temp-fd47dce0-c0eb-4d79-ac7c-fb9d0a13732e</Uuid>
@@ -441,6 +467,32 @@
     <InstrumentGroup>
       <DataType>Magnetics</DataType>
       <ShortType>MAG</ShortType>
+      <AdditionalFields>
+        <AdditionalField>
+          <Type>CORRECTION_MODEL</Type>
+          <AdditionalFieldOptions>
+            <AdditionalFieldOption>
+              <DisplayValue>Unknown</DisplayValue>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>IGRF-11</DisplayValue>
+              <Code>IGRF-11</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>CM4</DisplayValue>
+              <Code>CM4</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>WMM2015</DisplayValue>
+              <Code>WMM2015</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Other</DisplayValue>
+              <Code>Other</Code>
+            </AdditionalFieldOption>
+          </AdditionalFieldOptions>
+        </AdditionalField>
+      </AdditionalFields>
       <Instruments>
         <Instrument>
           <Uuid>temp-2395cb65-a4e0-424c-abea-b64cbbbfe32f</Uuid>
@@ -1022,6 +1074,28 @@
     <InstrumentGroup>
       <DataType>Navigation</DataType>
       <ShortType>NAV</ShortType>
+      <AdditionalFields>
+        <AdditionalField>
+          <Type>NAVIGATION_DATUM</Type>
+          <AdditionalFieldOptions>
+            <AdditionalFieldOption>
+              <DisplayValue>Unknown</DisplayValue>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>WGS84</DisplayValue>
+              <Code>WGS84</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>NAD83</DisplayValue>
+              <Code>NAD83</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Other</DisplayValue>
+              <Code>Other</Code>
+            </AdditionalFieldOption>
+          </AdditionalFieldOptions>
+        </AdditionalField>
+      </AdditionalFields>
       <Instruments>
         <Instrument>
           <Uuid>41f56f00-69d1-11e0-ae3e-0800200c9a66</Uuid>
@@ -1191,6 +1265,28 @@
     <InstrumentGroup>
       <DataType>Singlebeam Bathymetry</DataType>
       <ShortType>SB-BATHY</ShortType>
+      <AdditionalFields>
+        <AdditionalField>
+          <Type>VERTICAL_DATUM</Type>
+          <AdditionalFieldOptions>
+            <AdditionalFieldOption>
+              <DisplayValue>Unknown</DisplayValue>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>MHHW</DisplayValue>
+              <Code>MHHW</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>MLLW</DisplayValue>
+              <Code>MLLW</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Other</DisplayValue>
+              <Code>Other</Code>
+            </AdditionalFieldOption>
+          </AdditionalFieldOptions>
+        </AdditionalField>
+      </AdditionalFields>
       <Instruments>
         <Instrument>
           <Uuid>69560dff-8352-436e-921d-1faeb8e4a279</Uuid>
@@ -1305,6 +1401,32 @@
     <InstrumentGroup>
       <DataType>Water Column Sonar</DataType>
       <ShortType>WCSD</ShortType>
+      <AdditionalFields>
+        <AdditionalField>
+          <Type>CALIBRATION</Type>
+          <AdditionalFieldOptions>
+            <AdditionalFieldOption>
+              <DisplayValue>Unknown</DisplayValue>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Uncalibrated</DisplayValue>
+              <Code>Uncalibrated</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Uncalibrated w/ calibration data</DisplayValue>
+              <Code>Uncalibrated w/ calibration data</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Calibrated w/o calibration data</DisplayValue>
+              <Code>Calibrated w/o calibration data</Code>
+            </AdditionalFieldOption>
+            <AdditionalFieldOption>
+              <DisplayValue>Calibrated w/ calibration data</DisplayValue>
+              <Code>Calibrated w/ calibration data</Code>
+            </AdditionalFieldOption>
+          </AdditionalFieldOptions>
+        </AdditionalField>
+      </AdditionalFields>
       <Instruments>
         <Instrument>
           <Uuid>f0fc1bcf-5b10-45cc-ab92-d201931a0927</Uuid>
