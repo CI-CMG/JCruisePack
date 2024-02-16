@@ -36,6 +36,10 @@ public class PackageController implements PropertyChangeListener {
     packageModel.setSea(seaDd);
   }
 
+  public void setShip(DropDownItem ship) {
+    packageModel.setShip(ship);
+  }
+
   public void setArrivalPort(DropDownItem arrivalPort) {
     packageModel.setArrivalPort(arrivalPort);
   }
