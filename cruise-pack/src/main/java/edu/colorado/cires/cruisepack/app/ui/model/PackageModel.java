@@ -237,6 +237,21 @@ public class PackageModel extends PropertyChangeModel {
 
   public void setProjectsError(String projectsError) {
       setIfChanged(Events.UPDATE_PROJECTS_ERROR, projectsError, () -> this.projectsError, (e) -> this.projectsError = e);
-  }  
+  }
+
+  public void setProjectErrors(List<String> projectErrors) {
+    List<DropDownItem> newProjects = new ArrayList<>(0);
+    for (int i = 0; i < projectErrors.size(); i++) {
+      String errorMessage = projectErrors.get(i);
+      DropDownItem dropDownItem = projects.get(i);
+      if (errorMessage != null) {
+        dropDownItem = new DropDownItem(dropDownItem.getId(), dropDownItem.getValue(), errorMessage);
+      }
+      newProjects.add(dropDownItem);
+    }
+    setProjects(newProjects);
+  }
+
+  
 
 }

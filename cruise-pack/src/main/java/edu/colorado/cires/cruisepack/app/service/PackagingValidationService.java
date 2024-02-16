@@ -14,13 +14,17 @@ import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
 import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import jakarta.validation.Path.Node;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -92,29 +96,64 @@ public class PackagingValidationService {
   private void updatePeopleErrors(Set<ConstraintViolation<PeopleModel>> peopleViolations) {
     LOGGER.warn("people {}", peopleViolations);
 
-    String scientistErrors = null;
-    String sourceOrganizationErrors = null;
-    String fundingOrganizationErrors = null;
-    String metadataAuthorErrors = null;
+    String scientistError = null;
+    String[] scientistErrors = new String[peopleModel.getScientists().size()];
+    Arrays.fill(scientistErrors, null);
+    String sourceOrganizationError = null;
+    String[] sourceOrganizationErrors = new String[peopleModel.getSourceOrganizations().size()];
+    Arrays.fill(sourceOrganizationErrors, null);
+    String fundingOrganizationError = null;
+    String[] fundingOrganizationErrors = new String[peopleModel.getFundingOrganizations().size()];
+    String metadataAuthorError = null;
 
     for (ConstraintViolation<PeopleModel> constraintViolation : peopleViolations) {
       String propertyPath = constraintViolation.getPropertyPath().toString();
       String message = constraintViolation.getMessage();
       if (propertyPath.startsWith("scientists")) {
-        scientistErrors = message;
+        if (propertyPath.equals("scientists")) {
+          scientistError = message;
+        } else {
+          for (Node node : constraintViolation.getPropertyPath()) {
+            Integer index = node.getIndex();
+            if (index != null) {
+              scientistErrors[index] = message;
+            }
+          }
+        }
       } else if (propertyPath.startsWith("sourceOrganizations")) {
-        sourceOrganizationErrors = message;
+        if (propertyPath.equals("sourceOrganizations")) {
+          sourceOrganizationError = message;
+        } else {
+          for (Node node : constraintViolation.getPropertyPath()) {
+            Integer index = node.getIndex();
+            if (index != null) {
+              sourceOrganizationErrors[index] = message;
+            }
+          }
+        }
       } else if (propertyPath.startsWith("fundingOrganizations")) {
-        fundingOrganizationErrors = message;
+        if (propertyPath.equals("fundingOrganizations")) {
+          fundingOrganizationError = message;
+        } else {
+          for (Node node : constraintViolation.getPropertyPath()) {
+            Integer index = node.getIndex();
+            if (index != null) {
+              fundingOrganizationErrors[index] = message;
+            }
+          }
+        }
       } else if (propertyPath.startsWith("metadataAuthor")) {
-        metadataAuthorErrors = message;
+        metadataAuthorError = message;
       }
     }
 
-    peopleModel.setScientistError(scientistErrors);
-    peopleModel.setSourceOrganizationError(sourceOrganizationErrors);
-    peopleModel.setFundingOrganizationError(fundingOrganizationErrors);
-    peopleModel.setMetadataAuthorError(metadataAuthorErrors);
+    peopleModel.setScientistError(scientistError);
+    peopleModel.setScientistErrors(Arrays.stream(scientistErrors).collect(Collectors.toList()));
+    peopleModel.setSourceOrganizationError(sourceOrganizationError);
+    peopleModel.setSourceOrganizationErrors(Arrays.stream(sourceOrganizationErrors).collect(Collectors.toList()));
+    peopleModel.setFundingOrganizationError(fundingOrganizationError);
+    peopleModel.setFundingOrganizationErrors(Arrays.stream(fundingOrganizationErrors).collect(Collectors.toList()));
+    peopleModel.setMetadataAuthorError(metadataAuthorError);
   }
 
   private void updateOmicsErrors(Set<ConstraintViolation<OmicsModel>> omicsViolations) {
@@ -194,6 +233,8 @@ public class PackagingValidationService {
     String departureDateError = null;
     String releaseDateError = null;
     String projectsError = null;
+    String[] projectErrors = new String[packageModel.getProjects().size()];
+    Arrays.fill(projectErrors, null);
 
     for (ConstraintViolation<PackageModel> violation : packageViolations) {
       String propertyPath = violation.getPropertyPath().toString();
@@ -220,7 +261,16 @@ public class PackagingValidationService {
       } else if (propertyPath.startsWith("releaseDate")) {
         releaseDateError = message;
       } else if (propertyPath.startsWith("projects")) {
-        projectsError = message;
+        if (propertyPath.equals("projects")) {
+          projectsError = message;
+        } else {
+          for (Node node : violation.getPropertyPath()) {
+            Integer index = node.getIndex();
+            if (index != null) {
+              projectErrors[index] = message;
+            }
+          }
+        }
       }
     }
 
@@ -235,6 +285,7 @@ public class PackagingValidationService {
     packageModel.setDepartureDateError(departureDateError);
     packageModel.setReleaseDateError(releaseDateError);
     packageModel.setProjectsError(projectsError);
+    packageModel.setProjectErrors(Arrays.stream(projectErrors).collect(Collectors.toList()));
   }
 
   private void updateDatasetsErrors(Set<ConstraintViolation<DatasetsModel>> datasetsViolations) {

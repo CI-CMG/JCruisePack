@@ -91,5 +91,43 @@ public class PeopleModel extends PropertyChangeModel {
         setIfChanged(Events.UPDATE_METADATA_AUTHOR_ERROR, metadataAuthorError, () -> this.metadataAuthorError, (e) -> this.metadataAuthorError = e);
     }
 
+    public void setScientistErrors(List<String> errors) {
+        List<DropDownItem> newItems = new ArrayList<>(0);
+        for (int i = 0; i < errors.size(); i++) {
+            String errorMessage = errors.get(i);
+            DropDownItem dropDownItem = scientists.get(i);
+            if (errorMessage != null) {
+                dropDownItem = new DropDownItem(dropDownItem.getId(), dropDownItem.getValue(), errorMessage);
+            }
+            newItems.add(dropDownItem);
+        }
+        setScientists(newItems);
+    }
+
+    public void setSourceOrganizationErrors(List<String> errors) {
+        List<DropDownItem> newItems = new ArrayList<>(0);
+        for (int i = 0; i < errors.size(); i++) {
+            String errorMessage = errors.get(i);
+            DropDownItem dropDownItem = sourceOrganizations.get(i);
+            if (errorMessage != null) {
+                dropDownItem = new DropDownItem(dropDownItem.getId(), dropDownItem.getValue(), errorMessage);
+            }
+            newItems.add(dropDownItem);
+        }
+        setSourceOrganizations(newItems);
+    }
+
+    public void setFundingOrganizationErrors(List<String> errors) {
+        List<DropDownItem> newItems = new ArrayList<>(0);
+        for (int i = 0; i < errors.size(); i++) {
+            String errorMessage = errors.get(i);
+            DropDownItem dropDownItem = fundingOrganizations.get(i);
+            if (errorMessage != null) {
+                dropDownItem = new DropDownItem(dropDownItem.getId(), dropDownItem.getValue(), errorMessage);
+            }
+            newItems.add(dropDownItem);
+        }
+        setFundingOrganizations(newItems);
+    }
     
 }

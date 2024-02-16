@@ -4,6 +4,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,10 +13,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -114,7 +118,7 @@ public class AppendableTableWithSelections extends JComponent {
     }
   }
 
-  private List<DropDownItem> getDropDowns() {
+  public List<DropDownItem> getDropDowns() {
     return Arrays.stream(this.listingValuesPannel.getComponents())
     .map(c -> (JComboBox<?>) c)
     .map(c -> (DropDownItem) c.getSelectedItem())
@@ -126,7 +130,30 @@ public class AppendableTableWithSelections extends JComponent {
 
     for (DropDownItem item : dropDownItems) {
       JComboBox<DropDownItem> comboBox = new JComboBox<>();
-      comboBox.setModel(new DefaultComboBoxModel<>(options.toArray(new DropDownItem[0])));
+      List<DropDownItem> itemOptions = new ArrayList<>(options);
+      final String errorMessage = item.getErrorMessage();
+      if (errorMessage != null) {
+        item = new DropDownItem("", errorMessage);
+        itemOptions.add(item);
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+          @Override
+          public Component getListCellRendererComponent(
+            JList<?> list, Object value, int index,boolean isSelected, boolean cellHasFocus
+          ) {
+              super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+              if (((DropDownItem) value).getValue().equals(errorMessage)) {
+                  setForeground(ERROR_COLOR);
+                  comboBox.setForeground(ERROR_COLOR);
+              } else {
+                  setForeground(Color.BLACK);
+              }
+              
+              return this;
+          }
+        });
+      }
+      comboBox.setModel(new DefaultComboBoxModel<>(itemOptions.toArray(new DropDownItem[0])));
       comboBox.setSelectedItem(item);
 
       comboBox.addItemListener((e) -> handleUpdateChange());
