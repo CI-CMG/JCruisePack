@@ -4,10 +4,13 @@ import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,6 +77,10 @@ public class PackageController implements PropertyChangeListener {
 
   public void setPackageDirectoryError(String packageDirectoryError) {
     packageModel.setPackageDirectoryError(packageDirectoryError);
+  }
+
+  public void setProjects(List<DropDownItem> projects) {
+    packageModel.setProjects(projects);
   }
 
   @Override

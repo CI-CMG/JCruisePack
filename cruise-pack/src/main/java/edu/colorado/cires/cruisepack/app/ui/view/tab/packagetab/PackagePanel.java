@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateAppendableTable;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -12,6 +13,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
@@ -21,12 +23,14 @@ import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.AppendableTableWithSelections;
 import jakarta.annotation.PostConstruct;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,7 +80,9 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final ShipDatastore shipDatastore;
   private final PortDatastore portDatastore;
   private final SeaDatastore seaDatastore;
+  private final ProjectDatastore projectDatastore;
 
+  private final AppendableTableWithSelections projectsField;
   private final JTextField cruiseIdField = new JTextField();
   private final JLabel cruiseIdErrorLabel = createErrorLabel();
   private final JTextField segmentField = new JTextField();
@@ -110,7 +116,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
       ReactiveViewRegistry reactiveViewRegistry,
       PackageModel packageModel,
       ProjectChooserPanel projectChooserPanel,
-      ShipDatastore shipDatastore, PortDatastore portDatastore, SeaDatastore seaDatastore) {
+      ShipDatastore shipDatastore, PortDatastore portDatastore, SeaDatastore seaDatastore, ProjectDatastore projectDatastore) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
@@ -118,6 +124,13 @@ public class PackagePanel extends JPanel implements ReactiveView {
     this.shipDatastore = shipDatastore;
     this.portDatastore = portDatastore;
     this.seaDatastore = seaDatastore;
+    this.projectDatastore = projectDatastore;
+    this.projectsField = new AppendableTableWithSelections(
+      PROJECTS_LABEL,
+      ADDITIONAL_PROJECTS_LABEL,
+      ProjectDatastore.UNSELECTED_PROJECT,
+      projectDatastore.getProjectDropDowns()
+    );
 
     // TODO set this in model
     existingRecordList.setSelectedIndex(0);
@@ -168,9 +181,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     add(shipList, configureLayout(0, 6)); add(departurePortList, configureLayout(1, 6)); add(departureDateField, configureLayout(2, 6, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(createLabelWithErrorPanel(SEA_LABEL, seaErrorLabel), configureLayout(0, 7)); add(createLabelWithErrorPanel(ARRIVAL_PORT_LABEL, arrivalPortErrorLabel), configureLayout(1, 7)); add(createLabelWithErrorPanel(ARRIVAL_DATE_LABEL, arrivalDateErrorLabel), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(PROJECTS_LABEL), configureLayout(0, 9, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JScrollPane(projectChooserPanel), configureLayout(0, 10, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.weighty = 1.0;}));
-    add(newProjectButton, configureLayout(0, 11, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(projectsField, configureLayout(0, 9, c -> { c.weighty = 100; c.gridwidth = GridBagConstraints.REMAINDER; c.insets = new Insets(0, 0, 0, 1); }));
     
     JPanel releaseDatePanel = new JPanel();
     releaseDatePanel.setLayout(new FlowLayout());
@@ -181,7 +192,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     releaseDateWrapper.setLayout(new BorderLayout());
     releaseDateWrapper.add(releaseDatePanel, BorderLayout.EAST);
     
-    add(releaseDateWrapper, configureLayout(0, 12, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(releaseDateWrapper, configureLayout(0, 11, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     // @formatter:on
   }
 
@@ -199,8 +210,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     releaseDateField.addDateChangeListener((evt) -> packageController.setReleaseDate(evt.getNewDate()));
     dirSelectButton.addActionListener((evt) -> handleDirSelect());
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
-    newProjectButton.addActionListener((evt) -> projectChooserPanel.addRow());
-
+    projectsField.addValuesChangedListener((i) -> packageController.setProjects(i));
   }
 
   private void handleDirValue(String value) {
@@ -282,6 +292,13 @@ public class PackagePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_RELEASE_DATE_ERROR:
         updateLabelText(releaseDateErrorLabel, evt);
+        break;
+      case Events.UPDATE_PROJECTS:
+        updateAppendableTable(projectsField, evt);
+        break;
+      case Events.UPDATE_PROJECTS_ERROR:
+        updateLabelText(projectsField.getErrorLabel(), evt);
+        break;
       default:
         break;
     }
