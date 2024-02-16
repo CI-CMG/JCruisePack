@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.omicstab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateCheckBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -62,6 +63,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JComboBox<DropDownItem> contactField = new JComboBox<>();
   private final JLabel contactErrorLabel = createErrorLabel();
   private final JTextField trackingSheetField = new JTextField();
+  private final JLabel trackingSheetErrorLabel = createErrorLabel();
   private final JTextField bioProjectAcessionField = new JTextField();
   
   // Sampling types
@@ -172,7 +174,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     trackingSheetNCBIAccessionPanel.setLayout(new GridBagLayout());
     JPanel trackingSheetPanel = new JPanel();
     trackingSheetPanel.setLayout(new GridBagLayout());
-    trackingSheetPanel.add(new JLabel("Sample Tracking Sheet"), configureLayout(0, 0, c -> {
+    trackingSheetPanel.add(createLabelWithErrorPanel("Sample Tracking Sheet", trackingSheetErrorLabel), configureLayout(0, 0, c -> {
       c.weightx = 0;
     }));
     trackingSheetPanel.add(trackingSheetField, configureLayout(1, 0, c -> {
@@ -300,6 +302,9 @@ public class OmicsPanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET:
         updatePathField(trackingSheetField, evt);
+        break;
+      case Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET_ERROR:
+        updateLabelText(trackingSheetErrorLabel, evt);
         break;
       case Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION:
         updateTextField(bioProjectAcessionField, evt);

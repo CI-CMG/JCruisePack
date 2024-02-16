@@ -18,9 +18,10 @@ public class OmicsModel extends PropertyChangeModel {
     private boolean samplingConducted = false;
     @ValidPersonDropDownItem
     private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
-    private String contactError;
-    @NotNull
+    private String contactError = null;
+    @NotNull(message = "must not be blank")
     private Path sampleTrackingSheet = null;
+    private String sampleTrackingSheetError = null;
     @NotBlank
     private String bioProjectAccession = null;
     @ValidSamplingTypes
@@ -214,5 +215,13 @@ public class OmicsModel extends PropertyChangeModel {
     
     public void setContactError(String contactError) {
         setIfChanged(Events.UPDATE_OMICS_CONTACT_ERROR, contactError, () -> this.contactError, (e) -> this.contactError = contactError);
+    }
+    
+    public String getSampleTrackingSheetError() {
+        return sampleTrackingSheetError;
+    }
+    
+    public void setSampleTrackingSheetError(String sampleTrackingSheetError) {
+        setIfChanged(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET_ERROR, sampleTrackingSheetError, () -> this.sampleTrackingSheetError, (e) -> this.sampleTrackingSheetError = e);
     }
 }

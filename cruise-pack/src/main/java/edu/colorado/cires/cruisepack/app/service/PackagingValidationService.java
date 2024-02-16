@@ -93,6 +93,7 @@ public class PackagingValidationService {
   
     String additionalSamplingInformationError = null;
     String contactError = null;
+    String sampleTrackingSheetError = null;
 
     for (ConstraintViolation<OmicsModel> violation : omicsViolations) {
       String propertyPath = violation.getPropertyPath().toString();
@@ -101,11 +102,14 @@ public class PackagingValidationService {
         additionalSamplingInformationError = message;
       } else if (propertyPath.startsWith("contact")) {
         contactError = message;
+      } else if (propertyPath.startsWith("sampleTrackingSheet")) {
+        sampleTrackingSheetError = message;
       }
     }
 
     omicsModel.setAdditionalSamplingInformationError(additionalSamplingInformationError);
     omicsModel.setContactError(contactError);
+    omicsModel.setSampleTrackingSheetError(sampleTrackingSheetError);
   }
 
   private void updateCruiseInformationErrors(Set<ConstraintViolation<CruiseInformationModel>> cruiseInformationViolations) {
