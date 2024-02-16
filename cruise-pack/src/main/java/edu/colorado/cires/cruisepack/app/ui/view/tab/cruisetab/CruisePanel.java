@@ -1,7 +1,8 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.cruisetab;
 
-import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
-import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -14,7 +15,6 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
-import java.nio.file.Path;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -33,6 +33,10 @@ public class CruisePanel extends JPanel implements ReactiveView {
   private final JTextArea cruisePurposeField = new JTextArea();
   private final JTextArea cruiseDescriptionField = new JTextArea();
 
+  private final JLabel cruiseTitleErrorLabel = createErrorLabel();
+  private final JLabel cruisePurposeErrorLabel = createErrorLabel();
+  private final JLabel cruiseDescriptionErrorLabel = createErrorLabel();
+  
   private final CruiseDocumentsPanel cruiseDocumentsPanel;
   private final CruiseInformationModel cruiseInformationModel;
   private final ReactiveViewRegistry reactiveViewRegistry;
@@ -50,11 +54,11 @@ public class CruisePanel extends JPanel implements ReactiveView {
   @PostConstruct
   public void init() {
     setLayout(new GridBagLayout());
-    add(new JLabel(CRUISE_TITLE_LABEL), configureLayout(0, 0));
+    add(createLabelWithErrorPanel(CRUISE_TITLE_LABEL, cruiseTitleErrorLabel), configureLayout(0, 0));
     add(cruiseTitleField, configureLayout(0, 1));
-    add(new JLabel(CRUISE_PURPOSE_LABEL), configureLayout(0, 2));
+    add(createLabelWithErrorPanel(CRUISE_PURPOSE_LABEL, cruisePurposeErrorLabel), configureLayout(0, 2));
     add(cruisePurposeField, configureLayout(0, 3, c -> c.ipady = 200));
-    add(new JLabel(CRUISE_DESCRIPTION_LABEL), configureLayout(0, 4));
+    add(createLabelWithErrorPanel(CRUISE_DESCRIPTION_LABEL, cruiseDescriptionErrorLabel), configureLayout(0, 4));
     add(cruiseDescriptionField, configureLayout(0, 5, c -> c.ipady = 200));
     add(cruiseDocumentsPanel, configureLayout(0, 6));
 
@@ -81,6 +85,15 @@ public class CruisePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_CRUISE_DESCRIPTION:
         updateTextField(cruiseDescriptionField, evt);
+        break;
+      case Events.UPDATE_CRUISE_TITLE_ERROR:
+        updateLabelText(cruiseTitleErrorLabel, evt);
+        break;
+      case Events.UPDATE_CRUISE_PURPOSE_ERROR:
+        updateLabelText(cruisePurposeErrorLabel, evt);
+        break;
+      case Events.UPDATE_CRUISE_DESCRIPTION_ERROR:
+        updateLabelText(cruiseDescriptionErrorLabel, evt);
         break;
       default:
         break;

@@ -1,7 +1,9 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.cruisetab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
-import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.CruiseInformationController;
@@ -29,6 +31,7 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
   private static final String DIRECTORY_LABEL = "Select Directory";
 
   private final JTextField pathTextField = new JTextField();
+  private final JLabel docsDirectoryLabel = createErrorLabel();
   private final JButton selectDirectoryButton = new JButton(DIRECTORY_LABEL);
 
   private final ReactiveViewRegistry reactiveViewRegistry;
@@ -46,9 +49,9 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
   @PostConstruct
   public void init() {
     setLayout(new GridBagLayout());
-    add(new JLabel(DOCUMENTS_PATH_LABEL), configureLayout(0, 0));
-    add(pathTextField, configureLayout(1, 0));
-    add(selectDirectoryButton, configureLayout(2, 0));
+    add(createLabelWithErrorPanel(DOCUMENTS_PATH_LABEL, docsDirectoryLabel), configureLayout(0, 0, c -> c.weightx = 0));
+    add(pathTextField, configureLayout(1, 0, c -> c.weightx = 100));
+    add(selectDirectoryButton, configureLayout(2, 0, c -> c.weightx = 0));
 
     pathTextField.setText(cruiseInformationModel.getDocumentsPath() == null ? null : cruiseInformationModel.getDocumentsPath().toString());
 
@@ -64,6 +67,8 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
       case Events.UPDATE_DOCS_DIRECTORY:
         updatePathField(pathTextField, evt);
         break;
+      case Events.UPDATE_DOCS_DIRECTORY_ERROR:
+        updateLabelText(docsDirectoryLabel, evt);
       default:
         break;
     }
