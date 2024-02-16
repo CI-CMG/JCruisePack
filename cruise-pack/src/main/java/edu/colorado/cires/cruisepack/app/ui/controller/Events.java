@@ -9,6 +9,7 @@ public final class Events {
   public static final String UPDATE_ARRIVAL_PORT = "UPDATE_ARRIVAL_PORT";
   public static final String UPDATE_DEPARTURE_PORT = "UPDATE_DEPARTURE_PORT";
   public static final String UPDATE_SHIP = "UPDATE_SHIP";
+  public static final String UPDATE_PROJECTS = "UPDATE_PROJECTS";
   public static final String UPDATE_SEGMENT = "UPDATE_SEGMENT";
   public static final String UPDATE_SEGMENT_ERROR = "UPDATE_SEGMENT_ERROR";
   public static final String UPDATE_DEPARTURE_DATE = "UPDATE_DEPARTURE_DATE";
@@ -23,6 +24,7 @@ public final class Events {
   public static final String UPDATE_ARRIVAL_PORT_ERROR = "UPDATE_ARRIVAL_PORT_ERROR";
   public static final String UPDATE_DEPARTURE_PORT_ERROR = "UPDATE_DEPARTURE_PORT_ERROR";
   public static final String UPDATE_SHIP_ERROR = "UPDATE_SHIP_ERROR";
+  public static final String UPDATE_PROJECTS_ERROR = "UPDATE_PROJECTS_ERROR";
 
   // Footer Control
   public static final String UPDATE_STOP_BUTTON_ENABLED = "UPDATE_STOP_BUTTON_ENABLED";

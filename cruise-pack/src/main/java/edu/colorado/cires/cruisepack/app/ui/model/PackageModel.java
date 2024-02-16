@@ -5,13 +5,19 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPortDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidProjectDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSeaDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidShipDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,6 +55,10 @@ public class PackageModel extends PropertyChangeModel {
   @NotNull(message = "must not be blank") //TODO add more validation, path exists, space?
   private Path packageDirectory = null;
   private String packageDirectoryError = null;
+
+  @NotEmpty
+  private List<@ValidProjectDropDownItem DropDownItem> projects = new ArrayList<>(0);
+  private String projectsError = null;
 
   public String getCruiseId() {
     return cruiseId;
@@ -165,54 +175,68 @@ public class PackageModel extends PropertyChangeModel {
     setIfChanged(Events.UPDATE_RELEASE_DATE_ERROR, releaseDateError, () -> this.releaseDateError, (nv) -> this.releaseDateError = nv);
   }
 
-public String getSeaError() {
-    return seaError;
-}
+  public String getSeaError() {
+      return seaError;
+  }
 
-public void setSeaError(String seaError) {
-    setIfChanged(Events.UPDATE_SEA_ERROR, seaError, () -> this.seaError, (e) -> this.seaError = e);
-}
+  public void setSeaError(String seaError) {
+      setIfChanged(Events.UPDATE_SEA_ERROR, seaError, () -> this.seaError, (e) -> this.seaError = e);
+  }
 
-public String getArrivalPortError() {
-    return arrivalPortError;
-}
+  public String getArrivalPortError() {
+      return arrivalPortError;
+  }
 
-public void setArrivalPortError(String arrivalPortError) {
-    setIfChanged(Events.UPDATE_ARRIVAL_PORT_ERROR, arrivalPortError, () -> this.arrivalPortError, (e) -> this.arrivalPortError = e);
-}
+  public void setArrivalPortError(String arrivalPortError) {
+      setIfChanged(Events.UPDATE_ARRIVAL_PORT_ERROR, arrivalPortError, () -> this.arrivalPortError, (e) -> this.arrivalPortError = e);
+  }
 
-public String getDeparturePortError() {
-    return departurePortError;
-}
+  public String getDeparturePortError() {
+      return departurePortError;
+  }
 
-public void setDeparturePortError(String departurePortError) {
-    setIfChanged(Events.UPDATE_DEPARTURE_PORT_ERROR, departurePortError, () -> this.departurePortError, (e) -> this.departurePortError = e);
-}
+  public void setDeparturePortError(String departurePortError) {
+      setIfChanged(Events.UPDATE_DEPARTURE_PORT_ERROR, departurePortError, () -> this.departurePortError, (e) -> this.departurePortError = e);
+  }
 
-public String getShipError() {
-    return shipError;
-}
+  public String getShipError() {
+      return shipError;
+  }
 
-public void setShipError(String shipError) {
-    setIfChanged(Events.UPDATE_SHIP_ERROR, shipError, () -> this.shipError, (e) -> this.shipError = e);
-}
+  public void setShipError(String shipError) {
+      setIfChanged(Events.UPDATE_SHIP_ERROR, shipError, () -> this.shipError, (e) -> this.shipError = e);
+  }
 
-public String getDepartureDateError() {
-  return departureDateError;
-}
+  public String getDepartureDateError() {
+    return departureDateError;
+  }
 
-public void setDepartureDateError(String departureDateError) {
-  setIfChanged(Events.UPDATE_DEPARTURE_DATE_ERROR, departureDateError, () -> this.departureDateError, (e) -> this.departureDateError = e);
-}
+  public void setDepartureDateError(String departureDateError) {
+    setIfChanged(Events.UPDATE_DEPARTURE_DATE_ERROR, departureDateError, () -> this.departureDateError, (e) -> this.departureDateError = e);
+  }
 
-public String getArrivalDateError() {
-  return arrivalDateError;
-}
+  public String getArrivalDateError() {
+    return arrivalDateError;
+  }
 
-public void setArrivalDateError(String arrivalDateError) {
-  setIfChanged(Events.UPDATE_ARRIVAL_DATE_ERROR, arrivalDateError, () -> this.arrivalDateError, (e) -> this.arrivalDateError = e);
-}
+  public void setArrivalDateError(String arrivalDateError) {
+    setIfChanged(Events.UPDATE_ARRIVAL_DATE_ERROR, arrivalDateError, () -> this.arrivalDateError, (e) -> this.arrivalDateError = e);
+  }
 
+  public List<DropDownItem> getProjects() {
+      return projects;
+  }
 
-  
+  public void setProjects(List<DropDownItem> projects) {
+      setIfChanged(Events.UPDATE_PROJECTS, projects, () -> this.projects, (v) -> this.projects = v);
+  }
+
+  public String getProjectsError() {
+      return projectsError;
+  }
+
+  public void setProjectsError(String projectsError) {
+      setIfChanged(Events.UPDATE_PROJECTS_ERROR, projectsError, () -> this.projectsError, (e) -> this.projectsError = e);
+  }  
+
 }

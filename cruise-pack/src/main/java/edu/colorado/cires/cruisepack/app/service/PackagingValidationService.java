@@ -193,6 +193,7 @@ public class PackagingValidationService {
     String arrivalDateError = null;
     String departureDateError = null;
     String releaseDateError = null;
+    String projectsError = null;
 
     for (ConstraintViolation<PackageModel> violation : packageViolations) {
       String propertyPath = violation.getPropertyPath().toString();
@@ -218,6 +219,8 @@ public class PackagingValidationService {
         departureDateError = message;
       } else if (propertyPath.startsWith("releaseDate")) {
         releaseDateError = message;
+      } else if (propertyPath.startsWith("projects")) {
+        projectsError = message;
       }
     }
 
@@ -231,6 +234,7 @@ public class PackagingValidationService {
     packageModel.setArrivalDateError(arrivalDateError);
     packageModel.setDepartureDateError(departureDateError);
     packageModel.setReleaseDateError(releaseDateError);
+    packageModel.setProjectsError(projectsError);
   }
 
   private void updateDatasetsErrors(Set<ConstraintViolation<DatasetsModel>> datasetsViolations) {
