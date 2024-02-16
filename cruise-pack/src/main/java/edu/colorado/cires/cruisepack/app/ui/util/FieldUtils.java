@@ -7,6 +7,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.AppendableTableWi
 
 import java.util.Enumeration;
 import java.util.List;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -17,6 +19,8 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -84,7 +88,7 @@ public final class FieldUtils {
   public static void updateTextArea(JTextArea textArea, PropertyChangeEvent evt) {
     String oldValue = (String) evt.getOldValue();
     String newValue = (String) evt.getNewValue();
-    if (!oldValue.equals(newValue)) {
+    if (!Objects.equals(oldValue, newValue)) {
       textArea.setText(newValue);
     }
   }
@@ -92,7 +96,7 @@ public final class FieldUtils {
   public static void updateStatefulRadioButton(StatefulRadioButton radioButton, PropertyChangeEvent evt) {
     Boolean oldValue = (Boolean) evt.getOldValue();
     Boolean newValue = (Boolean) evt.getNewValue();
-    if (!oldValue.equals(newValue)) {
+    if (!Objects.equals(newValue, oldValue)) {
       radioButton.setSelectedValue(newValue);
     }
   }
@@ -123,6 +127,30 @@ public final class FieldUtils {
 
   public static void updateAppendableTable(AppendableTableWithSelections appendableTable, PropertyChangeEvent evt) {
     appendableTable.redrawComboboxes((List<DropDownItem>) evt.getNewValue());
+  }
+
+  public static void updateLabelText(JLabel label, PropertyChangeEvent evt) {
+    String newValue = (String) evt.getNewValue();
+    String oldValue = (String) evt.getOldValue();
+
+    if (!Objects.equals(oldValue, newValue)) {
+      label.setText(newValue);
+    }
+  }
+
+  public static JLabel createErrorLabel() {
+    JLabel label = new JLabel();
+    label.setText("");
+    label.setForeground(new Color(Color.RED.getRGB()));
+    return label;
+  }
+
+  public static JPanel createLabelWithErrorPanel(String labelText, JLabel errorLabel) {
+    JPanel panel = new JPanel();
+    panel.setLayout(new BorderLayout(10, 0));
+    panel.add(new JLabel(labelText), BorderLayout.LINE_START);
+    panel.add(errorLabel, BorderLayout.CENTER);
+    return panel;
   }
 
   private FieldUtils() {
