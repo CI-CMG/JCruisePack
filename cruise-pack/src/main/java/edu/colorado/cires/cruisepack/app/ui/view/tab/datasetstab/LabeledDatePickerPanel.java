@@ -19,4 +19,8 @@ public class LabeledDatePickerPanel extends JPanel {
     setBorder(BorderFactory.createTitledBorder(title));
     add(datePicker, configureLayout(0, 0));
   }
+
+  public DatePicker getDatePicker() {
+    return datePicker;
+  }
 }

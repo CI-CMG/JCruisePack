@@ -25,4 +25,8 @@ public class LabeledFilePathPanel extends JPanel {
     add(textField, configureLayout(0, 0, c -> c.weightx = 1));
     add(fileSelectButton, configureLayout(1, 0, c -> c.weightx = 0));
   }
+
+  public JTextField getTextField() {
+    return textField;
+  }
 }

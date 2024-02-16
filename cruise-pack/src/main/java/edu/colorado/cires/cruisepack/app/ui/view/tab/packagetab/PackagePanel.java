@@ -36,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -173,8 +174,12 @@ public class PackagePanel extends JPanel implements ReactiveView {
   }
 
   private void handleDirValue(String value) {
-    Path path = Paths.get(value);
-    packageController.setPackageDirectory(path.toAbsolutePath().normalize());
+    if (StringUtils.isBlank(value)) {
+      packageController.setPackageDirectory(null);
+    } else {
+      Path path = Paths.get(value);
+      packageController.setPackageDirectory(path.toAbsolutePath().normalize());
+    }
   }
 
   private void handleDirSelect() {
