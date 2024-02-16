@@ -1,7 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -19,6 +22,9 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
@@ -27,6 +33,7 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -71,21 +78,31 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final SeaDatastore seaDatastore;
 
   private final JTextField cruiseIdField = new JTextField();
+  private final JLabel cruiseIdErrorLabel = createErrorLabel();
   private final JTextField segmentField = new JTextField();
+  private final JLabel segmentErrorLabel = createErrorLabel();
   private final JComboBox<DropDownItem> shipList = new JComboBox<>();
+  private final JLabel shipErrorLabel = createErrorLabel();
   private final JComboBox<DropDownItem> departurePortList = new JComboBox<>();
+  private final JLabel departurePortErrorLabel = createErrorLabel();
   private final JComboBox<DropDownItem> seaList = new JComboBox<>();
+  private final JLabel seaErrorLabel = createErrorLabel();
   private final JComboBox<DropDownItem> arrivalPortList = new JComboBox<>();
+  private final JLabel arrivalPortErrorLabel = createErrorLabel();
   private final DatePicker departureDateField = new DatePicker(configureDatePicker());
+  private final JLabel departureDateErrorLabel = createErrorLabel();
   private final DatePicker arrivalDateField = new DatePicker(configureDatePicker());
+  private final JLabel arrivalDateErrorLabel = createErrorLabel();
   private final DatePicker releaseDateField = new DatePicker(configureDatePicker());
+  private final JLabel releaseDateErrorLabel = createErrorLabel();
 
   private final JTextField packageDirectoryField = new JTextField();
+  private final JLabel packageDirectoryErrorLabel = createErrorLabel();
+
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
 
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
   private final JComboBox<String> existingRecordList = new JComboBox<>(new String[]{"test", "real"});
-
 
   @Autowired
   public PackagePanel(
@@ -115,6 +132,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private void initializeFields() {
     cruiseIdField.setText(packageModel.getCruiseId());
+
     segmentField.setText(packageModel.getSegment());
 
     shipList.setModel(new DefaultComboBoxModel<>(shipDatastore.getShipDropDowns().toArray(new DropDownItem[0])));
@@ -139,20 +157,31 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private void setupLayout() {
     setLayout(new GridBagLayout());
+
     // @formatter:off
     add(new JLabel(EXISTING_RECORD_DESCRIPTION_LABEL, null, SwingConstants.CENTER), configureLayout(0, 0, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.ipady = 20;}));
-    add(new JLabel(CRUISE_ID_LABEL), configureLayout(0, 1)); add(new JLabel(SEGMENT_LABEL), configureLayout(1, 1)); add(new JLabel(EXISTING_RECORD_LABEL), configureLayout(2, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(createLabelWithErrorPanel(CRUISE_ID_LABEL, cruiseIdErrorLabel), configureLayout(0, 1)); add(createLabelWithErrorPanel(SEGMENT_LABEL, segmentErrorLabel), configureLayout(1, 1)); add(new JLabel(EXISTING_RECORD_LABEL), configureLayout(2, 1, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(cruiseIdField, configureLayout(0, 2)); add(segmentField, configureLayout(1, 2)); add(existingRecordList, configureLayout(2, 2, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(DESTINATION_LABEL), configureLayout(0, 3, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(createLabelWithErrorPanel(DESTINATION_LABEL, packageDirectoryErrorLabel), configureLayout(0, 3, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; }));
     add(packageDirectoryField, configureLayout(0, 4, 2)); add(dirSelectButton, configureLayout(2, 4, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(SHIP_LABEL), configureLayout(0, 5)); add(new JLabel(DEPARTURE_PORT_LABEL), configureLayout(1, 5)); add(new JLabel(DEPARTURE_DATE_LABEL), configureLayout(2, 5, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(createLabelWithErrorPanel(SHIP_LABEL, shipErrorLabel), configureLayout(0, 5)); add(createLabelWithErrorPanel(DEPARTURE_PORT_LABEL, departurePortErrorLabel), configureLayout(1, 5)); add(createLabelWithErrorPanel(DEPARTURE_DATE_LABEL, departureDateErrorLabel), configureLayout(2, 5, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(shipList, configureLayout(0, 6)); add(departurePortList, configureLayout(1, 6)); add(departureDateField, configureLayout(2, 6, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(SEA_LABEL), configureLayout(0, 7)); add(new JLabel(ARRIVAL_PORT_LABEL), configureLayout(1, 7)); add(new JLabel(ARRIVAL_DATE_LABEL), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    add(createLabelWithErrorPanel(SEA_LABEL, seaErrorLabel), configureLayout(0, 7)); add(createLabelWithErrorPanel(ARRIVAL_PORT_LABEL, arrivalPortErrorLabel), configureLayout(1, 7)); add(createLabelWithErrorPanel(ARRIVAL_DATE_LABEL, arrivalDateErrorLabel), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JLabel(PROJECTS_LABEL), configureLayout(0, 9, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(new JScrollPane(projectChooserPanel), configureLayout(0, 10, 3, c -> { c.gridwidth = GridBagConstraints.REMAINDER; c.weighty = 1.0;}));
     add(newProjectButton, configureLayout(0, 11, 3, c -> c.gridwidth = GridBagConstraints.REMAINDER));
-    add(new JLabel(RELEASE_DATE_LABEL, null, SwingConstants.TRAILING), configureLayout(0, 12, 2)); add(releaseDateField, configureLayout(2, 12, c -> c.gridwidth = GridBagConstraints.REMAINDER));
+    
+    JPanel releaseDatePanel = new JPanel();
+    releaseDatePanel.setLayout(new FlowLayout());
+    releaseDatePanel.add(createLabelWithErrorPanel(RELEASE_DATE_LABEL, releaseDateErrorLabel));
+    releaseDatePanel.add(releaseDateField);
+
+    JPanel releaseDateWrapper = new JPanel();
+    releaseDateWrapper.setLayout(new BorderLayout());
+    releaseDateWrapper.add(releaseDatePanel, BorderLayout.EAST);
+    
+    add(releaseDateWrapper, configureLayout(0, 12, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     // @formatter:on
   }
 
@@ -162,6 +191,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     cruiseIdField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> packageController.setCruiseId(cruiseIdField.getText()));
     segmentField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> packageController.setSegment(segmentField.getText()));
     seaList.addItemListener((evt) -> packageController.setSea((DropDownItem) evt.getItem()));
+    shipList.addItemListener((evt) -> packageController.setShip((DropDownItem) evt.getItem()));
     arrivalPortList.addItemListener((evt) -> packageController.setArrivalPort((DropDownItem) evt.getItem()));
     departurePortList.addItemListener((evt) -> packageController.setDeparturePort((DropDownItem) evt.getItem()));
     departureDateField.addDateChangeListener((evt) -> packageController.setDepartureDate(evt.getNewDate()));
@@ -223,6 +253,35 @@ public class PackagePanel extends JPanel implements ReactiveView {
       case Events.UPDATE_PACKAGE_DIRECTORY:
         updatePathField(packageDirectoryField, evt);
         break;
+      case Events.UPDATE_CRUISE_ID_ERROR:
+        updateLabelText(cruiseIdErrorLabel, evt);
+        break;
+      case Events.UPDATE_SEGMENT_ERROR:
+        updateLabelText(segmentErrorLabel, evt);
+        break;
+      case Events.UPDATE_PACKAGE_DIRECTORY_ERROR:
+        updateLabelText(packageDirectoryErrorLabel, evt);
+        break;
+      case Events.UPDATE_SEA_ERROR:
+        updateLabelText(seaErrorLabel, evt);
+        break;
+      case Events.UPDATE_ARRIVAL_PORT_ERROR:
+        updateLabelText(arrivalPortErrorLabel, evt);
+        break;
+      case Events.UPDATE_DEPARTURE_PORT_ERROR:
+        updateLabelText(departurePortErrorLabel, evt);
+        break;
+      case Events.UPDATE_SHIP_ERROR:
+        updateLabelText(shipErrorLabel, evt);
+        break;
+      case Events.UPDATE_ARRIVAL_DATE_ERROR:
+        updateLabelText(arrivalDateErrorLabel, evt);
+        break;
+      case Events.UPDATE_DEPARTURE_DATE_ERROR:
+        updateLabelText(departureDateErrorLabel, evt);
+        break;
+      case Events.UPDATE_RELEASE_DATE_ERROR:
+        updateLabelText(releaseDateErrorLabel, evt);
       default:
         break;
     }
