@@ -239,7 +239,18 @@ public class PackagingValidationService {
 
   private void updateDatasetsErrors(Set<ConstraintViolation<DatasetsModel>> datasetsViolations) {
     LOGGER.warn("datasets {}", datasetsViolations);
-    // TODO
+    String datasetsError = null;
+
+    for (ConstraintViolation<DatasetsModel> violation : datasetsViolations) {
+      String propertyPath = violation.getPropertyPath().toString();
+      String message = violation.getMessage();
+
+      if (propertyPath.equals("datasets")) {
+        datasetsError = message;
+      }
+    }
+    
+    datasetsModel.setDatasetsError(datasetsError);
   }
 
   private PackJob createPackJob() {

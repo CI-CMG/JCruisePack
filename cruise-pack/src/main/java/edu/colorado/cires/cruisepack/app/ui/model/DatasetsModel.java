@@ -2,6 +2,8 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatasetsModel extends PropertyChangeModel {
 
+  @NotEmpty
   private List<@Valid ? extends BaseDatasetInstrumentModel> datasets = new ArrayList<>();
+  private String datasetsError = null;
 
   public List<? extends BaseDatasetInstrumentModel> getDatasets() {
     return datasets;
@@ -30,5 +34,15 @@ public class DatasetsModel extends PropertyChangeModel {
       fireChangeEvent(Events.UPDATE_DATASET_LIST, datasets, newDatasets);
     }
   }
+
+  public String getDatasetsError() {
+      return datasetsError;
+  }
+
+  public void setDatasetsError(String datasetsError) {
+      setIfChanged(Events.UPDATE_DATASETS_ERROR, datasetsError, () -> this.datasetsError, (e) -> this.datasetsError = e);
+  }
+
+  
 
 }

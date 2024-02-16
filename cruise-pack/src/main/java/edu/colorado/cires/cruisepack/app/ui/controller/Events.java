@@ -84,6 +84,7 @@ public final class Events {
   // Datasets
   public static final String UPDATE_DATASET_LIST = "UPDATE_DATASET_LIST";
   public static final String UPDATE_DATASET_DATA_PREFIX = "UPDATE_DATASET_DATA_";
+  public static final String UPDATE_DATASETS_ERROR = "UPDATE_DATASETS_ERROR";
 
   private Events() {
 

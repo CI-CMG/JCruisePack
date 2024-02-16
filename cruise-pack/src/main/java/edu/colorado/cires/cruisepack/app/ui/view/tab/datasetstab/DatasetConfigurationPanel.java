@@ -1,25 +1,33 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatasetConfigurationPanel extends JPanel {
+public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
 
   private static final String DIALOG_MESSAGE = "Select Dataset Type";
   private static final String DIALOG_TITLE = "New Dataset";
@@ -27,18 +35,21 @@ public class DatasetConfigurationPanel extends JPanel {
   private final UiRefresher uiRefresher;
   private final InstrumentDatastore instrumentDatastore;
   private final DatasetPanelFactoryResolver datasetPanelFactoryResolver;
+  private final ReactiveViewRegistry reactiveViewRegistry;
 
   private List<DatasetPanel> rows = new ArrayList<>();
+  private JLabel datasetsErrorLabel = createErrorLabel();
   private JPanel fluff = new JPanel();
   private DropDownItem[] dataTypes;
 
   @Autowired
   public DatasetConfigurationPanel(
       UiRefresher uiRefresher,
-      InstrumentDatastore instrumentDatastore, DatasetPanelFactoryResolver datasetPanelFactoryResolver) {
+      InstrumentDatastore instrumentDatastore, DatasetPanelFactoryResolver datasetPanelFactoryResolver, ReactiveViewRegistry reactiveViewRegistry) {
     this.uiRefresher = uiRefresher;
     this.instrumentDatastore = instrumentDatastore;
     this.datasetPanelFactoryResolver = datasetPanelFactoryResolver;
+    this.reactiveViewRegistry = reactiveViewRegistry;
   }
 
   @PostConstruct
@@ -54,6 +65,9 @@ public class DatasetConfigurationPanel extends JPanel {
   }
 
   private void addFluff() {
+    fluff.add(datasetsErrorLabel, configureLayout(0, 0, c -> {
+      c.weightx = 1;
+    }));
     add(fluff, configureLayout(0, rows.size(), c -> {
       c.fill = GridBagConstraints.BOTH;
       c.weighty = 1;
@@ -72,7 +86,7 @@ public class DatasetConfigurationPanel extends JPanel {
   }
 
   private void setupMvc() {
-
+    reactiveViewRegistry.register(this);
   }
 
   private DropDownItem[] resolveDataTypes() {
@@ -116,5 +130,16 @@ public class DatasetConfigurationPanel extends JPanel {
     remove(row);
     rows.remove(row);
     uiRefresher.refresh();
+  }
+
+  @Override
+  public void onChange(PropertyChangeEvent evt) {
+    switch (evt.getPropertyName()) {
+      case Events.UPDATE_DATASETS_ERROR:
+        updateLabelText(datasetsErrorLabel, evt);
+        break;
+      default:
+        break;
+    }
   }
 }
