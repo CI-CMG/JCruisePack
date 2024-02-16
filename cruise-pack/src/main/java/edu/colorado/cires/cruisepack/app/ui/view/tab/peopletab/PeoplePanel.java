@@ -2,10 +2,13 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateAppendableTable;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import jakarta.annotation.PostConstruct;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
@@ -52,6 +55,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private final PeopleModel peopleModel;
 
   private final JComboBox<DropDownItem> metadataAuthorField = new JComboBox<>();
+  private final JLabel metadataAuthorErrorLabel = new JLabel();
   private final AppendableTableWithSelections scientistsField;
   private final AppendableTableWithSelections sourceOrganizationsField;
   private final AppendableTableWithSelections fundingOrganizationsField;
@@ -82,6 +86,9 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private void initializeFields() {
     metadataAuthorField.setModel(new DefaultComboBoxModel<>(personDatastore.getPersonDropDowns().toArray(new DropDownItem[0])));
     metadataAuthorField.setSelectedItem(peopleModel.getMetadataAuthor());
+
+    metadataAuthorErrorLabel.setText("");
+    metadataAuthorErrorLabel.setForeground(new Color(Color.RED.getRGB()));
   }
 
   private void setupLayout() {
@@ -113,8 +120,13 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     add(editOrgButton, configureLayout(1, 2, c -> {
       c.weighty = 0;
     }));
+
+    JPanel labelPanel = new JPanel();
+    labelPanel.setLayout(new BorderLayout(10, 0));
+    labelPanel.add(new JLabel(METADATA_AUTHOR_LABEL), BorderLayout.LINE_START);
+    labelPanel.add(metadataAuthorErrorLabel, BorderLayout.CENTER);
     
-    add(new JLabel(METADATA_AUTHOR_LABEL), configureLayout(2, 1, c -> {
+    add(labelPanel, configureLayout(2, 1, c -> {
       c.weighty = 0;
     }));
     add(metadataAuthorField, configureLayout(2, 2, c -> {
@@ -146,6 +158,18 @@ public class PeoplePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_METADATA_AUTHOR:
         updateComboBox(metadataAuthorField, evt);
+        break;
+      case Events.UPDATE_SCIENTIST_ERROR:
+        updateLabelText(scientistsField.getErrorLabel(), evt);
+        break;
+      case Events.UPDATE_SOURCE_ORGANIZATION_ERROR:
+        updateLabelText(sourceOrganizationsField.getErrorLabel(), evt);
+        break;
+      case Events.UPDATE_FUNDING_ORGANIZATION_ERROR:
+        updateLabelText(fundingOrganizationsField.getErrorLabel(), evt);
+        break;
+      case  Events.UPDATE_METADATA_AUTHOR_ERROR:
+        updateLabelText(metadataAuthorErrorLabel, evt);
         break;
       default:
         break;

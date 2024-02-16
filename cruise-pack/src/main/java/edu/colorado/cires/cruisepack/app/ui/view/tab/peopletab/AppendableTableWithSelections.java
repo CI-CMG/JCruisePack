@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import javax.swing.JScrollPane;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 public class AppendableTableWithSelections extends JComponent {
+
+  private static final Color ERROR_COLOR = new Color(Color.RED.getRGB());
   
   private final String tableHeader;
   private final String addText;
@@ -27,6 +30,7 @@ public class AppendableTableWithSelections extends JComponent {
   private final List<DropDownItem> options;
 
   private final JPanel listingValuesPannel = new JPanel();
+  private final JLabel errorLabel = new JLabel();
   private final List<ValuesChangedListener> listeners = new ArrayList<>(0);
 
   public AppendableTableWithSelections(String tableHeader, String addText, DropDownItem defaultValue, List<DropDownItem> options) {
@@ -49,9 +53,16 @@ public class AppendableTableWithSelections extends JComponent {
   private void init() {
     setLayout(new GridBagLayout());
 
-    JPanel panel = new JPanel();
-    panel.setLayout(new GridBagLayout());
-    panel.add(new JLabel(tableHeader), configureLayout(0, 0, c -> {
+    JPanel pannel = new JPanel();
+    pannel.setLayout(new GridBagLayout());
+
+    JPanel labelPanel = new JPanel();
+    labelPanel.setLayout(new BorderLayout(10, 0));
+    labelPanel.add(new JLabel(tableHeader), BorderLayout.LINE_START);
+    errorLabel.setForeground(ERROR_COLOR);
+    labelPanel.add(errorLabel, BorderLayout.CENTER);
+
+    pannel.add(labelPanel, configureLayout(0, 0, c -> {
       c.weighty = 0;
     }));
 
@@ -70,7 +81,7 @@ public class AppendableTableWithSelections extends JComponent {
       c.weighty = 100;
     }));
 
-    panel.add(new JScrollPane(listingPanel), configureLayout(0, 1, c -> {
+    pannel.add(new JScrollPane(listingPanel), configureLayout(0, 1, c -> {
       c.weighty = 100;
     }));
 
@@ -78,11 +89,11 @@ public class AppendableTableWithSelections extends JComponent {
     addButton.addActionListener(e -> {
       handleAddChange();
     });
-    panel.add(addButton, configureLayout(0, 2, c -> {
+    pannel.add(addButton, configureLayout(0, 2, c -> {
       c.weighty = 0;
     }));
 
-    add(panel, configureLayout(0, 0, c -> c.weighty = 100));
+    add(pannel, configureLayout(0, 0, c -> c.weighty = 100));
   }
 
   private void handleUpdateChange() {
@@ -124,6 +135,10 @@ public class AppendableTableWithSelections extends JComponent {
     }
 
     revalidate();
+  }
+
+  public JLabel getErrorLabel() {
+    return errorLabel;
   }
 
 }
