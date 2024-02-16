@@ -1,7 +1,5 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
-import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Objects;

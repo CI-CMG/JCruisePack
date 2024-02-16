@@ -1,6 +1,5 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;

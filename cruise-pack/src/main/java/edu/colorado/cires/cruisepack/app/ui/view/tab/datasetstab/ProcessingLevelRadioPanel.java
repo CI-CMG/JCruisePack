@@ -1,7 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import java.awt.Color;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
@@ -10,7 +9,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.event.EventListenerList;
 
 public class ProcessingLevelRadioPanel extends JPanel {
 

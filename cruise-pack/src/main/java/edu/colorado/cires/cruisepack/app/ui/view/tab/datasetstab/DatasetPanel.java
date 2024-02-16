@@ -10,7 +10,6 @@ import com.github.lgooddatepicker.components.DatePicker;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
-import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;

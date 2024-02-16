@@ -3,8 +3,6 @@ package edu.colorado.cires.cruisepack.app.service;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import gov.loc.repository.bagit.domain.Bag;
 import java.nio.file.Path;
-import java.time.Instant;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

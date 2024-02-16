@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 

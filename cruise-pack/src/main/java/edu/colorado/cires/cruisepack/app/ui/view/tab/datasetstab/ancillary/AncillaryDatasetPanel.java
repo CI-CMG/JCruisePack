@@ -2,7 +2,6 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ancillary;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_COMMENTS;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_INSTRUMENT;
-import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
