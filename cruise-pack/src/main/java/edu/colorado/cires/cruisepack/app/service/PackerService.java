@@ -5,18 +5,24 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filt
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.prototype.bag.Bagger;
+import gov.loc.repository.bagit.creator.BagCreator;
+import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +33,23 @@ public class PackerService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerService.class);
 
+  private static final String LOCAL_DATA = "local-data";
+  private static final String PEOPLE_XML = "people.xml";
+  private static final String ORGANIZATIONS_XML = "organizations.xml";
+
   private final ServiceProperties serviceProperties;
-  private final ObjectMapper objectMapper;
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
   private final MetadataService metadataService;
 
   @Autowired
-  public PackerService(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackagingValidationService validationService,
-      FooterControlController footerControlController, MetadataService metadataService) {
+  public PackerService(
+      ServiceProperties serviceProperties,
+      PackagingValidationService validationService,
+      FooterControlController footerControlController,
+      MetadataService metadataService
+  ) {
     this.serviceProperties = serviceProperties;
-    this.objectMapper = objectMapper;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
     this.metadataService = metadataService;
@@ -68,7 +80,7 @@ public class PackerService {
     // TODO put in queue?
     new Thread(() -> {
       try {
-////    rawCheck(packJob);
+////    rawCheck(packJob); //TODO add to validation phase
         resetBagDirs(packJob);
         copyDocs(packJob);
         copyOmics(packJob);
@@ -285,7 +297,36 @@ public class PackerService {
    */
 
   private void packData(PackJob packJob) {
-    DatasetPacker.pack(serviceProperties, packJob, metadataService);
+    Path mainBagDataDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).toAbsolutePath().normalize();
+
+    CruiseMetadata cruiseMetadata = metadataService.createMetadata(packJob);
+    metadataService.writeMetadata(cruiseMetadata, mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
+
+    for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
+      String instrumentBagName = instruments.get(0).getBagName();
+      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
+
+      mkDir(instrumentBagRootDir);
+      copyLocalData(serviceProperties, instrumentBagRootDir);
+
+      for (InstrumentDetail dataset : instruments) {
+        Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
+
+        copyMainDatasetFiles(datasetDir, dataset);
+        dataset.getAdditionalFiles().forEach(additionalFile -> copyAdditionalFiles(datasetDir, additionalFile));
+      }
+
+      CruiseMetadata packageMetadata = metadataService.createDatasetMetadata(cruiseMetadata, instruments);
+      metadataService.writeMetadata(packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
+
+
+      try {
+        BagCreator.bagInPlace(instrumentBagRootDir, Arrays.asList(StandardSupportedAlgorithms.MD5), false);
+      } catch (NoSuchAlgorithmException | IOException e) {
+        throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
+      }
+
+    }
   }
 
   /*
@@ -362,5 +403,109 @@ public class PackerService {
                 self.main_manifest.write('{0}  {1}\n'.format(checksum,
                                                              full_path))
    */
+
+  private static void copyLocalData(ServiceProperties serviceProperties, Path instrumentBagDataDir) {
+    Path systemLocalData = Paths.get(serviceProperties.getWorkDir()).resolve(LOCAL_DATA);
+    Path people = systemLocalData.resolve(PEOPLE_XML);
+    Path organizations = systemLocalData.resolve(ORGANIZATIONS_XML);
+    Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);
+    if (Files.isRegularFile(people)) {
+      mkDir(localData);
+      copy(people, localData.resolve(PEOPLE_XML));
+    }
+    if (Files.isRegularFile(organizations)) {
+      mkDir(localData);
+      copy(organizations, localData.resolve(ORGANIZATIONS_XML));
+    }
+  }
+
+
+  private static boolean filterExtension(Path path, InstrumentDetail dataset) {
+    if (!dataset.getExtensions().isEmpty() && InstrumentStatus.RAW == dataset.getStatus()) {
+      String ext = FilenameUtils.getExtension(path.getFileName().toString());
+      return dataset.getExtensions().contains(ext);
+    }
+    return true;
+  }
+
+  private static Path resolveFinalPath(Path datasetDir, Path sourceDataDir, Path sourceFile) {
+    return datasetDir.resolve(sourceDataDir.relativize(sourceFile));
+  }
+
+  private static Path resolveFinalPath(Path datasetDir, Path sourceDataDir, Path sourceFile, InstrumentDetail dataset) {
+    if (InstrumentStatus.RAW == dataset.getStatus() && dataset.isFlatten()) {
+      return datasetDir.resolve(sourceFile.getFileName());
+    }
+    return datasetDir.resolve(sourceDataDir.relativize(sourceFile));
+  }
+
+  private void copyMainDatasetFiles(Path datasetDir, InstrumentDetail dataset) {
+    Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
+    try {
+      Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+          if (Files.isHidden(dir)) {
+            return FileVisitResult.SKIP_SUBTREE;
+          }
+          return super.preVisitDirectory(dir, attr);
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+          Path sourceFile = file.toAbsolutePath().normalize();
+          Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
+          if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
+            mkDir(targetFile.getParent());
+            copy(sourceFile, targetFile);
+          }
+          return super.visitFile(file, attr);
+        }
+      });
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
+    }
+  }
+
+  private void copyAdditionalFiles(Path datasetDir, AdditionalFiles additionalFile) {
+    Path sourceDataPath = additionalFile.getSourceFileOrDirectory().toAbsolutePath().normalize();
+    Path resolvedDatasetDir = datasetDir.resolve(additionalFile.getRelativeDestinationDirectory()).toAbsolutePath().normalize();
+    try {
+      if (Files.isDirectory(sourceDataPath)) {
+        Files.walkFileTree(sourceDataPath, new SimpleFileVisitor<>() {
+
+          @Override
+          public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+            if (Files.isHidden(dir)) {
+              return FileVisitResult.SKIP_SUBTREE;
+            }
+            return super.preVisitDirectory(dir, attr);
+          }
+
+          @Override
+          public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+            Path sourceFile = file.toAbsolutePath().normalize();
+            Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceFile);
+            if (filterHidden(sourceFile) && filterTimeSize(sourceFile, targetFile)) {
+              mkDir(targetFile.getParent());
+              copy(sourceFile, targetFile);
+            }
+            return super.visitFile(file, attr);
+          }
+        });
+      } else if (Files.isRegularFile(sourceDataPath) && !Files.isHidden(sourceDataPath)) {
+        Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceDataPath);
+        if (filterTimeSize(sourceDataPath, targetFile)) {
+          mkDir(targetFile.getParent());
+          copy(sourceDataPath, targetFile);
+        }
+      } else {
+        throw new IllegalStateException("Unable to read " + sourceDataPath);
+      }
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to process files " + sourceDataPath, e);
+    }
+  }
 
 }

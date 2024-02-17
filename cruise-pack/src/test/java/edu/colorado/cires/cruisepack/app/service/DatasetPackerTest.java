@@ -1,25 +1,27 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 @Disabled
 public class DatasetPackerTest {
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-  private Path mainBagRootDir = Paths.get("target/TST200400");
-
-  @BeforeEach
-  public void beforeEach() throws Exception{
-    FileUtils.deleteQuietly(mainBagRootDir.toFile());
-    Files.createDirectories(mainBagRootDir.resolve("data"));
-  }
-
-
+//  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+//  private Path mainBagRootDir = Paths.get("target/TST200400");
+//
+//  @BeforeEach
+//  public void beforeEach() throws Exception{
+//    FileUtils.deleteQuietly(mainBagRootDir.toFile());
+//    Files.createDirectories(mainBagRootDir.resolve("data"));
+//  }
+//
+//
 //  @Test
 //  public void test() throws Exception {
 //    CruiseMetadata cruiseMetadata = new CruiseMetadata();
@@ -112,19 +114,7 @@ public class DatasetPackerTest {
 //
 //    DatasetPacker.pack(null, OBJECT_MAPPER, packJob);
 //
-//    Path expectedRoot = Paths.get("src/test/resources/test-bags/TST200400/data/TST200400_MB-BATHY_EM122");
-//    TreeSet<Path> expected = new TreeSet<>();
-//    try(Stream<Path> fileStream = Files.walk(expectedRoot)) {
-//      fileStream.filter(Files::isRegularFile).map(expectedRoot::relativize).forEach(expected::add);
-//    }
 //
-//    Path actualRoot = mainBagRootDir.resolve("data/TST200400_MB-BATHY_EM122");
-//    TreeSet<Path> actual = new TreeSet<>();
-//    try(Stream<Path> fileStream = Files.walk(actualRoot)) {
-//      fileStream.filter(Files::isRegularFile).map(actualRoot::relativize).forEach(actual::add);
-//    }
-//
-//    assertEquals(expected, actual);
 //
 //  }
 }
