@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +20,13 @@ public class DatasetNameResolverTest {
     InstrumentDetailPackageKey key = new InstrumentDetailPackageKey("MB-BATHY", "EM122");
     instruments.put(key, Arrays.asList(
         new InstrumentNameHolder("longem122", "EM122", InstrumentStatus.RAW,
-            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122")),
+            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122"), Collections.emptyList()),
         new InstrumentNameHolder("longem122", "EM122", InstrumentStatus.PROCESSED,
-            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed")),
+            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed"), Collections.emptyList()),
         new InstrumentNameHolder("longem122", "EM122", InstrumentStatus.PROCESSED,
-            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1")),
+            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1"), Collections.emptyList()),
         new InstrumentNameHolder("longem122", "EM122", InstrumentStatus.PRODUCTS,
-            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products"))
+            Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products"), Collections.emptyList())
         ));
 
     DatasetNameResolver.setDirNamesOnInstruments(mainName, instruments);

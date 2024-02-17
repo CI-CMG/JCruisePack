@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public class InstrumentNameHolder {
 
@@ -10,13 +11,15 @@ public class InstrumentNameHolder {
   private final String shortName;
   private final InstrumentStatus status;
   private final Path dataPath;
+  private final List<AdditionalFiles> additionalFiles;
 
 
-  public InstrumentNameHolder(String instrument, String shortName, InstrumentStatus status, Path dataPath) {
+  public InstrumentNameHolder(String instrument, String shortName, InstrumentStatus status, Path dataPath, List<AdditionalFiles> additionalFiles) {
     this.instrument = instrument;
     this.shortName = shortName;
     this.status = status;
     this.dataPath = dataPath;
+    this.additionalFiles = additionalFiles;
   }
 
   public String getDirName() {
@@ -49,5 +52,9 @@ public class InstrumentNameHolder {
 
   public Path getDataPath() {
     return dataPath;
+  }
+
+  public List<AdditionalFiles> getAdditionalFiles() {
+    return additionalFiles;
   }
 }

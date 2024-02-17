@@ -64,7 +64,9 @@ public class DatasetPacker {
     return true;
   }
 
-
+  private static Path resolveFinalPath(Path datasetDir, Path sourceDataDir, Path sourceFile) {
+    return datasetDir.resolve(sourceDataDir.relativize(sourceFile));
+  }
 
   private static Path resolveFinalPath(Path datasetDir, Path sourceDataDir, Path sourceFile, InstrumentDetail dataset) {
     if (InstrumentStatus.RAW == dataset.getStatus() && dataset.isFlatten()){
@@ -121,46 +123,16 @@ public class DatasetPacker {
 
       for (InstrumentDetail dataset : instruments) {
         Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
-        Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
+
 
         //TODO
 //        CruiseMetadata packageMetadata = getPackageMetadata(packJob.getCruiseMetadata(), dataset);
 //        writeMetadata(objectMapper, packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
 
 
-        try {
-          Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
+        copyMainDatasetFiles(datasetDir, dataset);
+        dataset.getAdditionalFiles().forEach(additionalFile -> copyAdditionalFiles(datasetDir, additionalFile));
 
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
-              if (Files.isHidden(dir)) {
-                return FileVisitResult.SKIP_SUBTREE;
-              }
-              return super.preVisitDirectory(dir, attr);
-            }
-
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
-              Path sourceFile = file.toAbsolutePath().normalize();
-              Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
-              if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
-                mkDir(targetFile.getParent());
-                copy(sourceFile, targetFile);
-              }
-              return super.visitFile(file, attr);
-            }
-          });
-        } catch (IOException e) {
-          throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
-        }
-
-        //TODO
-//        if (dataset.getCustomHandler() != null) {
-//          CustomInstrumentProcessingContext customProcessingContext = new CustomInstrumentProcessingContext(packJob, dataset, mainBagDataDir,
-//              datasetBagRootDir);
-//
-//          dataset.getCustomHandler().accept(customProcessingContext);
-//        }
       }
 
       try {
@@ -169,6 +141,75 @@ public class DatasetPacker {
         throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
       }
 
+    }
+  }
+
+  private static void copyMainDatasetFiles(Path datasetDir, InstrumentDetail dataset) {
+    Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
+    try {
+      Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+          if (Files.isHidden(dir)) {
+            return FileVisitResult.SKIP_SUBTREE;
+          }
+          return super.preVisitDirectory(dir, attr);
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+          Path sourceFile = file.toAbsolutePath().normalize();
+          Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
+          if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
+            mkDir(targetFile.getParent());
+            copy(sourceFile, targetFile);
+          }
+          return super.visitFile(file, attr);
+        }
+      });
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to process files " + sourceDataDir, e);
+    }
+  }
+
+  private static void copyAdditionalFiles(Path datasetDir, AdditionalFiles additionalFile) {
+    Path sourceDataPath = additionalFile.getSourceFileOrDirectory().toAbsolutePath().normalize();
+    Path resolvedDatasetDir = datasetDir.resolve(additionalFile.getRelativeDestinationDirectory()).toAbsolutePath().normalize();
+    try {
+      if (Files.isDirectory(sourceDataPath)) {
+        Files.walkFileTree(sourceDataPath, new SimpleFileVisitor<>() {
+
+          @Override
+          public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException {
+            if (Files.isHidden(dir)) {
+              return FileVisitResult.SKIP_SUBTREE;
+            }
+            return super.preVisitDirectory(dir, attr);
+          }
+
+          @Override
+          public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
+            Path sourceFile = file.toAbsolutePath().normalize();
+            Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceFile);
+            if (filterHidden(sourceFile) && filterTimeSize(sourceFile, targetFile)) {
+              mkDir(targetFile.getParent());
+              copy(sourceFile, targetFile);
+            }
+            return super.visitFile(file, attr);
+          }
+        });
+      } else if (Files.isRegularFile(sourceDataPath) && !Files.isHidden(sourceDataPath)) {
+        Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceDataPath);
+        if (filterTimeSize(sourceDataPath, targetFile)) {
+          mkDir(targetFile.getParent());
+          copy(sourceDataPath, targetFile);
+        }
+      } else {
+        throw new IllegalStateException("Unable to read " + sourceDataPath);
+      }
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to process files " + sourceDataPath, e);
     }
   }
 

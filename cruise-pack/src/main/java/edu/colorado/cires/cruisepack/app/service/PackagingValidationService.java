@@ -380,6 +380,7 @@ public class PackagingValidationService {
                 .setFlatten(instrument.isFlatten())
                 .setDirName(nameHolder.getDirName())
                 .setBagName(nameHolder.getBagName())
+                .setAdditionalFiles(nameHolder.getAdditionalFiles())
                 .build());
 
       }

@@ -1,11 +1,14 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import edu.colorado.cires.cruisepack.app.service.AdditionalFiles;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.InstrumentNameHolder;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
@@ -45,7 +48,11 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   }
 
   public Optional<InstrumentNameHolder> getInstrumentNameHolder() {
-    return getSelectedInstrument().map(dd -> new InstrumentNameHolder(dd.getValue(), dd.getId(), getSelectedInstrumentProcessingLevel(), dataPath));
+    return getSelectedInstrument().map(dd -> new InstrumentNameHolder(dd.getValue(), dd.getId(), getSelectedInstrumentProcessingLevel(), dataPath,
+        getAdditionalFiles()));
   }
 
+  protected List<AdditionalFiles> getAdditionalFiles() {
+    return Collections.emptyList();
+  }
 }
