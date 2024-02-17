@@ -16,9 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +31,16 @@ public class PackerService {
   private final ObjectMapper objectMapper;
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
+  private final MetadataService metadataService;
 
   @Autowired
   public PackerService(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackagingValidationService validationService,
-      FooterControlController footerControlController) {
+      FooterControlController footerControlController, MetadataService metadataService) {
     this.serviceProperties = serviceProperties;
     this.objectMapper = objectMapper;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
+    this.metadataService = metadataService;
   }
 
   public void startPacking() {
@@ -286,7 +285,7 @@ public class PackerService {
    */
 
   private void packData(PackJob packJob) {
-    DatasetPacker.pack(serviceProperties, objectMapper, packJob);
+    DatasetPacker.pack(serviceProperties, packJob, metadataService);
   }
 
   /*

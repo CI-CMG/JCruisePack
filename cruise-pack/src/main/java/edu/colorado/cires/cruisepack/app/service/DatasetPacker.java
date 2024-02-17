@@ -5,14 +5,11 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filt
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.Instrument;
-import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.PackageInstrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,11 +17,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +30,6 @@ public class DatasetPacker {
   private static final String LOCAL_DATA = "local-data";
   private static final String PEOPLE_XML = "people.xml";
   private static final String ORGANIZATIONS_XML = "organizations.xml";
-
 
 
   private static void copyLocalData(ServiceProperties serviceProperties, PackJob packJob, Path instrumentBagDataDir) {
@@ -55,7 +48,6 @@ public class DatasetPacker {
   }
 
 
-
   private static boolean filterExtension(Path path, InstrumentDetail dataset) {
     if (!dataset.getExtensions().isEmpty() && InstrumentStatus.RAW == dataset.getStatus()) {
       String ext = FilenameUtils.getExtension(path.getFileName().toString());
@@ -69,70 +61,34 @@ public class DatasetPacker {
   }
 
   private static Path resolveFinalPath(Path datasetDir, Path sourceDataDir, Path sourceFile, InstrumentDetail dataset) {
-    if (InstrumentStatus.RAW == dataset.getStatus() && dataset.isFlatten()){
+    if (InstrumentStatus.RAW == dataset.getStatus() && dataset.isFlatten()) {
       return datasetDir.resolve(sourceFile.getFileName());
     }
     return datasetDir.resolve(sourceDataDir.relativize(sourceFile));
   }
 
-  private static void writeMetadata(ObjectMapper objectMapper, CruiseMetadata cruiseMetadata, Path file) {
-    try (OutputStream outputStream = Files.newOutputStream(file)) {
-      objectMapper.writeValue(outputStream, cruiseMetadata);
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to write metadata " + file, e);
-    }
-  }
 
-  private static Instrument resolveInstrument(CruiseMetadata cruiseMetadata, InstrumentDetail dataset) {
-    return cruiseMetadata.getInstruments().stream()
-        .filter(instrument -> Paths.get(instrument.getDataPath()).equals(dataset.getDataPath()))
-        .findFirst().orElseThrow(() -> new IllegalStateException("Metadata for " + dataset.getDataPath() + " was not found"));
-  }
-
-  private static CruiseMetadata getPackageMetadata(CruiseMetadata cruiseMetadata, InstrumentDetail dataset) {
-    CruiseMetadata packageMetadata = cruiseMetadata.shallowCopy();
-    Map<String, PackageInstrument> packageInstruments = new LinkedHashMap<>();
-    Instrument instrument = resolveInstrument(cruiseMetadata, dataset);
-    PackageInstrument packageInstrument = new PackageInstrument();
-    packageInstrument.setInstrument(instrument);
-    packageInstrument.setTypeName(dataset.getShortName());
-    packageInstrument.setFlatten(dataset.isFlatten());
-    packageInstrument.setExtensions(new ArrayList<>(dataset.getExtensions()));
-    packageInstrument.setDirName(dataset.getDirName());
-    packageInstrument.setBagName(dataset.getBagName());
-
-    packageInstruments.put(dataset.getDirName(), packageInstrument);
-
-    packageMetadata.setPackageInstruments(packageInstruments);
-    return packageMetadata;
-  }
-
-  public static void pack(ServiceProperties serviceProperties, ObjectMapper objectMapper, PackJob packJob) {
+  public static void pack(ServiceProperties serviceProperties, PackJob packJob, MetadataService metadataService) {
     Path mainBagDataDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).toAbsolutePath().normalize();
 
-    //TODO
-//    writeMetadata(objectMapper, packJob.getCruiseMetadata(), mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
+    CruiseMetadata cruiseMetadata = metadataService.createMetadata(packJob);
+    metadataService.writeMetadata(cruiseMetadata, mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
 
     for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
       String instrumentBagName = instruments.get(0).getBagName();
       Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
 
       mkDir(instrumentBagRootDir);
-
       copyLocalData(serviceProperties, packJob, instrumentBagRootDir);
 
       for (InstrumentDetail dataset : instruments) {
         Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
 
-
-        //TODO
-//        CruiseMetadata packageMetadata = getPackageMetadata(packJob.getCruiseMetadata(), dataset);
-//        writeMetadata(objectMapper, packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
-
+        CruiseMetadata packageMetadata = metadataService.getPackageMetadata(cruiseMetadata, dataset);
+        metadataService.writeMetadata(packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
 
         copyMainDatasetFiles(datasetDir, dataset);
         dataset.getAdditionalFiles().forEach(additionalFile -> copyAdditionalFiles(datasetDir, additionalFile));
-
       }
 
       try {

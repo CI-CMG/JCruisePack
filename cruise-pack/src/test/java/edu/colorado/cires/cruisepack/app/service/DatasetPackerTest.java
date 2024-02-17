@@ -1,24 +1,12 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.cruisepack.app.service.CruiseMetadata.Instrument;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 
 @Disabled
 public class DatasetPackerTest {

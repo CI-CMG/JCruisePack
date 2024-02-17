@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import gov.loc.repository.bagit.domain.Bag;
 import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
