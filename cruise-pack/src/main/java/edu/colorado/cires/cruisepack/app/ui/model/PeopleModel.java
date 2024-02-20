@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -16,16 +17,30 @@ public class PeopleModel extends PropertyChangeModel {
 
     @NotEmpty
     private List<@ValidPersonDropDownItem DropDownItem> scientists = new ArrayList<>(0);
-    private String scientistsError = "";
+    private String scientistsError = null;
     @NotEmpty
     private List<@ValidOrganizationDropDownItem DropDownItem> sourceOrganizations = new ArrayList<>(0);
-    private String sourceOrganizationsError = "";
+    private String sourceOrganizationsError = null;
     @NotEmpty
     private List<@ValidOrganizationDropDownItem DropDownItem> fundingOrganizations = new ArrayList<>(0);
-    private String fundingOrganizationsError = "";
+    private String fundingOrganizationsError = null;
     @ValidPersonDropDownItem
     private DropDownItem metadataAuthor = PersonDatastore.UNSELECTED_PERSON;
-    private String metadataAuthorError;
+    private String metadataAuthorError = null;
+
+    public void restoreDefaults() {
+        setScientists(Collections.emptyList());
+        setScientistError(null);
+        
+        setSourceOrganizations(Collections.emptyList());
+        setSourceOrganizationError(null);
+
+        setFundingOrganizations(Collections.emptyList());
+        setFundingOrganizationError(null);
+
+        setMetadataAuthor(PersonDatastore.UNSELECTED_PERSON);
+        setMetadataAuthorError(null);
+    }
     
     public List<DropDownItem> getScientists() {
         return scientists;

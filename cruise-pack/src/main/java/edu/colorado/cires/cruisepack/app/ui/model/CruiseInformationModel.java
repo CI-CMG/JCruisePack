@@ -22,6 +22,20 @@ public class CruiseInformationModel extends PropertyChangeModel {
   private Path documentsPath;
   private String documentsPathError;
 
+  public void restoreDefaults() {
+    setCruiseTitle(null);
+    setCruiseTitleError(null);
+
+    setCruisePurpose(null);
+    setCruisePurposeError(null);
+
+    setCruiseDescription(null);
+    setCruiseDescriptionError(null);
+
+    setDocumentsPath(null);
+    setDocumentsPathError(null);
+  }
+
   public Path getDocumentsPath() {
     return documentsPath;
   }

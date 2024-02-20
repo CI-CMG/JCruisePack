@@ -33,7 +33,43 @@ public class OmicsModel extends PropertyChangeModel {
     private String expectedAnalysesError = null;
     @NotBlank
     private String additionalSamplingInformation = null;
-    private String additionalSamplingInformationError = "";
+    private String additionalSamplingInformationError = null;
+
+    public void restoreDefaults() {
+        setSamplingConducted(false);
+        
+        setContact(PersonDatastore.UNSELECTED_PERSON);
+        setContactError(null);
+
+        setSampleTrackingSheet(null);
+        setSampleTrackingSheetError(null);
+
+        setBioProjectAccession(null);
+        setBioProjectAcessionError(null);
+
+        setWaterSamplingType(false);
+        setSoilSedimentSamplingType(false);
+        setOrganicTissueSamplingType(false);
+        setSamplingTypesError(null);
+
+        setBarcodingExpectedAnalysis(false);
+        setGenomicsExpectedAnalysis(false);
+        setTranscriptomicsExpectedAnalysis(false);
+        setProteomicsExpectedAnalysis(false);
+        setMetabolomicsExpectedAnalysis(false);
+        setEpigeneticsExpectedAnalysis(false);
+        setOtherExpectedAnalysis(false);
+        setMetaBarcodingExpectedAnalysis(false);
+        setMetaGenomicsExpectedAnalysis(false);
+        setMetatranscriptomicsExpectedAnalysis(false);
+        setMetaproteomicsExpectedAnalysis(false);
+        setMetametabolomicsExpectedAnalysis(false);
+        setMicrobiomeExpectedAnalysis(false);
+        setExpectedAnalysesError(null);
+
+        setAdditionalSamplingInformation(null);
+        setAdditionalSamplingInformationError(null);
+    }
     
     public boolean isSamplingConducted() {
         return samplingConducted;

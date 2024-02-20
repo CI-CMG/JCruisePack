@@ -16,6 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -59,6 +60,41 @@ public class PackageModel extends PropertyChangeModel {
   @NotEmpty
   private List<@ValidProjectDropDownItem DropDownItem> projects = new ArrayList<>(0);
   private String projectsError = null;
+
+  public void restoreDefaults() {
+    setCruiseId(null);
+    setCruiseIdError(null);
+
+    setSegment(null);
+    setSegmentError(null);
+
+    setSea(SeaDatastore.UNSELECTED_SEA);
+    setSeaError(null);
+
+    setArrivalPort(PortDatastore.UNSELECTED_PORT);
+    setArrivalPortError(null);
+
+    setDeparturePort(PortDatastore.UNSELECTED_PORT);
+    setDeparturePortError(null);
+
+    setShip(ShipDatastore.UNSELECTED_SHIP);
+    setShipError(null);
+
+    setDepartureDate(null);
+    setDepartureDateError(null);
+
+    setArrivalDate(null);
+    setArrivalDateError(null);
+
+    setReleaseDate(null);
+    setReleaseDateError(null);
+
+    setPackageDirectory(null);
+    setPackageDirectoryError(null);
+
+    setProjects(Collections.emptyList());
+    setProjectsError(null);
+  }
 
   public String getCruiseId() {
     return cruiseId;

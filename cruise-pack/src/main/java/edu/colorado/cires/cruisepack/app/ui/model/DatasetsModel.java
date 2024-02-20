@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,17 @@ public class DatasetsModel extends PropertyChangeModel {
   private List<@Valid ? extends BaseDatasetInstrumentModel> datasets = new ArrayList<>();
   private String datasetsError = null;
 
+  public void restoreDefaults() {
+    setDatasetsError(null);
+    clearDatasets();
+  }
+
   public List<? extends BaseDatasetInstrumentModel> getDatasets() {
     return datasets;
+  }
+
+  private void clearDatasets() {
+    fireChangeEvent(Events.UPDATE_DATASET_LIST, datasets, Collections.emptyList());
   }
 
   public void addDataset(BaseDatasetInstrumentModel dataset) {

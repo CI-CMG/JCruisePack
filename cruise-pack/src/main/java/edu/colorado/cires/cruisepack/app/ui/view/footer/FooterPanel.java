@@ -84,6 +84,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
     packageButton.addActionListener((evt) -> handlePackage());
+    clearFormButton.addActionListener((evt) -> footerControlController.restoreDefaultsGlobal());
   }
 
   private void handlePackage() {
