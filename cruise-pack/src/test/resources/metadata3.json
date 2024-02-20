@@ -106,5 +106,24 @@
       "dir_name": "Hydrosweep-DS-2",
       "bag_name": "FOOBARGE123_SEG1-WCSD_Hydrosweep-DS-2"
     }
-  ]
+  ],
+  "package_instruments": {
+    "MB": {
+      "uuid": "9da1f3f0-9ec8-11e1-a8b0-0800200c9a66",
+      "type": "Multibeam Bathymetry",
+      "instrument": "Kongsberg EM122",
+      "short_name": "EM122",
+      "release_date": "2023-02-20",
+      "status": "Raw",
+      "data_comment": "comment1",
+      "dir_name": "EM122",
+      "bag_name": "FOOBARGE123_SEG1-BATHY_EM122",
+      "type_name": "ANCILLARY",
+      "flatten": false,
+      "extensions": [
+        "foo",
+        "bar"
+      ]
+    }
+  }
 }
