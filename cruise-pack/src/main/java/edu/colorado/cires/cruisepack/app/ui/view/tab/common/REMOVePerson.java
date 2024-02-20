@@ -1,6 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.common;
 
-public class Person {
+public class REMOVePerson {
 
     private final String name;
     private final String position;
@@ -18,7 +18,7 @@ public class Person {
 
     
 
-    public Person(String name, String position, String organization, String street, String city, String state,
+    public REMOVePerson(String name, String position, String organization, String street, String city, String state,
             String zip, String country, String phone, String email, String orcidID, String uuid, Boolean use) {
         this.name = name;
         this.position = position;
@@ -129,8 +129,8 @@ public class Person {
             return this;
         }
 
-        public Person build() {
-            return new Person(
+        public REMOVePerson build() {
+            return new REMOVePerson(
                 name, 
                 position, 
                 organization, 

@@ -9,7 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Objects;
 
-import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatasore;
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
@@ -40,7 +40,7 @@ public @interface ValidOrganizationDropDownItem {
 
         @Override
         public boolean isValid(DropDownItem value, ConstraintValidatorContext context) {
-            return !Objects.equals(value, OrganizationDatasore.UNSELECTED_ORGANIZATION);
+            return !Objects.equals(value, OrganizationDatastore.UNSELECTED_ORGANIZATION);
         }
     
     }

@@ -86,6 +86,55 @@ public final class Events {
   public static final String UPDATE_DATASET_DATA_PREFIX = "UPDATE_DATASET_DATA_";
   public static final String UPDATE_DATASETS_ERROR = "UPDATE_DATASETS_ERROR";
 
+  // Person
+  public static final String UPDATE_PERSON_NAME = "UPDATE_PERSON_NAME";
+  public static final String UPDATE_PERSON_POSITION = "UPDATE_PERSON_POSITION";
+  public static final String UPDATE_PERSON_ORGANIZATION = "UPDATE_PERSON_ORGANIZATION";
+  public static final String UPDATE_PERSON_STREET = "UPDATE_PERSON_STREET";
+  public static final String UPDATE_PERSON_CITY = "UPDATE_PERSON_CITY";
+  public static final String UPDATE_PERSON_STATE = "UPDATE_PERSON_STATE";
+  public static final String UPDATE_PERSON_ZIP = "UPDATE_PERSON_ZIP";
+  public static final String UPDATE_PERSON_COUNTRY = "UPDATE_PERSON_COUNTRY";
+  public static final String UPDATE_PERSON_PHONE = "UPDATE_PERSON_PHONE";
+  public static final String UPDATE_PERSON_EMAIL = "UPDATE_PERSON_EMAIL";
+  public static final String UPDATE_PERSON_ORCIDID = "UPDATE_PERSON_ORCIDID";
+  public static final String UPDATE_PERSON_UUID = "UPDATE_PERSON_UUID";
+  public static final String UPDATE_PERSON_USE = "UPDATE_PERSON_USE";
+  public static final String UPDATE_PERSON_NAME_ERROR = "UPDATE_PERSON_NAME_ERROR";
+  public static final String UPDATE_PERSON_POSITION_ERROR = "UPDATE_PERSON_POSITION_ERROR";
+  public static final String UPDATE_PERSON_ORGANIZATION_ERROR = "UPDATE_PERSON_ORGANIZATION_ERROR";
+  public static final String UPDATE_PERSON_STREET_ERROR = "UPDATE_PERSON_STREET_ERROR";
+  public static final String UPDATE_PERSON_CITY_ERROR = "UPDATE_PERSON_CITY_ERROR";
+  public static final String UPDATE_PERSON_STATE_ERROR = "UPDATE_PERSON_STATE_ERROR";
+  public static final String UPDATE_PERSON_ZIP_ERROR = "UPDATE_PERSON_ZIP_ERROR";
+  public static final String UPDATE_PERSON_COUNTRY_ERROR = "UPDATE_PERSON_COUNTRY_ERROR";
+  public static final String UPDATE_PERSON_PHONE_ERROR = "UPDATE_PERSON_PHONE_ERROR";
+  public static final String UPDATE_PERSON_EMAIL_ERROR = "UPDATE_PERSON_EMAIL_ERROR";
+  public static final String UPDATE_PERSON_ORCID_ID_ERROR = "UPDATE_ORCID_ID_ERROR";
+  public static final String UPDATE_PERSON_UUID_ERROR = "UPDATE_PERSON_UUID_ERROR";
+
+  // Organization
+  public static final String UPDATE_ORG_NAME = "UPDATE_ORG_NAME";
+  public static final String UPDATE_ORG_STREET = "UPDATE_ORG_STREET";
+  public static final String UPDATE_ORG_CITY = "UPDATE_ORG_CITY";
+  public static final String UPDATE_ORG_STATE = "UPDATE_ORG_STATE";
+  public static final String UPDATE_ORG_ZIP = "UPDATE_ORG_ZIP";
+  public static final String UPDATE_ORG_COUNTRY = "UPDATE_ORG_COUNTRY";
+  public static final String UPDATE_ORG_PHONE = "UPDATE_ORG_PHONE";
+  public static final String UPDATE_ORG_EMAIL = "UPDATE_ORG_EMAIL";
+  public static final String UPDATE_ORG_ORCID_ID = "UPDATE_ORG_ORCID_ID";
+  public static final String UPDATE_ORG_UUID = "UPDATE_ORG_UUID";
+  public static final String UPDATE_ORG_USE = "UPDATE_ORG_USE";
+  public static final String UPDATE_ORG_NAME_ERROR = "UPDATE_ORG_NAME_ERROR";
+  public static final String UPDATE_ORG_STREET_ERROR = "UPDATE_ORG_STREET_ERROR";
+  public static final String UPDATE_ORG_CITY_ERROR = "UPDATE_ORG_CITY_ERROR";
+  public static final String UPDATE_ORG_STATE_ERROR = "UPDATE_ORG_STATE_ERROR";
+  public static final String UPDATE_ORG_ZIP_ERROR = "UPDATE_ORG_ZIP_ERROR";
+  public static final String UPDATE_ORG_COUNTRY_ERROR = "UPDATE_ORG_COUNTRY_ERROR";
+  public static final String UPDATE_ORG_PHONE_ERROR = "UPDATE_ORG_PHONE_ERROR";
+  public static final String UPDATE_ORG_EMAIL_ERROR = "UPDATE_ORG_EMAIL_ERROR";
+  public static final String UPDATE_ORG_UUID_ERROR = "UPDATE_ORG_UUID_ERROR";
+
   private Events() {
 
   }

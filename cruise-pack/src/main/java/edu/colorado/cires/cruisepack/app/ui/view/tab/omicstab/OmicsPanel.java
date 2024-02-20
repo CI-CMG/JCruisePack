@@ -116,7 +116,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
   private void initializeFields() {
     samplingConductedField.setSelectedValue(omicsModel.isSamplingConducted());
-    contactField.setModel(new DefaultComboBoxModel<>(personDatastore.getPersonDropDowns().toArray(new DropDownItem[0])));
+    contactField.setModel(new DefaultComboBoxModel<>(personDatastore.getEnabledPersonDropDowns().toArray(new DropDownItem[0])));
     contactField.setSelectedItem(omicsModel.getContact());
     trackingSheetField.setText(omicsModel.getSampleTrackingSheet() == null ? null : omicsModel.getSampleTrackingSheet().toAbsolutePath().normalize().toString());
     bioProjectAcessionField.setText(omicsModel.getBioProjectAccession());
@@ -165,7 +165,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
       c.weightx = 100;
     }));
     JButton editPeopleButton = new JButton("Create/Edit People");
-    editPeopleButton.addActionListener(e -> new EditPersonDialog(beanFactory, peopleList));
+    // editPeopleButton.addActionListener(e -> new EditPersonDialog(beanFactory, peopleList));
     omicsPersonPanel.add(editPeopleButton, configureLayout(3, 0, c -> {
       c.weightx = 0;
     }));

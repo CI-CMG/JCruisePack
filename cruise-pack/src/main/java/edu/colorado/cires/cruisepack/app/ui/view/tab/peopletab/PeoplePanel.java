@@ -11,6 +11,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.DefaultComboBoxModel;
@@ -22,7 +24,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatasore;
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.PeopleController;
@@ -47,33 +49,29 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private static final String CREATE_PEOPLE_LABEL = "Create / Edit People";
   private static final String CREATE_ORG_LABEL = "Create / Edit Organizations";
   
-  private final PeopleList peopleList;
-  private final OrganizationList organizationList;
-  private final BeanFactory beanFactory;
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final PersonDatastore personDatastore;
+  private final OrganizationDatastore organizationDatasore;
   private final PeopleController peopleController;
   private final PeopleModel peopleModel;
 
   private final JComboBox<DropDownItem> metadataAuthorField = new JComboBox<>();
   private final JLabel metadataAuthorErrorLabel = new JLabel();
-  private final AppendableTableWithSelections scientistsField;
-  private final AppendableTableWithSelections sourceOrganizationsField;
-  private final AppendableTableWithSelections fundingOrganizationsField;
-
+  private AppendableTableWithSelections scientistsField;
+  private AppendableTableWithSelections sourceOrganizationsField;
+  private AppendableTableWithSelections fundingOrganizationsField;
+  private final EditPersonDialog editPersonDialog;
+  private final EditOrgDialog editOrgDialog;
 
   @Autowired
-  public PeoplePanel(PeopleList peopleList, OrganizationList organizationList, BeanFactory beanFactory, ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatasore organizationDatasore) {
-    this.peopleList = peopleList;
-    this.organizationList = organizationList;
-    this.beanFactory = beanFactory;
+  public PeoplePanel(PeopleList peopleList, OrganizationList organizationList, BeanFactory beanFactory, ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore, EditPersonDialog editPersonDialog, EditOrgDialog editOrgButton) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.personDatastore = personDatastore;
+    this.organizationDatasore = organizationDatasore;
     this.peopleController = peopleController;
     this.peopleModel = peopleModel;
-    this.scientistsField = new AppendableTableWithSelections(SCIENTISTS_LABEL, ADD_SCIENTIST_LABEL, PersonDatastore.UNSELECTED_PERSON, personDatastore.getPersonDropDowns());
-    this.sourceOrganizationsField = new AppendableTableWithSelections(SOURCE_ORG_LABEL, ADD_SOURCE_ORG_LABEL, OrganizationDatasore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
-    this.fundingOrganizationsField = new AppendableTableWithSelections(FUNDING_ORG_LABEL, ADD_FUNDING_ORG_LABEL, OrganizationDatasore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
+    this.editPersonDialog = editPersonDialog;
+    this.editOrgDialog = editOrgButton;
   }
 
 
@@ -85,7 +83,11 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   }
 
   private void initializeFields() {
-    metadataAuthorField.setModel(new DefaultComboBoxModel<>(personDatastore.getPersonDropDowns().toArray(new DropDownItem[0])));
+    scientistsField = new AppendableTableWithSelections(SCIENTISTS_LABEL, ADD_SCIENTIST_LABEL, PersonDatastore.UNSELECTED_PERSON, personDatastore.getEnabledPersonDropDowns());
+    sourceOrganizationsField = new AppendableTableWithSelections(SOURCE_ORG_LABEL, ADD_SOURCE_ORG_LABEL, OrganizationDatastore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
+    fundingOrganizationsField = new AppendableTableWithSelections(FUNDING_ORG_LABEL, ADD_FUNDING_ORG_LABEL, OrganizationDatastore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
+
+    metadataAuthorField.setModel(new DefaultComboBoxModel<>(personDatastore.getEnabledPersonDropDowns().toArray(new DropDownItem[0])));
     metadataAuthorField.setSelectedItem(peopleModel.getMetadataAuthor());
 
     metadataAuthorErrorLabel.setText("");
@@ -108,7 +110,28 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editPeopleButton = new JButton(CREATE_PEOPLE_LABEL);
     editPeopleButton.addActionListener(e -> {
-      new EditPersonDialog(beanFactory, peopleList);
+      editPersonDialog.addComponentListener(new ComponentListener() {
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+          initializeFields();
+        }
+        
+      });
+      editPersonDialog.pack();
+      editPersonDialog.setVisible(true);
     });
     add(editPeopleButton, configureLayout(0, 2, c -> {
       c.weighty = 0;
@@ -116,7 +139,28 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editOrgButton = new JButton(CREATE_ORG_LABEL);
     editOrgButton.addActionListener(e -> {
-      new EditOrgDialog(beanFactory, organizationList);
+      editOrgDialog.addComponentListener(new ComponentListener() {
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+          initializeFields();
+        }
+        
+      });
+      editOrgDialog.pack();
+      editOrgDialog.setVisible(true);
     });
     add(editOrgButton, configureLayout(1, 2, c -> {
       c.weighty = 0;
