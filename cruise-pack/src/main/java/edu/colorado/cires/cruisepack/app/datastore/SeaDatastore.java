@@ -57,4 +57,8 @@ public class SeaDatastore {
   public List<DropDownItem> getSeaDropDowns() {
     return seaDropDowns;
   }
+
+  public String getSeaNameForUuid(String uuid) {
+    return seaDropDowns.stream().filter(dd -> uuid.equals(dd.getId())).findFirst().map(DropDownItem::getValue).orElse(null);
+  }
 }

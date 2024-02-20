@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = Omics.Builder.class)
@@ -24,16 +25,14 @@ public class Omics {
   private final String ncbiAccession;
   private final List<String> samplingTypes;
   private final List<String> analysesTypes;
-  private final String trackingPath;
   private final String omicsComment;
   private final OmicsPoc omicsPoc;
 
-  private Omics(String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String trackingPath, String omicsComment,
+  private Omics(String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment,
       OmicsPoc omicsPoc) {
     this.ncbiAccession = ncbiAccession;
     this.samplingTypes = samplingTypes;
     this.analysesTypes = analysesTypes;
-    this.trackingPath = trackingPath;
     this.omicsComment = omicsComment;
     this.omicsPoc = omicsPoc;
   }
@@ -50,10 +49,6 @@ public class Omics {
     return analysesTypes;
   }
 
-  public String getTrackingPath() {
-    return trackingPath;
-  }
-
   public String getOmicsComment() {
     return omicsComment;
   }
@@ -62,11 +57,40 @@ public class Omics {
     return omicsPoc;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Omics omics = (Omics) o;
+    return Objects.equals(ncbiAccession, omics.ncbiAccession) && Objects.equals(samplingTypes, omics.samplingTypes)
+        && Objects.equals(analysesTypes, omics.analysesTypes) && Objects.equals(omicsComment, omics.omicsComment)
+        && Objects.equals(omicsPoc, omics.omicsPoc);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(ncbiAccession, samplingTypes, analysesTypes, omicsComment, omicsPoc);
+  }
+
+  @Override
+  public String toString() {
+    return "Omics{" +
+        "ncbiAccession='" + ncbiAccession + '\'' +
+        ", samplingTypes=" + samplingTypes +
+        ", analysesTypes=" + analysesTypes +
+        ", omicsComment='" + omicsComment + '\'' +
+        ", omicsPoc=" + omicsPoc +
+        '}';
+  }
+
   public static class Builder {
     private String ncbiAccession;
     private List<String> samplingTypes = Collections.emptyList();
     private List<String> analysesTypes = Collections.emptyList();
-    private String trackingPath;
     private String omicsComment;
     private OmicsPoc omicsPoc;
 
@@ -78,7 +102,6 @@ public class Omics {
       ncbiAccession = src.ncbiAccession;
       samplingTypes = src.samplingTypes;
       analysesTypes = src.analysesTypes;
-      trackingPath = src.trackingPath;
       omicsComment = src.omicsComment;
       omicsPoc = src.omicsPoc;
     }
@@ -104,11 +127,6 @@ public class Omics {
       return this;
     }
 
-    public Builder withTrackingPath(String trackingPath) {
-      this.trackingPath = trackingPath;
-      return this;
-    }
-
     public Builder withOmicsComment(String omicsComment) {
       this.omicsComment = omicsComment;
       return this;
@@ -120,7 +138,7 @@ public class Omics {
     }
 
     public Omics build() {
-      return new Omics(ncbiAccession, samplingTypes, analysesTypes, trackingPath, omicsComment, omicsPoc);
+      return new Omics(ncbiAccession, samplingTypes, analysesTypes, omicsComment, omicsPoc);
     }
   }
 }

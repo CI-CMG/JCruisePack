@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = PackageInstrument.Builder.class)
@@ -25,16 +26,13 @@ public class PackageInstrument {
   private final String typeName;
   private final boolean flatten;
   private final List<String> extensions;
-  private final String dirName;
-  private final String bagName;
 
-  private PackageInstrument(Instrument instrument, String typeName, boolean flatten, List<String> extensions, String dirName, String bagName) {
+
+  private PackageInstrument(Instrument instrument, String typeName, boolean flatten, List<String> extensions) {
     this.instrument = instrument;
     this.typeName = typeName;
     this.flatten = flatten;
     this.extensions = extensions;
-    this.dirName = dirName;
-    this.bagName = bagName;
   }
 
   public Instrument getInstrument() {
@@ -53,12 +51,32 @@ public class PackageInstrument {
     return extensions;
   }
 
-  public String getDirName() {
-    return dirName;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    PackageInstrument that = (PackageInstrument) o;
+    return flatten == that.flatten && Objects.equals(instrument, that.instrument) && Objects.equals(typeName, that.typeName)
+        && Objects.equals(extensions, that.extensions);
   }
 
-  public String getBagName() {
-    return bagName;
+  @Override
+  public int hashCode() {
+    return Objects.hash(instrument, typeName, flatten, extensions);
+  }
+
+  @Override
+  public String toString() {
+    return "PackageInstrument{" +
+        "instrument=" + instrument +
+        ", typeName='" + typeName + '\'' +
+        ", flatten=" + flatten +
+        ", extensions=" + extensions +
+        '}';
   }
 
   public static class Builder {
@@ -66,8 +84,6 @@ public class PackageInstrument {
     private String typeName;
     private boolean flatten;
     private List<String> extensions = Collections.emptyList();
-    private String dirName;
-    private String bagName;
 
     private Builder() {
 
@@ -78,8 +94,6 @@ public class PackageInstrument {
       typeName = src.typeName;
       flatten = src.flatten;
       extensions = src.extensions;
-      dirName = src.dirName;
-      bagName = src.bagName;
     }
 
     public Builder withInstrument(Instrument instrument) {
@@ -105,18 +119,9 @@ public class PackageInstrument {
       return this;
     }
 
-    public Builder withDirName(String dirName) {
-      this.dirName = dirName;
-      return this;
-    }
-
-    public Builder withBagName(String bagName) {
-      this.bagName = bagName;
-      return this;
-    }
 
     public PackageInstrument build() {
-      return new PackageInstrument(instrument, typeName, flatten, extensions, dirName, bagName);
+      return new PackageInstrument(instrument, typeName, flatten, extensions);
     }
   }
 }

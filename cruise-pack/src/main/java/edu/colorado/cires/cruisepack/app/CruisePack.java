@@ -29,6 +29,10 @@ public class CruisePack {
         .web(WebApplicationType.NONE)
         .run(args);
 
+    String[] beanNames = ctx.getBeanDefinitionNames(); // get beans
+    for (String beanName : beanNames) {
+      System.out.println("Bean --> "+ beanName); // print bean
+    }
 
 
     SwingUtilities.invokeLater(() -> {

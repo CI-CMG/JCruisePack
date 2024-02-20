@@ -1,7 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -9,7 +8,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
@@ -29,23 +27,22 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(
     webEnvironment = WebEnvironment.NONE,
-    classes = {PackerService.class, ObjectMapper.class}
+    classes = {
+        PackerService.class,
+        JacksonAutoConfiguration.class
+    }
 )
 public class PackerServiceTest {
 
   private Path mainBagRootDir = Paths.get("target/test-output").toAbsolutePath().normalize();
 
-  @BeforeEach
-  public void beforeEach() throws Exception {
-    FileUtils.deleteQuietly(mainBagRootDir.toFile());
-    Files.createDirectories(mainBagRootDir);
-  }
 
   @Autowired
   private PackerService packerService;
@@ -61,6 +58,13 @@ public class PackerServiceTest {
 
   @MockBean
   private ServiceProperties serviceProperties;
+
+  @BeforeEach
+  public void beforeEach() throws Exception {
+    doReturn("../sample-work-dir").when(serviceProperties).getWorkDir();
+    FileUtils.deleteQuietly(mainBagRootDir.toFile());
+    Files.createDirectories(mainBagRootDir);
+  }
 
   @Test
   public void testSingleDataset() throws Exception {
@@ -110,18 +114,16 @@ public class PackerServiceTest {
         .build();
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
-    doReturn("../sample-work-dir").when(serviceProperties).getWorkDir();
 
     CruiseMetadata cruiseMetadata = mock(CruiseMetadata.class);
     when(metadataService.createMetadata(packJob)).thenReturn(cruiseMetadata);
-
 
     Path metadataPath = mainBagRootDir.resolve("TST200400/TST200400-metadata.json");
     doAnswer(invocation -> {
       Path path = invocation.getArgument(1, Path.class);
       FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
       return null;
-  }).when(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
+    }).when(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
 
     CruiseMetadata instrumentMetadata = mock(CruiseMetadata.class);
     when(metadataService.createDatasetMetadata(cruiseMetadata, instrumentDetails)).thenReturn(instrumentMetadata);

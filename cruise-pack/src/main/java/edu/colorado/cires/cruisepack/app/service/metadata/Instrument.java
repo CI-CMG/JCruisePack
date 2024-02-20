@@ -5,21 +5,20 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = Instrument.Builder.class)
 public class Instrument {
 
-  public Builder builder() {
+  public static Builder builder() {
     return new Builder();
   }
 
-  public Builder builder(Instrument src) {
+  public static Builder builder(Instrument src) {
     return new Builder(src);
   }
 
@@ -28,23 +27,23 @@ public class Instrument {
   private final String instrument;
   private final String shortName;
   private final String releaseDate;
-  private final String dataPath;
   private final String status;
   private final String dataComment;
-  private final List<AdditionalData> additionalData;
+  private final String dirName;
+  private final String bagName;
   private final Map<String, Object> otherFields;
 
-  private Instrument(String uuid, String type, String instrument, String shortName, String releaseDate, String dataPath, String status,
-      String dataComment, List<AdditionalData> additionalData, Map<String, Object> otherFields) {
+  private Instrument(String uuid, String type, String instrument, String shortName, String releaseDate, String status,
+      String dataComment, String dirName, String bagName, Map<String, Object> otherFields) {
     this.uuid = uuid;
     this.type = type;
     this.instrument = instrument;
     this.shortName = shortName;
     this.releaseDate = releaseDate;
-    this.dataPath = dataPath;
     this.status = status;
     this.dataComment = dataComment;
-    this.additionalData = additionalData;
+    this.dirName = dirName;
+    this.bagName = bagName;
     this.otherFields = otherFields;
   }
 
@@ -73,9 +72,6 @@ public class Instrument {
     return releaseDate;
   }
 
-  public String getDataPath() {
-    return dataPath;
-  }
 
   public String getStatus() {
     return status;
@@ -85,8 +81,48 @@ public class Instrument {
     return dataComment;
   }
 
-  public List<AdditionalData> getAdditionalData() {
-    return additionalData;
+  public String getDirName() {
+    return dirName;
+  }
+
+  public String getBagName() {
+    return bagName;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Instrument that = (Instrument) o;
+    return Objects.equals(uuid, that.uuid) && Objects.equals(type, that.type) && Objects.equals(instrument,
+        that.instrument) && Objects.equals(shortName, that.shortName) && Objects.equals(releaseDate, that.releaseDate)
+        && Objects.equals(status, that.status) && Objects.equals(dataComment, that.dataComment) && Objects.equals(dirName,
+        that.dirName) && Objects.equals(bagName, that.bagName) && Objects.equals(otherFields, that.otherFields);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(uuid, type, instrument, shortName, releaseDate, status, dataComment, dirName, bagName, otherFields);
+  }
+
+  @Override
+  public String toString() {
+    return "Instrument{" +
+        "uuid='" + uuid + '\'' +
+        ", type='" + type + '\'' +
+        ", instrument='" + instrument + '\'' +
+        ", shortName='" + shortName + '\'' +
+        ", releaseDate='" + releaseDate + '\'' +
+        ", status='" + status + '\'' +
+        ", dataComment='" + dataComment + '\'' +
+        ", dirName='" + dirName + '\'' +
+        ", bagName='" + bagName + '\'' +
+        ", otherFields=" + otherFields +
+        '}';
   }
 
   public static class Builder {
@@ -96,10 +132,10 @@ public class Instrument {
     private String instrument;
     private String shortName;
     private String releaseDate;
-    private String dataPath;
     private String status;
     private String dataComment;
-    private List<AdditionalData> additionalData = Collections.emptyList();
+    private String dirName;
+    private String bagName;
     private Map<String, Object> otherFields = new LinkedHashMap<>();
 
     private Builder() {
@@ -112,10 +148,10 @@ public class Instrument {
       instrument = src.instrument;
       shortName = src.shortName;
       releaseDate = src.releaseDate;
-      dataPath = src.dataPath;
       status = src.status;
       dataComment = src.dataComment;
-      additionalData = src.additionalData;
+      dirName = src.dirName;
+      bagName = src.bagName;
       otherFields = src.otherFields;
     }
 
@@ -144,11 +180,6 @@ public class Instrument {
       return this;
     }
 
-    public Builder withDataPath(String dataPath) {
-      this.dataPath = dataPath;
-      return this;
-    }
-
     public Builder withStatus(String status) {
       this.status = status;
       return this;
@@ -159,23 +190,25 @@ public class Instrument {
       return this;
     }
 
-    public Builder withAdditionalData(List<AdditionalData> additionalData) {
-      if (additionalData == null) {
-        additionalData = Collections.emptyList();
-      }
-      this.additionalData = Collections.unmodifiableList(new ArrayList<>(additionalData));
+    public Builder withDirName(String dirName) {
+      this.dirName = dirName;
+      return this;
+    }
+
+    public Builder withBagName(String bagName) {
+      this.bagName = bagName;
       return this;
     }
 
     @JsonAnySetter
-    private Builder withOtherField(String name, Object value) {
+    public Builder withOtherField(String name, Object value) {
       this.otherFields.put(name, value);
       return this;
     }
 
     public Instrument build() {
-      return new Instrument(uuid, type, instrument, shortName, releaseDate, dataPath, status,
-          dataComment, additionalData, Collections.unmodifiableMap(otherFields));
+      return new Instrument(uuid, type, instrument, shortName, releaseDate, status,
+          dataComment, dirName, bagName, Collections.unmodifiableMap(otherFields));
     }
   }
 

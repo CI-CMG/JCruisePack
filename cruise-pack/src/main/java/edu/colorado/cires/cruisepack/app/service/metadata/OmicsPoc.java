@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.service.metadata;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = OmicsPoc.Builder.class)
@@ -42,6 +43,34 @@ public class OmicsPoc {
 
   public String getEmail() {
     return email;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    OmicsPoc omicsPoc = (OmicsPoc) o;
+    return Objects.equals(name, omicsPoc.name) && Objects.equals(uuid, omicsPoc.uuid) && Objects.equals(phone,
+        omicsPoc.phone) && Objects.equals(email, omicsPoc.email);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, uuid, phone, email);
+  }
+
+  @Override
+  public String toString() {
+    return "OmicsPoc{" +
+        "name='" + name + '\'' +
+        ", uuid='" + uuid + '\'' +
+        ", phone='" + phone + '\'' +
+        ", email='" + email + '\'' +
+        '}';
   }
 
   public static class Builder {

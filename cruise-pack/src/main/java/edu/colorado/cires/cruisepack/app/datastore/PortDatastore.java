@@ -58,4 +58,8 @@ public class PortDatastore {
   public List<DropDownItem> getPortDropDowns() {
     return portDropDowns;
   }
+
+  public String getPortNameForUuid(String uuid) {
+    return portDropDowns.stream().filter(dd -> uuid.equals(dd.getId())).findFirst().map(DropDownItem::getValue).orElse(null);
+  }
 }

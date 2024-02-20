@@ -1,0 +1,55 @@
+{
+  "cruise_id": "FOOBARGE123",
+  "segment_id": "SEG1",
+  "package_id": "FOOBARGE123_SEG1",
+  "master_release_date": "2023-02-19",
+  "ship": "Melville",
+  "ship_uuid": "632f234e-e9a8-4683-8fdb-c3cff0ee5a68",
+  "departure_port": "Akita, JP",
+  "departure_date": "2023-02-17",
+  "arrival_port": "Amagasaki, JP",
+  "arrival_date": "2023-02-18",
+  "sea_area": "Japan Sea",
+  "cruise_title": "Foo Barge Cruise",
+  "cruise_purpose": "Explore Foo Barginess",
+  "cruise_description": "To boldly go where no Foo Barge has gone before",
+  "sponsors": [],
+  "funders": [],
+  "scientists": [],
+  "projects": [],
+  "instruments": [
+    {
+      "uuid": "9da1f3f0-9ec8-11e1-a8b0-0800200c9a66",
+      "type": "Multibeam Bathymetry",
+      "instrument": "Kongsberg EM122",
+      "short_name": "EM122",
+      "release_date": "2023-02-20",
+      "status": "Raw",
+      "data_comment": "comment1",
+      "dir_name": "EM122",
+      "bag_name": "FOOBARGE123_SEG1-BATHY_EM122"
+    },
+    {
+      "uuid": "9da1f3f0-9ec8-11e1-a8b0-0800200c9a66",
+      "type": "Multibeam Bathymetry",
+      "instrument": "Kongsberg EM122",
+      "short_name": "EM122",
+      "release_date": "2023-02-21",
+      "status": "Processed",
+      "data_comment": "comment2",
+      "dir_name": "EM122_processed",
+      "bag_name": "FOOBARGE123_SEG1-BATHY_EM122"
+    },
+    {
+      "uuid": "7318b3fd-823d-42a8-8a74-293c88256f87",
+      "type": "Water Column Sonar",
+      "instrument": "Atlas Hydrosweep DS-2",
+      "short_name": "Hydrosweep-DS-2",
+      "release_date": "2023-02-22",
+      "status": "Raw",
+      "data_comment": "comment3",
+      "dir_name": "Hydrosweep-DS-2",
+      "bag_name": "FOOBARGE123_SEG1-WCSD_Hydrosweep-DS-2"
+    }
+  ]
+}
