@@ -1,8 +1,11 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ancillary;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -68,6 +71,11 @@ public class AncillaryDatasetPanel extends DatasetPanel<AncillaryDatasetInstrume
       case UPDATE_COMMENTS:
         updateTextField(commentsPanel.getCommentsField(), evt);
         break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
       default:
         break;
     }
