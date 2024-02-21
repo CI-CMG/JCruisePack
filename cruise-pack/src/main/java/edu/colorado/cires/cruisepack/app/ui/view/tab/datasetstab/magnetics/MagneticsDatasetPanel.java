@@ -1,14 +1,22 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.magnetics;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_CORRECTION_MODEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_CORRECTION_MODEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SAMPLE_RATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SAMPLE_RATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SENSOR_DEPTH;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SENSOR_DEPTH_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_TOW_DISTANCE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_TOW_DISTANCE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateRadioButtonGroup;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -129,6 +137,27 @@ public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrume
         break;
       case UPDATE_SENSOR_DEPTH:
         updateTextField(sensorDepthPanel.getField(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_CORRECTION_MODEL_ERROR:
+        updateLabelText(correctionModelPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_SAMPLE_RATE_ERROR:
+        updateLabelText(sampleRatePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_TOW_DISTANCE_ERROR:
+        updateLabelText(towDistancePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_SENSOR_DEPTH_ERROR:
+        updateLabelText(sensorDepthPanel.getErrorLabel(), evt);
         break;
       default:
         break;
