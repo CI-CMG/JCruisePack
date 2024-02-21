@@ -7,6 +7,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -36,6 +37,8 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   private final InstrumentDatastore instrumentDatastore;
   private final DatasetPanelFactoryResolver datasetPanelFactoryResolver;
   private final ReactiveViewRegistry reactiveViewRegistry;
+  private final List<DatasetListener<BaseDatasetInstrumentModel>> datasetCreatedListeners = new ArrayList<>(0);
+  private final List<DatasetListener<BaseDatasetInstrumentModel>> datasetRemovedListeners = new ArrayList<>(0);
 
   private List<DatasetPanel> rows = new ArrayList<>();
   private JLabel datasetsErrorLabel = createErrorLabel();
@@ -50,6 +53,22 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
     this.instrumentDatastore = instrumentDatastore;
     this.datasetPanelFactoryResolver = datasetPanelFactoryResolver;
     this.reactiveViewRegistry = reactiveViewRegistry;
+  }
+
+  public void addDatasetCreatedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+    datasetCreatedListeners.add(listener);
+  }
+
+  public void removeDatasetCreatedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+    datasetCreatedListeners.add(listener);
+  }
+
+  public void addDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+    datasetRemovedListeners.add(listener);
+  }
+
+  public void removeDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+    datasetRemovedListeners.remove(listener);
   }
 
   @PostConstruct
@@ -123,6 +142,10 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
       rows.add(row);
       addFluff();
       uiRefresher.refresh();
+
+      for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetCreatedListeners) {
+        listener.handle(row.getModel());
+      }
     }
   }
 
@@ -130,6 +153,9 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
     remove(row);
     rows.remove(row);
     uiRefresher.refresh();
+    for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetRemovedListeners) {
+      listener.handle(row.getModel());
+    }
   }
 
   @Override

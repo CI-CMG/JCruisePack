@@ -55,6 +55,10 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     setupMvc();
   }
 
+  public M getModel() {
+    return model;
+  }
+
   private void initializeFields() {
     releaseDate.setDate(model.getPublicReleaseDate());
     directoryPath.setText(model.getDataPath() == null ? null : model.getDataPath().toAbsolutePath().normalize().toString());

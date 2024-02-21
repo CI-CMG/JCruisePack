@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.ui.controller.DatasetsController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
@@ -23,13 +24,17 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
 
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final DatasetConfigurationPanel datasetConfigurationPanel;
+  private final DatasetsController datasetsController;
 
   @Autowired
   public DatasetsPanel(
       ReactiveViewRegistry reactiveViewRegistry,
-      DatasetConfigurationPanel datasetConfigurationPanel) {
+      DatasetConfigurationPanel datasetConfigurationPanel,
+      DatasetsController datasetsController
+  ) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.datasetConfigurationPanel = datasetConfigurationPanel;
+    this.datasetsController = datasetsController;
   }
 
   @PostConstruct
@@ -55,6 +60,8 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
     addDatasetButton.addActionListener((evt) -> datasetConfigurationPanel.addRow());
+    datasetConfigurationPanel.addDatasetCreatedListener((m) -> datasetsController.addDataset(m));
+    datasetConfigurationPanel.addDatasetRemovedListener((m) -> datasetsController.removeDataset(m));
   }
 
   @Override
