@@ -30,18 +30,22 @@ public class DatasetsModel extends PropertyChangeModel {
   }
 
   public void addDataset(BaseDatasetInstrumentModel dataset) {
-    if (!datasets.contains(dataset)) {
+    List<BaseDatasetInstrumentModel> oldDatasets = new ArrayList<>(datasets);
+    if (!oldDatasets.contains(dataset)) {
       List<BaseDatasetInstrumentModel> newDatasets = new ArrayList<>(datasets);
       newDatasets.add(dataset);
-      fireChangeEvent(Events.UPDATE_DATASET_LIST, datasets, newDatasets);
+      datasets = newDatasets;
+      fireChangeEvent(Events.UPDATE_DATASET_LIST, oldDatasets, datasets);
     }
   }
 
   public void removeDataset(BaseDatasetInstrumentModel dataset) {
-    if (datasets.contains(dataset)) {
+    List<BaseDatasetInstrumentModel> oldDatasets = new ArrayList<>(datasets);
+    if (oldDatasets.contains(dataset)) {
       List<BaseDatasetInstrumentModel> newDatasets = new ArrayList<>(datasets);
       newDatasets.remove(dataset);
-      fireChangeEvent(Events.UPDATE_DATASET_LIST, datasets, newDatasets);
+      datasets = newDatasets;
+      fireChangeEvent(Events.UPDATE_DATASET_LIST, oldDatasets, datasets);
     }
   }
 
