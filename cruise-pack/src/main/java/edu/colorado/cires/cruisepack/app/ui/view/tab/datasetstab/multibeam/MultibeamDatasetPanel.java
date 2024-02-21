@@ -1,10 +1,14 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.multibeam;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MultibeamDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateRadioButtonGroup;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -80,6 +84,15 @@ public class MultibeamDatasetPanel extends DatasetPanel<MultibeamDatasetInstrume
         break;
       case UPDATE_COMMENTS:
         updateTextField(commentsPanel.getCommentsField(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
         break;
       default:
         break;
