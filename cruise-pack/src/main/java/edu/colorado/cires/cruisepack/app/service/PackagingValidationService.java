@@ -298,6 +298,13 @@ public class PackagingValidationService {
 
       if (propertyPath.equals("datasets")) {
         datasetsError = message;
+      } else {
+        for (Node node : violation.getPropertyPath()) {
+          Integer index = node.getIndex();
+          if (index != null) {
+            datasetsModel.getDatasets().get(index).setModelErrors(propertyPath, message);
+          }
+        }
       }
     }
     

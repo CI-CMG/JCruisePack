@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
+
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
@@ -7,6 +9,7 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -21,6 +24,7 @@ public class ProcessingLevelRadioPanel extends JPanel {
   private final JRadioButton processedButton = new JRadioButton(PROCESSED_LABEL);
   private final JRadioButton productsButton = new JRadioButton(PRODUCTS_LABEL);
   private final ButtonGroup processingLevelGroup = new ButtonGroup();
+  private final JLabel errorLabel = createErrorLabel();
 
   public ProcessingLevelRadioPanel() {
     processingLevelGroup.add(rawButton);
@@ -32,6 +36,7 @@ public class ProcessingLevelRadioPanel extends JPanel {
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     setBackground(Color.WHITE);
     setBorder(BorderFactory.createTitledBorder(PROCESSING_LEVEL_LABEL));
+    add(errorLabel);
     add(rawButton);
     add(processedButton);
     add(productsButton);
@@ -49,6 +54,10 @@ public class ProcessingLevelRadioPanel extends JPanel {
       }
     }
     return null;
+  }
+
+  public JLabel getErrorLabel() {
+    return errorLabel;
   }
 
   public void addActionListener(ActionListener listener) {

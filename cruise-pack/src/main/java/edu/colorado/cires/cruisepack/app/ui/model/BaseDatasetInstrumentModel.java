@@ -5,6 +5,9 @@ import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.InstrumentNameHolder;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -15,9 +18,16 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
 
   public static final String UPDATE_PUBLIC_RELEASE_DATE = "UPDATE_PUBLIC_RELEASE_DATE";
   public static final String UPDATE_DATA_PATH = "UPDATE_DATA_PATH";
+  public static final String UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR = "UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR";
+  public static final String UPDATE_DATASET_DATA_PATH_ERROR = "UPDATE_DATASET_DATA_PATH_ERROR";
 
+  @NotNull(message = "must not be blank")
   private LocalDate publicReleaseDate;
+  private String publicReleaseDateError = null;;
+  @NotNull(message = "must not be blank")
   private Path dataPath;
+  private String dataPathError = null;
+  @NotBlank
   protected final String instrumentGroupShortCode;
 
   protected BaseDatasetInstrumentModel(String instrumentGroupShortCode) {
@@ -55,4 +65,25 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   protected List<AdditionalFiles> getAdditionalFiles() {
     return Collections.emptyList();
   }
+
+  private void setPublicReleaseDateError(String publicReleaseDateError) {
+    setIfChanged(UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR, publicReleaseDateError, () -> this.publicReleaseDateError, (e) -> this.publicReleaseDateError = e);
+  }
+
+  private void setDataPathError(String dataPathError) {
+    setIfChanged(UPDATE_DATASET_DATA_PATH_ERROR, dataPathError, () -> this.dataPathError, (e) -> this.dataPathError = e);
+  }
+
+  public void setModelErrors(String propertyPath, String message) {
+    if (propertyPath.endsWith("publicReleaseDate")) {
+      setPublicReleaseDateError(message);
+    } else if (propertyPath.endsWith("dataPath")) {
+      setDataPathError(message);
+    }
+
+    setErrors(propertyPath, message);
+  }
+
+  protected abstract void setErrors(String propertyPath, String message);
+  
 }

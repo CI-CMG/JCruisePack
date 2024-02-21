@@ -1,8 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_DATASET_DATA_PATH_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_DATA_PATH;
 import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PUBLIC_RELEASE_DATE;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -17,6 +21,7 @@ import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -34,8 +39,10 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   protected final C controller;
 
   private final DatePicker releaseDate = new DatePicker();
+  private final JLabel publicReleaseDateErrorLabel = createErrorLabel();
   private final JButton removeButton = new JButton(REMOVE);
   private final JTextField directoryPath = new JTextField();
+  private final JLabel dataPathErrorLabel = createErrorLabel();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
 
   protected DatasetPanel(M model, C controller, InstrumentDatastore instrumentDatastore) {
@@ -87,6 +94,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     JPanel releaseDatePanel = new JPanel();
     releaseDatePanel.setBackground(Color.WHITE);
     releaseDatePanel.setBorder(BorderFactory.createTitledBorder(PUBLIC_RELEASE_DATE));
+    releaseDatePanel.add(publicReleaseDateErrorLabel);
     releaseDatePanel.add(releaseDate);
     row1.add(releaseDatePanel, configureLayout(1, 0, c -> {
       c.weightx = 1;
@@ -99,8 +107,9 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     directorySelectPanel.setLayout(new GridBagLayout());
     directorySelectPanel.setBackground(Color.WHITE);
     directorySelectPanel.setBorder(BorderFactory.createTitledBorder(PATH_LABEL));
-    directorySelectPanel.add(directoryPath, configureLayout(0, 0, c -> c.weightx = 1));
-    directorySelectPanel.add(dirSelectButton, configureLayout(1, 0, c -> c.weightx = 0));
+    directorySelectPanel.add(dataPathErrorLabel, configureLayout(0, 0, c -> c.weightx = 1));
+    directorySelectPanel.add(directoryPath, configureLayout(0, 1, c -> c.weightx = 1));
+    directorySelectPanel.add(dirSelectButton, configureLayout(1, 1, c -> c.weightx = 0));
     header.add(directorySelectPanel, configureLayout(0, 1));
 
     return header;
@@ -116,6 +125,10 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
       updateDatePicker(releaseDate, evt);
     } else if (UPDATE_DATA_PATH.equals(evt.getPropertyName())) {
       updatePathField(directoryPath, evt);
+    } else if (UPDATE_DATASET_DATA_PATH_ERROR.equals(evt.getPropertyName())) {
+      updateLabelText(dataPathErrorLabel, evt);
+    } else if (UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR.equals(evt.getPropertyName())) {
+      updateLabelText(publicReleaseDateErrorLabel, evt);
     }
     customOnChange(evt);
   }
