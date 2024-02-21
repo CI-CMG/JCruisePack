@@ -2,7 +2,9 @@ package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -12,23 +14,42 @@ import org.apache.commons.lang3.StringUtils;
 public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
   public static final String UPDATE_INSTRUMENT = "UPDATE_INSTRUMENT";
-  public static final String UPDATE_PROCESSING_LEVEL = "UPDATE_PROCESSING";
+  public static final String UPDATE_INSTRUMENT_ERROR = "UPDATE_INSTRUMENT_ERROR";
+  public static final String UPDATE_PROCESSING_LEVEL = "UPDATE_PROCESSING_LEVEL";
+  public static final String UPDATE_PROCESSING_LEVEL_ERROR = "UPDATE_PROCESSING_LEVEL_ERROR";
   public static final String UPDATE_COMMENTS = "UPDATE_COMMENTS";
+  public static final String UPDATE_COMMENTS_ERROR = "UPDATE_COMMENTS_ERROR";
   public static final String UPDATE_CALIBRATION_STATE = "UPDATE_CALIBRATION_STATE";
+  public static final String UPDATE_CALIBRATION_STATE_ERROR = "UPDATE_CALIBRATION_STATE_ERROR";
   public static final String UPDATE_CALIBRATION_REPORT_PATH = "UPDATE_CALIBRATION_REPORT_PATH";
+  public static final String UPDATE_CALIBRATION_REPORT_PATH_ERROR = "UPDATE_CALIBRATION_REPORT_PATH_ERROR";
   public static final String UPDATE_CALIBRATION_DATA_PATH = "UPDATE_CALIBRATION_DATA_PATH";
+  public static final String UPDATE_CALIBRATION_DATA_PATH_ERROR = "UPDATE_CALIBRATION_DATA_PATH_ERROR";
   public static final String UPDATE_CALIBRATION_DATE = "UPDATE_CALIBRATION_DATE";
+  public static final String UPDATE_CALIBRATION_DATE_ERROR = "UPDATE_CALIBRATION_DATE_ERROR";
 
   // TODO move this to datasource
+  @NotNull @ValidInstrumentDropDownItem
   private DropDownItem instrument;
+  private String instrumentError = null;
+  @NotBlank
   private String processingLevel = "Raw";
+  private String processingLevelError = null;
+  @NotBlank
   private String comments;
+  private String commentsError = null;
+  @NotNull @ValidInstrumentDropDownItem
   private DropDownItem calibrationState;
+  private String calibrationStateError = null;
   @NotNull
   private Path calibrationReportPath;
-  private String calibrationReportPathError;
+  private String calibrationReportPathError = null;
+  @NotNull
   private Path calibrationDataPath;
+  private String calibrationDataPathError = null;
+  @NotNull
   private LocalDate calibrationDate;
+  private String calibrationDateError = null;
 
   public WaterColumnSonarDatasetInstrumentModel(String instrumentGroupShortCode) {
     super(instrumentGroupShortCode);
@@ -101,6 +122,53 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   @Override
   protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
     return InstrumentStatus.forValue(processingLevel);
+  }
+
+  private void setInstrumentError(String message) {
+    setIfChanged(UPDATE_INSTRUMENT_ERROR, message, () -> this.instrumentError, (e) -> this.instrumentError = e);
+  }
+
+  private void setProcessingLevelError(String message) {
+    setIfChanged(UPDATE_PROCESSING_LEVEL_ERROR, message, () -> this.processingLevelError, (e) -> this.processingLevelError = e);
+  }
+
+  private void setCommentsError(String message) {
+    setIfChanged(UPDATE_COMMENTS_ERROR, message, () -> this.commentsError, (e) -> this.commentsError = e);
+  }
+
+  private void setCalibrationStateError(String message) {
+    setIfChanged(UPDATE_CALIBRATION_STATE_ERROR, message, () -> this.calibrationStateError, (e) -> this.calibrationStateError = e);
+  }
+
+  private void setCalibrationReportPathError(String message) {
+    setIfChanged(UPDATE_CALIBRATION_REPORT_PATH_ERROR, message, () -> this.calibrationReportPathError, (e) -> this.calibrationReportPathError = e);
+  }
+
+  private void setCalibrationDataPathError(String message) {
+    setIfChanged(UPDATE_CALIBRATION_DATA_PATH_ERROR, message, () -> this.calibrationDataPathError, (e) -> this.calibrationDataPathError = e);
+  }
+
+  private void setCalibrationDateError(String message) {
+    setIfChanged(UPDATE_CALIBRATION_DATE_ERROR, message, () -> this.calibrationDateError, (e) -> this.calibrationDateError = e);
+  }
+
+  @Override
+  protected void setErrors(String propertyPath, String message) {
+    if (propertyPath.endsWith("instrument")) {
+      setInstrumentError(message);
+    } else if (propertyPath.endsWith("processingLevel")) {
+      setProcessingLevelError(message);
+    } else if (propertyPath.endsWith("comments")) {
+      setCommentsError(message);
+    } else if (propertyPath.endsWith("calibrationState")) {
+      setCalibrationStateError(message);
+    } else if (propertyPath.endsWith("calibrationReportPath")) {
+      setCalibrationReportPathError(message);
+    } else if (propertyPath.endsWith("calibrationDataPath")) {
+      setCalibrationDataPathError(message);
+    } else if (propertyPath.endsWith("calibrationDate")) {
+      setCalibrationDateError(message);
+    }
   }
 
 }

@@ -1,15 +1,23 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.wcsd;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_DATA_PATH;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_DATA_PATH_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_DATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_DATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_REPORT_PATH;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_REPORT_PATH_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_STATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_CALIBRATION_STATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateRadioButtonGroup;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
@@ -155,6 +163,27 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel<WaterColumnSonarD
         break;
       case UPDATE_CALIBRATION_DATE:
         updateDatePicker(calibrationDatePanel.getDatePicker(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_CALIBRATION_STATE_ERROR:
+        updateLabelText(calibrationStatePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_CALIBRATION_REPORT_PATH_ERROR:
+        updateLabelText(calibrationReportPathPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_CALIBRATION_DATA_PATH_ERROR:
+        updateLabelText(calibrationDataPathPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_CALIBRATION_DATE_ERROR:
+        updateLabelText(calibrationDatePanel.getErrorLabel(), evt);
         break;
       default:
         break;
