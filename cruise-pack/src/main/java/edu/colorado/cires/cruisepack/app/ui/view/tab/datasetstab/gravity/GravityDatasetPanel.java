@@ -1,15 +1,24 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.gravity;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_ARRIVAL_TIE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_ARRIVAL_TIE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_CORRECTION_MODEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_CORRECTION_MODEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DEPARTURE_TIE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DEPARTURE_TIE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DRIFT_PER_DAY;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DRIFT_PER_DAY_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_OBSERVATION_RATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_OBSERVATION_RATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateRadioButtonGroup;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -137,6 +146,30 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
         break;
       case UPDATE_DRIFT_PER_DAY:
         updateTextField(driftPanel.getField(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_CORRECTION_MODEL_ERROR:
+        updateLabelText(correctionModelPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_OBSERVATION_RATE_ERROR:
+        updateLabelText(obsRatePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_DEPARTURE_TIE_ERROR:
+        updateLabelText(departureTiePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_ARRIVAL_TIE_ERROR:
+        updateLabelText(arrivalTiePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_DRIFT_PER_DAY_ERROR:
+        updateLabelText(driftPanel.getErrorLabel(), evt);
         break;
       default:
         break;
