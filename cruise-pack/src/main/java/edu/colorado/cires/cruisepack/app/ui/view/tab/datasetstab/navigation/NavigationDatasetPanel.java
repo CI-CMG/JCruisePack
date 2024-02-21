@@ -1,11 +1,16 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.navigation;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_NAV_DATUM;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_NAV_DATUM_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateRadioButtonGroup;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -92,6 +97,18 @@ class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentMod
         break;
       case UPDATE_NAV_DATUM:
         updateComboBox(navDatumPanel.getInstrumentField(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_NAV_DATUM_ERROR:
+        updateLabelText(navDatumPanel.getErrorLabel(), evt);
         break;
       default:
         break;
