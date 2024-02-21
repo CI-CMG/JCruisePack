@@ -1,13 +1,20 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.singebeam;
 
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_OBS_RATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_OBS_RATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_SOUND_VELOCITY;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_SOUND_VELOCITY_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_VERTICAL_DATUM;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_VERTICAL_DATUM_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateRadioButtonGroup;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
@@ -114,6 +121,24 @@ public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstru
         break;
       case UPDATE_SOUND_VELOCITY:
         updateTextField(soundVelocityPanel.getField(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_VERTICAL_DATUM_ERROR:
+        updateLabelText(verticalDatumPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_OBS_RATE_ERROR:
+        updateLabelText(obsRatePanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_SOUND_VELOCITY_ERROR:
+        updateLabelText(soundVelocityPanel.getErrorLabel(), evt);
         break;
       default:
         break;
