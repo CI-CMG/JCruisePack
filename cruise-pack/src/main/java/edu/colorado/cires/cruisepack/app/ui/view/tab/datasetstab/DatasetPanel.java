@@ -19,6 +19,9 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -44,11 +47,20 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private final JTextField directoryPath = new JTextField();
   private final JLabel dataPathErrorLabel = createErrorLabel();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
+  private final List<DatasetListener<BaseDatasetInstrumentModel>> datasetRemovedListeners = new ArrayList<>(0);
 
   protected DatasetPanel(M model, C controller, InstrumentDatastore instrumentDatastore) {
     dataTypeName = instrumentDatastore.getNameForShortCode(getInstrumentShortCode());
     this.model = model;
     this.controller = controller;
+  }
+
+  public void addDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+    datasetRemovedListeners.add(listener);
+  }
+
+  public void removeDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+    datasetRemovedListeners.remove(listener);
   }
 
   protected abstract String getInstrumentShortCode();
@@ -117,7 +129,11 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
 
   private void setupMvc() {
 //    packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> handleDirValue(packageDirectoryField.getText()));
-
+    removeButton.addActionListener((evt) -> {
+      for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetRemovedListeners) {
+        listener.handle(model);
+      }
+    });
   }
 
   public void onChange(PropertyChangeEvent evt) {

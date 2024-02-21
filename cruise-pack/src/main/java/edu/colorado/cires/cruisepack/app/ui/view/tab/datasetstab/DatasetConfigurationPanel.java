@@ -133,6 +133,9 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
 
     if (dataType != null && !dataType.equals(InstrumentDatastore.UNSELECTED_DATASET_TYPE)) {
       DatasetPanel<?, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
+      row.addDatasetRemovedListener((evt) -> {
+        removeRow(row);
+      });
       remove(fluff);
       add(row, configureLayout(0, rows.size(), c -> {
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -150,12 +153,12 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   }
 
   public void removeRow(DatasetPanel row) {
-    remove(row);
-    rows.remove(row);
-    uiRefresher.refresh();
     for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetRemovedListeners) {
       listener.handle(row.getModel());
     }
+    remove(row);
+    rows.remove(row);
+    uiRefresher.refresh();
   }
 
   @Override
