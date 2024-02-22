@@ -88,18 +88,21 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JCheckBox metametabolomicsField = new JCheckBox("Metametabolomics");
   private final JCheckBox microbiomeField = new JCheckBox("Microbiome");
   private final JLabel expectedAnalysesErrorLabel = createErrorLabel();
+  private final JButton editPeopleButton = new JButton("Create/Edit People");
+  private final EditPersonDialog editPersonDialog;
 
   private final JTextArea additionalSamplingInformationField = new JTextArea();
   private final JLabel additionalSamplingInformationErrorLabel = new JLabel();
 
   @Autowired
-  public OmicsPanel(PeopleList peopleList, BeanFactory beanFactory, OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry) {
+  public OmicsPanel(PeopleList peopleList, BeanFactory beanFactory, OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry, EditPersonDialog editPersonDialog) {
     this.peopleList = peopleList;
     this.beanFactory = beanFactory;
     this.omicsModel = omicsModel;
     this.personDatastore = personDatastore;
     this.omicsController = omicsController;
     this.reactiveViewRegistry = reactiveViewRegistry;
+    this.editPersonDialog = editPersonDialog;
   }
 
   @PostConstruct
@@ -164,8 +167,6 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     omicsPersonPanel.add(contactField, configureLayout(2, 0, c -> {
       c.weightx = 100;
     }));
-    JButton editPeopleButton = new JButton("Create/Edit People");
-    // editPeopleButton.addActionListener(e -> new EditPersonDialog(beanFactory, peopleList));
     omicsPersonPanel.add(editPeopleButton, configureLayout(3, 0, c -> {
       c.weightx = 0;
     }));
@@ -282,6 +283,10 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     metametabolomicsField.addItemListener(createItemListener(omicsController::setMetametabolomicsExpectedAnalysis));
     microbiomeField.addItemListener(createItemListener(omicsController::setMicrobiomeExpectedAnalysis));
     additionalSamplingInformationField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> omicsController.setAdditionalSamplingInformation(additionalSamplingInformationField.getText()));
+    editPeopleButton.addActionListener(e -> {
+      editPersonDialog.pack();
+      editPersonDialog.setVisible(true);
+    });
   }
 
   private ItemListener createItemListener(Consumer<Boolean> consumer) {
