@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.person.PersonData;
@@ -30,22 +36,35 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 
 @Component
-public class PersonDatastore {
+public class PersonDatastore extends PropertyChangeModel implements PropertyChangeListener {
 
     public static final DropDownItem UNSELECTED_PERSON = new DropDownItem("", "Select Person");
 
     private final ServiceProperties serviceProperties;
     private List<DropDownItem> personDropDowns;
+    private final ReactiveViewRegistry reactiveViewRegistry;
 
     @Autowired
-    public PersonDatastore(ServiceProperties serviceProperties) {
+    public PersonDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
         this.serviceProperties = serviceProperties;
+        this.reactiveViewRegistry = reactiveViewRegistry;
     }
 
     @PostConstruct
     public void init() {
-        personDropDowns = mergeDropDownItemLists(readPeople("data"), readPeople("local-data"));
-        personDropDowns.add(UNSELECTED_PERSON);
+        addChangeListener(this);
+        load();
+    }
+    
+    private void load() {
+        List<DropDownItem> items = mergeDropDownItemLists(readPeople("data"), readPeople("local-data"));
+        items.add(0, UNSELECTED_PERSON);
+
+        setPersonDropDowns(items);
+    }
+
+    private void setPersonDropDowns(List<DropDownItem> items) {
+        setIfChanged(Events.UPDATE_PERSON_DATA_STORE, items, () -> new ArrayList<DropDownItem>(0), (i) -> this.personDropDowns = i);
     }
 
     private List<DropDownItem> readPeople(String dir) {
@@ -124,7 +143,7 @@ public class PersonDatastore {
             throw new IllegalStateException("Failed to save drop down items: ", e);
         }
 
-        init();
+        load();
     }
 
     private Person personFromModel(PersonModel personModel) {
@@ -142,7 +161,15 @@ public class PersonDatastore {
         person.setOrcid(personModel.getOrcidID());
         person.setUuid(personModel.getUuid());
         person.setUse(personModel.isUse());
+        person.setUuid(personModel.getUuid());
         return person;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        for (ReactiveView view : reactiveViewRegistry.getViews()) {
+            view.onChange(evt);
+        }
     }
     
 }

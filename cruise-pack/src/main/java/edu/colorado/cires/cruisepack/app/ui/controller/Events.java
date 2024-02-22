@@ -137,6 +137,7 @@ public final class Events {
   public static final String UPDATE_ORG_UUID_ERROR = "UPDATE_ORG_UUID_ERROR";
 
   public static final String UPDATE_CRUISE_DATA_STORE = "UPDATE_CRUISE_DATA_STORE";
+  public static final String UPDATE_PERSON_DATA_STORE = "UPDATE_PERSON_DATA_STORE";
 
   private Events() {
 
