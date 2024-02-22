@@ -5,9 +5,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
+import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
+import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 
 public class PackJob {
 
@@ -17,6 +30,106 @@ public class PackJob {
 
   public static Builder builder(PackJob src) {
     return new Builder(src);
+  }
+
+  private static String resolveDropDownItemUuid(DropDownItem ddi) {
+    if (ddi == null || ddi.getId().isEmpty()) {
+      return null;
+    }
+    return ddi.getId();
+  }
+
+  public static String resolvePackageId(PackageModel packageModel) {
+    String packageId = packageModel.getCruiseId();
+    if (packageModel.getSegment() != null) {
+      packageId = packageId + "_" + packageModel.getSegment();
+    }
+    return packageId;
+  }
+
+  private static Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> getDirNames(DatasetsModel datasetsModel, String packageId) {
+    Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = new LinkedHashMap<>();
+    for (BaseDatasetInstrumentModel instrumentModel : datasetsModel.getDatasets()) {
+      instrumentModel.getPackageKey().ifPresent(key -> {
+        instrumentModel.getInstrumentNameHolder().ifPresent(nameHolder -> {
+          List<InstrumentNameHolder> holders = namers.get(key);
+          if (holders == null) {
+            holders = new ArrayList<>();
+            namers.put(key, holders);
+          }
+          holders.add(nameHolder);
+        });
+      });
+    }
+    DatasetNameResolver.setDirNamesOnInstruments(packageId, namers);
+    return namers;
+  }
+
+  private static Map<InstrumentDetailPackageKey, List<InstrumentDetail>> getInstruments(DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore, String packageId) {
+    Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = getDirNames(datasetsModel, packageId);
+    Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new LinkedHashMap<>();
+    for (Entry<InstrumentDetailPackageKey, List<InstrumentNameHolder>> entry : namers.entrySet()) {
+      InstrumentDetailPackageKey pkg = entry.getKey();
+      List<InstrumentDetail> instrumentDetails = new ArrayList<>(entry.getValue().size());
+      for (InstrumentNameHolder nameHolder : entry.getValue()) {
+        Instrument instrument = instrumentDatastore.getInstrument(pkg)
+            .orElseThrow(() -> new IllegalStateException("Unable to find instrument " + pkg));
+        Set<String> exts = new LinkedHashSet<>();
+        FileExtensionList fileExtensionList = instrument.getFileExtensions();
+        if (fileExtensionList != null) {
+          List<String> extList = fileExtensionList.getFileExtensions();
+          if (extList != null) {
+            exts.addAll(extList);
+          }
+        }
+
+        instrumentDetails.add(
+            InstrumentDetail.builder()
+                .setStatus(nameHolder.getStatus())
+                .setInstrument(nameHolder.getInstrument())
+                .setShortName(nameHolder.getShortName())
+                .setExtensions(exts)
+                .setDataPath(nameHolder.getDataPath())
+                .setFlatten(instrument.isFlatten())
+                .setDirName(nameHolder.getDirName())
+                .setBagName(nameHolder.getBagName())
+                .setAdditionalFiles(nameHolder.getAdditionalFiles())
+                .build());
+
+      }
+      map.put(pkg, Collections.unmodifiableList(instrumentDetails));
+    }
+    return map;
+  }
+
+  public static PackJob create(PackageModel packageModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore) {
+    String packageId = resolvePackageId(packageModel);
+    return PackJob.builder()
+        .setCruiseId(packageModel.getCruiseId())
+        .setSegment(packageModel.getSegment())
+        .setSeaUuid(resolveDropDownItemUuid(packageModel.getSea()))
+        .setArrivalPortUuid(resolveDropDownItemUuid(packageModel.getArrivalPort()))
+        .setDeparturePortUuid(resolveDropDownItemUuid(packageModel.getDeparturePort()))
+        .setShipUuid(resolveDropDownItemUuid(packageModel.getShip()))
+        .setDepartureDate(packageModel.getDepartureDate())
+        .setArrivalDate(packageModel.getArrivalDate())
+        .setReleaseDate(packageModel.getReleaseDate())
+        .setPackageDirectory(packageModel.getPackageDirectory())
+        .setCruiseTitle(cruiseInformationModel.getCruiseTitle())
+        .setCruisePurpose(cruiseInformationModel.getCruisePurpose())
+        .setCruiseDescription(cruiseInformationModel.getCruiseDescription())
+        .setDocumentsPath(cruiseInformationModel.getDocumentsPath())
+        .setOmicsSamplingConducted(omicsModel.isSamplingConducted())
+        .setOmicsContactUuid(resolveDropDownItemUuid(omicsModel.getContact()))
+        .setOmicsSampleTrackingSheetPath(omicsModel.getSampleTrackingSheet())
+        .setOmicsBioProjectAccession(omicsModel.getBioProjectAccession())
+        //TODO
+//        .setOmicsSamplingTypes(omicsModel.getSamplingTypes())
+//        .setOmicsExpectedAnalyses(omicsModel.getExpectedAnalyses())
+        .setOmicsAdditionalSamplingInformation(omicsModel.getAdditionalSamplingInformation())
+        .setPackageId(packageId)
+        .setInstruments(getInstruments(datasetsModel, instrumentDatastore, packageId))
+        .build();
   }
 
   private final String cruiseId;
@@ -52,7 +165,7 @@ public class PackJob {
       String cruiseDescription, Path documentsPath, boolean omicsSamplingConducted, String omicsContactUuid, Path omicsSampleTrackingSheetPath,
       String omicsBioProjectAccession, List<String> omicsSamplingTypes, List<String> omicsExpectedAnalyses, String omicsAdditionalSamplingInformation,
       String packageId, Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments) {
-    this.cruiseId = cruiseId;
+    this.cruiseId = Objects.requireNonNull(cruiseId, "cruiseId must not be null");
     this.segment = segment;
     this.seaUuid = seaUuid;
     this.arrivalPortUuid = arrivalPortUuid;

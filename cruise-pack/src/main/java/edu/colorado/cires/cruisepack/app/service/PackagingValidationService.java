@@ -3,27 +3,16 @@ package edu.colorado.cires.cruisepack.app.service;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
-import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.Path.Node;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.Set;
@@ -88,7 +77,7 @@ public class PackagingValidationService {
             omicsViolations.isEmpty() &&
             datasetsViolations.isEmpty() &&
             peopleViolations.isEmpty()) {
-      return Optional.of(createPackJob());
+      return Optional.of(PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore));
     }
     return Optional.empty();
   }
@@ -309,105 +298,5 @@ public class PackagingValidationService {
     }
     
     datasetsModel.setDatasetsError(datasetsError);
-  }
-
-  private PackJob createPackJob() {
-    String packageId = resolvePackageId();
-    return PackJob.builder()
-        .setCruiseId(packageModel.getCruiseId())
-        .setSegment(packageModel.getSegment())
-        .setSeaUuid(resolveDropDownItemUuid(packageModel.getSea()))
-        .setArrivalPortUuid(resolveDropDownItemUuid(packageModel.getArrivalPort()))
-        .setDeparturePortUuid(resolveDropDownItemUuid(packageModel.getDeparturePort()))
-        .setShipUuid(resolveDropDownItemUuid(packageModel.getShip()))
-        .setDepartureDate(packageModel.getDepartureDate())
-        .setArrivalDate(packageModel.getArrivalDate())
-        .setReleaseDate(packageModel.getReleaseDate())
-        .setPackageDirectory(packageModel.getPackageDirectory())
-        .setCruiseTitle(cruiseInformationModel.getCruiseTitle())
-        .setCruisePurpose(cruiseInformationModel.getCruisePurpose())
-        .setCruiseDescription(cruiseInformationModel.getCruiseDescription())
-        .setDocumentsPath(cruiseInformationModel.getDocumentsPath())
-        .setOmicsSamplingConducted(omicsModel.isSamplingConducted())
-        .setOmicsContactUuid(resolveDropDownItemUuid(omicsModel.getContact()))
-        .setOmicsSampleTrackingSheetPath(omicsModel.getSampleTrackingSheet())
-        .setOmicsBioProjectAccession(omicsModel.getBioProjectAccession())
-        //TODO
-//        .setOmicsSamplingTypes(omicsModel.getSamplingTypes())
-//        .setOmicsExpectedAnalyses(omicsModel.getExpectedAnalyses())
-        .setOmicsAdditionalSamplingInformation(omicsModel.getAdditionalSamplingInformation())
-        .setPackageId(packageId)
-        .setInstruments(getInstruments(packageId))
-        .build();
-  }
-
-  private Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> getDirNames(String packageId) {
-    Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = new LinkedHashMap<>();
-    for (BaseDatasetInstrumentModel instrumentModel : datasetsModel.getDatasets()) {
-      instrumentModel.getPackageKey().ifPresent(key -> {
-        instrumentModel.getInstrumentNameHolder().ifPresent(nameHolder -> {
-          List<InstrumentNameHolder> holders = namers.get(key);
-          if (holders == null) {
-            holders = new ArrayList<>();
-            namers.put(key, holders);
-          }
-          holders.add(nameHolder);
-        });
-      });
-    }
-    DatasetNameResolver.setDirNamesOnInstruments(packageId, namers);
-    return namers;
-  }
-
-  private Map<InstrumentDetailPackageKey, List<InstrumentDetail>> getInstruments(String packageId) {
-    Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = getDirNames(packageId);
-    Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new LinkedHashMap<>();
-    for (Entry<InstrumentDetailPackageKey, List<InstrumentNameHolder>> entry : namers.entrySet()) {
-      InstrumentDetailPackageKey pkg = entry.getKey();
-      List<InstrumentDetail> instrumentDetails = new ArrayList<>(entry.getValue().size());
-      for (InstrumentNameHolder nameHolder : entry.getValue()) {
-        Instrument instrument = instrumentDatastore.getInstrument(pkg)
-            .orElseThrow(() -> new IllegalStateException("Unable to find instrument " + pkg));
-        Set<String> exts = new LinkedHashSet<>();
-        FileExtensionList fileExtensionList = instrument.getFileExtensions();
-        if (fileExtensionList != null) {
-          List<String> extList = fileExtensionList.getFileExtensions();
-          if (extList != null) {
-            exts.addAll(extList);
-          }
-        }
-
-        instrumentDetails.add(
-            InstrumentDetail.builder()
-                .setStatus(nameHolder.getStatus())
-                .setInstrument(nameHolder.getInstrument())
-                .setShortName(nameHolder.getShortName())
-                .setExtensions(exts)
-                .setDataPath(nameHolder.getDataPath())
-                .setFlatten(instrument.isFlatten())
-                .setDirName(nameHolder.getDirName())
-                .setBagName(nameHolder.getBagName())
-                .setAdditionalFiles(nameHolder.getAdditionalFiles())
-                .build());
-
-      }
-      map.put(pkg, Collections.unmodifiableList(instrumentDetails));
-    }
-    return map;
-  }
-
-  private static String resolveDropDownItemUuid(DropDownItem ddi) {
-    if (ddi == null || ddi.getId().isEmpty()) {
-      return null;
-    }
-    return ddi.getId();
-  }
-
-  private String resolvePackageId() {
-    String packageId = packageModel.getCruiseId();
-    if (packageModel.getSegment() != null) {
-      packageId = packageId + "_" + packageModel.getSegment();
-    }
-    return packageId;
   }
 }

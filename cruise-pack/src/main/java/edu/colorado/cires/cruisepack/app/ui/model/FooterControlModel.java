@@ -9,6 +9,7 @@ public class FooterControlModel extends PropertyChangeModel {
   private boolean stopButtonEnabled = false;
   private boolean saveButtonEnabled = true;
   private boolean packageButtonEnabled = true;
+  private boolean saveWarningDialogueVisible = false;
 
   public boolean isStopButtonEnabled() {
     return stopButtonEnabled;
@@ -33,4 +34,14 @@ public class FooterControlModel extends PropertyChangeModel {
   public void setPackageButtonEnabled(boolean packageButtonEnabled) {
     setIfChanged(Events.UPDATE_PACKAGE_BUTTON_ENABLED, packageButtonEnabled, () -> this.packageButtonEnabled, (nv) -> this.packageButtonEnabled = nv);
   }
+
+  public boolean isSaveWarningDialogueVisible() {
+      return saveWarningDialogueVisible;
+  }
+
+  public void setSaveWarningDialogueVisible(boolean saveWarningDialogueVisible) {
+      setIfChanged(Events.UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE, saveWarningDialogueVisible, () -> this.saveWarningDialogueVisible, (v) -> this.saveWarningDialogueVisible = v);
+  }
+
+  
 }

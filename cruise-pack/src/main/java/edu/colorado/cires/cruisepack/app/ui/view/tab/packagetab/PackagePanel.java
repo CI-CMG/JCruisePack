@@ -4,6 +4,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLa
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateAppendableTable;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBoxModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
@@ -12,11 +13,15 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+
+import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
@@ -44,7 +49,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -81,6 +85,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final PortDatastore portDatastore;
   private final SeaDatastore seaDatastore;
   private final ProjectDatastore projectDatastore;
+  private final CruiseDataDatastore cruiseDataDatastore;
+  private final FooterControlController footerControlController;
 
   private final AppendableTableWithSelections projectsField;
   private final JTextField cruiseIdField = new JTextField();
@@ -108,7 +114,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
 
   private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
-  private final JComboBox<String> existingRecordList = new JComboBox<>(new String[]{"test", "real"});
+  private final JComboBox<DropDownItem> existingRecordList = new JComboBox<>();
 
   @Autowired
   public PackagePanel(
@@ -116,7 +122,13 @@ public class PackagePanel extends JPanel implements ReactiveView {
       ReactiveViewRegistry reactiveViewRegistry,
       PackageModel packageModel,
       ProjectChooserPanel projectChooserPanel,
-      ShipDatastore shipDatastore, PortDatastore portDatastore, SeaDatastore seaDatastore, ProjectDatastore projectDatastore) {
+      ShipDatastore shipDatastore,
+      PortDatastore portDatastore,
+      SeaDatastore seaDatastore,
+      ProjectDatastore projectDatastore,
+      CruiseDataDatastore cruiseDataDatastore,
+      FooterControlController footerControlController
+  ) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
@@ -131,9 +143,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
       ProjectDatastore.UNSELECTED_PROJECT,
       projectDatastore.getProjectDropDowns()
     );
-
-    // TODO set this in model
-    existingRecordList.setSelectedIndex(0);
+    this.cruiseDataDatastore = cruiseDataDatastore;
+    this.footerControlController = footerControlController;
   }
 
   @PostConstruct
@@ -144,6 +155,9 @@ public class PackagePanel extends JPanel implements ReactiveView {
   }
 
   private void initializeFields() {
+    existingRecordList.setModel(new DefaultComboBoxModel<>(cruiseDataDatastore.getDropDownItems().toArray(new DropDownItem[0])));
+    existingRecordList.setSelectedItem(CruiseDataDatastore.UNSELECTED_CRUISE);
+
     cruiseIdField.setText(packageModel.getCruiseId());
 
     segmentField.setText(packageModel.getSegment());
@@ -211,6 +225,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     dirSelectButton.addActionListener((evt) -> handleDirSelect());
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
     projectsField.addValuesChangedListener((i) -> packageController.setProjects(i));
+    existingRecordList.addItemListener((evt) -> footerControlController.updateFormState((CruiseMetadata) ((DropDownItem) evt.getItem()).getRecord()));
   }
 
   private void handleDirValue(String value) {
@@ -299,6 +314,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
       case Events.UPDATE_PROJECTS_ERROR:
         updateLabelText(projectsField.getErrorLabel(), evt);
         break;
+      case Events.UPDATE_CRUISE_DATA_STORE:
+        updateComboBoxModel(existingRecordList, evt);
       default:
         break;
     }

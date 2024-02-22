@@ -7,10 +7,20 @@ import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import jakarta.annotation.PostConstruct;
+
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +49,17 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
   private final JProgressBar progressBar = new JProgressBar();
+  private final JDialog saveWarningDialog = new JDialog((JFrame) null, null, true);
+  private final JButton closeSaveWarningButton = new JButton("OK");
+  private final UiRefresher uiRefresher;
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel) {
+      FooterControlModel footerControlModel, UiRefresher uiRefresher) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
+    this.uiRefresher = uiRefresher;
   }
 
   @PostConstruct
@@ -74,6 +88,21 @@ public class FooterPanel extends JPanel implements ReactiveView {
     row1.add(packageButton, configureLayout(5, 0));
     add(row1, configureLayout(0, 0));
 
+    saveWarningDialog.setLayout(new GridBagLayout());
+    JLabel warningLabel = new JLabel("<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>");
+    warningLabel.setHorizontalAlignment(JLabel.CENTER);
+    saveWarningDialog.add(warningLabel, configureLayout(0, 0, c -> {
+      c.weighty = 100;
+      c.gridwidth = GridBagConstraints.REMAINDER;
+      c.insets = new Insets(20, 20, 20, 20);
+    }));
+    JPanel warningDialogPanel = new JPanel();
+    warningDialogPanel.setLayout(new BorderLayout());
+    warningDialogPanel.add(closeSaveWarningButton, BorderLayout.EAST);
+    saveWarningDialog.add(warningDialogPanel, configureLayout(0, 1, c -> c.weighty = 0));
+    saveWarningDialog.setVisible(false);
+
+
     JPanel row2 = new JPanel();
     row2.setLayout(new GridBagLayout());
     row2.add(progressBar, configureLayout(0, 0));
@@ -85,6 +114,17 @@ public class FooterPanel extends JPanel implements ReactiveView {
     reactiveViewRegistry.register(this);
     packageButton.addActionListener((evt) -> handlePackage());
     clearFormButton.addActionListener((evt) -> footerControlController.restoreDefaultsGlobal());
+    saveButton.addActionListener((evt) -> {
+      footerControlController.saveForms();
+      uiRefresher.refresh();
+    });
+    closeSaveWarningButton.addActionListener((evt) -> footerControlController.setSaveWarningDialogueVisible(false));
+    saveWarningDialog.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent event) {
+        footerControlController.setSaveWarningDialogueVisible(false);
+      }
+    });;
   }
 
   private void handlePackage() {
@@ -112,6 +152,14 @@ public class FooterPanel extends JPanel implements ReactiveView {
         boolean newValue = (boolean) evt.getNewValue();
         if (stopButton.isEnabled() != newValue) {
           stopButton.setEnabled(newValue);
+        }
+      }
+      break;
+      case Events.UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE: {
+        boolean newValue = (boolean) evt.getNewValue();
+        if (saveWarningDialog.isVisible() != newValue) {
+          saveWarningDialog.pack();
+          saveWarningDialog.setVisible(newValue);
         }
       }
       break;

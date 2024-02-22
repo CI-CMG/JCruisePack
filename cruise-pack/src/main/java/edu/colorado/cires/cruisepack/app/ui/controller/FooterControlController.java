@@ -1,6 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
+import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackerService;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
@@ -26,11 +30,13 @@ public class FooterControlController implements PropertyChangeListener {
   private final DatasetsModel datasetsModel;
   private final CruiseInformationModel cruiseInformationModel;
   private final OmicsModel omicsModel;
+  private final CruiseDataDatastore cruiseDataDatastore;
+  private final InstrumentDatastore instrumentDatastore;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
       BeanFactory beanFactory, PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
-      CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel) {
+      CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, CruiseDataDatastore cruiseDataDatastore) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -39,6 +45,8 @@ public class FooterControlController implements PropertyChangeListener {
     this.datasetsModel = datasetsModel;
     this.cruiseInformationModel = cruiseInformationModel;
     this.omicsModel = omicsModel;
+    this.instrumentDatastore = instrumentDatastore;
+    this.cruiseDataDatastore = cruiseDataDatastore;
   }
 
   @PostConstruct
@@ -58,8 +66,15 @@ public class FooterControlController implements PropertyChangeListener {
     footerControlModel.setPackageButtonEnabled(packageButtonEnabled);
   }
 
+  public synchronized void setSaveWarningDialogueVisible(boolean saveWarningDialogueVisible) {
+    footerControlModel.setSaveWarningDialogueVisible(saveWarningDialogueVisible);
+  }
+
   public synchronized void startPackaging() {
     beanFactory.getBean(PackerService.class).startPacking();
+  }
+
+  public void updateFormState(CruiseMetadata cruiseMetadata) {
   }
 
   public void restoreDefaultsGlobal() {
@@ -68,6 +83,15 @@ public class FooterControlController implements PropertyChangeListener {
     datasetsModel.restoreDefaults();
     cruiseInformationModel.restoreDefaults();
     omicsModel.restoreDefaults();
+  }
+
+  public void saveForms() {
+    if (packageModel.getCruiseId() == null) {
+      setSaveWarningDialogueVisible(true);
+    } else {
+      PackJob packJob = PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
+      cruiseDataDatastore.save(packJob);
+    }
   }
 
   @Override

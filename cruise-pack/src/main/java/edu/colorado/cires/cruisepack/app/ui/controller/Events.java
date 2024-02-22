@@ -30,6 +30,7 @@ public final class Events {
   public static final String UPDATE_STOP_BUTTON_ENABLED = "UPDATE_STOP_BUTTON_ENABLED";
   public static final String UPDATE_SAVE_BUTTON_ENABLED = "UPDATE_SAVE_BUTTON_ENABLED";
   public static final String UPDATE_PACKAGE_BUTTON_ENABLED = "UPDATE_PACKAGE_BUTTON_ENABLED";
+  public static final String UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE = "UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE";
 
 
   // PeopleModel
@@ -134,6 +135,8 @@ public final class Events {
   public static final String UPDATE_ORG_PHONE_ERROR = "UPDATE_ORG_PHONE_ERROR";
   public static final String UPDATE_ORG_EMAIL_ERROR = "UPDATE_ORG_EMAIL_ERROR";
   public static final String UPDATE_ORG_UUID_ERROR = "UPDATE_ORG_UUID_ERROR";
+
+  public static final String UPDATE_CRUISE_DATA_STORE = "UPDATE_CRUISE_DATA_STORE";
 
   private Events() {
 

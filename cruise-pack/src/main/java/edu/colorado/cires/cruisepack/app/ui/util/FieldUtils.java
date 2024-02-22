@@ -14,9 +14,11 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -126,7 +128,16 @@ public final class FieldUtils {
   }
 
   public static void updateAppendableTable(AppendableTableWithSelections appendableTable, PropertyChangeEvent evt) {
-    appendableTable.redrawComboboxes((List<DropDownItem>) evt.getNewValue());
+    List<?> oldValue = (List<?>) evt.getNewValue();
+    List<DropDownItem> oldItems = oldValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
+
+    List<?> newValue = (List<?>) evt.getOldValue();
+    List<DropDownItem> newItems = newValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
+
+    if (oldItems.equals(newItems)) {
+      appendableTable.redrawComboboxes(newItems);
+    }
+
   }
 
   public static void updateLabelText(JLabel label, PropertyChangeEvent evt) {
@@ -151,6 +162,18 @@ public final class FieldUtils {
     panel.add(new JLabel(labelText), BorderLayout.LINE_START);
     panel.add(errorLabel, BorderLayout.CENTER);
     return panel;
+  }
+
+  public static void updateComboBoxModel(JComboBox<DropDownItem> comboBox, PropertyChangeEvent event) {
+    List<?> newValue = (List<?>) event.getNewValue();
+    List<DropDownItem> newItems = newValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
+
+    List<?> oldValue = (List<?>) event.getOldValue();
+    List<DropDownItem> oldItems = oldValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
+
+    if (!oldItems.equals(newItems)) {
+      comboBox.setModel(new DefaultComboBoxModel<>(newItems.toArray(new DropDownItem[0])));
+    }
   }
 
   private FieldUtils() {
