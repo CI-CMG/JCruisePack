@@ -53,7 +53,7 @@ public class PersonModel extends PropertyChangeModel {
     private String orcidID = null;
     private String orcidIDError = null;
 
-    @NotBlank
+
     private String uuid = null;
     private String uuidError = null;
 
