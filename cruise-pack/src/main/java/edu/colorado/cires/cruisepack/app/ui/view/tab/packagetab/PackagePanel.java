@@ -315,7 +315,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
         updateLabelText(projectsField.getErrorLabel(), evt);
         break;
       case Events.UPDATE_CRUISE_DATA_STORE:
-        updateComboBoxModel(existingRecordList, evt);
+        updateComboBoxModel(existingRecordList, cruiseDataDatastore.getDropDownItems());
       default:
         break;
     }

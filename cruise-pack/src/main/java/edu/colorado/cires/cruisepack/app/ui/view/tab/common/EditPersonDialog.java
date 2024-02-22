@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.common;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBoxModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefulRadioButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
@@ -402,7 +403,10 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
             case Events.UPDATE_PERSON_UUID_ERROR:
                 updateLabelText(uuidErrorLabel, evt);
                 break;
-                default:
+            case Events.UPDATE_PERSON_DATA_STORE:
+                updateComboBoxModel(peopleList, personDatastore.getAllPersonDropDowns());
+                break;
+            default:
                 break;
         }
     }

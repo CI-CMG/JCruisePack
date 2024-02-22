@@ -4,6 +4,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLa
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateCheckBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBoxModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefulRadioButton;
@@ -381,6 +382,9 @@ public class OmicsPanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_OMICS_EXPECTED_ANALYSES_ERROR:
         updateLabelText(expectedAnalysesErrorLabel, evt);
+        break;
+      case Events.UPDATE_PERSON_DATA_STORE:
+        updateComboBoxModel(contactField, personDatastore.getEnabledPersonDropDowns());
       default:
         break;
     }

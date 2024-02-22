@@ -164,16 +164,8 @@ public final class FieldUtils {
     return panel;
   }
 
-  public static void updateComboBoxModel(JComboBox<DropDownItem> comboBox, PropertyChangeEvent event) {
-    List<?> newValue = (List<?>) event.getNewValue();
-    List<DropDownItem> newItems = newValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
-
-    List<?> oldValue = (List<?>) event.getOldValue();
-    List<DropDownItem> oldItems = oldValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
-
-    if (!oldItems.equals(newItems)) {
-      comboBox.setModel(new DefaultComboBoxModel<>(newItems.toArray(new DropDownItem[0])));
-    }
+  public static void updateComboBoxModel(JComboBox<DropDownItem> comboBox, List<DropDownItem> items) {
+    comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new DropDownItem[0])));
   }
 
   private FieldUtils() {
