@@ -14,6 +14,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -54,13 +55,13 @@ public class CruisePanel extends JPanel implements ReactiveView {
   @PostConstruct
   public void init() {
     setLayout(new GridBagLayout());
-    add(createLabelWithErrorPanel(CRUISE_TITLE_LABEL, cruiseTitleErrorLabel), configureLayout(0, 0));
-    add(cruiseTitleField, configureLayout(0, 1));
-    add(createLabelWithErrorPanel(CRUISE_PURPOSE_LABEL, cruisePurposeErrorLabel), configureLayout(0, 2));
-    add(cruisePurposeField, configureLayout(0, 3, c -> c.ipady = 200));
-    add(createLabelWithErrorPanel(CRUISE_DESCRIPTION_LABEL, cruiseDescriptionErrorLabel), configureLayout(0, 4));
-    add(cruiseDescriptionField, configureLayout(0, 5, c -> c.ipady = 200));
-    add(cruiseDocumentsPanel, configureLayout(0, 6));
+    add(createLabelWithErrorPanel(CRUISE_TITLE_LABEL, cruiseTitleErrorLabel), configureLayout(0, 0, c -> c.weighty = 0));
+    add(cruiseTitleField, configureLayout(0, 1, c -> c.weighty = 0));
+    add(createLabelWithErrorPanel(CRUISE_PURPOSE_LABEL, cruisePurposeErrorLabel), configureLayout(0, 2, c -> c.weighty = 0));
+    add(cruisePurposeField, configureLayout(0, 3, c -> { c.insets = new Insets(4, 3, 4, 3); c.weighty = 100; }));
+    add(createLabelWithErrorPanel(CRUISE_DESCRIPTION_LABEL, cruiseDescriptionErrorLabel), configureLayout(0, 4, c -> c.weighty = 0));
+    add(cruiseDescriptionField, configureLayout(0, 5, c -> { c.insets = new Insets(4, 3, 4, 3); c.weighty = 100; }));
+    add(cruiseDocumentsPanel, configureLayout(0, 6, c -> c.weighty = 0));
 
     cruiseTitleField.setText(cruiseInformationModel.getCruiseTitle());
     cruisePurposeField.setText(cruiseInformationModel.getCruisePurpose());

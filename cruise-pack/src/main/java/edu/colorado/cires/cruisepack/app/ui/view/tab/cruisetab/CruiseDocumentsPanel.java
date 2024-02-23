@@ -49,9 +49,9 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
   @PostConstruct
   public void init() {
     setLayout(new GridBagLayout());
-    add(createLabelWithErrorPanel(DOCUMENTS_PATH_LABEL, docsDirectoryLabel), configureLayout(0, 0, c -> c.weightx = 0));
-    add(pathTextField, configureLayout(1, 0, c -> c.weightx = 100));
-    add(selectDirectoryButton, configureLayout(2, 0, c -> c.weightx = 0));
+    add(createLabelWithErrorPanel(DOCUMENTS_PATH_LABEL, docsDirectoryLabel), configureLayout(0, 0, c -> { c.weightx = 0; c.weighty = 0; }));
+    add(pathTextField, configureLayout(1, 0, c -> { c.weightx = 100; c.weighty = 0; }));
+    add(selectDirectoryButton, configureLayout(2, 0, c -> { c.weightx = 0; c.weighty = 0; }));
 
     pathTextField.setText(cruiseInformationModel.getDocumentsPath() == null ? null : cruiseInformationModel.getDocumentsPath().toString());
 
