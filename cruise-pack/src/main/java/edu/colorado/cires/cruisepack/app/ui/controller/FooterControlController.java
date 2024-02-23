@@ -100,8 +100,13 @@ public class FooterControlController implements PropertyChangeListener {
     } else {
       PackJob packJob = PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
       cruiseDataDatastore.save(packJob);
+      emitPackageId(packJob.getPackageId());
       setSaveExitAppDialogueVisible(true);
     }
+  }
+
+  private void emitPackageId(String packageId) {
+    footerControlModel.emitPackageId(packageId);
   }
 
   public void exitApplication() {

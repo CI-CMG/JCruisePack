@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.footer;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
@@ -55,6 +56,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton closeSaveWarningButton = new JButton("OK");
   private final JButton closeExitAppButton = new JButton("No");
   private final JButton confirmExitAppButton = new JButton("Yes");
+  private final JLabel exitAppLabel = new JLabel("<html><B>Record data has been updated. Do you want to exit editor?</B></html>");
   private final UiRefresher uiRefresher;
 
   @Autowired
@@ -107,7 +109,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
     saveWarningDialog.setVisible(false);
 
     saveExitAppDialog.setLayout(new GridBagLayout());
-    JLabel exitAppLabel = new JLabel("<html><B>Record data has been updated. Do you want to exit editor?</B></html>");
     exitAppLabel.setHorizontalAlignment(JLabel.CENTER);
     saveExitAppDialog.add(exitAppLabel, configureLayout(0, 0, c -> {
       c.weighty = 100;
@@ -201,6 +202,15 @@ public class FooterPanel extends JPanel implements ReactiveView {
           saveExitAppDialog.setVisible(newValue);
         }
       }
+      break;
+      case Events.EMIT_PACKAGE_ID:
+        updateLabelText(exitAppLabel, new PropertyChangeEvent(
+          evt,
+          "UPDATE_APP_EXIT_LABEL",
+          exitAppLabel.getText(),
+          String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", (String) evt.getNewValue())
+        ));
+        break;
       default:
         break;
     }

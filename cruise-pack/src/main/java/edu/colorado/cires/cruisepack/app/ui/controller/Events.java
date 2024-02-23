@@ -32,6 +32,7 @@ public final class Events {
   public static final String UPDATE_PACKAGE_BUTTON_ENABLED = "UPDATE_PACKAGE_BUTTON_ENABLED";
   public static final String UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE = "UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE";
   public static final String UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE = "UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE";
+  public static final String EMIT_PACKAGE_ID = "EMIT_PACKAGE_ID";
 
 
   // PeopleModel

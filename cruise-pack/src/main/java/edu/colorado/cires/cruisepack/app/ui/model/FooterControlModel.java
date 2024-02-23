@@ -52,5 +52,9 @@ public class FooterControlModel extends PropertyChangeModel {
       setIfChanged(Events.UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE, saveExitAppDialogueVisible, () -> this.saveExitAppDialogueVisible, (v) -> this.saveExitAppDialogueVisible = v);
   }
 
+  public void emitPackageId(String packageId) {
+    fireChangeEvent(Events.EMIT_PACKAGE_ID, null, packageId);
+  }
+
   
 }
