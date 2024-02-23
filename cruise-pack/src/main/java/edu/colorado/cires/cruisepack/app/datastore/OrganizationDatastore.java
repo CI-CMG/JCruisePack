@@ -67,8 +67,21 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         setIfChanged(Events.UPDATE_ORGANIZATION_DATA_STORE, items, () -> new ArrayList<DropDownItem>(), (i) -> this.organizationDropDowns = i);
     }
 
-    public List<DropDownItem> getOrganizationDropDowns() {
+    public List<DropDownItem> getAllOrganizationDropDowns() {
         return organizationDropDowns;
+    }
+
+    public List<DropDownItem> getEnabledOrganizationDropDowns() {
+        return organizationDropDowns.stream()
+        .filter(o -> {
+            Organization organization = (Organization) o.getRecord();
+            if (organization == null) {
+                return true;
+            }
+
+            return organization.isUse();
+        })
+        .collect(Collectors.toList());
     }
 
     public void save(OrganizationModel organizationModel) {

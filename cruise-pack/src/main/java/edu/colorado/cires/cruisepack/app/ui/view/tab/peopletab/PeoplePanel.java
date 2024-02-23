@@ -12,9 +12,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -85,8 +87,8 @@ public class PeoplePanel extends JPanel implements ReactiveView {
 
   private void initializeFields() {
     scientistsField = new AppendableTableWithSelections(SCIENTISTS_LABEL, ADD_SCIENTIST_LABEL, PersonDatastore.UNSELECTED_PERSON, personDatastore.getEnabledPersonDropDowns());
-    sourceOrganizationsField = new AppendableTableWithSelections(SOURCE_ORG_LABEL, ADD_SOURCE_ORG_LABEL, OrganizationDatastore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
-    fundingOrganizationsField = new AppendableTableWithSelections(FUNDING_ORG_LABEL, ADD_FUNDING_ORG_LABEL, OrganizationDatastore.UNSELECTED_ORGANIZATION, organizationDatasore.getOrganizationDropDowns());
+    sourceOrganizationsField = new AppendableTableWithSelections(SOURCE_ORG_LABEL, ADD_SOURCE_ORG_LABEL, OrganizationDatastore.UNSELECTED_ORGANIZATION, organizationDatasore.getEnabledOrganizationDropDowns());
+    fundingOrganizationsField = new AppendableTableWithSelections(FUNDING_ORG_LABEL, ADD_FUNDING_ORG_LABEL, OrganizationDatastore.UNSELECTED_ORGANIZATION, organizationDatasore.getEnabledOrganizationDropDowns());
 
     metadataAuthorField.setModel(new DefaultComboBoxModel<>(personDatastore.getEnabledPersonDropDowns().toArray(new DropDownItem[0])));
     metadataAuthorField.setSelectedItem(peopleModel.getMetadataAuthor());
@@ -111,26 +113,6 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editPeopleButton = new JButton(CREATE_PEOPLE_LABEL);
     editPeopleButton.addActionListener(e -> {
-      editPersonDialog.addComponentListener(new ComponentListener() {
-
-        @Override
-        public void componentResized(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentMoved(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentShown(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentHidden(ComponentEvent e) {
-          initializeFields();
-        }
-        
-      });
       editPersonDialog.pack();
       editPersonDialog.setVisible(true);
     });
@@ -140,26 +122,6 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editOrgButton = new JButton(CREATE_ORG_LABEL);
     editOrgButton.addActionListener(e -> {
-      editOrgDialog.addComponentListener(new ComponentListener() {
-
-        @Override
-        public void componentResized(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentMoved(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentShown(ComponentEvent e) {
-        }
-
-        @Override
-        public void componentHidden(ComponentEvent e) {
-          initializeFields();
-        }
-        
-      });
       editOrgDialog.pack();
       editOrgDialog.setVisible(true);
     });
@@ -214,11 +176,52 @@ public class PeoplePanel extends JPanel implements ReactiveView {
       case Events.UPDATE_FUNDING_ORGANIZATION_ERROR:
         updateLabelText(fundingOrganizationsField.getErrorLabel(), evt);
         break;
-      case  Events.UPDATE_METADATA_AUTHOR_ERROR:
+      case Events.UPDATE_METADATA_AUTHOR_ERROR:
         updateLabelText(metadataAuthorErrorLabel, evt);
         break;
       case Events.UPDATE_PERSON_DATA_STORE:
-        updateComboBoxModel(metadataAuthorField, personDatastore.getEnabledPersonDropDowns());
+        List<DropDownItem> options = personDatastore.getEnabledPersonDropDowns();
+        scientistsField.setOptions(options);
+        List<String> enabledUUIDs = options.stream()
+          .map(i -> i.getId())
+          .collect(Collectors.toList());
+        updateAppendableTable(
+          scientistsField,
+          new PropertyChangeEvent(
+            enabledUUIDs,
+            "UPDATE_PERSON_TABLE",
+            new ArrayList<>(0),
+            scientistsField.getDropDowns().stream()
+              .filter(i -> enabledUUIDs.contains(i.getId()))
+              .collect(Collectors.toList())
+          )
+        );
+        break;
+      case Events.UPDATE_ORGANIZATION_DATA_STORE:
+        options = organizationDatasore.getEnabledOrganizationDropDowns();
+        fundingOrganizationsField.setOptions(options);
+        sourceOrganizationsField.setOptions(options);
+        enabledUUIDs = options.stream()
+          .map(i -> i.getId())
+          .collect(Collectors.toList());
+        
+        updateAppendableTable(fundingOrganizationsField, new PropertyChangeEvent(
+          evt,
+          "UPDATE_FUNDING_TABLE",
+          Collections.emptyList(),
+          fundingOrganizationsField.getDropDowns().stream()
+            .filter(i -> enabledUUIDs.contains(i.getId()))
+            .collect(Collectors.toList())
+        ));
+        updateAppendableTable(sourceOrganizationsField, new PropertyChangeEvent(
+          evt,
+          "UPDATE_SOURCE_TABLE",
+          Collections.emptyList(),
+          sourceOrganizationsField.getDropDowns().stream()
+            .filter(i -> enabledUUIDs.contains(i.getId()))
+            .collect(Collectors.toList())
+        ));
+        break;
       default:
         break;
     }

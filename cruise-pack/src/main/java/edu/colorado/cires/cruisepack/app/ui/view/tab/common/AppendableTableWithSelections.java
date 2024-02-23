@@ -31,7 +31,7 @@ public class AppendableTableWithSelections extends JComponent {
   private final String tableHeader;
   private final String addText;
   private final DropDownItem defaultValue;
-  private final List<DropDownItem> options;
+  private List<DropDownItem> options;
 
   private final JPanel listingValuesPannel = new JPanel();
   private final JLabel errorLabel = new JLabel();
@@ -43,6 +43,10 @@ public class AppendableTableWithSelections extends JComponent {
     this.defaultValue = defaultValue;
     this.options = options;
     init();
+  }
+
+  public void setOptions(List<DropDownItem> items) {
+    this.options = items;
   }
 
   public void addValuesChangedListener(ValuesChangedListener listener) {

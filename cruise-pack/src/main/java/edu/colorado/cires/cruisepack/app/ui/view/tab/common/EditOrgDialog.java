@@ -88,7 +88,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     }
 
     private void initializeFields() {
-        orgList.setModel(new DefaultComboBoxModel<>(organizationDatastore.getOrganizationDropDowns().toArray(new DropDownItem[0])));
+        orgList.setModel(new DefaultComboBoxModel<>(organizationDatastore.getAllOrganizationDropDowns().toArray(new DropDownItem[0])));
         orgList.setSelectedItem(OrganizationDatastore.UNSELECTED_ORGANIZATION);
 
         nameField.setText(organizationModel.getName());
@@ -349,7 +349,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
                 updateLabelText(uuidErrorLabel, evt);
                 break;
             case Events.UPDATE_ORGANIZATION_DATA_STORE:
-                updateComboBoxModel(orgList, organizationDatastore.getOrganizationDropDowns());
+                updateComboBoxModel(orgList, organizationDatastore.getAllOrganizationDropDowns());
             default:
                 break;
         }
