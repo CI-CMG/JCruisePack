@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -66,6 +67,10 @@ public class OrganizationService {
         organizationModel.setUuidError(uuidError);
 
         if (violations.isEmpty()) {
+            if (organizationModel.getUuid() == null) {
+                organizationModel.setUuid(UUID.randomUUID().toString());
+            }
+
             organizationDatastore.save(organizationModel);
         }
     }

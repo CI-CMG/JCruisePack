@@ -41,7 +41,6 @@ public class OrganizationModel extends PropertyChangeModel {
     private String email;
     private String emailError = null;
 
-    @NotBlank
     private String uuid;
     private String uuidError = null;
 
