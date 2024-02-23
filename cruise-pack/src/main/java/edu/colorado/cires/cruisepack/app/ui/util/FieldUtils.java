@@ -128,13 +128,13 @@ public final class FieldUtils {
   }
 
   public static void updateAppendableTable(AppendableTableWithSelections appendableTable, PropertyChangeEvent evt) {
-    List<?> oldValue = (List<?>) evt.getNewValue();
+    List<?> oldValue = (List<?>) evt.getOldValue();
     List<DropDownItem> oldItems = oldValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
 
-    List<?> newValue = (List<?>) evt.getOldValue();
+    List<?> newValue = (List<?>) evt.getNewValue();
     List<DropDownItem> newItems = newValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
 
-    if (oldItems.equals(newItems)) {
+    if (!oldItems.equals(newItems)) {
       appendableTable.redrawComboboxes(newItems);
     }
 
