@@ -138,7 +138,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
     packageButton.addActionListener((evt) -> handlePackage());
     clearFormButton.addActionListener((evt) -> footerControlController.restoreDefaultsGlobal());
     saveButton.addActionListener((evt) -> {
-      footerControlController.saveForms();
+      footerControlController.saveForms(false);
       uiRefresher.refresh();
     });
     closeSaveWarningButton.addActionListener((evt) -> footerControlController.setSaveWarningDialogueVisible(false));

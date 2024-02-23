@@ -94,15 +94,21 @@ public class FooterControlController implements PropertyChangeListener {
     omicsModel.restoreDefaults();
   }
 
-  public synchronized void saveForms() {
+  public synchronized void saveForms(boolean fromExitPrompt) {
     if (packageModel.getCruiseId() == null) {
       setSaveWarningDialogueVisible(true);
     } else {
       PackJob packJob = PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
       cruiseDataDatastore.save(packJob);
       emitPackageId(packJob.getPackageId());
-      setSaveExitAppDialogueVisible(true);
+      if (!fromExitPrompt) {
+        setSaveExitAppDialogueVisible(true);
+      }
     }
+  }
+
+  public synchronized void setSaveBeforeExitDialogVisible(boolean saveBeforeExitDialogVisible) {
+    footerControlModel.setSaveBeforeExitDialogVisible(saveBeforeExitDialogVisible);
   }
 
   private void emitPackageId(String packageId) {
