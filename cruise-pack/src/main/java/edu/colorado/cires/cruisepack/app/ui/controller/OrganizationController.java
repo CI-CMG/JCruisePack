@@ -67,8 +67,8 @@ public class OrganizationController implements PropertyChangeListener {
         organizationModel.restoreDefaults();
     }
 
-    public void submit() {
-        organizationService.save(organizationModel);
+    public boolean submit() {
+        return organizationService.save(organizationModel);
     }
 
     @Override

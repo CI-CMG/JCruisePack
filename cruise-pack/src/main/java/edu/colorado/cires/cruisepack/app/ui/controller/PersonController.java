@@ -90,8 +90,8 @@ public class PersonController implements PropertyChangeListener {
         personModel.restoreDefaults();
     }
 
-    public void submit() {
-        personService.save(personModel);
+    public boolean submit() {
+        return personService.save(personModel);
     }
     
 }

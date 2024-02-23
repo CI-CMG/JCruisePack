@@ -21,7 +21,7 @@ public class PersonService {
         this.personDatastore = personDatastore;
     }
 
-    public void save(PersonModel personModel) {
+    public boolean save(PersonModel personModel) {
         Set<ConstraintViolation<PersonModel>> violations = validator.validate(personModel);
         String nameError = null;
         String positionError = null;
@@ -83,7 +83,10 @@ public class PersonService {
                 personModel.setUuid(UUID.randomUUID().toString());
             }
             personDatastore.save(personModel);
+            return true;
         }
+
+        return false;
     }
     
 }

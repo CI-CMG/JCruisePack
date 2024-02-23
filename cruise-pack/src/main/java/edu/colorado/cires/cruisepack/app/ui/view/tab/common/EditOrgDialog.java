@@ -11,6 +11,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.function.Consumer;
 
@@ -22,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,6 +68,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     private final StatefulRadioButton useField = new StatefulRadioButton("Display in pull-down lists:");
     private final JButton clearButton = new JButton("Clear");
     private final JButton saveButton = new JButton("Save");
+    private final SaveBeforeExitDialog saveBeforeExitDialog = new SaveBeforeExitDialog("<html><B>Save changes before closing?</B></html>");
 
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final OrganizationDatastore organizationDatastore;
@@ -105,6 +109,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     }
 
     private void setupLayout() {
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout(0, 0));
 
         JPanel form = new JPanel();
@@ -282,6 +287,22 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
             organizationController.restoreDefaults();
         });
         saveButton.addActionListener((e) -> organizationController.submit());
+
+        saveBeforeExitDialog.addNoListener((evt) -> setVisible(false));
+        saveBeforeExitDialog.addYesListener((evt) -> {
+            boolean saved = organizationController.submit();
+            if (saved) {
+                setVisible(false);
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+                saveBeforeExitDialog.pack();
+                saveBeforeExitDialog.setVisible(true);
+            }
+        });
     }
 
     private void addTextListener(Consumer<String> consumer, JTextField textField) {

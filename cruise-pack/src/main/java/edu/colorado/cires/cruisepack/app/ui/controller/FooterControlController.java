@@ -107,10 +107,6 @@ public class FooterControlController implements PropertyChangeListener {
     }
   }
 
-  public synchronized void setSaveBeforeExitDialogVisible(boolean saveBeforeExitDialogVisible) {
-    footerControlModel.setSaveBeforeExitDialogVisible(saveBeforeExitDialogVisible);
-  }
-
   private void emitPackageId(String packageId) {
     footerControlModel.emitPackageId(packageId);
   }

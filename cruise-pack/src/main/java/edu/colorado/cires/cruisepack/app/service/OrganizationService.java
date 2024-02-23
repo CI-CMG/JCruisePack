@@ -21,7 +21,7 @@ public class OrganizationService {
         this.organizationDatastore = organizationDatastore;
     }
 
-    public void save(OrganizationModel organizationModel) {
+    public boolean save(OrganizationModel organizationModel) {
         Set<ConstraintViolation<OrganizationModel>> violations = validator.validate(organizationModel);
         String nameError = null;
         String streetError = null;
@@ -72,7 +72,11 @@ public class OrganizationService {
             }
 
             organizationDatastore.save(organizationModel);
+
+            return true;
         }
+
+        return false;
     }
     
 }
