@@ -181,6 +181,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_PERSON_DATA_STORE:
         List<DropDownItem> options = personDatastore.getEnabledPersonDropDowns();
+        updateComboBoxModel(metadataAuthorField, options);
         scientistsField.setOptions(options);
         List<String> enabledUUIDs = options.stream()
           .map(i -> i.getId())
