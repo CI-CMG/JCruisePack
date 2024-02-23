@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateAppendableTable;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBoxModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -216,6 +217,8 @@ public class PeoplePanel extends JPanel implements ReactiveView {
       case  Events.UPDATE_METADATA_AUTHOR_ERROR:
         updateLabelText(metadataAuthorErrorLabel, evt);
         break;
+      case Events.UPDATE_PERSON_DATA_STORE:
+        updateComboBoxModel(metadataAuthorField, personDatastore.getEnabledPersonDropDowns());
       default:
         break;
     }
