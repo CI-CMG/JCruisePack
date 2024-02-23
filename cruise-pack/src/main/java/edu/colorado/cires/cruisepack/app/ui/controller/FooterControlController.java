@@ -17,6 +17,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeGenerator;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,11 +35,12 @@ public class FooterControlController implements PropertyChangeListener {
   private final OmicsModel omicsModel;
   private final CruiseDataDatastore cruiseDataDatastore;
   private final InstrumentDatastore instrumentDatastore;
+  private final ConfigurableApplicationContext applicationContext;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
       BeanFactory beanFactory, PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
-      CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, CruiseDataDatastore cruiseDataDatastore) {
+      CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -47,6 +51,7 @@ public class FooterControlController implements PropertyChangeListener {
     this.omicsModel = omicsModel;
     this.instrumentDatastore = instrumentDatastore;
     this.cruiseDataDatastore = cruiseDataDatastore;
+    this.applicationContext = applicationContext;
   }
 
   @PostConstruct
@@ -70,6 +75,10 @@ public class FooterControlController implements PropertyChangeListener {
     footerControlModel.setSaveWarningDialogueVisible(saveWarningDialogueVisible);
   }
 
+  public synchronized void setSaveExitAppDialogueVisible(boolean saveExitAppDialogueVisible) {
+    footerControlModel.setSaveExitAppDialogueVisible(saveExitAppDialogueVisible);
+  }
+
   public synchronized void startPackaging() {
     beanFactory.getBean(PackerService.class).startPacking();
   }
@@ -85,13 +94,28 @@ public class FooterControlController implements PropertyChangeListener {
     omicsModel.restoreDefaults();
   }
 
-  public void saveForms() {
+  public synchronized void saveForms() {
     if (packageModel.getCruiseId() == null) {
       setSaveWarningDialogueVisible(true);
     } else {
       PackJob packJob = PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
       cruiseDataDatastore.save(packJob);
+      setSaveExitAppDialogueVisible(true);
     }
+  }
+
+  public void exitApplication() {
+    int exitCode = SpringApplication.exit(applicationContext, new ExitCodeGenerator[] {
+      new ExitCodeGenerator() {
+
+        @Override
+        public int getExitCode() {
+          return 0;
+        }
+        
+      }
+    });
+    System.exit(exitCode);
   }
 
   @Override

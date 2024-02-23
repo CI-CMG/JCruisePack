@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +51,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
   private final JProgressBar progressBar = new JProgressBar();
   private final JDialog saveWarningDialog = new JDialog((JFrame) null, null, true);
+  private final JDialog saveExitAppDialog = new JDialog((JFrame) null, null, true);
   private final JButton closeSaveWarningButton = new JButton("OK");
+  private final JButton closeExitAppButton = new JButton("No");
+  private final JButton confirmExitAppButton = new JButton("Yes");
   private final UiRefresher uiRefresher;
 
   @Autowired
@@ -102,6 +106,24 @@ public class FooterPanel extends JPanel implements ReactiveView {
     saveWarningDialog.add(warningDialogPanel, configureLayout(0, 1, c -> c.weighty = 0));
     saveWarningDialog.setVisible(false);
 
+    saveExitAppDialog.setLayout(new GridBagLayout());
+    JLabel exitAppLabel = new JLabel("<html><B>Record data has been updated. Do you want to exit editor?</B></html>");
+    exitAppLabel.setHorizontalAlignment(JLabel.CENTER);
+    saveExitAppDialog.add(exitAppLabel, configureLayout(0, 0, c -> {
+      c.weighty = 100;
+      c.gridwidth = GridBagConstraints.REMAINDER;
+      c.insets = new Insets(20, 20, 20, 20);
+    }));
+    JPanel exitAppPanel = new JPanel();
+    exitAppPanel.setLayout(new BorderLayout());
+    JPanel exitAppButtonPanel = new JPanel();
+    exitAppButtonPanel.setLayout(new GridBagLayout());
+    exitAppButtonPanel.add(closeExitAppButton, configureLayout(0, 0));
+    exitAppButtonPanel.add(confirmExitAppButton, configureLayout(1, 0));
+    exitAppPanel.add(exitAppButtonPanel, BorderLayout.EAST);
+    saveExitAppDialog.add(exitAppPanel, configureLayout(0, 1, c -> c.weighty = 0));
+    saveExitAppDialog.setVisible(false);
+
 
     JPanel row2 = new JPanel();
     row2.setLayout(new GridBagLayout());
@@ -124,7 +146,16 @@ public class FooterPanel extends JPanel implements ReactiveView {
       public void windowClosing(WindowEvent event) {
         footerControlController.setSaveWarningDialogueVisible(false);
       }
-    });;
+    });
+
+    closeExitAppButton.addActionListener((evt) -> footerControlController.setSaveExitAppDialogueVisible(false));
+    confirmExitAppButton.addActionListener((evt) -> footerControlController.exitApplication());
+    saveExitAppDialog.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent event) {
+        footerControlController.setSaveExitAppDialogueVisible(false);
+      }
+    });
   }
 
   private void handlePackage() {
@@ -163,6 +194,13 @@ public class FooterPanel extends JPanel implements ReactiveView {
         }
       }
       break;
+      case Events.UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE: {
+        boolean newValue = (boolean) evt.getNewValue();
+        if (saveExitAppDialog.isVisible() != newValue) {
+          saveExitAppDialog.pack();
+          saveExitAppDialog.setVisible(newValue);
+        }
+      }
       default:
         break;
     }
