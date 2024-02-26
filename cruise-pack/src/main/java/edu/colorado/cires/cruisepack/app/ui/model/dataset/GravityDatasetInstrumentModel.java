@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
@@ -30,8 +31,8 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   public static final String UPDATE_DRIFT_PER_DAY_ERROR = "UPDATE_DRIFT_PER_DAY_ERROR";
 
   // TODO move this to datasource
-  @NotNull @ValidInstrumentDropDownItem
-  private DropDownItem instrument;
+  @ValidInstrumentDropDownItem
+  private DropDownItem instrument = InstrumentDatastore.UNSELECTED_INSTRUMENT;
   private String instrumentError = null;
   @NotBlank
   private String processingLevel = "Raw";

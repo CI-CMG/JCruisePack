@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
 import java.util.Objects;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
-import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
@@ -41,7 +40,7 @@ public @interface ValidInstrumentDropDownItem {
 
         @Override
         public boolean isValid(DropDownItem value, ConstraintValidatorContext context) {
-            return !Objects.equals(value, InstrumentDatastore.UNSELECTED_DATASET_TYPE);
+            return !Objects.equals(value, InstrumentDatastore.UNSELECTED_INSTRUMENT);
         }
     
     }

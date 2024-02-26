@@ -1,12 +1,11 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,8 +19,8 @@ public class XbtDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   public static final String UPDATE_COMMENTS_ERROR = "UPDATE_COMMENTS_ERROR";
 
   // TODO move this to datasource
-  @NotNull @ValidInstrumentDropDownItem
-  private DropDownItem instrument;
+  @ValidInstrumentDropDownItem
+  private DropDownItem instrument = InstrumentDatastore.UNSELECTED_INSTRUMENT;
   private String instrumentError = null;
   @NotBlank
   private String processingLevel = "Raw";
