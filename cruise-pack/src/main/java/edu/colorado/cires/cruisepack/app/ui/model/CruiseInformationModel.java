@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,6 +35,13 @@ public class CruiseInformationModel extends PropertyChangeModel {
 
     setDocumentsPath(null);
     setDocumentsPathError(null);
+  }
+
+  public void updateFormState(CruiseMetadata cruiseMetadata) {
+    setCruiseTitle(cruiseMetadata.getCruiseTitle());
+    setCruisePurpose(cruiseMetadata.getCruisePurpose());
+    setCruiseDescription(cruiseMetadata.getCruiseDescription());
+    // setDocumentsPath
   }
 
   public Path getDocumentsPath() {

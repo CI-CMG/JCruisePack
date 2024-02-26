@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidOrganizationDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
@@ -40,6 +41,15 @@ public class PeopleModel extends PropertyChangeModel {
 
         setMetadataAuthor(PersonDatastore.UNSELECTED_PERSON);
         setMetadataAuthorError(null);
+    }
+
+    public void updateFormState(CruiseMetadata cruiseMetadata) {
+        setScientists(cruiseMetadata.getScientists().stream().map((po) -> new DropDownItem(po.getUuid(), po.getName())).toList());
+        setFundingOrganizations(cruiseMetadata.getFunders().stream().map((po) -> new DropDownItem(po.getUuid(), po.getName())).toList());
+        setSourceOrganizations(cruiseMetadata.getSponsors().stream().map((po) -> new DropDownItem(po.getUuid(), po.getName())).toList());
+        if (cruiseMetadata.getMetadataAuthor() != null) {
+            setMetadataAuthor(new DropDownItem(cruiseMetadata.getMetadataAuthor().getUuid(), cruiseMetadata.getMetadataAuthor().getName()));
+        }
     }
     
     public List<DropDownItem> getScientists() {

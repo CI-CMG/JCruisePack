@@ -1,8 +1,10 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPortDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidProjectDropDownItem;
@@ -18,7 +20,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -94,6 +95,44 @@ public class PackageModel extends PropertyChangeModel {
 
     setProjects(Collections.emptyList());
     setProjectsError(null);
+  }
+
+  public void updateFormState(CruiseMetadata cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore) {
+    setCruiseId(cruiseMetadata.getCruiseId());
+    setSegment(cruiseMetadata.getSegmentId());
+    // setPackageDirectory
+    if (cruiseMetadata.getShipUuid() != null && cruiseMetadata.getShip() != null) {
+      DropDownItem dropDownItem = shipDatastore.getShipDropDowns().stream()
+        .filter(i -> i.getId().equals(cruiseMetadata.getShipUuid())).findFirst().orElse(null);
+      setShip(dropDownItem);
+    }
+    if (cruiseMetadata.getDeparturePort() != null) {
+      DropDownItem dropDownItem = portDatastore.getPortDropDowns().stream()
+        .filter(i -> i.getValue().equals(cruiseMetadata.getDeparturePort())).findFirst().orElse(null);
+      setDeparturePort(dropDownItem);
+    }
+    if (cruiseMetadata.getDepartureDate() != null) {
+      setDepartureDate(LocalDate.parse(cruiseMetadata.getDepartureDate()));
+    }
+    if (cruiseMetadata.getSeaArea() != null) {
+      DropDownItem dropDownItem = seaDatastore.getSeaDropDowns().stream()
+        .filter(i -> i.getValue().equals(cruiseMetadata.getSeaArea())).findFirst().orElse(null);
+        setSea(dropDownItem);
+    }
+    if (cruiseMetadata.getArrivalPort() != null) {
+      DropDownItem dropDownItem = portDatastore.getPortDropDowns().stream()
+        .filter(i -> i.getValue().equals(cruiseMetadata.getArrivalPort())).findFirst().orElse(null);
+      setArrivalPort(dropDownItem);
+    }
+    if (cruiseMetadata.getArrivalDate() != null) {
+      setArrivalDate(LocalDate.parse(cruiseMetadata.getArrivalDate()));
+    }
+    if (!cruiseMetadata.getProjects().isEmpty()) {
+      setProjects(projectDatastore.getProjectDropDownsMatchingNames(cruiseMetadata.getProjects()));
+    }
+    if (cruiseMetadata.getMasterReleaseDate() != null) {
+      setReleaseDate(LocalDate.parse(cruiseMetadata.getMasterReleaseDate()));
+    }
   }
 
   public String getCruiseId() {

@@ -1,6 +1,11 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
+import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
+import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
@@ -69,6 +74,60 @@ public class OmicsModel extends PropertyChangeModel {
 
         setAdditionalSamplingInformation(null);
         setAdditionalSamplingInformationError(null);
+    }
+
+    public void updateFormState(CruiseMetadata cruiseMetadata) {
+        Omics omicsMetadata = cruiseMetadata.getOmics();
+        if (omicsMetadata != null) {
+            for (String samplingType : omicsMetadata.getSamplingTypes()) {
+                if (samplingType.equals(SamplingTypes.WATER.getName())) {
+                    setWaterSamplingType(true);
+                } else if (samplingType.equals(SamplingTypes.SOIL_SEDIMENT.getName())) {
+                    setSoilSedimentSamplingType(true);
+                } else if (samplingType.equals(SamplingTypes.ORGANIC_TISSUE.getName())) {
+                    setOrganicTissueSamplingType(true);
+                }
+            }
+
+            for (String analysis : omicsMetadata.getAnalysesTypes()) {
+                if (analysis.equals(ExpectedAnalyses.BARCODING.getName())) {
+                    setBarcodingExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.GENOMICS.getName())) {
+                    setGenomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.TRANSCRIPOMICS.getName())) {
+                    setTranscriptomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.PROTEOMICS.getName())) {
+                    setProteomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.METABOLOMICS.getName())) {
+                    setMetabolomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.EPIGENETICS.getName())) {
+                    setEpigeneticsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.OTHER.getName())) {
+                    setOtherExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.METABARCODING.getName())) {
+                    setMetaBarcodingExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.METAGENOMICS.getName())) {
+                    setMetaGenomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.METATRANSCRIPTOMICS.getName())) {
+                    setMetatranscriptomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.METAPROTEOMICS.getName())) {
+                    setMetaproteomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.METAMETABOLOMICS.getName())) {
+                    setMetametabolomicsExpectedAnalysis(true);
+                } else if (analysis.equals(ExpectedAnalyses.MICROBIOME.getName())) {
+                    setMicrobiomeExpectedAnalysis(true);
+                }
+            }
+
+            OmicsPoc poc = omicsMetadata.getOmicsPoc();
+            if (poc != null) {
+                setContact(new DropDownItem(poc.getUuid(), poc.getName()));
+            }
+            // TODO: setSampleTrackingSheet
+            setBioProjectAccession(omicsMetadata.getNcbiAccession());
+            setAdditionalSamplingInformation(omicsMetadata.getOmicsComment());
+            // TODO: setSamplingConducted
+        }
     }
     
     public boolean isSamplingConducted() {

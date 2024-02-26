@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,5 +57,11 @@ public class ProjectDatastore {
 
   public List<DropDownItem> getProjectDropDowns() {
     return projectDropDowns;
+  }
+
+  public List<DropDownItem> getProjectDropDownsMatchingNames(List<String> names) {
+    return projectDropDowns.stream()
+      .filter((dd) -> names.contains(dd.getValue()))
+      .toList();
   }
 }
