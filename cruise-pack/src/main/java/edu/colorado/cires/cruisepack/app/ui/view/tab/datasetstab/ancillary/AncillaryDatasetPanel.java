@@ -20,6 +20,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.LabeledComboBox
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 public class AncillaryDatasetPanel extends DatasetPanel<AncillaryDatasetInstrumentModel, AncillaryDatasetInstrumentController> {
@@ -41,6 +43,7 @@ public class AncillaryDatasetPanel extends DatasetPanel<AncillaryDatasetInstrume
   public void init() {
     super.init();
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
+    instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
     commentsPanel.getCommentsField().setText(model.getComments());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));

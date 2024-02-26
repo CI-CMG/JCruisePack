@@ -40,6 +40,8 @@ import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import org.apache.commons.lang3.StringUtils;
@@ -71,6 +73,7 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel<WaterColumnSonarD
   public void init() {
     super.init();
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
+    instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     calibrationStatePanel.getInstrumentField().setSelectedItem(model.getCalibrationState());

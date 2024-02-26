@@ -36,6 +36,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevel
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentModel, GravityDatasetInstrumentController> {
@@ -66,6 +68,7 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
   public void init() {
     super.init();
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
+    instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());

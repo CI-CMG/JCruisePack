@@ -40,6 +40,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private final String dataTypeName;
   protected final M model;
   protected final C controller;
+  protected final InstrumentDatastore instrumentDatastore;
 
   private final DatePicker releaseDate = new DatePicker();
   private final JLabel publicReleaseDateErrorLabel = createErrorLabel();
@@ -53,6 +54,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     dataTypeName = instrumentDatastore.getNameForShortCode(getInstrumentShortCode());
     this.model = model;
     this.controller = controller;
+    this.instrumentDatastore = instrumentDatastore;
   }
 
   public void addDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {

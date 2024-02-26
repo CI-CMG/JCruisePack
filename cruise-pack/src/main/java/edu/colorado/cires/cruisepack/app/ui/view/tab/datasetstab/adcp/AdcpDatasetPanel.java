@@ -26,6 +26,7 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 public class AdcpDatasetPanel extends DatasetPanel<AdcpDatasetInstrumentModel, AdcpDatasetInstrumentController> {
@@ -44,6 +45,7 @@ public class AdcpDatasetPanel extends DatasetPanel<AdcpDatasetInstrumentModel, A
   public void init() {
     super.init();
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
+    instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
 

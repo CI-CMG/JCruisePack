@@ -18,7 +18,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,10 +29,12 @@ import org.springframework.stereotype.Component;
 public class InstrumentDatastore {
 
   public static final DropDownItem UNSELECTED_DATASET_TYPE = new DropDownItem("", "Select Data Type");
+  public static final DropDownItem UNSELECTED_INSTRUMENT = new DropDownItem("", "Select Instrument");
 
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> datasetTypeDropDowns;
+  private Map<String, List<DropDownItem>> instrumentDropDowns;
   private InstrumentData instrumentData;
 
   @Autowired
@@ -57,6 +61,19 @@ public class InstrumentDatastore {
         .sorted((s1, s2) -> s1.getDataType().compareToIgnoreCase(s2.getDataType()))
         .map(instrumentGroup -> new DropDownItem(instrumentGroup.getShortType(), instrumentGroup.getDataType()))
         .forEach(datasetTypeDropDowns::add);
+
+    instrumentDropDowns = new HashMap<>(0);
+    instrumentData.getInstrumentGroups().getInstrumentGroups().forEach((ig) -> {
+      List<DropDownItem> instruments = new ArrayList<>(ig.getInstruments().getInstruments().stream()
+        .map(i -> new DropDownItem(i.getUuid(), i.getShortName(), i))
+        .sorted((i1, i2) -> i1.getValue().compareToIgnoreCase(i2.getValue()))
+        .toList());
+      instruments.add(0, UNSELECTED_INSTRUMENT);
+      instrumentDropDowns.put(
+        ig.getShortType(),
+        instruments
+      );
+    });
   }
 
   public Optional<Instrument> getInstrument(InstrumentDetailPackageKey key) {
@@ -86,6 +103,10 @@ public class InstrumentDatastore {
 
   public List<DropDownItem> getDatasetTypeDropDowns() {
     return datasetTypeDropDowns;
+  }
+
+  public List<DropDownItem> getInstrumentDropDownsForDatasetType(String datasetType) {
+    return instrumentDropDowns.get(datasetType);
   }
 
   public String getNameForShortCode(String shortCode) {
