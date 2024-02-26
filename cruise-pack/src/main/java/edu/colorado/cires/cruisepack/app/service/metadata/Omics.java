@@ -21,14 +21,13 @@ public class Omics {
     return new Builder(src);
   }
 
-  @JsonProperty("NCBI_accession")
   private final String ncbiAccession;
   private final List<String> samplingTypes;
   private final List<String> analysesTypes;
   private final String omicsComment;
   private final OmicsPoc omicsPoc;
 
-  private Omics(String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment,
+  private Omics(@JsonProperty("NCBI_accession") String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment,
       OmicsPoc omicsPoc) {
     this.ncbiAccession = ncbiAccession;
     this.samplingTypes = samplingTypes;
