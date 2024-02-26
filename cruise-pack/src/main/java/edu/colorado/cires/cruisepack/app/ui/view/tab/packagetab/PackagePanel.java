@@ -225,7 +225,14 @@ public class PackagePanel extends JPanel implements ReactiveView {
     dirSelectButton.addActionListener((evt) -> handleDirSelect());
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
     projectsField.addValuesChangedListener((i) -> packageController.setProjects(i));
-    existingRecordList.addItemListener((evt) -> footerControlController.updateFormState((CruiseMetadata) ((DropDownItem) evt.getItem()).getRecord()));
+    existingRecordList.addItemListener((evt) -> {
+      CruiseMetadata metadata = (CruiseMetadata) ((DropDownItem) evt.getItem()).getRecord();
+      if (metadata != null) { // can be default value with no underlying metadata
+        footerControlController.updateFormState(metadata);
+      } else {
+        footerControlController.restoreDefaultsGlobal();
+      }
+    });
   }
 
   private void handleDirValue(String value) {
