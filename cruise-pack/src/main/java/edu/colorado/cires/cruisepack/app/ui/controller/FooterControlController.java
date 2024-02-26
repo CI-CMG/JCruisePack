@@ -2,6 +2,10 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackerService;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
@@ -36,11 +40,17 @@ public class FooterControlController implements PropertyChangeListener {
   private final CruiseDataDatastore cruiseDataDatastore;
   private final InstrumentDatastore instrumentDatastore;
   private final ConfigurableApplicationContext applicationContext;
+  private final ProjectDatastore projectDatastore;
+  private final PortDatastore portDatastore;
+  private final ShipDatastore shipDatastore;
+  private final SeaDatastore seaDatastore;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
       BeanFactory beanFactory, PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
-      CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext) {
+      CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, 
+      CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
+      PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -52,6 +62,10 @@ public class FooterControlController implements PropertyChangeListener {
     this.instrumentDatastore = instrumentDatastore;
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.applicationContext = applicationContext;
+    this.projectDatastore = projectDatastore;
+    this.portDatastore = portDatastore;
+    this.shipDatastore = shipDatastore;
+    this.seaDatastore = seaDatastore;
   }
 
   @PostConstruct
@@ -84,6 +98,10 @@ public class FooterControlController implements PropertyChangeListener {
   }
 
   public void updateFormState(CruiseMetadata cruiseMetadata) {
+    packageModel.updateFormState(cruiseMetadata, projectDatastore, portDatastore, shipDatastore, seaDatastore);
+    peopleModel.updateFormState(cruiseMetadata);
+    cruiseInformationModel.updateFormState(cruiseMetadata);
+    omicsModel.updateFormState(cruiseMetadata);
   }
 
   public void restoreDefaultsGlobal() {
@@ -98,7 +116,7 @@ public class FooterControlController implements PropertyChangeListener {
     if (packageModel.getCruiseId() == null) {
       setSaveWarningDialogueVisible(true);
     } else {
-      PackJob packJob = PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
+      PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
       cruiseDataDatastore.save(packJob);
       emitPackageId(packJob.getPackageId());
       if (!fromExitPrompt) {
