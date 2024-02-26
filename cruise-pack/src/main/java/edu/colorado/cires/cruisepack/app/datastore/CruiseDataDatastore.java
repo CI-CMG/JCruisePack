@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -81,7 +82,8 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   }
 
   private void setDropDownItems(List<DropDownItem> items) {
-    setIfChanged(Events.UPDATE_CRUISE_DATA_STORE, items, () -> this.dropDownItems, (i) -> this.dropDownItems = i);
+    this.dropDownItems = items;
+    fireChangeEvent(Events.UPDATE_CRUISE_DATA_STORE, Collections.emptyList(), items);
   }
 
   public List<DropDownItem> getDropDownItems() {
