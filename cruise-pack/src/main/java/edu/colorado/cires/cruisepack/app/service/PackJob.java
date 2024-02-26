@@ -10,17 +10,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Map.Entry;
+
 import java.util.Set;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.ExpectedAnalysesModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
+import edu.colorado.cires.cruisepack.app.ui.model.SamplingTypesModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
 import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
+import edu.colorado.cires.cruisepack.xml.person.Person;
 
 public class PackJob {
 
@@ -102,8 +110,82 @@ public class PackJob {
     return map;
   }
 
-  public static PackJob create(PackageModel packageModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore) {
+  public static PackJob create(PackageModel packageModel, PeopleModel peopleModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore) {
     String packageId = resolvePackageId(packageModel);
+    Person omicsContact = (Person) omicsModel.getContact().getRecord();
+
+    List<String> omicsSamplingTypes = new ArrayList<>(0);
+    SamplingTypesModel samplingTypesModel = omicsModel.getSamplingTypes();
+    if (samplingTypesModel != null) {
+      if (samplingTypesModel.isWater()) {
+        omicsSamplingTypes.add(SamplingTypes.WATER.getName());
+      }
+
+      if (samplingTypesModel.isSoilSediment()) {
+        omicsSamplingTypes.add(SamplingTypes.SOIL_SEDIMENT.getName());
+      }
+
+      if (samplingTypesModel.isOrganicTissue()) {
+        omicsSamplingTypes.add(SamplingTypes.ORGANIC_TISSUE.getName());
+      }
+    }
+
+    List<String> omicsExpectedAnalyses = new ArrayList<>(0);
+    ExpectedAnalysesModel expectedAnalysesModel = omicsModel.getExpectedAnalyses();
+    if (expectedAnalysesModel != null) {
+      if (expectedAnalysesModel.isBarcoding()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.BARCODING.getName());
+      }
+
+      if (expectedAnalysesModel.isGenomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.GENOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isTranscriptomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.TRANSCRIPOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isProteomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.PROTEOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isMetabolomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.METABOLOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isEpigenetics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.EPIGENETICS.getName());
+      }
+
+      if (expectedAnalysesModel.isOther()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.OTHER.getName());
+      }
+
+      if (expectedAnalysesModel.isMetabarcoding()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.METABARCODING.getName());
+      }
+
+      if (expectedAnalysesModel.isMetagenomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.METAGENOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isMetatranscriptomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.METATRANSCRIPTOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isMetaproteomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.METAPROTEOMICS.getName());
+      }
+      
+      if (expectedAnalysesModel.isMetametabolomics()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.METAMETABOLOMICS.getName());
+      }
+
+      if (expectedAnalysesModel.isMicrobiome()) {
+        omicsExpectedAnalyses.add(ExpectedAnalyses.MICROBIOME.getName());
+      }
+    }
+
     return PackJob.builder()
         .setCruiseId(packageModel.getCruiseId())
         .setSegment(packageModel.getSegment())
@@ -113,6 +195,7 @@ public class PackJob {
         .setShipUuid(resolveDropDownItemUuid(packageModel.getShip()))
         .setDepartureDate(packageModel.getDepartureDate())
         .setArrivalDate(packageModel.getArrivalDate())
+        .setProjects(packageModel.getProjects().stream().map(DropDownItem::getValue).toList())
         .setReleaseDate(packageModel.getReleaseDate())
         .setPackageDirectory(packageModel.getPackageDirectory())
         .setCruiseTitle(cruiseInformationModel.getCruiseTitle())
@@ -120,15 +203,33 @@ public class PackJob {
         .setCruiseDescription(cruiseInformationModel.getCruiseDescription())
         .setDocumentsPath(cruiseInformationModel.getDocumentsPath())
         .setOmicsSamplingConducted(omicsModel.isSamplingConducted())
-        .setOmicsContactUuid(resolveDropDownItemUuid(omicsModel.getContact()))
+        .setOmicsContactUuid(omicsContact != null ? omicsContact.getUuid() : null)
+        .setOmicsContactName(omicsContact != null ? omicsContact.getName() : null)
+        .setOmicsContactEmail(omicsContact != null ? omicsContact.getEmail() : null)
+        .setOmicsContactPhone(omicsContact != null ? omicsContact.getPhone() : null)
         .setOmicsSampleTrackingSheetPath(omicsModel.getSampleTrackingSheet())
         .setOmicsBioProjectAccession(omicsModel.getBioProjectAccession())
-        //TODO
-//        .setOmicsSamplingTypes(omicsModel.getSamplingTypes())
-//        .setOmicsExpectedAnalyses(omicsModel.getExpectedAnalyses())
+        .setOmicsSamplingTypes(omicsSamplingTypes)
+        .setOmicsExpectedAnalyses(omicsExpectedAnalyses)
         .setOmicsAdditionalSamplingInformation(omicsModel.getAdditionalSamplingInformation())
         .setPackageId(packageId)
         .setInstruments(getInstruments(datasetsModel, instrumentDatastore, packageId))
+        .setScientists(peopleModel.getScientists().stream().map(
+          (dd) -> PeopleOrg.builder()
+            .withUuid(dd.getId())
+            .withName(dd.getValue())
+          .build()).toList())
+        .setFunders(peopleModel.getFundingOrganizations().stream().map(
+          (dd) -> PeopleOrg.builder()
+            .withUuid(dd.getId())
+            .withName(dd.getValue())
+          .build()).toList())
+        .setSources(peopleModel.getSourceOrganizations().stream().map(
+          (dd) -> PeopleOrg.builder()
+            .withUuid(dd.getId())
+            .withName(dd.getValue())
+          .build()).toList())
+        .setMetadataAuthor(peopleModel.getMetadataAuthor() == null ? null : (Person) peopleModel.getMetadataAuthor().getRecord())
         .build();
   }
 
@@ -140,8 +241,14 @@ public class PackJob {
   private final String shipUuid;
   private final LocalDate departureDate;
   private final LocalDate arrivalDate;
+  private final List<String> projects;
   private final LocalDate releaseDate;
   private final Path packageDirectory;
+  
+  private final List<PeopleOrg> scientists;
+  private final List<PeopleOrg> funders;
+  private final List<PeopleOrg> sources;
+  private final Person metadataAuthor;
 
   private final String cruiseTitle;
   private final String cruisePurpose;
@@ -150,6 +257,9 @@ public class PackJob {
 
   private final boolean omicsSamplingConducted;
   private final String omicsContactUuid;
+  private final String omicsContactName;
+  private final String omicsContactEmail;
+  private final String omicsContactPhone;
   private final Path omicsSampleTrackingSheetPath;
   private final String omicsBioProjectAccession;
   private final List<String> omicsSamplingTypes;
@@ -161,10 +271,10 @@ public class PackJob {
   private final Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments;
 
   private PackJob(String cruiseId, String segment, String seaUuid, String arrivalPortUuid, String departurePortUuid, String shipUuid,
-      LocalDate departureDate, LocalDate arrivalDate, LocalDate releaseDate, Path packageDirectory, String cruiseTitle, String cruisePurpose,
-      String cruiseDescription, Path documentsPath, boolean omicsSamplingConducted, String omicsContactUuid, Path omicsSampleTrackingSheetPath,
-      String omicsBioProjectAccession, List<String> omicsSamplingTypes, List<String> omicsExpectedAnalyses, String omicsAdditionalSamplingInformation,
-      String packageId, Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments) {
+      LocalDate departureDate, LocalDate arrivalDate, List<String> projects, LocalDate releaseDate, Path packageDirectory, String cruiseTitle, String cruisePurpose,
+      String cruiseDescription, Path documentsPath, boolean omicsSamplingConducted, String omicsContactUuid, String omicsContactName, String omicsContactEmail, String omicsContactPhone,
+       Path omicsSampleTrackingSheetPath, String omicsBioProjectAccession, List<String> omicsSamplingTypes, List<String> omicsExpectedAnalyses, String omicsAdditionalSamplingInformation,
+      String packageId, Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments, List<PeopleOrg> scientists, List<PeopleOrg> funders, List<PeopleOrg> sources, Person metadataAuthor) {
     this.cruiseId = Objects.requireNonNull(cruiseId, "cruiseId must not be null");
     this.segment = segment;
     this.seaUuid = seaUuid;
@@ -173,6 +283,7 @@ public class PackJob {
     this.shipUuid = shipUuid;
     this.departureDate = departureDate;
     this.arrivalDate = arrivalDate;
+    this.projects = projects;
     this.releaseDate = releaseDate;
     this.packageDirectory = packageDirectory;
     this.cruiseTitle = cruiseTitle;
@@ -181,6 +292,9 @@ public class PackJob {
     this.documentsPath = documentsPath;
     this.omicsSamplingConducted = omicsSamplingConducted;
     this.omicsContactUuid = omicsContactUuid;
+    this.omicsContactName = omicsContactName;
+    this.omicsContactEmail = omicsContactEmail;
+    this.omicsContactPhone = omicsContactPhone;
     this.omicsSampleTrackingSheetPath = omicsSampleTrackingSheetPath;
     this.omicsBioProjectAccession = omicsBioProjectAccession;
     this.omicsSamplingTypes = omicsSamplingTypes;
@@ -188,6 +302,10 @@ public class PackJob {
     this.omicsAdditionalSamplingInformation = omicsAdditionalSamplingInformation;
     this.packageId = packageId;
     this.instruments = instruments;
+    this.scientists = scientists;
+    this.funders = funders;
+    this.sources = sources;
+    this.metadataAuthor = metadataAuthor;
   }
 
   public String getCruiseId() {
@@ -222,6 +340,10 @@ public class PackJob {
     return arrivalDate;
   }
 
+  public List<String> getProjects() {
+    return projects;
+  }
+
   public LocalDate getReleaseDate() {
     return releaseDate;
   }
@@ -254,6 +376,18 @@ public class PackJob {
     return omicsContactUuid;
   }
 
+  public String getOmicsContactName() {
+    return omicsContactName;
+  }
+
+  public String getOmicsContactEmail() {
+    return omicsContactEmail;
+  }
+
+  public String getOmicsContactPhone() {
+    return omicsContactPhone;
+  }
+
   public Path getOmicsSampleTrackingSheetPath() {
     return omicsSampleTrackingSheetPath;
   }
@@ -282,6 +416,22 @@ public class PackJob {
     return instruments;
   }
 
+  public List<PeopleOrg> getScientists() {
+    return scientists;
+  }
+
+  public List<PeopleOrg> getFunders() {
+    return funders;
+  }
+
+  public List<PeopleOrg> getSources() {
+    return sources;
+  }
+
+  public Person getMetadataAuthor() {
+    return metadataAuthor;
+  }
+
   public static class Builder {
 
     private String cruiseId;
@@ -292,6 +442,7 @@ public class PackJob {
     private String shipUuid;
     private LocalDate departureDate;
     private LocalDate arrivalDate;
+    private List<String> projects = Collections.emptyList();
     private LocalDate releaseDate;
     private Path packageDirectory;
     private String cruiseTitle;
@@ -300,6 +451,9 @@ public class PackJob {
     private Path documentsPath;
     private boolean omicsSamplingConducted;
     private String omicsContactUuid;
+    private String omicsContactName;
+    private String omicsContactEmail;
+    private String omicsContactPhone;
     private Path omicsSampleTrackingSheetPath;
     private String omicsBioProjectAccession;
     private List<String> omicsSamplingTypes = Collections.emptyList();
@@ -307,6 +461,10 @@ public class PackJob {
     private String omicsAdditionalSamplingInformation;
     private String packageId;
     private Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments = Collections.emptyMap();
+    private List<PeopleOrg> scientists = Collections.emptyList();
+    private List<PeopleOrg> funders = Collections.emptyList();
+    private List<PeopleOrg> sources = Collections.emptyList();
+    private Person metadataAuthor;
 
     private Builder() {
 
@@ -321,6 +479,7 @@ public class PackJob {
       shipUuid = src.shipUuid;
       departureDate = src.departureDate;
       arrivalDate = src.arrivalDate;
+      projects = src.projects;
       releaseDate = src.releaseDate;
       packageDirectory = src.packageDirectory;
       cruiseTitle = src.cruiseTitle;
@@ -329,6 +488,9 @@ public class PackJob {
       documentsPath = src.documentsPath;
       omicsSamplingConducted = src.omicsSamplingConducted;
       omicsContactUuid = src.omicsContactUuid;
+      omicsContactName = src.omicsContactName;
+      omicsContactEmail = src.omicsContactEmail;
+      omicsContactPhone = src.omicsContactPhone;
       omicsSampleTrackingSheetPath = src.omicsSampleTrackingSheetPath;
       omicsBioProjectAccession = src.omicsBioProjectAccession;
       omicsSamplingTypes = src.omicsSamplingTypes;
@@ -336,6 +498,10 @@ public class PackJob {
       omicsAdditionalSamplingInformation = src.omicsAdditionalSamplingInformation;
       packageId = src.packageId;
       instruments = src.instruments;
+      scientists = src.scientists;
+      funders = src.funders;
+      sources = src.sources;
+      metadataAuthor = src.metadataAuthor;
     }
 
     public Builder setCruiseId(String cruiseId) {
@@ -378,6 +544,11 @@ public class PackJob {
       return this;
     }
 
+    public Builder setProjects(List<String> projects) {
+      this.projects = projects;
+      return this;
+    }
+
     public Builder setReleaseDate(LocalDate releaseDate) {
       this.releaseDate = releaseDate;
       return this;
@@ -415,6 +586,21 @@ public class PackJob {
 
     public Builder setOmicsContactUuid(String omicsContactUuid) {
       this.omicsContactUuid = omicsContactUuid;
+      return this;
+    }
+
+    public Builder setOmicsContactName(String omicsContactName) {
+      this.omicsContactName = omicsContactName;
+      return this;
+    }
+
+    public Builder setOmicsContactEmail(String omicsContactEmail) {
+      this.omicsContactEmail = omicsContactEmail;
+      return this;
+    }
+
+    public Builder setOmicsContactPhone(String omicsContactPhone) {
+      this.omicsContactPhone = omicsContactPhone;
       return this;
     }
 
@@ -468,12 +654,32 @@ public class PackJob {
       return this;
     }
 
+    public Builder setScientists(List<PeopleOrg> scientists) {
+      this.scientists = scientists;
+      return this;
+    }
+    
+    public Builder setFunders(List<PeopleOrg> funders) {
+      this.funders = funders;
+      return this;
+    }
+
+    public Builder setSources(List<PeopleOrg> sources) {
+      this.sources = sources;
+      return this;
+    }
+
+    public Builder setMetadataAuthor(Person metadataAuthor) {
+      this.metadataAuthor = metadataAuthor;
+      return this;
+    }
+
     public PackJob build() {
       return new PackJob(
           cruiseId, segment, seaUuid, arrivalPortUuid, departurePortUuid, shipUuid,
-          departureDate, arrivalDate, releaseDate, packageDirectory, cruiseTitle, cruisePurpose, cruiseDescription, documentsPath,
-          omicsSamplingConducted, omicsContactUuid, omicsSampleTrackingSheetPath, omicsBioProjectAccession, omicsSamplingTypes, omicsExpectedAnalyses,
-          omicsAdditionalSamplingInformation, packageId, instruments);
+          departureDate, arrivalDate, projects, releaseDate, packageDirectory, cruiseTitle, cruisePurpose, cruiseDescription, documentsPath,
+          omicsSamplingConducted, omicsContactUuid, omicsContactName, omicsContactEmail, omicsContactPhone, omicsSampleTrackingSheetPath, omicsBioProjectAccession, omicsSamplingTypes, omicsExpectedAnalyses,
+          omicsAdditionalSamplingInformation, packageId, instruments, scientists, funders, sources, metadataAuthor);
     }
   }
 }

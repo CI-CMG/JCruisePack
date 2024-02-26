@@ -7,6 +7,9 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
+import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,6 +53,7 @@ public class MetadataService {
         .withMasterReleaseDate(packJob.getReleaseDate() == null ? null : packJob.getReleaseDate().format(DTF))
         .withShip(packJob.getShipUuid() == null ? null : shipDatastore.getShipNameForUuid(packJob.getShipUuid()))
         .withShipUuid(packJob.getShipUuid())
+        .withProjects(packJob.getProjects())
         .withDeparturePort(packJob.getDeparturePortUuid() == null ? null : portDatastore.getPortNameForUuid(packJob.getDeparturePortUuid()))
         .withDepartureDate(packJob.getDepartureDate() == null ? null : packJob.getDepartureDate().format(DTF))
         .withArrivalPort(packJob.getArrivalPortUuid() == null ? null : portDatastore.getPortNameForUuid(packJob.getArrivalPortUuid()))
@@ -58,13 +62,28 @@ public class MetadataService {
         .withCruiseTitle(packJob.getCruiseTitle())
         .withCruisePurpose(packJob.getCruisePurpose())
         .withCruiseDescription(packJob.getCruiseDescription())
-// TODO
-//        .withSponsors()
-//        .withFunders()
-//        .withScientists()
-//        .withProjects()
-//        .withOmics(packJob)
-//        .withMetadataAuthor()
+       .withSponsors(packJob.getSources())
+       .withFunders(packJob.getFunders())
+       .withMetadataAuthor(packJob.getMetadataAuthor() == null ? null : MetadataAuthor.builder()
+       .withUuid(packJob.getMetadataAuthor().getUuid())
+       .withName(packJob.getMetadataAuthor().getName())
+       .withEmail(packJob.getMetadataAuthor().getEmail())
+       .withPhone(packJob.getMetadataAuthor().getPhone())
+       .build())
+       //        .withProjects()
+       .withScientists(packJob.getScientists())
+       .withOmics(Omics.builder()
+          .withSamplingTypes(packJob.getOmicsSamplingTypes())
+          .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
+          .withOmicsPoc(OmicsPoc.builder()
+           .withUuid(packJob.getOmicsContactUuid())
+            .withName(packJob.getOmicsContactName())
+            .withEmail(packJob.getOmicsContactEmail())
+            .withPhone(packJob.getOmicsContactPhone())
+          .build())
+          .withNcbiAccession(packJob.getOmicsBioProjectAccession())
+          .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
+        .build())
         .withInstruments(getInstrumentsJson(packJob))
         .build();
   }

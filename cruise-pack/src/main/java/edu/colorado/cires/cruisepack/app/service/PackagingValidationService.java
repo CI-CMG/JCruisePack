@@ -77,7 +77,7 @@ public class PackagingValidationService {
             omicsViolations.isEmpty() &&
             datasetsViolations.isEmpty() &&
             peopleViolations.isEmpty()) {
-      return Optional.of(PackJob.create(packageModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore));
+      return Optional.of(PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore));
     }
     return Optional.empty();
   }
