@@ -27,6 +27,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevel
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -41,10 +42,12 @@ class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentMod
   private final ProcessingLevelRadioPanel buttonPanel = new ProcessingLevelRadioPanel();
   private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel();
   private final LabeledComboBoxPanel navDatumPanel = new LabeledComboBoxPanel(NAV_DATUM_LABEL);
+  private final List<DropDownItem> navigationDatumOptions;
 
 
-  public NavigationDatasetPanel(NavigationDatasetInstrumentModel model, NavigationDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore) {
+  public NavigationDatasetPanel(NavigationDatasetInstrumentModel model, NavigationDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> navigationDatumOptions) {
     super(model, controller, instrumentDatastore);
+    this.navigationDatumOptions = navigationDatumOptions;
   }
 
   @Override
@@ -55,6 +58,9 @@ class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentMod
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     navDatumPanel.getInstrumentField().setSelectedItem(model.getNavDatum());
+    navDatumPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
+      navigationDatumOptions.toArray(new DropDownItem[0])
+    ));
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));

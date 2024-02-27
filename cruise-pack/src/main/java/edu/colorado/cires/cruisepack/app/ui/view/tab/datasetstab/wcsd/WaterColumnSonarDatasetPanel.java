@@ -40,6 +40,8 @@ import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -64,9 +66,11 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel<WaterColumnSonarD
   private final LabeledFilePathPanel calibrationDataPathPanel = new LabeledFilePathPanel(CALIBRATION_DATA_PATH_LABEL);
   private final JButton calibrationTemplateDownloadButton = new JButton(DOWNLOAD_BUTTON_LABEL);
   private final LabeledDatePickerPanel calibrationDatePanel = new LabeledDatePickerPanel(CALIBRATION_DATE_LABEL);
+  private final List<DropDownItem> calibrationStateDropDownOptions;
 
-  public WaterColumnSonarDatasetPanel(WaterColumnSonarDatasetInstrumentModel model, WaterColumnSonarDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore) {
+  public WaterColumnSonarDatasetPanel(WaterColumnSonarDatasetInstrumentModel model, WaterColumnSonarDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> calibrationStateDropDownOptions) {
     super(model, controller, instrumentDatastore);
+    this.calibrationStateDropDownOptions = calibrationStateDropDownOptions;
   }
 
   @Override
@@ -77,6 +81,9 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel<WaterColumnSonarD
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     calibrationStatePanel.getInstrumentField().setSelectedItem(model.getCalibrationState());
+    calibrationStatePanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
+      calibrationStateDropDownOptions.toArray(new DropDownItem[0])
+    ));
     calibrationReportPathPanel.getTextField().setText(model.getCalibrationReportPath() == null ? null : model.getCalibrationReportPath().toAbsolutePath().normalize().toString());
     calibrationDataPathPanel.getTextField().setText(model.getCalibrationDataPath() == null ? null : model.getCalibrationDataPath().toAbsolutePath().normalize().toString());
     calibrationDatePanel.getDatePicker().setDate(model.getCalibrationDate());

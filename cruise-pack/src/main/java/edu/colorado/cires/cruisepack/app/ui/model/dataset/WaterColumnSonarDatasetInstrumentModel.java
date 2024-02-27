@@ -1,9 +1,11 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.WaterColumnCalibrationStateDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidWaterColumnCalibrationStateDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,8 +41,8 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   @NotBlank
   private String comments;
   private String commentsError = null;
-  @NotNull @ValidInstrumentDropDownItem
-  private DropDownItem calibrationState;
+  @ValidWaterColumnCalibrationStateDropDownItem
+  private DropDownItem calibrationState = WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE;
   private String calibrationStateError = null;
   @NotNull
   private Path calibrationReportPath;

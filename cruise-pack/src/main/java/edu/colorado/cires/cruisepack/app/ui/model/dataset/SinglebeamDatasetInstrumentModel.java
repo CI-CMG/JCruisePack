@@ -1,13 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.SinglebeamVerticalDatumDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSinglebeamVerticalDatumDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,8 +36,8 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
   @NotBlank
   private String comments;
   private String commentsError = null;
-  @NotNull @ValidInstrumentDropDownItem
-  private DropDownItem verticalDatum;
+  @ValidSinglebeamVerticalDatumDropDownItem
+  private DropDownItem verticalDatum = SinglebeamVerticalDatumDatastore.UNSELECTED_VERTICAL_DATUM;
   private String verticalDatumError = null;
   @NotBlank
   private String obsRate;

@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.wcsd;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.WaterColumnCalibrationStateDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.WaterColumnSonarDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Component;
 public class WaterColumnSonarDatasetPanelFactory extends
     DatasetPanelFactory<WaterColumnSonarDatasetInstrumentModel, WaterColumnSonarDatasetInstrumentController, WaterColumnSonarDatasetPanel> {
 
+  private final WaterColumnCalibrationStateDatastore waterColumnCalibrationStateDatastore;
 
   @Autowired
-  public WaterColumnSonarDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
+  public WaterColumnSonarDatasetPanelFactory(InstrumentDatastore instrumentDatastore, WaterColumnCalibrationStateDatastore waterColumnCalibrationStateDatastore) {
     super(instrumentDatastore);
+    this.waterColumnCalibrationStateDatastore = waterColumnCalibrationStateDatastore;
   }
 
   @Override
@@ -35,7 +38,12 @@ public class WaterColumnSonarDatasetPanelFactory extends
   @Override
   protected WaterColumnSonarDatasetPanel createView(WaterColumnSonarDatasetInstrumentModel model,
       WaterColumnSonarDatasetInstrumentController controller) {
-    return new WaterColumnSonarDatasetPanel(model, controller, instrumentDatastore);
+    return new WaterColumnSonarDatasetPanel(
+      model,
+      controller,
+      instrumentDatastore,
+      waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns()
+    );
   }
 
 }

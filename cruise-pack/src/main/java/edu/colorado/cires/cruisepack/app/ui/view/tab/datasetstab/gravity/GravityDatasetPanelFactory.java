@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.gravity;
 
+import edu.colorado.cires.cruisepack.app.datastore.GravityCorrectionModelDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.GravityDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel;
@@ -11,9 +12,12 @@ import org.springframework.stereotype.Component;
 public class GravityDatasetPanelFactory extends
     DatasetPanelFactory<GravityDatasetInstrumentModel, GravityDatasetInstrumentController, GravityDatasetPanel> {
 
+  private final GravityCorrectionModelDatastore gravityCorrectionModelDatastore;
+
   @Autowired
-  public GravityDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
+  public GravityDatasetPanelFactory(InstrumentDatastore instrumentDatastore, GravityCorrectionModelDatastore gravityCorrectionModelDatastore) {
     super(instrumentDatastore);
+    this.gravityCorrectionModelDatastore = gravityCorrectionModelDatastore;
   }
 
   @Override
@@ -33,7 +37,7 @@ public class GravityDatasetPanelFactory extends
 
   @Override
   protected GravityDatasetPanel createView(GravityDatasetInstrumentModel model, GravityDatasetInstrumentController controller) {
-    return new GravityDatasetPanel(model, controller, instrumentDatastore);
+    return new GravityDatasetPanel(model, controller, instrumentDatastore, gravityCorrectionModelDatastore.getCorrectionModelDropDowns());
   }
 
 }

@@ -1,13 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.NavigationDatumDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidNavigationDatumDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,8 +33,8 @@ public class NavigationDatasetInstrumentModel extends BaseDatasetInstrumentModel
   @NotBlank
   private String comments;
   private String commentsError = null;
-  @NotNull @ValidInstrumentDropDownItem
-  private DropDownItem navDatum;
+  @ValidNavigationDatumDropDownItem
+  private DropDownItem navDatum = NavigationDatumDatastore.UNSELECTED_NAVIGATION_DATUM;
   private String navDatumError = null;
 
   public NavigationDatasetInstrumentModel(String instrumentGroupShortCode) {

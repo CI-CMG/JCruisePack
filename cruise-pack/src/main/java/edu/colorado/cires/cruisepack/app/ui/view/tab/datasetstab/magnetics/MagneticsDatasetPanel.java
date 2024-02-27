@@ -34,6 +34,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevel
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -56,10 +58,12 @@ public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrume
   private final LabeledTextFieldPanel sampleRatePanel = new LabeledTextFieldPanel(SAMPLE_RATE_LABEL);
   private final LabeledTextFieldPanel towDistancePanel = new LabeledTextFieldPanel(TOW_DISTANCE_LABEL);
   private final LabeledTextFieldPanel sensorDepthPanel = new LabeledTextFieldPanel(SENSOR_DEPTH);
+  private final List<DropDownItem> correctionModelOptions;
 
 
-  public MagneticsDatasetPanel(MagneticsDatasetInstrumentModel model, MagneticsDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore) {
+  public MagneticsDatasetPanel(MagneticsDatasetInstrumentModel model, MagneticsDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> correctionModelOptions) {
     super(model, controller, instrumentDatastore);
+    this.correctionModelOptions = correctionModelOptions;
   }
 
   @Override
@@ -70,6 +74,9 @@ public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrume
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
+    correctionModelPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
+      correctionModelOptions.toArray(new DropDownItem[0])
+    ));
     sampleRatePanel.getField().setText(model.getSampleRate());
     towDistancePanel.getField().setText(model.getTowDistance());
     sensorDepthPanel.getField().setText(model.getSensorDepth());

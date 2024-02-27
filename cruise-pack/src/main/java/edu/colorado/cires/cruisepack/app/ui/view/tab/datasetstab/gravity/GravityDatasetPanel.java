@@ -36,6 +36,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevel
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -58,10 +60,12 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
   private final LabeledTextFieldPanel departureTiePanel = new LabeledTextFieldPanel(DEPARTURE_TIE_LABEL);
   private final LabeledTextFieldPanel arrivalTiePanel = new LabeledTextFieldPanel(ARRIVAL_TIE_LABEL);
   private final LabeledTextFieldPanel driftPanel = new LabeledTextFieldPanel(DRIFT_LABEL);
+  private final List<DropDownItem> correctionModelOptions;
 
   public GravityDatasetPanel(GravityDatasetInstrumentModel model, GravityDatasetInstrumentController controller,
-      InstrumentDatastore instrumentDatastore) {
+      InstrumentDatastore instrumentDatastore, List<DropDownItem> correctionModelOptions) {
     super(model, controller, instrumentDatastore);
+    this.correctionModelOptions = correctionModelOptions;
   }
 
   @Override
@@ -72,6 +76,9 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
+    correctionModelPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
+      correctionModelOptions.toArray(new DropDownItem[0])
+    ));
     obsRatePanel.getField().setText(model.getObservationRate());
     departureTiePanel.getField().setText(model.getDepartureTie());
     arrivalTiePanel.getField().setText(model.getArrivalTie());

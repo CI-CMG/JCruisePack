@@ -32,6 +32,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevel
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -50,9 +52,11 @@ public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstru
   private final LabeledComboBoxPanel verticalDatumPanel = new LabeledComboBoxPanel(VERTICAL_DATUM_LABEL);
   private final LabeledTextFieldPanel obsRatePanel = new LabeledTextFieldPanel(OBS_RATE_LABEL);
   private final LabeledTextFieldPanel soundVelocityPanel = new LabeledTextFieldPanel(SOUND_VELOCITY_LABEL);
+  private final List<DropDownItem> verticalDatumOptions;
 
-  public SinglebeamDatasetPanel(SinglebeamDatasetInstrumentModel model, SinglebeamDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore) {
+  public SinglebeamDatasetPanel(SinglebeamDatasetInstrumentModel model, SinglebeamDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> verticalDatumOptions) {
     super(model, controller, instrumentDatastore);
+    this.verticalDatumOptions = verticalDatumOptions;
   }
 
   @Override
@@ -63,6 +67,9 @@ public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstru
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     verticalDatumPanel.getInstrumentField().setSelectedItem(model.getVerticalDatum());
+    verticalDatumPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
+      verticalDatumOptions.toArray(new DropDownItem[0])
+    ));
     obsRatePanel.getField().setText(model.getObsRate());
     soundVelocityPanel.getField().setText(model.getSoundVelocity());
 

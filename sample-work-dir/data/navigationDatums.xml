@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<NavigationDatumData xmlns="https://colorado.edu/cires/cruisepack/navigationDatums">
+    <DataVersion>1.0</DataVersion>
+    <NavigationDatums>
+        <NavigationDatum>
+            <Name>Unknown</Name>
+            <Uuid>2b1a38cf-2845-4506-84df-84017e8e8a85</Uuid>
+        </NavigationDatum>
+        <NavigationDatum>
+            <Name>WGS84</Name>
+            <Uuid>38a0260a-0606-4039-a639-25583f1ed8de</Uuid>
+        </NavigationDatum>
+        <NavigationDatum>
+            <Name>NAD83</Name>
+            <Uuid>c880dd11-8a93-4dc9-bbb3-daacbc4b4a0d</Uuid>
+        </NavigationDatum>
+        <NavigationDatum>
+            <Name>Other</Name>
+            <Uuid>b263f39e-6b06-4cff-af2b-249e1ec5e70a</Uuid>
+        </NavigationDatum>
+    </NavigationDatums>
+</NavigationDatumData>

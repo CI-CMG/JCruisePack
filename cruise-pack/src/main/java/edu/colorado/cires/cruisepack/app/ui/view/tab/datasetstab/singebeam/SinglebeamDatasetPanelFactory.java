@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.singebeam;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.SinglebeamVerticalDatumDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.SinglebeamDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<SinglebeamDatasetInstrumentModel, SinglebeamDatasetInstrumentController, SinglebeamDatasetPanel> {
 
+  private final SinglebeamVerticalDatumDatastore singlebeamVerticalDatumDatastore;
 
   @Autowired
-  public SinglebeamDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
+  public SinglebeamDatasetPanelFactory(InstrumentDatastore instrumentDatastore, SinglebeamVerticalDatumDatastore singlebeamVerticalDatumDatastore) {
     super(instrumentDatastore);
+    this.singlebeamVerticalDatumDatastore = singlebeamVerticalDatumDatastore;
   }
 
   @Override
@@ -33,7 +36,7 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
 
   @Override
   protected SinglebeamDatasetPanel createView(SinglebeamDatasetInstrumentModel model, SinglebeamDatasetInstrumentController controller) {
-    return new SinglebeamDatasetPanel(model, controller, instrumentDatastore);
+    return new SinglebeamDatasetPanel(model, controller, instrumentDatastore, singlebeamVerticalDatumDatastore.getVerticalDatumDropDowns());
   }
 
 }

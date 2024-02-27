@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.navigation;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.NavigationDatumDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.NavigationDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Component;
 public class NavigationDatasetPanelFactory extends
     DatasetPanelFactory<NavigationDatasetInstrumentModel, NavigationDatasetInstrumentController, NavigationDatasetPanel> {
 
+  private final NavigationDatumDatastore navigationDatumDatastore;
 
   @Autowired
-  public NavigationDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
+  public NavigationDatasetPanelFactory(InstrumentDatastore instrumentDatastore, NavigationDatumDatastore navigationDatumDatastore) {
     super(instrumentDatastore);
+    this.navigationDatumDatastore = navigationDatumDatastore;
   }
 
   @Override
@@ -34,6 +37,6 @@ public class NavigationDatasetPanelFactory extends
 
   @Override
   protected NavigationDatasetPanel createView(NavigationDatasetInstrumentModel model, NavigationDatasetInstrumentController controller) {
-    return new NavigationDatasetPanel(model, controller, instrumentDatastore);
+    return new NavigationDatasetPanel(model, controller, instrumentDatastore, navigationDatumDatastore.getNavigationDatumDropDowns());
   }
 }

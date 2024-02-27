@@ -1,13 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.MagneticsCorrectionModelDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidMagneticsCorrectionModelDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -38,8 +38,8 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   @NotBlank
   private String comments;
   private String commentsError = null;
-  @NotNull @ValidInstrumentDropDownItem
-  private DropDownItem correctionModel;
+  @ValidMagneticsCorrectionModelDropDownItem
+  private DropDownItem correctionModel = MagneticsCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL;
   private String correctionModelError = null;
   @NotBlank
   private String sampleRate;
