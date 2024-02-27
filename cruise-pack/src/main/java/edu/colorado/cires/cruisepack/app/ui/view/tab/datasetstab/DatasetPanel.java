@@ -131,6 +131,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
 
   private void setupMvc() {
 //    packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> handleDirValue(packageDirectoryField.getText()));
+    releaseDate.addDateChangeListener((evt) -> controller.setPublicReleaseDate(evt.getNewDate()));
     removeButton.addActionListener((evt) -> {
       for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetRemovedListeners) {
         listener.handle(model);
