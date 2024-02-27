@@ -39,9 +39,13 @@ public class CruiseInformationModel extends PropertyChangeModel {
 
   public void updateFormState(CruiseMetadata cruiseMetadata) {
     setCruiseTitle(cruiseMetadata.getCruiseTitle());
+    setCruiseTitleError(null);
     setCruisePurpose(cruiseMetadata.getCruisePurpose());
+    setCruisePurposeError(null);
     setCruiseDescription(cruiseMetadata.getCruiseDescription());
-    // setDocumentsPath
+    setCruiseDescriptionError(null);
+    setDocumentsPath(null); // TODO: Get from metadata
+    setDocumentsPathError(null);
   }
 
   public Path getDocumentsPath() {
