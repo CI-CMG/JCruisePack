@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.InstrumentNameHolder;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -54,12 +55,22 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   protected abstract InstrumentStatus getSelectedInstrumentProcessingLevel();
 
   public Optional<InstrumentDetailPackageKey> getPackageKey() {
-    return getSelectedInstrument().map(dd -> new InstrumentDetailPackageKey(instrumentGroupShortCode, dd.getId()));
+    return getSelectedInstrument().map(dd -> new InstrumentDetailPackageKey(instrumentGroupShortCode, dd.getValue()));
   }
 
   public Optional<InstrumentNameHolder> getInstrumentNameHolder() {
-    return getSelectedInstrument().map(dd -> new InstrumentNameHolder(dd.getValue(), dd.getId(), getSelectedInstrumentProcessingLevel(), dataPath,
-        getAdditionalFiles()));
+    Optional<DropDownItem> maybeInstrument=  getSelectedInstrument();
+    if (maybeInstrument.isEmpty()) {
+      return Optional.empty();
+    }
+    DropDownItem selectedInstrument = maybeInstrument.get();
+    Instrument instrument = (Instrument) selectedInstrument.getRecord();
+    if (instrument == null) {
+      return Optional.empty();
+    }
+
+    return Optional.of(new InstrumentNameHolder(instrument.getUuid(), instrument.getName(), instrument.getShortName(), getSelectedInstrumentProcessingLevel(), dataPath,
+        getAdditionalFiles(), getPublicReleaseDate(), getComments()));
   }
 
   protected List<AdditionalFiles> getAdditionalFiles() {
@@ -85,5 +96,6 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   }
 
   protected abstract void setErrors(String propertyPath, String message);
+  public abstract String getComments();
   
 }

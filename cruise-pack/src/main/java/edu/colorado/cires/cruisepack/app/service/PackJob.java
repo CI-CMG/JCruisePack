@@ -93,6 +93,7 @@ public class PackJob {
 
         instrumentDetails.add(
             InstrumentDetail.builder()
+                .setUuid(nameHolder.getUuid())
                 .setStatus(nameHolder.getStatus())
                 .setInstrument(nameHolder.getInstrument())
                 .setShortName(nameHolder.getShortName())
@@ -102,6 +103,8 @@ public class PackJob {
                 .setDirName(nameHolder.getDirName())
                 .setBagName(nameHolder.getBagName())
                 .setAdditionalFiles(nameHolder.getAdditionalFiles())
+                .setReleaseDate(nameHolder.getReleaseDate())
+                .setDataComment(nameHolder.getDataComment())
                 .build());
 
       }
