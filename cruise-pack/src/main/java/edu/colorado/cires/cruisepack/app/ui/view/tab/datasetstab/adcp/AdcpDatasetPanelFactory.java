@@ -1,9 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.adcp;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.AdcpDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.AdcpDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +25,26 @@ public class AdcpDatasetPanelFactory extends DatasetPanelFactory<AdcpDatasetInst
   }
 
   @Override
+  public String getInstrumentGroupName() {
+    return AdcpDatasetPanel.INSTRUMENT_SHORT_CODE;
+  }
+
+  @Override
   protected AdcpDatasetInstrumentModel createModel() {
     return new AdcpDatasetInstrumentModel(getInstrumentGroupShortCode());
+  }
+
+  @Override
+  protected AdcpDatasetInstrumentModel createModel(Instrument instrument) {
+    AdcpDatasetInstrumentModel model = createModel();
+    model.setComments(instrument.getDataComment());
+    model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
+//    model.setDataPath(); TODO
+    model.setProcessingLevel(instrument.getStatus());
+    if (instrument.getReleaseDate() != null) {
+      model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    }
+    return model;
   }
 
   @Override

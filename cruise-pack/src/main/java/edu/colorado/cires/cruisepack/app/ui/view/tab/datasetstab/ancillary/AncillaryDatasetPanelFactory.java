@@ -1,9 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ancillary;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.AncillaryDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +26,25 @@ public class AncillaryDatasetPanelFactory extends
   }
 
   @Override
+  public String getInstrumentGroupName() {
+    return "Ancillary Data";
+  }
+
+  @Override
   protected AncillaryDatasetInstrumentModel createModel() {
     return new AncillaryDatasetInstrumentModel(getInstrumentGroupShortCode());
+  }
+
+  @Override
+  protected AncillaryDatasetInstrumentModel createModel(Instrument instrument) {
+    AncillaryDatasetInstrumentModel model = createModel();
+    model.setComments(instrument.getDataComment());
+    model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
+    if (instrument.getReleaseDate() != null) {
+      model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    }
+    // TODO set data path
+    return model;
   }
 
   @Override

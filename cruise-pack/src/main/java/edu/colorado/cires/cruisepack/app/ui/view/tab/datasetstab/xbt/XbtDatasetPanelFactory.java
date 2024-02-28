@@ -1,9 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.xbt;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.XbtDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.XbtDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +25,27 @@ public class XbtDatasetPanelFactory extends DatasetPanelFactory<XbtDatasetInstru
   }
 
   @Override
+  public String getInstrumentGroupName() {
+    return XbtDatasetPanel.INSTRUMENT_SHORT_CODE;
+  }
+
+  @Override
   protected XbtDatasetInstrumentModel createModel() {
     return new XbtDatasetInstrumentModel(getInstrumentGroupShortCode());
+  }
+
+  @Override
+  protected XbtDatasetInstrumentModel createModel(Instrument instrument) {
+    XbtDatasetInstrumentModel model = createModel();
+//    model.setDataPath(); TODO
+    model.setComments(instrument.getDataComment());
+    
+    model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
+    model.setProcessingLevel(instrument.getStatus());
+    if (instrument.getReleaseDate() != null) {
+      model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    }
+    return model;
   }
 
   @Override

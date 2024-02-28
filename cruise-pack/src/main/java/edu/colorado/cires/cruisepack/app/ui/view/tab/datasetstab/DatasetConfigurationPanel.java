@@ -7,7 +7,6 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -37,8 +35,8 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   private final InstrumentDatastore instrumentDatastore;
   private final DatasetPanelFactoryResolver datasetPanelFactoryResolver;
   private final ReactiveViewRegistry reactiveViewRegistry;
-  private final List<DatasetListener<BaseDatasetInstrumentModel>> datasetCreatedListeners = new ArrayList<>(0);
-  private final List<DatasetListener<BaseDatasetInstrumentModel>> datasetRemovedListeners = new ArrayList<>(0);
+  private final List<DatasetListener> datasetCreatedListeners = new ArrayList<>(0);
+  private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
 
   private List<DatasetPanel> rows = new ArrayList<>();
   private JLabel datasetsErrorLabel = createErrorLabel();
@@ -55,19 +53,19 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
     this.reactiveViewRegistry = reactiveViewRegistry;
   }
 
-  public void addDatasetCreatedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+  public void addDatasetCreatedListener(DatasetListener listener) {
     datasetCreatedListeners.add(listener);
   }
 
-  public void removeDatasetCreatedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+  public void removeDatasetCreatedListener(DatasetListener listener) {
     datasetCreatedListeners.add(listener);
   }
 
-  public void addDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+  public void addDatasetRemovedListener(DatasetListener listener) {
     datasetRemovedListeners.add(listener);
   }
 
-  public void removeDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+  public void removeDatasetRemovedListener(DatasetListener listener) {
     datasetRemovedListeners.remove(listener);
   }
 
@@ -133,32 +131,42 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
 
     if (dataType != null && !dataType.equals(InstrumentDatastore.UNSELECTED_DATASET_TYPE)) {
       DatasetPanel<?, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
-      row.addDatasetRemovedListener((evt) -> {
-        removeRow(row);
-      });
-      remove(fluff);
-      add(row, configureLayout(0, rows.size(), c -> {
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weighty = 0;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-      }));
-      rows.add(row);
-      addFluff();
-      uiRefresher.refresh();
-
-      for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetCreatedListeners) {
-        listener.handle(row.getModel());
+      for (DatasetListener listener : datasetCreatedListeners) {
+        listener.handle(row);
       }
     }
   }
+  
+  public void createRow(DatasetPanel<?, ?> row) {
+    row.addDatasetRemovedListener((evt) -> handleRowRemove(row));
+    remove(fluff);
+    add(row, configureLayout(0, rows.size(), c -> {
+      c.fill = GridBagConstraints.HORIZONTAL;
+      c.weighty = 0;
+      c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    rows.add(row);
+    addFluff();
+    uiRefresher.refresh();
+  }
 
   public void removeRow(DatasetPanel row) {
-    for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetRemovedListeners) {
-      listener.handle(row.getModel());
-    }
     remove(row);
     rows.remove(row);
     uiRefresher.refresh();
+  }
+  
+  public void removeAllRows() {
+    List<DatasetPanel> panels = new ArrayList<>(rows);
+    for (DatasetPanel<?, ?> panel : panels) {
+      removeRow(panel);
+    }
+  }
+  
+  private void handleRowRemove(DatasetPanel<?, ?> row) {
+    for (DatasetListener listener : datasetRemovedListeners) {
+      listener.handle(row);
+    }
   }
 
   @Override

@@ -76,8 +76,8 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel<WaterColumnSonarD
   @Override
   public void init() {
     super.init();
-    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
+    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
     calibrationStatePanel.getInstrumentField().setSelectedItem(model.getCalibrationState());

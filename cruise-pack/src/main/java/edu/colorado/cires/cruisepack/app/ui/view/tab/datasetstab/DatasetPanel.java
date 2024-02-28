@@ -21,7 +21,6 @@ import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -48,7 +47,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private final JTextField directoryPath = new JTextField();
   private final JLabel dataPathErrorLabel = createErrorLabel();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
-  private final List<DatasetListener<BaseDatasetInstrumentModel>> datasetRemovedListeners = new ArrayList<>(0);
+  private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
 
   protected DatasetPanel(M model, C controller, InstrumentDatastore instrumentDatastore) {
     dataTypeName = instrumentDatastore.getNameForShortCode(getInstrumentShortCode());
@@ -57,11 +56,11 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     this.instrumentDatastore = instrumentDatastore;
   }
 
-  public void addDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+  public void addDatasetRemovedListener(DatasetListener listener) {
     datasetRemovedListeners.add(listener);
   }
 
-  public void removeDatasetRemovedListener(DatasetListener<BaseDatasetInstrumentModel> listener) {
+  public void removeDatasetRemovedListener(DatasetListener listener) {
     datasetRemovedListeners.remove(listener);
   }
 
@@ -133,8 +132,8 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
 //    packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> handleDirValue(packageDirectoryField.getText()));
     releaseDate.addDateChangeListener((evt) -> controller.setPublicReleaseDate(evt.getNewDate()));
     removeButton.addActionListener((evt) -> {
-      for (DatasetListener<BaseDatasetInstrumentModel> listener : datasetRemovedListeners) {
-        listener.handle(model);
+      for (DatasetListener listener : datasetRemovedListeners) {
+        listener.handle(this);
       }
     });
   }

@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
+import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
 import java.util.Collection;
@@ -34,5 +36,24 @@ public class DatasetPanelFactoryResolver {
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("Unable to find panel factory for type: " + dataType))
         .createPanel();
+  }
+  
+  public DatasetPanel createDatasetPanel(Instrument instrument) {
+    BaseDatasetInstrumentModel model = createDatasetModel(instrument);
+    String dataType = instrument.getType();
+    return factories.stream()
+        .filter(dpf -> dpf.getInstrumentGroupName().equals(dataType))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Unable to find panel factory for type: " + dataType))
+        .createPanel(model);
+  }
+  
+  private BaseDatasetInstrumentModel createDatasetModel(Instrument instrument) {
+    String dataType = instrument.getType();
+    return factories.stream()
+        .filter(dpf -> dpf.getInstrumentGroupName().equals(dataType))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("Unable to find panel factory for type: " + dataType))
+        .createModel(instrument);
   }
 }

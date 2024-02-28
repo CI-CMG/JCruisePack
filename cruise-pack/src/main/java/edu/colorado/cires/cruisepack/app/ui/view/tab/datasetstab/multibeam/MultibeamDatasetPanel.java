@@ -44,8 +44,8 @@ public class MultibeamDatasetPanel extends DatasetPanel<MultibeamDatasetInstrume
   @Override
   public void init() {
     super.init();
-    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
+    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
 

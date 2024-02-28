@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,12 +27,12 @@ public class DatasetsController implements PropertyChangeListener {
     datasetsModel.addChangeListener(this);
   }
 
-  public void addDataset(BaseDatasetInstrumentModel dataset) {
-    datasetsModel.addDataset(dataset);
+  public void addDataset(DatasetPanel<?, ?> row) {
+    datasetsModel.addDataset(row);
   }
 
-  public void removeDataset(BaseDatasetInstrumentModel dataset) {
-    datasetsModel.removeDataset(dataset);
+  public void removeDataset(DatasetPanel<?, ?> row) {
+    datasetsModel.removeDataset(row);
   }
 
   @Override

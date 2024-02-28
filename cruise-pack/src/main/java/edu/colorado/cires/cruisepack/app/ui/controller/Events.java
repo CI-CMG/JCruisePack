@@ -85,7 +85,9 @@ public final class Events {
   public static final String UPDATE_DOCS_DIRECTORY_ERROR = "UPDATE_DOCS_DIRECTORY_ERROR";
 
   // Datasets
-  public static final String UPDATE_DATASET_LIST = "UPDATE_DATASET_LIST";
+  public static final String CLEAR_DATASET_LIST = "UPDATE_DATASET_LIST";
+  public static final String ADD_DATASET = "ADD_DATASET";
+  public static final String REMOVE_DATASET = "REMOVE_DATASET";
   public static final String UPDATE_DATASET_DATA_PREFIX = "UPDATE_DATASET_DATA_";
   public static final String UPDATE_DATASETS_ERROR = "UPDATE_DATASETS_ERROR";
 

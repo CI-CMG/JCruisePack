@@ -2,9 +2,12 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.navigation;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.NavigationDatumDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.NavigationDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +29,27 @@ public class NavigationDatasetPanelFactory extends
   }
 
   @Override
+  public String getInstrumentGroupName() {
+    return "Navigation";
+  }
+
+  @Override
   protected NavigationDatasetInstrumentModel createModel() {
     return new NavigationDatasetInstrumentModel(getInstrumentGroupShortCode());
+  }
+
+  @Override
+  protected NavigationDatasetInstrumentModel createModel(Instrument instrument) {
+    NavigationDatasetInstrumentModel model = createModel();
+//    model.setDataPath(); TODO
+    model.setComments(instrument.getDataComment());
+    model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
+//    model.setNavDatum(); TODO
+    model.setProcessingLevel(instrument.getStatus());
+    if (instrument.getReleaseDate() != null) {
+      model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    }
+    return model;
   }
 
   @Override

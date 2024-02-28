@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.DatasetsController;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
@@ -60,12 +61,16 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
     addDatasetButton.addActionListener((evt) -> datasetConfigurationPanel.addRow());
-    datasetConfigurationPanel.addDatasetCreatedListener((m) -> datasetsController.addDataset(m));
-    datasetConfigurationPanel.addDatasetRemovedListener((m) -> datasetsController.removeDataset(m));
+    datasetConfigurationPanel.addDatasetCreatedListener(datasetsController::addDataset);
+    datasetConfigurationPanel.addDatasetRemovedListener(datasetsController::removeDataset);
   }
 
   @Override
   public void onChange(PropertyChangeEvent evt) {
-
+    switch (evt.getPropertyName()) {
+      case Events.ADD_DATASET -> datasetConfigurationPanel.createRow((DatasetPanel<?, ?>) evt.getNewValue());
+      case Events.REMOVE_DATASET -> datasetConfigurationPanel.removeRow((DatasetPanel<?, ?>) evt.getOldValue());
+      case Events.CLEAR_DATASET_LIST -> datasetConfigurationPanel.removeAllRows();
+    }
   }
 }

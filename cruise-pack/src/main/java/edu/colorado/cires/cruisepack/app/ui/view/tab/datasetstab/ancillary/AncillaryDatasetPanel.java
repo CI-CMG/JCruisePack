@@ -42,8 +42,8 @@ public class AncillaryDatasetPanel extends DatasetPanel<AncillaryDatasetInstrume
   @Override
   public void init() {
     super.init();
-    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
+    instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     commentsPanel.getCommentsField().setText(model.getComments());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));

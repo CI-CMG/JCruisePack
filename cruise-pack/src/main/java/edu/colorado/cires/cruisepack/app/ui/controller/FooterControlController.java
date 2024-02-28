@@ -102,6 +102,7 @@ public class FooterControlController implements PropertyChangeListener {
     peopleModel.updateFormState(cruiseMetadata);
     cruiseInformationModel.updateFormState(cruiseMetadata);
     omicsModel.updateFormState(cruiseMetadata);
+    datasetsModel.updateFormState(cruiseMetadata);
   }
 
   public void restoreDefaultsGlobal() {

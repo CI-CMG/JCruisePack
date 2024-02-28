@@ -35,6 +35,10 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
     this.instrumentGroupShortCode = instrumentGroupShortCode;
   }
 
+  public String getInstrumentGroupShortCode() {
+    return instrumentGroupShortCode;
+  }
+
   public LocalDate getPublicReleaseDate() {
     return publicReleaseDate;
   }
