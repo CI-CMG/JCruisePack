@@ -43,6 +43,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.Optional;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -226,9 +227,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
     projectsField.addValuesChangedListener((i) -> packageController.setProjects(i));
     existingRecordList.addItemListener((evt) -> {
-      CruiseMetadata metadata = (CruiseMetadata) ((DropDownItem) evt.getItem()).getRecord();
-      if (metadata != null) { // can be default value with no underlying metadata
-        footerControlController.updateFormState(metadata);
+      DropDownItem dropDownItem = (DropDownItem) evt.getItem();
+      Optional<CruiseMetadata> maybeMetadata = cruiseDataDatastore.getByPackageId(dropDownItem.getId());
+      if (maybeMetadata.isPresent()) {
+        footerControlController.updateFormState(maybeMetadata.get());
       } else {
         footerControlController.restoreDefaultsGlobal();
       }

@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -55,16 +56,12 @@ public class PackJob {
     return packageId;
   }
 
-  private static Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> getDirNames(DatasetsModel datasetsModel, String packageId) {
+  private static Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> getDirNames(DatasetsModel datasetsModel, String packageId, InstrumentDatastore instrumentDatastore) {
     Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = new LinkedHashMap<>();
     for (BaseDatasetInstrumentModel instrumentModel : datasetsModel.getDatasets()) {
       instrumentModel.getPackageKey().ifPresent(key -> {
-        instrumentModel.getInstrumentNameHolder().ifPresent(nameHolder -> {
-          List<InstrumentNameHolder> holders = namers.get(key);
-          if (holders == null) {
-            holders = new ArrayList<>();
-            namers.put(key, holders);
-          }
+        instrumentDatastore.getInstrument(key).flatMap(instrumentModel::getInstrumentNameHolder).ifPresent(nameHolder -> {
+          List<InstrumentNameHolder> holders = namers.computeIfAbsent(key, k -> new ArrayList<>());
           holders.add(nameHolder);
         });
       });
@@ -74,7 +71,7 @@ public class PackJob {
   }
 
   private static Map<InstrumentDetailPackageKey, List<InstrumentDetail>> getInstruments(DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore, String packageId) {
-    Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = getDirNames(datasetsModel, packageId);
+    Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = getDirNames(datasetsModel, packageId, instrumentDatastore);
     Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new LinkedHashMap<>();
     for (Entry<InstrumentDetailPackageKey, List<InstrumentNameHolder>> entry : namers.entrySet()) {
       InstrumentDetailPackageKey pkg = entry.getKey();
@@ -113,9 +110,9 @@ public class PackJob {
     return map;
   }
 
-  public static PackJob create(PackageModel packageModel, PeopleModel peopleModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore) {
+  public static PackJob create(PackageModel packageModel, PeopleModel peopleModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore, PersonDatastore personDatastore) {
     String packageId = resolvePackageId(packageModel);
-    Person omicsContact = (Person) omicsModel.getContact().getRecord();
+    Person omicsContact = personDatastore.getByUUID(omicsModel.getContact().getId()).orElse(null);
 
     List<String> omicsSamplingTypes = new ArrayList<>(0);
     SamplingTypesModel samplingTypesModel = omicsModel.getSamplingTypes();
@@ -232,7 +229,7 @@ public class PackJob {
             .withUuid(dd.getId())
             .withName(dd.getValue())
           .build()).toList())
-        .setMetadataAuthor(peopleModel.getMetadataAuthor() == null ? null : (Person) peopleModel.getMetadataAuthor().getRecord())
+        .setMetadataAuthor(peopleModel.getMetadataAuthor() == null ? null : personDatastore.getByUUID(peopleModel.getMetadataAuthor().getId()).orElse(null))
         .build();
   }
 

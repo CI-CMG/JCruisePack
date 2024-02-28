@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
@@ -21,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
@@ -44,13 +44,14 @@ public class FooterControlController implements PropertyChangeListener {
   private final PortDatastore portDatastore;
   private final ShipDatastore shipDatastore;
   private final SeaDatastore seaDatastore;
+  private final PersonDatastore personDatastore;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
       BeanFactory beanFactory, PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
       CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, 
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
-      PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore) {
+      PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -66,6 +67,7 @@ public class FooterControlController implements PropertyChangeListener {
     this.portDatastore = portDatastore;
     this.shipDatastore = shipDatastore;
     this.seaDatastore = seaDatastore;
+    this.personDatastore = personDatastore;
   }
 
   @PostConstruct
@@ -117,7 +119,7 @@ public class FooterControlController implements PropertyChangeListener {
     if (packageModel.getCruiseId() == null) {
       setSaveWarningDialogueVisible(true);
     } else {
-      PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore);
+      PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
       cruiseDataDatastore.save(packJob);
       emitPackageId(packJob.getPackageId());
       if (!fromExitPrompt) {
@@ -131,16 +133,7 @@ public class FooterControlController implements PropertyChangeListener {
   }
 
   public void exitApplication() {
-    int exitCode = SpringApplication.exit(applicationContext, new ExitCodeGenerator[] {
-      new ExitCodeGenerator() {
-
-        @Override
-        public int getExitCode() {
-          return 0;
-        }
-        
-      }
-    });
+    int exitCode = SpringApplication.exit(applicationContext, () -> 0);
     System.exit(exitCode);
   }
 

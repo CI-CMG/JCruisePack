@@ -289,23 +289,21 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
 
         peopleList.addItemListener((evt) -> {
             DropDownItem item = (DropDownItem) evt.getItem();
-            Person person = (Person) item.getRecord();
-            if (person == null) {
-                return;
-            }
-            personController.setName(person.getName());
-            personController.setPosition(person.getPosition());
-            personController.setOrganization(person.getOrganization());
-            personController.setStreet(person.getStreet());
-            personController.setCity(person.getCity());
-            personController.setState(person.getState());
-            personController.setZip(person.getZip());
-            personController.setCountry(person.getCountry());
-            personController.setPhone(person.getPhone());
-            personController.setEmail(person.getEmail());
-            personController.setOrcidID(person.getOrcid());
-            personController.setUUID(person.getUuid());
-            personController.setUse(person.isUse());
+            personDatastore.getByUUID(item.getId()).ifPresent(person -> {
+                personController.setName(person.getName());
+                personController.setPosition(person.getPosition());
+                personController.setOrganization(person.getOrganization());
+                personController.setStreet(person.getStreet());
+                personController.setCity(person.getCity());
+                personController.setState(person.getState());
+                personController.setZip(person.getZip());
+                personController.setCountry(person.getCountry());
+                personController.setPhone(person.getPhone());
+                personController.setEmail(person.getEmail());
+                personController.setOrcidID(person.getOrcid());
+                personController.setUUID(person.getUuid());
+                personController.setUse(person.isUse());
+            });
         });
         addTextListener(personController::setName, nameField);
         addTextListener(personController::setPosition, positionField);

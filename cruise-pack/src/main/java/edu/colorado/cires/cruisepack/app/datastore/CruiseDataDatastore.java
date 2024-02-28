@@ -20,7 +20,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   private final ObjectMapper objectMapper;
   private List<DropDownItem> dropDownItems;
   private final ReactiveViewRegistry reactiveViewRegistry;
+  private List<CruiseMetadata> cruises;
 
   public CruiseDataDatastore(MetadataService metadataService, ServiceProperties serviceProperties, ObjectMapper objectMapper, ReactiveViewRegistry reactiveViewRegistry) {
     this.metadataService = metadataService;
@@ -58,11 +61,11 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
 
   private void load() {
     Path cruiseMetadataDir = getCruiseMetadataDir();
-    List<CruiseMetadata> metadata = new ArrayList<>(0);
-    try {
-      Files.walk(cruiseMetadataDir).filter(p -> !p.toFile().isDirectory()).forEach(p -> {
+    cruises = new ArrayList<>(0);
+    try (Stream<Path> paths = Files.walk(cruiseMetadataDir).filter(p -> !p.toFile().isDirectory())) {
+      paths.forEach(p -> {
         try {
-          metadata.add(objectMapper.readValue(p.toFile(), CruiseMetadata.class));
+          cruises.add(objectMapper.readValue(p.toFile(), CruiseMetadata.class));
         } catch (IOException e) {
           throw new IllegalStateException("Cannot read cruise metadata from file: " + p, e);
         }
@@ -71,10 +74,10 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
       throw new IllegalStateException("Cannot read cruise metadata from directory: " + cruiseMetadataDir, e);
     }
 
-    List<DropDownItem> items = metadata.stream()
-    .map(m -> new DropDownItem(m.getPackageId(), m.getPackageId(), m))
-    .sorted((c1, c2) -> c1.getValue().compareToIgnoreCase(c2.getValue()))
-    .collect(Collectors.toList());
+    List<DropDownItem> items = cruises.stream()
+      .map(m -> new DropDownItem(m.getPackageId(), m.getPackageId()))
+      .sorted((c1, c2) -> c1.getValue().compareToIgnoreCase(c2.getValue()))
+      .collect(Collectors.toList());
 
     items.add(0, UNSELECTED_CRUISE);
 
@@ -101,5 +104,11 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     for (ReactiveView view : reactiveViewRegistry.getViews()) {
       view.onChange(evt);
     }
+  }
+  
+  public Optional<CruiseMetadata> getByPackageId(String packageId) {
+    return cruises.stream()
+        .filter(m -> m.getPackageId().equals(packageId))
+        .findFirst();
   }
 }

@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
@@ -35,6 +36,7 @@ public class PackagingValidationService {
   private final PackageController packageController;
   private final FooterControlController footerControlController;
   private final InstrumentDatastore instrumentDatastore;
+  private final PersonDatastore personDatastore;
 
   @Autowired
   public PackagingValidationService(
@@ -46,7 +48,9 @@ public class PackagingValidationService {
       PackageController packageController,
       FooterControlController footerControlController,
       InstrumentDatastore instrumentDatastore,
-      PeopleModel peopleModel) {
+      PeopleModel peopleModel,
+      PersonDatastore personDatastore
+  ) {
     this.validator = validator;
     this.packageModel = packageModel;
     this.omicsModel = omicsModel;
@@ -56,6 +60,7 @@ public class PackagingValidationService {
     this.footerControlController = footerControlController;
     this.instrumentDatastore = instrumentDatastore;
     this.peopleModel = peopleModel;
+    this.personDatastore = personDatastore;
   }
 
   public Optional<PackJob> validate() {
@@ -77,7 +82,7 @@ public class PackagingValidationService {
             omicsViolations.isEmpty() &&
             datasetsViolations.isEmpty() &&
             peopleViolations.isEmpty()) {
-      return Optional.of(PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore));
+      return Optional.of(PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore));
     }
     return Optional.empty();
   }

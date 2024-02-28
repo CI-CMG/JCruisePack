@@ -1,25 +1,5 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -34,6 +14,24 @@ import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class OrganizationDatastore extends PropertyChangeModel implements PropertyChangeListener {
@@ -42,6 +40,7 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
     private final ServiceProperties serviceProperties;
     private List<DropDownItem> organizationDropDowns;
     private final ReactiveViewRegistry reactiveViewRegistry;
+    private  List<Organization> organizations;
 
     @Autowired
     public OrganizationDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
@@ -57,7 +56,10 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
 
     
     private void load() {
-        List<DropDownItem> items = mergeDropDownItemLists(readOrganizations("data"), readOrganizations("local-data"));
+        organizations = mergeOrganizations(readOrganizations("data"), readOrganizations("local-data"));
+        List<DropDownItem> items = organizations.stream()
+            .map(o -> new DropDownItem(o.getUuid(), o.getName()))
+            .collect(Collectors.toList());
         items.add(0, UNSELECTED_ORGANIZATION);
 
         setOrganizationDropDowns(items);
@@ -73,23 +75,24 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
 
     public List<DropDownItem> getEnabledOrganizationDropDowns() {
         return organizationDropDowns.stream()
-        .filter(o -> {
-            Organization organization = (Organization) o.getRecord();
-            if (organization == null) {
-                return true;
-            }
-
-            return organization.isUse();
-        })
+        .filter(dd -> 
+            getByUUID(dd.getId())
+                .map(Organization::isUse)
+                .orElse(dd.equals(UNSELECTED_ORGANIZATION))
+        )
         .collect(Collectors.toList());
     }
 
     public void save(OrganizationModel organizationModel) {
         Organization organization = organizationFromModel(organizationModel);
-        DropDownItem dropDownItem = new DropDownItem(organization.getUuid(), organization.getName(), organization);
-        List<DropDownItem> dropDownItems = mergeDropDownItemLists(
+        OrganizationData newOrganizationData = new OrganizationData();
+        OrganizationList newOrganizationList = new OrganizationList();
+        List<Organization> listWithNewOrganization = newOrganizationList.getOrganizations();
+        listWithNewOrganization.add(organization);
+        newOrganizationData.setOrganizations(newOrganizationList);
+        List<Organization> mergedOrganizations = mergeOrganizations(
             readOrganizations("local-data"),
-             Collections.singletonList(dropDownItem)
+             newOrganizationData
         );
 
         OrganizationData organizationData = new OrganizationData();
@@ -97,9 +100,7 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         OrganizationList organizationList = new OrganizationList();
         List<Organization> organizations = organizationList.getOrganizations();
         organizations.addAll(
-            dropDownItems.stream()
-            .map(i -> (Organization) i.getRecord())
-            .collect(Collectors.toList())
+            mergedOrganizations
         );
         organizationData.setOrganizations(organizationList);
 
@@ -131,17 +132,17 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         return organization;
     }
 
-    private List<DropDownItem> mergeDropDownItemLists(List<DropDownItem> defaults, List<DropDownItem> overrides) {
-        Map<String, DropDownItem> merged = new HashMap<>(0);
-        defaults.forEach(i -> merged.put(i.getId(), i));
-        overrides.forEach(i -> merged.put(i.getId(), i));
+    private List<Organization> mergeOrganizations(OrganizationData defaults, OrganizationData overrides) {
+        Map<String, Organization> merged = new HashMap<>(0);
+        defaults.getOrganizations().getOrganizations().forEach(o -> merged.put(o.getUuid(), o));
+        overrides.getOrganizations().getOrganizations().forEach(o -> merged.put(o.getUuid(), o));
 
         return merged.values().stream()
-            .sorted((p1, p2) -> p1.getValue().compareToIgnoreCase(p2.getValue()))
+            .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
             .collect(Collectors.toList());
     }
 
-    private List<DropDownItem> readOrganizations(String dir) {
+    private OrganizationData readOrganizations(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
         Path peopleFile = dataDir.resolve("organizations.xml");
@@ -155,12 +156,13 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         } catch (IOException | JAXBException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
-        List<DropDownItem> dropDowns = new ArrayList<>(organizationData.getOrganizations().getOrganizations().size() + 1);
-        organizationData.getOrganizations().getOrganizations().stream()
-            .sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()))
-            .map(organization -> new DropDownItem(organization.getUuid(), organization.getName(), organization))
-            .forEach(dropDowns::add);
-        return dropDowns;
+        return organizationData;
+    }
+    
+    public Optional<Organization> getByUUID(String uuid) {
+        return organizations.stream()
+            .filter(o -> o.getUuid().equals(uuid))
+            .findFirst();
     }
 
     @Override

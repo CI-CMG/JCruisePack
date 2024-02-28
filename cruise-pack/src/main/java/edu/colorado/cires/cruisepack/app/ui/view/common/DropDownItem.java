@@ -7,27 +7,17 @@ public class DropDownItem {
   private final String id;
   private final String value;
   private final String errorMessage;
-  private final Object record;
 
   public DropDownItem(String id, String value) {
     this.id = id;
     this.value = value;
     this.errorMessage = null;
-    this.record = null;
   }
 
   public DropDownItem(String id, String value, String errorMessage) {
     this.id = id;
     this.value = value;
     this.errorMessage = errorMessage;
-    this.record = null;
-  }
-
-  public DropDownItem(String id, String value, Object record) {
-    this.id = id;
-    this.value = value;
-    this.errorMessage = null;
-    this.record = record;
   }
 
   public String getId() {
@@ -40,10 +30,6 @@ public class DropDownItem {
 
   public String getErrorMessage() {
     return errorMessage;
-  }
-
-  public Object getRecord() {
-    return record;
   }
 
   @Override

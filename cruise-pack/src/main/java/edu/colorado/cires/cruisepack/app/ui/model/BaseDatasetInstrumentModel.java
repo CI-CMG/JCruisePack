@@ -62,19 +62,28 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
     return getSelectedInstrument().map(dd -> new InstrumentDetailPackageKey(instrumentGroupShortCode, dd.getValue()));
   }
 
-  public Optional<InstrumentNameHolder> getInstrumentNameHolder() {
-    Optional<DropDownItem> maybeInstrument=  getSelectedInstrument();
+  public Optional<InstrumentNameHolder> getInstrumentNameHolder(Instrument referenceInstrument) {
+    Optional<DropDownItem> maybeInstrument = getSelectedInstrument();
     if (maybeInstrument.isEmpty()) {
       return Optional.empty();
     }
     DropDownItem selectedInstrument = maybeInstrument.get();
-    Instrument instrument = (Instrument) selectedInstrument.getRecord();
-    if (instrument == null) {
-      return Optional.empty();
+    if (selectedInstrument.getId().equals(referenceInstrument.getUuid()) && selectedInstrument.getValue().equals(referenceInstrument.getShortName())) {
+      return Optional.of(
+          new InstrumentNameHolder(
+              referenceInstrument.getUuid(),
+              referenceInstrument.getName(),
+              referenceInstrument.getShortName(),
+              getSelectedInstrumentProcessingLevel(),
+              dataPath,
+              getAdditionalFiles(),
+              getPublicReleaseDate(),
+              getComments()
+          )
+      );
     }
-
-    return Optional.of(new InstrumentNameHolder(instrument.getUuid(), instrument.getName(), instrument.getShortName(), getSelectedInstrumentProcessingLevel(), dataPath,
-        getAdditionalFiles(), getPublicReleaseDate(), getComments()));
+    
+    return Optional.empty();
   }
 
   protected List<AdditionalFiles> getAdditionalFiles() {

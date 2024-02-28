@@ -65,7 +65,7 @@ public class InstrumentDatastore {
     instrumentDropDowns = new HashMap<>(0);
     instrumentData.getInstrumentGroups().getInstrumentGroups().forEach((ig) -> {
       List<DropDownItem> instruments = new ArrayList<>(ig.getInstruments().getInstruments().stream()
-        .map(i -> new DropDownItem(i.getUuid(), i.getShortName(), i))
+        .map(i -> new DropDownItem(i.getUuid(), i.getShortName()))
         .sorted((i1, i2) -> i1.getValue().compareToIgnoreCase(i2.getValue()))
         .toList());
       instruments.add(0, UNSELECTED_INSTRUMENT);

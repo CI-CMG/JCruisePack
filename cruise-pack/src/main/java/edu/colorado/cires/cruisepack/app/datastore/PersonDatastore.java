@@ -1,25 +1,5 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -34,6 +14,24 @@ import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PersonDatastore extends PropertyChangeModel implements PropertyChangeListener {
@@ -43,6 +41,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
     private final ServiceProperties serviceProperties;
     private List<DropDownItem> personDropDowns;
     private final ReactiveViewRegistry reactiveViewRegistry;
+    private List<Person> people;
 
     @Autowired
     public PersonDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
@@ -57,7 +56,10 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
     }
     
     private void load() {
-        List<DropDownItem> items = mergeDropDownItemLists(readPeople("data"), readPeople("local-data"));
+        people = mergeDropDownItemLists(readPeople("data"), readPeople("local-data"));
+        List<DropDownItem> items = people.stream()
+                .map(p -> new DropDownItem(p.getUuid(), p.getName()))
+                .collect(Collectors.toList());
         items.add(0, UNSELECTED_PERSON);
 
         setPersonDropDowns(items);
@@ -67,7 +69,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         setIfChanged(Events.UPDATE_PERSON_DATA_STORE, items, () -> new ArrayList<DropDownItem>(0), (i) -> this.personDropDowns = i);
     }
 
-    private List<DropDownItem> readPeople(String dir) {
+    private PersonData readPeople(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
         Path peopleFile = dataDir.resolve("people.xml");
@@ -81,45 +83,43 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         } catch (IOException | JAXBException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
-        List<DropDownItem> dropDowns = new ArrayList<>(personData.getPeople().getPersons().size() + 1);
-        personData.getPeople().getPersons().stream()
-            .sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()))
-            .map(person -> new DropDownItem(person.getUuid(), person.getName(), person))
-            .forEach(dropDowns::add);
-        return dropDowns;
+        
+        return personData;
     }
 
     public List<DropDownItem> getEnabledPersonDropDowns() {
         return personDropDowns.stream()
-            .filter((i) -> {
-                Person person = (Person) i.getRecord();
-                if (person == null) {
-                    return true;
-                }
-                return person.isUse();
-            }).collect(Collectors.toList());
+            .filter((dd) -> 
+                getByUUID(dd.getId())
+                    .map(Person::isUse)
+                    .orElse(dd.equals(UNSELECTED_PERSON))
+            ).collect(Collectors.toList());
     }
 
     public List<DropDownItem> getAllPersonDropDowns() {
         return personDropDowns;
     }
 
-    private List<DropDownItem> mergeDropDownItemLists(List<DropDownItem> defaults, List<DropDownItem> overrides) {
-        Map<String, DropDownItem> merged = new HashMap<>(0);
-        defaults.forEach(i -> merged.put(i.getId(), i));
-        overrides.forEach(i -> merged.put(i.getId(), i));
+    private List<Person> mergeDropDownItemLists(PersonData defaults, PersonData overrides) {
+        Map<String, Person> merged = new HashMap<>(0);
+        defaults.getPeople().getPersons().forEach(i -> merged.put(i.getUuid(), i));
+        overrides.getPeople().getPersons().forEach(i -> merged.put(i.getUuid(), i));
 
         return merged.values().stream()
-            .sorted((p1, p2) -> p1.getValue().compareToIgnoreCase(p2.getValue()))
+            .sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()))
             .collect(Collectors.toList());
     }
 
     public void save(PersonModel personModel) {
         Person person = personFromModel(personModel);
-        DropDownItem dropDownItem = new DropDownItem(person.getUuid(), person.getName(), person);
-        List<DropDownItem> dropDownItems = mergeDropDownItemLists(
+        PersonData newPersonData = new PersonData();
+        PersonList newPersonList = new PersonList();
+        List<Person> listWithNewPerson = newPersonList.getPersons();
+        listWithNewPerson.add(person);
+        newPersonData.setPeople(newPersonList);
+        List<Person> mergedPeople = mergeDropDownItemLists(
             readPeople("local-data"),
-             Collections.singletonList(dropDownItem)
+             newPersonData
         );
 
         PersonData personData = new PersonData();
@@ -127,9 +127,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         PersonList personList = new PersonList();
         List<Person> people = personList.getPersons();
         people.addAll(
-            dropDownItems.stream()
-            .map(i -> (Person) i.getRecord())
-            .collect(Collectors.toList())
+            mergedPeople
         );
         personData.setPeople(personList);
 
@@ -170,6 +168,12 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         for (ReactiveView view : reactiveViewRegistry.getViews()) {
             view.onChange(evt);
         }
+    }
+    
+    public Optional<Person> getByUUID(String uuid) {
+        return people.stream()
+            .filter(p -> p.getUuid().equals(uuid))
+            .findFirst();
     }
     
 }
