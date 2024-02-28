@@ -45,7 +45,7 @@ public class CruiseMetadata {
   private final List<Instrument> instruments;
   private final Map<String, PackageInstrument> packageInstruments;
 
-  private CruiseMetadata(String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
+  protected CruiseMetadata(String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists, List<String> projects, Omics omics,
       MetadataAuthor metadataAuthor, List<Instrument> instruments, Map<String, PackageInstrument> packageInstruments) {

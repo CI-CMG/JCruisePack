@@ -1,8 +1,10 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -10,10 +12,11 @@ import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,8 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Component
 public class CruiseDataDatastore extends PropertyChangeModel implements PropertyChangeListener {
 
@@ -35,9 +36,8 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   private final MetadataService metadataService;
   private final ServiceProperties serviceProperties;
   private final ObjectMapper objectMapper;
-  private List<DropDownItem> dropDownItems;
   private final ReactiveViewRegistry reactiveViewRegistry;
-  private List<CruiseMetadata> cruises;
+  private List<CruiseData> cruises;
 
   public CruiseDataDatastore(MetadataService metadataService, ServiceProperties serviceProperties, ObjectMapper objectMapper, ReactiveViewRegistry reactiveViewRegistry) {
     this.metadataService = metadataService;
@@ -48,8 +48,21 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
 
   public void save(PackJob packJob) {
     CruiseMetadata metadata = metadataService.createMetadata(packJob);
-    Path metadataFile = getCruiseMetadataDir().resolve(metadata.getPackageId() + ".json");
-    metadataService.writeMetadata(metadata, metadataFile);
+    CruiseData data = CruiseData.dataBuilderFromMetadata(metadata).build();
+    save(Collections.singletonList(data));
+  }
+  
+  public void save(List<CruiseData> cruiseDataList) {
+    cruiseDataList.forEach(cruiseData -> {
+      String packageId = cruiseData.getPackageId();
+      Path metadataFile = getCruiseMetadataDir().resolve(packageId + ".json");
+      try (OutputStream outputStream = new FileOutputStream(metadataFile.toFile())) {
+        objectMapper.writeValue(outputStream, cruiseData);
+      } catch (IOException e) {
+        throw new IllegalStateException("Unable to write cruise data: " + packageId, e);
+      }
+    });
+    
     load();
   }
 
@@ -65,7 +78,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     try (Stream<Path> paths = Files.walk(cruiseMetadataDir).filter(p -> !p.toFile().isDirectory())) {
       paths.forEach(p -> {
         try {
-          cruises.add(objectMapper.readValue(p.toFile(), CruiseMetadata.class));
+          cruises.add(objectMapper.readValue(p.toFile(), CruiseData.class));
         } catch (IOException e) {
           throw new IllegalStateException("Cannot read cruise metadata from file: " + p, e);
         }
@@ -74,23 +87,22 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
       throw new IllegalStateException("Cannot read cruise metadata from directory: " + cruiseMetadataDir, e);
     }
 
-    List<DropDownItem> items = cruises.stream()
-      .map(m -> new DropDownItem(m.getPackageId(), m.getPackageId()))
-      .sorted((c1, c2) -> c1.getValue().compareToIgnoreCase(c2.getValue()))
-      .collect(Collectors.toList());
-
-    items.add(0, UNSELECTED_CRUISE);
-
-    setDropDownItems(items);
+    setCruises(cruises);
   }
 
-  private void setDropDownItems(List<DropDownItem> items) {
-    this.dropDownItems = items;
-    fireChangeEvent(Events.UPDATE_CRUISE_DATA_STORE, Collections.emptyList(), items);
+  private void setCruises(List<CruiseData> cruises) {
+    fireChangeEvent(Events.UPDATE_CRUISE_DATA_STORE, Collections.emptyList(), cruises);
   }
 
   public List<DropDownItem> getDropDownItems() {
-    return dropDownItems;
+    List<DropDownItem> items = cruises.stream()
+        .filter(CruiseData::isUse)
+        .sorted((c1, c2) -> c1.getPackageId().compareToIgnoreCase(c2.getPackageId()))
+        .map(c -> new DropDownItem(c.getPackageId(), c.getPackageId()))
+        .collect(Collectors.toList());
+    items.add(0, UNSELECTED_CRUISE);
+    
+    return items;
   }
 
   private Path getCruiseMetadataDir() {
@@ -106,9 +118,13 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     }
   }
   
-  public Optional<CruiseMetadata> getByPackageId(String packageId) {
+  public Optional<CruiseData> getByPackageId(String packageId) {
     return cruises.stream()
         .filter(m -> m.getPackageId().equals(packageId))
         .findFirst();
+  }
+  
+  public List<CruiseData> getCruises() {
+    return cruises;
   }
 }

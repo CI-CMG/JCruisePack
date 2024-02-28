@@ -19,6 +19,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
@@ -228,7 +229,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     projectsField.addValuesChangedListener((i) -> packageController.setProjects(i));
     existingRecordList.addItemListener((evt) -> {
       DropDownItem dropDownItem = (DropDownItem) evt.getItem();
-      Optional<CruiseMetadata> maybeMetadata = cruiseDataDatastore.getByPackageId(dropDownItem.getId());
+      Optional<CruiseData> maybeMetadata = cruiseDataDatastore.getByPackageId(dropDownItem.getId());
       if (maybeMetadata.isPresent()) {
         footerControlController.updateFormState(maybeMetadata.get());
       } else {

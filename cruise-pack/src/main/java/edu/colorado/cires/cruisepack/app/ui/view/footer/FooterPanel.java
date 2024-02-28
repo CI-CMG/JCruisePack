@@ -42,6 +42,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final FooterControlController footerControlController;
   private final FooterControlModel footerControlModel;
+  private final HideRecordsDialog hideRecordsDialog;
 
   private final JButton hideRecordsButton = new JButton(HIDE_RECORDS_LABEL);
   private final JButton importExportButton = new JButton(IMPORT_EXPORT_LABEL);
@@ -61,10 +62,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel, UiRefresher uiRefresher) {
+      FooterControlModel footerControlModel, HideRecordsDialog hideRecordsDialog, UiRefresher uiRefresher) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
+    this.hideRecordsDialog = hideRecordsDialog;
     this.uiRefresher = uiRefresher;
   }
 
@@ -156,6 +158,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
       public void windowClosing(WindowEvent event) {
         footerControlController.setSaveExitAppDialogueVisible(false);
       }
+    });
+    
+    hideRecordsButton.addActionListener((evt) -> {
+      hideRecordsDialog.pack();
+      hideRecordsDialog.setVisible(true);
     });
   }
 
