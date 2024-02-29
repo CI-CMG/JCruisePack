@@ -2,7 +2,6 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.packagetab;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLabel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createLabelWithErrorPanel;
-import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateAppendableTable;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBoxModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
@@ -13,14 +12,12 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
-
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
@@ -29,11 +26,9 @@ import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.AppendableTableWithSelections;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemList;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
 import jakarta.annotation.PostConstruct;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -45,7 +40,6 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Optional;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;

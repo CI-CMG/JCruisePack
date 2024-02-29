@@ -3,19 +3,15 @@ package edu.colorado.cires.cruisepack.app.ui.util;
 import com.github.lgooddatepicker.components.DatePicker;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.AppendableTableWithSelections;
-
-import java.util.Enumeration;
-import java.util.List;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -125,12 +121,6 @@ public final class FieldUtils {
     if (!Objects.equals(oldValue, newValue)) {
       comboBox.setSelectedItem(newValue);
     }
-  }
-
-  public static void updateAppendableTable(AppendableTableWithSelections appendableTable, PropertyChangeEvent evt) {
-    List<?> newValue = (List<?>) evt.getNewValue();
-    List<DropDownItem> newItems = newValue.stream().map(v -> (DropDownItem) v).collect(Collectors.toList());
-    appendableTable.redrawComboboxes(newItems);
   }
 
   public static void updateLabelText(JLabel label, PropertyChangeEvent evt) {

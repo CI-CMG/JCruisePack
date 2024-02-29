@@ -6,18 +6,10 @@ public class DropDownItem {
 
   private final String id;
   private final String value;
-  private final String errorMessage;
 
   public DropDownItem(String id, String value) {
     this.id = id;
     this.value = value;
-    this.errorMessage = null;
-  }
-
-  public DropDownItem(String id, String value, String errorMessage) {
-    this.id = id;
-    this.value = value;
-    this.errorMessage = errorMessage;
   }
 
   public String getId() {
@@ -26,10 +18,6 @@ public class DropDownItem {
 
   public String getValue() {
     return value;
-  }
-
-  public String getErrorMessage() {
-    return errorMessage;
   }
 
   @Override
@@ -41,12 +29,12 @@ public class DropDownItem {
       return false;
     }
     DropDownItem that = (DropDownItem) o;
-    return Objects.equals(id, that.id) && Objects.equals(value, that.value) && Objects.equals(errorMessage, that.errorMessage);
+    return Objects.equals(id, that.id) && Objects.equals(value, that.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, value, errorMessage);
+    return Objects.hash(id, value);
   }
 
   @Override
