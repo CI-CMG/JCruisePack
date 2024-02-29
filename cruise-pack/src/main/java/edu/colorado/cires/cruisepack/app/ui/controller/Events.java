@@ -10,6 +10,9 @@ public final class Events {
   public static final String UPDATE_DEPARTURE_PORT = "UPDATE_DEPARTURE_PORT";
   public static final String UPDATE_SHIP = "UPDATE_SHIP";
   public static final String UPDATE_PROJECTS = "UPDATE_PROJECTS";
+  public static final String ADD_PROJECT = "ADD_PROJECT";
+  public static final String REMOVE_PROJECT = "REMOVE_PROJECT";
+  public static final String CLEAR_PROJECTS = "CLEAR_PROJECTS";
   public static final String UPDATE_SEGMENT = "UPDATE_SEGMENT";
   public static final String UPDATE_SEGMENT_ERROR = "UPDATE_SEGMENT_ERROR";
   public static final String UPDATE_DEPARTURE_DATE = "UPDATE_DEPARTURE_DATE";
@@ -35,10 +38,15 @@ public final class Events {
   public static final String EMIT_PACKAGE_ID = "EMIT_PACKAGE_ID";
 
 
-  // PeopleModel
-  public static final String UPDATE_SCIENTISTS = "UPDATE_SCIENTISTS";
-  public static final String UPDATE_SOURCE_ORGANIZATIONS = "UPDATE_SOURCE_ORGANIZATIONS";
-  public static final String UPDATE_FUNDING_ORGANIZATIONS = "UPDATE_FUNDING_ORGANIZATIONS";
+  public static final String ADD_SCIENTIST = "ADD_SCIENTIST";
+  public static final String REMOVE_SCIENTIST = "REMOVE_SCIENTIST";
+  public static final String CLEAR_SCIENTISTS = "CLEAR_SCIENTISTS";
+  public static final String ADD_SOURCE_ORGANIZATION = "ADD_SOURCE_ORGANIZATION";
+  public static final String REMOVE_SOURCE_ORGANIZATION = "REMOVE_SOURCE_ORGANIZATION";
+  public static final String CLEAR_SOURCE_ORGANIZATIONS = "CLEAR_SOURCE_ORGANIZATIONS";
+  public static final String ADD_FUNDING_ORGANIZATION = "ADD_FUNDING_ORGANIZATION";
+  public static final String REMOVE_FUNDING_ORGANIZATION = "REMOVE_FUNDING_ORGANIZATION";
+  public static final String CLEAR_FUNDING_ORGANIZATIONS = "CLEAR_FUNDING_ORGANIZATIONS";
   public static final String UPDATE_METADATA_AUTHOR = "UPDATE_METADATA_AUTHOR";
   // Errors
   public static final String UPDATE_SCIENTIST_ERROR = "UPDATE_SCIENTIST_ERROR";

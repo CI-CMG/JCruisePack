@@ -30,6 +30,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.AppendableTableWithSelections;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemList;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
 import jakarta.annotation.PostConstruct;
 
 import java.awt.BorderLayout;
@@ -90,7 +92,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final CruiseDataDatastore cruiseDataDatastore;
   private final FooterControlController footerControlController;
 
-  private final AppendableTableWithSelections projectsField;
+  private final DropDownItemList projectsField;
   private final JTextField cruiseIdField = new JTextField();
   private final JLabel cruiseIdErrorLabel = createErrorLabel();
   private final JTextField segmentField = new JTextField();
@@ -139,11 +141,11 @@ public class PackagePanel extends JPanel implements ReactiveView {
     this.portDatastore = portDatastore;
     this.seaDatastore = seaDatastore;
     this.projectDatastore = projectDatastore;
-    this.projectsField = new AppendableTableWithSelections(
+    this.projectsField = new DropDownItemList(
       PROJECTS_LABEL,
       ADDITIONAL_PROJECTS_LABEL,
-      ProjectDatastore.UNSELECTED_PROJECT,
-      projectDatastore.getProjectDropDowns()
+      projectDatastore.getProjectDropDowns(),
+      ProjectDatastore.UNSELECTED_PROJECT
     );
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.footerControlController = footerControlController;
@@ -226,7 +228,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
     releaseDateField.addDateChangeListener((evt) -> packageController.setReleaseDate(evt.getNewDate()));
     dirSelectButton.addActionListener((evt) -> handleDirSelect());
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
-    projectsField.addValuesChangedListener((i) -> packageController.setProjects(i));
+    projectsField.addAddItemListener((i) -> packageController.addProject(i));
+    projectsField.addRemoveItemListener((i) -> packageController.removeProject(i));
     existingRecordList.addItemListener((evt) -> {
       DropDownItem dropDownItem = (DropDownItem) evt.getItem();
       Optional<CruiseData> maybeMetadata = cruiseDataDatastore.getByPackageId(dropDownItem.getId());
@@ -318,8 +321,14 @@ public class PackagePanel extends JPanel implements ReactiveView {
       case Events.UPDATE_RELEASE_DATE_ERROR:
         updateLabelText(releaseDateErrorLabel, evt);
         break;
-      case Events.UPDATE_PROJECTS:
-        updateAppendableTable(projectsField, evt);
+      case Events.ADD_PROJECT:
+        projectsField.addItem((DropDownItemPanel) evt.getNewValue());
+        break;
+      case Events.REMOVE_PROJECT:
+        projectsField.removeItem((DropDownItemPanel) evt.getOldValue());
+        break;
+      case Events.CLEAR_PROJECTS:
+        projectsField.clearItems();
         break;
       case Events.UPDATE_PROJECTS_ERROR:
         updateLabelText(projectsField.getErrorLabel(), evt);

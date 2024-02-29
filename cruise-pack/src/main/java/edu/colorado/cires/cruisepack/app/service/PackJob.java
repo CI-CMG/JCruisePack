@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.ui.model.DropDownItemModel;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -195,7 +196,7 @@ public class PackJob {
         .setShipUuid(resolveDropDownItemUuid(packageModel.getShip()))
         .setDepartureDate(packageModel.getDepartureDate())
         .setArrivalDate(packageModel.getArrivalDate())
-        .setProjects(packageModel.getProjects().stream().map(DropDownItem::getValue).toList())
+        .setProjects(packageModel.getProjects().stream().map(DropDownItemModel::getItem).map(DropDownItem::getValue).toList())
         .setReleaseDate(packageModel.getReleaseDate())
         .setPackageDirectory(packageModel.getPackageDirectory())
         .setCruiseTitle(cruiseInformationModel.getCruiseTitle())
@@ -216,18 +217,18 @@ public class PackJob {
         .setInstruments(getInstruments(datasetsModel, instrumentDatastore, packageId))
         .setScientists(peopleModel.getScientists().stream().map(
           (dd) -> PeopleOrg.builder()
-            .withUuid(dd.getId())
-            .withName(dd.getValue())
+            .withUuid(dd.getItem().getId())
+            .withName(dd.getItem().getValue())
           .build()).toList())
         .setFunders(peopleModel.getFundingOrganizations().stream().map(
           (dd) -> PeopleOrg.builder()
-            .withUuid(dd.getId())
-            .withName(dd.getValue())
+            .withUuid(dd.getItem().getId())
+            .withName(dd.getItem().getValue())
           .build()).toList())
         .setSources(peopleModel.getSourceOrganizations().stream().map(
           (dd) -> PeopleOrg.builder()
-            .withUuid(dd.getId())
-            .withName(dd.getValue())
+            .withUuid(dd.getItem().getId())
+            .withName(dd.getItem().getValue())
           .build()).toList())
         .setMetadataAuthor(peopleModel.getMetadataAuthor() == null ? null : personDatastore.getByUUID(peopleModel.getMetadataAuthor().getId()).orElse(null))
         .build();

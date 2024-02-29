@@ -1,15 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
 import jakarta.annotation.PostConstruct;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import org.springframework.stereotype.Component;
 
 @Component
 public class PeopleController implements PropertyChangeListener {
@@ -26,17 +24,29 @@ public class PeopleController implements PropertyChangeListener {
     public void init() {
         peopleModel.addChangeListener(this);
     }
-
-    public void setScientists(List<DropDownItem> scientsts) {
-        peopleModel.setScientists(scientsts);
+    
+    public void addScientist(DropDownItemPanel panel) {
+        peopleModel.addScientist(panel);
     }
-
-    public void setSourceOrganizations(List<DropDownItem> sourceOrganizations) {
-        peopleModel.setSourceOrganizations(sourceOrganizations);
+    
+    public void removeScientist(DropDownItemPanel panel) {
+        peopleModel.removeScientist(panel);
     }
-
-    public void setFundingOrganizations(List<DropDownItem> fundingOrganizations) {
-        peopleModel.setFundingOrganizations(fundingOrganizations);
+    
+    public void addSourceOrganization(DropDownItemPanel panel) {
+        peopleModel.addSourceOrganization(panel);
+    }
+    
+    public void removeSourceOrganization(DropDownItemPanel panel) {
+        peopleModel.removeSourceOrganization(panel);
+    }
+    
+    public void addFundingOrganization(DropDownItemPanel panel) {
+        peopleModel.addFundingOrganization(panel);
+    }
+    
+    public void removeFundingOrganization(DropDownItemPanel panel) {
+        peopleModel.removeFundingOrganization(panel);
     }
 
     public void setMetadataAuthor(DropDownItem metadataAuthor) {

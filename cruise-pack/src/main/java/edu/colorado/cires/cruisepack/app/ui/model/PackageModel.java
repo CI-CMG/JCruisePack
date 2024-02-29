@@ -7,14 +7,14 @@ import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPortDropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidProjectDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidProjectDropDownItemModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSeaDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidShipDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class PackageModel extends PropertyChangeModel {
   private String packageDirectoryError = null;
 
   @NotEmpty
-  private List<@ValidProjectDropDownItem DropDownItem> projects = new ArrayList<>(0);
+  private List<@ValidProjectDropDownItemModel DropDownItemModel> projects = new ArrayList<>(0);
   private String projectsError = null;
 
   public void restoreDefaults() {
@@ -93,7 +93,7 @@ public class PackageModel extends PropertyChangeModel {
     setPackageDirectory(null);
     setPackageDirectoryError(null);
 
-    setProjects(Collections.emptyList());
+    clearProjects();
     setProjectsError(null);
   }
 
@@ -128,7 +128,11 @@ public class PackageModel extends PropertyChangeModel {
       setArrivalDate(LocalDate.parse(cruiseMetadata.getArrivalDate()));
     }
     if (!cruiseMetadata.getProjects().isEmpty()) {
-      setProjects(projectDatastore.getProjectDropDownsMatchingNames(cruiseMetadata.getProjects()));
+      for (DropDownItem item : projectDatastore.getProjectDropDownsMatchingNames(cruiseMetadata.getProjects())) {
+        DropDownItemPanel panel = new DropDownItemPanel(projectDatastore.getProjectDropDowns(), ProjectDatastore.UNSELECTED_PROJECT);
+        panel.getModel().setItem(item);
+        addProject(panel);
+      }
     }
     if (cruiseMetadata.getMasterReleaseDate() != null) {
       setReleaseDate(LocalDate.parse(cruiseMetadata.getMasterReleaseDate()));
@@ -185,10 +189,6 @@ public class PackageModel extends PropertyChangeModel {
     setIfChanged(Events.UPDATE_SEGMENT, segment, () -> this.segment, (nv) -> this.segment = nv);
   }
 
-  public String getSegmentError() {
-    return segmentError;
-  }
-
   public void setSegmentError(String segmentError) {
     setIfChanged(Events.UPDATE_SEGMENT_ERROR, segmentError, () -> this.segmentError, (e) -> this.segmentError = e);
   }
@@ -225,89 +225,45 @@ public class PackageModel extends PropertyChangeModel {
     setIfChanged(Events.UPDATE_PACKAGE_DIRECTORY, packageDirectory, () -> this.packageDirectory, (nv) -> this.packageDirectory = nv);
   }
 
-  public String getCruiseIdError() {
-    return cruiseIdError;
-  }
-
   public void setCruiseIdError(String cruiseIdError) {
     setIfChanged(Events.UPDATE_CRUISE_ID_ERROR, cruiseIdError, () -> this.cruiseIdError, (nv) -> this.cruiseIdError = nv);
 
-  }
-
-  public String getPackageDirectoryError() {
-    return packageDirectoryError;
   }
 
   public void setPackageDirectoryError(String packageDirectoryError) {
     setIfChanged(Events.UPDATE_PACKAGE_DIRECTORY_ERROR, packageDirectoryError, () -> this.packageDirectoryError, (nv) -> this.packageDirectoryError = nv);
   }
 
-  public String getReleaseDateError() {
-    return releaseDateError;
-  }
-
   public void setReleaseDateError(String releaseDateError) {
     setIfChanged(Events.UPDATE_RELEASE_DATE_ERROR, releaseDateError, () -> this.releaseDateError, (nv) -> this.releaseDateError = nv);
-  }
-
-  public String getSeaError() {
-      return seaError;
   }
 
   public void setSeaError(String seaError) {
       setIfChanged(Events.UPDATE_SEA_ERROR, seaError, () -> this.seaError, (e) -> this.seaError = e);
   }
 
-  public String getArrivalPortError() {
-      return arrivalPortError;
-  }
-
   public void setArrivalPortError(String arrivalPortError) {
       setIfChanged(Events.UPDATE_ARRIVAL_PORT_ERROR, arrivalPortError, () -> this.arrivalPortError, (e) -> this.arrivalPortError = e);
-  }
-
-  public String getDeparturePortError() {
-      return departurePortError;
   }
 
   public void setDeparturePortError(String departurePortError) {
       setIfChanged(Events.UPDATE_DEPARTURE_PORT_ERROR, departurePortError, () -> this.departurePortError, (e) -> this.departurePortError = e);
   }
 
-  public String getShipError() {
-      return shipError;
-  }
-
   public void setShipError(String shipError) {
       setIfChanged(Events.UPDATE_SHIP_ERROR, shipError, () -> this.shipError, (e) -> this.shipError = e);
-  }
-
-  public String getDepartureDateError() {
-    return departureDateError;
   }
 
   public void setDepartureDateError(String departureDateError) {
     setIfChanged(Events.UPDATE_DEPARTURE_DATE_ERROR, departureDateError, () -> this.departureDateError, (e) -> this.departureDateError = e);
   }
 
-  public String getArrivalDateError() {
-    return arrivalDateError;
-  }
-
   public void setArrivalDateError(String arrivalDateError) {
     setIfChanged(Events.UPDATE_ARRIVAL_DATE_ERROR, arrivalDateError, () -> this.arrivalDateError, (e) -> this.arrivalDateError = e);
   }
 
-  public List<DropDownItem> getProjects() {
+  public List<DropDownItemModel> getProjects() {
       return projects;
-  }
-
-  public void setProjects(List<DropDownItem> projects) {
-      setIfChanged(Events.UPDATE_PROJECTS, projects, () -> this.projects, (v) -> this.projects = v);
-  }
-
-  public String getProjectsError() {
-      return projectsError;
   }
 
   public void setProjectsError(String projectsError) {
@@ -315,18 +271,37 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void setProjectErrors(List<String> projectErrors) {
-    List<DropDownItem> newProjects = new ArrayList<>(0);
     for (int i = 0; i < projectErrors.size(); i++) {
-      String errorMessage = projectErrors.get(i);
-      DropDownItem dropDownItem = projects.get(i);
-      if (errorMessage != null) {
-        dropDownItem = new DropDownItem(dropDownItem.getId(), dropDownItem.getValue(), errorMessage);
-      }
-      newProjects.add(dropDownItem);
+      projects.get(i).setItemError(
+          projectErrors.get(i)
+      );
     }
-    setProjects(newProjects);
   }
 
+  public void clearProjects() {
+    fireChangeEvent(Events.CLEAR_PROJECTS, null, Collections.emptyList());
+  }
   
+  public void addProject(DropDownItemPanel panel) {
+    List<DropDownItemModel> oldModels = new ArrayList<>(projects);
+    DropDownItemModel model = panel.getModel();
+    if (!oldModels.contains(model)) {
+      List<DropDownItemModel> newModels = new ArrayList<>(projects);
+      newModels.add(model);
+      projects = newModels;
+      fireChangeEvent(Events.ADD_PROJECT, null, panel);
+    }
+  }
+  
+  public void removeProject(DropDownItemPanel panel) {
+    List<DropDownItemModel> oldModels = new ArrayList<>(projects);
+    DropDownItemModel model = panel.getModel();
+    if (oldModels.contains(model)) {
+      List<DropDownItemModel> newModels = new ArrayList<>(projects);
+      newModels.remove(model);
+      projects = newModels;
+      fireChangeEvent(Events.REMOVE_PROJECT, panel, null);
+    }
+  }
 
 }

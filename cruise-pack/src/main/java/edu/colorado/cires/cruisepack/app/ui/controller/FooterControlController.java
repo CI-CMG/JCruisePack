@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
@@ -45,13 +46,15 @@ public class FooterControlController implements PropertyChangeListener {
   private final ShipDatastore shipDatastore;
   private final SeaDatastore seaDatastore;
   private final PersonDatastore personDatastore;
+  private final OrganizationDatastore organizationDatastore;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
       BeanFactory beanFactory, PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
       CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, 
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
-      PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore) {
+      PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
+      OrganizationDatastore organizationDatastore) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -68,6 +71,7 @@ public class FooterControlController implements PropertyChangeListener {
     this.shipDatastore = shipDatastore;
     this.seaDatastore = seaDatastore;
     this.personDatastore = personDatastore;
+    this.organizationDatastore = organizationDatastore;
   }
 
   @PostConstruct
@@ -101,7 +105,7 @@ public class FooterControlController implements PropertyChangeListener {
 
   public void updateFormState(CruiseMetadata cruiseMetadata) {
     packageModel.updateFormState(cruiseMetadata, projectDatastore, portDatastore, shipDatastore, seaDatastore);
-    peopleModel.updateFormState(cruiseMetadata);
+    peopleModel.updateFormState(cruiseMetadata, personDatastore, organizationDatastore);
     cruiseInformationModel.updateFormState(cruiseMetadata);
     omicsModel.updateFormState(cruiseMetadata);
     datasetsModel.updateFormState(cruiseMetadata);
