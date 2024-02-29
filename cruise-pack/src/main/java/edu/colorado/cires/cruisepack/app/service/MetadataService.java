@@ -99,8 +99,8 @@ public class MetadataService {
   }
 
   private Instrument instrumentDetailToJson(InstrumentDetailPackageKey key, InstrumentDetail instrumentDetail) {
-
-    return Instrument.builder()
+    
+    Instrument.Builder builder = Instrument.builder()
         .withUuid(instrumentDetail.getUuid())
         .withType(instrumentDatastore.getNameForShortCode(key.getInstrumentGroupShortType()))
         .withInstrument(instrumentDetail.getInstrument())
@@ -109,9 +109,13 @@ public class MetadataService {
         .withStatus(instrumentDetail.getStatus() == null ? null : instrumentDetail.getStatus().getStrValue())
         .withDataComment(instrumentDetail.getDataComment())
         .withDirName(instrumentDetail.getDirName())
-        .withBagName(instrumentDetail.getBagName())
-//        .withOtherField() // TODO add customizer to populate this
-        .build();
+        .withBagName(instrumentDetail.getBagName());
+    
+    for (Entry<String, Object> entry : instrumentDetail.getAdditionalFields().entrySet()) {
+      builder = builder.withOtherField(entry.getKey(), entry.getValue());
+    }
+
+    return builder.build();
   }
 
   public CruiseMetadata createDatasetMetadata(CruiseMetadata cruiseMetadata, List<InstrumentDetail> instruments) {

@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -76,6 +77,16 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
 
   public String getComments() {
     return comments;
+  }
+
+  @Override
+  protected Map<String, Object> getAdditionalFields() {
+    return Map.of(
+        "calibrationState", calibrationState.getValue(),
+        "calibrationReportPath", calibrationReportPath,
+        "calibrationDataPath", calibrationDataPath,
+        "calibrationDate", calibrationDate
+    );
   }
 
   public void setComments(String comments) {

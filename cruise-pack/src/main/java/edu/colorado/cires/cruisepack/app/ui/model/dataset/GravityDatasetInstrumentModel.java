@@ -8,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidGravityCorrect
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,6 +92,17 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
   public String getComments() {
     return comments;
+  }
+
+  @Override
+  protected Map<String, Object> getAdditionalFields() {
+    return Map.of(
+        "correctionModel", correctionModel.getValue(),
+        "observationRate", observationRate,
+        "departureTie", departureTie,
+        "arrivalTie", arrivalTie,
+        "driftPerDay", driftPerDay
+    );
   }
 
   public void setComments(String comments) {

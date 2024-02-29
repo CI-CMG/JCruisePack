@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
@@ -78,7 +79,8 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
               dataPath,
               getAdditionalFiles(),
               getPublicReleaseDate(),
-              getComments()
+              getComments(),
+              getAdditionalFields()
           )
       );
     }
@@ -110,5 +112,7 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
 
   protected abstract void setErrors(String propertyPath, String message);
   public abstract String getComments();
+  
+  protected abstract Map<String, Object> getAdditionalFields();
   
 }

@@ -3,9 +3,12 @@ package edu.colorado.cires.cruisepack.app.service;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class InstrumentDetail {
@@ -30,10 +33,11 @@ public class InstrumentDetail {
   private final String bagName;
   private final String dataComment;
   private final List<AdditionalFiles> additionalFiles;
+  private final Map<String, Object> additionalFields;
   //  private final Consumer<CustomInstrumentProcessingContext> customHandler;
 
   private InstrumentDetail(InstrumentStatus status, String uuid, LocalDate releaseDate, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten,
-      String dirName, String bagName, String dataComment, List<AdditionalFiles> additionalFiles) {
+      String dirName, String bagName, String dataComment, List<AdditionalFiles> additionalFiles, Map<String, Object> additionalFields) {
     this.status = status;
     this.uuid = uuid;
     this.releaseDate = releaseDate;
@@ -46,6 +50,7 @@ public class InstrumentDetail {
     this.bagName = bagName;
     this.dataComment = dataComment;
     this.additionalFiles = additionalFiles;
+    this.additionalFields = additionalFields;
   }
 
   public InstrumentStatus getStatus() {
@@ -96,6 +101,10 @@ public class InstrumentDetail {
     return additionalFiles;
   }
 
+  public Map<String, Object> getAdditionalFields() {
+    return additionalFields;
+  }
+
   public static class Builder {
 
     private InstrumentStatus status;
@@ -110,6 +119,7 @@ public class InstrumentDetail {
     private String bagName;
     private String dataComment;
     private List<AdditionalFiles> additionalFiles = Collections.emptyList();
+    private Map<String, Object> additionalFields = new HashMap<>();
 
     private Builder() {
 
@@ -128,6 +138,7 @@ public class InstrumentDetail {
       bagName = src.bagName;
       dataComment = src.dataComment;
       additionalFiles = src.additionalFiles;
+      additionalFields = src.additionalFields;
     }
 
     public Builder setStatus(InstrumentStatus status) {
@@ -192,10 +203,15 @@ public class InstrumentDetail {
       this.additionalFiles = additionalFiles;
       return this;
     }
+    
+    public Builder setAdditionalField(Entry<String, Object> entry) {
+      this.additionalFields.put(entry.getKey(), entry.getValue());
+      return this;
+    }
 
     public InstrumentDetail build() {
       return new InstrumentDetail(status, uuid, releaseDate, instrument, shortName, extensions, dataPath, flatten,
-          dirName, bagName, dataComment, additionalFiles);
+          dirName, bagName, dataComment, additionalFiles, additionalFields);
     }
   }
 }

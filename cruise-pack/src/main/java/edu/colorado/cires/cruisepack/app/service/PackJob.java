@@ -88,22 +88,30 @@ public class PackJob {
             exts.addAll(extList);
           }
         }
+        
+        InstrumentDetail.Builder builder = InstrumentDetail.builder()
+            .setUuid(nameHolder.getUuid())
+            .setStatus(nameHolder.getStatus())
+            .setInstrument(nameHolder.getInstrument())
+            .setShortName(nameHolder.getShortName())
+            .setExtensions(exts)
+            .setDataPath(nameHolder.getDataPath())
+            .setFlatten(instrument.isFlatten())
+            .setDirName(nameHolder.getDirName())
+            .setBagName(nameHolder.getBagName())
+            .setAdditionalFiles(nameHolder.getAdditionalFiles())
+            .setReleaseDate(nameHolder.getReleaseDate())
+            .setDataComment(nameHolder.getDataComment());
+        
+        if (nameHolder.getAdditionalFields() != null) {
+          for (Entry<String, Object> e : nameHolder.getAdditionalFields().entrySet()) {
+            builder = builder.setAdditionalField(e);
+          }
+        }
 
         instrumentDetails.add(
-            InstrumentDetail.builder()
-                .setUuid(nameHolder.getUuid())
-                .setStatus(nameHolder.getStatus())
-                .setInstrument(nameHolder.getInstrument())
-                .setShortName(nameHolder.getShortName())
-                .setExtensions(exts)
-                .setDataPath(nameHolder.getDataPath())
-                .setFlatten(instrument.isFlatten())
-                .setDirName(nameHolder.getDirName())
-                .setBagName(nameHolder.getBagName())
-                .setAdditionalFiles(nameHolder.getAdditionalFiles())
-                .setReleaseDate(nameHolder.getReleaseDate())
-                .setDataComment(nameHolder.getDataComment())
-                .build());
+            builder.build()
+        );
 
       }
       map.put(pkg, Collections.unmodifiableList(instrumentDetails));

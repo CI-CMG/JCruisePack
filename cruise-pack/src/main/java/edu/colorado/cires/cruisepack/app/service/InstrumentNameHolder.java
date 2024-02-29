@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.service;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public class InstrumentNameHolder {
 
@@ -16,9 +17,20 @@ public class InstrumentNameHolder {
   private final LocalDate releaseDate;
   private final String dataComment;
   private final List<AdditionalFiles> additionalFiles;
+  private final Map<String, Object> additionalFields;
 
 
-  public InstrumentNameHolder(String uuid, String instrument, String shortName, InstrumentStatus status, Path dataPath, List<AdditionalFiles> additionalFiles, LocalDate releaseDate, String dataComment) {
+  public InstrumentNameHolder(
+      String uuid,
+      String instrument,
+      String shortName,
+      InstrumentStatus status,
+      Path dataPath,
+      List<AdditionalFiles> additionalFiles,
+      LocalDate releaseDate,
+      String dataComment,
+      Map<String, Object> additionalFields
+  ) {
     this.uuid = uuid;
     this.instrument = instrument;
     this.shortName = shortName;
@@ -27,6 +39,7 @@ public class InstrumentNameHolder {
     this.additionalFiles = additionalFiles;
     this.releaseDate = releaseDate;
     this.dataComment = dataComment;
+    this.additionalFields = additionalFields;
   }
 
   public String getUuid() {
@@ -75,5 +88,9 @@ public class InstrumentNameHolder {
 
   public String getDataComment() {
     return dataComment;
+  }
+
+  public Map<String, Object> getAdditionalFields() {
+    return additionalFields;
   }
 }

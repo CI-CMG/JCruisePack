@@ -6,6 +6,8 @@ import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -64,6 +66,11 @@ public class XbtDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
   public String getComments() {
     return comments;
+  }
+
+  @Override
+  protected Map<String, Object> getAdditionalFields() {
+    return Collections.emptyMap();
   }
 
   public void setComments(String comments) {
