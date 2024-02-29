@@ -42,7 +42,10 @@ public class MultibeamDatasetPanelFactory extends
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     model.setProcessingLevel(instrument.getStatus());
-    model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    
+    if (instrument.getReleaseDate() != null) {
+      model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    }
     return model;
   }
 

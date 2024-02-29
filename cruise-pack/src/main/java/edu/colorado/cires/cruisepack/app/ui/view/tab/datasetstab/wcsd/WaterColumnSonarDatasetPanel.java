@@ -80,10 +80,10 @@ public class WaterColumnSonarDatasetPanel extends DatasetPanel<WaterColumnSonarD
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
-    calibrationStatePanel.getInstrumentField().setSelectedItem(model.getCalibrationState());
     calibrationStatePanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       calibrationStateDropDownOptions.toArray(new DropDownItem[0])
     ));
+    calibrationStatePanel.getInstrumentField().setSelectedItem(model.getCalibrationState());
     calibrationReportPathPanel.getTextField().setText(model.getCalibrationReportPath() == null ? null : model.getCalibrationReportPath().toAbsolutePath().normalize().toString());
     calibrationDataPathPanel.getTextField().setText(model.getCalibrationDataPath() == null ? null : model.getCalibrationDataPath().toAbsolutePath().normalize().toString());
     calibrationDatePanel.getDatePicker().setDate(model.getCalibrationDate());

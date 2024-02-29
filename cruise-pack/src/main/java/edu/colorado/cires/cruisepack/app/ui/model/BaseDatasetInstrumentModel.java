@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -113,6 +114,6 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   protected abstract void setErrors(String propertyPath, String message);
   public abstract String getComments();
   
-  protected abstract Map<String, Object> getAdditionalFields();
+  protected abstract HashMap<String, Object> getAdditionalFields();
   
 }

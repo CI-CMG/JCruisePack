@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDrop
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -69,8 +70,8 @@ public class OtherDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   }
 
   @Override
-  protected Map<String, Object> getAdditionalFields() {
-    return Collections.emptyMap();
+  protected HashMap<String, Object> getAdditionalFields() {
+    return new HashMap<>(0);
   }
 
   public void setComments(String comments) {

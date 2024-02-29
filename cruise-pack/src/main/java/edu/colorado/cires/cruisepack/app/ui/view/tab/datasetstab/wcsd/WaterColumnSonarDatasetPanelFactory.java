@@ -7,7 +7,9 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.WaterColumnSonarD
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,12 +46,45 @@ public class WaterColumnSonarDatasetPanelFactory extends
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
-//    model.setCalibrationDate(); TODO
-//    model.setCalibrationDataPath(); TODO
-//    model.setCalibrationReportPath(); TODO
-//    model.setCalibrationState(); TODO
+
+    Map<String, Object> otherFields = instrument.getOtherFields();
+    
+    setValueIfExists(
+        "calibrationState",
+        otherFields,
+        String.class,
+        (v) -> waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns()
+            .stream()
+            .filter(dd -> dd.getValue().equals(v))
+            .findFirst()
+            .orElse(WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE),
+        model::setCalibrationState
+    );
+    setValueIfExists(
+        "calibrationDate",
+        otherFields,
+        String.class,
+        (v) -> v == null ? null : LocalDate.parse(v),
+        model::setCalibrationDate
+    );
+    setValueIfExists(
+        "calibrationDataPath",
+        otherFields,
+        String.class,
+        Paths::get,
+        model::setCalibrationDataPath
+    );
+    setValueIfExists(
+        "calibrationReportPath",
+        otherFields,
+        String.class,
+        Paths::get,
+        model::setCalibrationReportPath
+    );
     model.setProcessingLevel(instrument.getStatus());
-    model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    if (instrument.getReleaseDate() != null) {
+      model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
+    }
     return model;
   }
 

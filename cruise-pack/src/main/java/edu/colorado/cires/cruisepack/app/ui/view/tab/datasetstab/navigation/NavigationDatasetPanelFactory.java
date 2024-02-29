@@ -44,7 +44,16 @@ public class NavigationDatasetPanelFactory extends
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
-//    model.setNavDatum(); TODO
+    setValueIfExists(
+        "navDatum",
+        instrument.getOtherFields(),
+        String.class,
+        (v) -> navigationDatumDatastore.getNavigationDatumDropDowns().stream()
+            .filter(dd -> dd.getValue().equals(v))
+            .findFirst()
+            .orElse(NavigationDatumDatastore.UNSELECTED_NAVIGATION_DATUM),
+        model::setNavDatum
+    );
     model.setProcessingLevel(instrument.getStatus());
     if (instrument.getReleaseDate() != null) {
       model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));

@@ -4,6 +4,10 @@ import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class DatasetPanelFactory<M extends BaseDatasetInstrumentModel, C extends BaseDatasetInstrumentController<M>, V extends DatasetPanel<M, C>> {
 
@@ -25,6 +29,20 @@ public abstract class DatasetPanelFactory<M extends BaseDatasetInstrumentModel, 
     view.init();
     return view;
   }
+  
+  protected <JsonType, ModelType> void setValueIfExists(
+      String key,
+      Map<String, Object> otherFields,
+      Class<JsonType> jsonTypeClass,
+      Function<JsonType, ModelType> transform,
+      Consumer<ModelType> setter
+  ) {
+    Object value = otherFields.get(key);
+    if (value != null && value.getClass().isAssignableFrom(jsonTypeClass)) {
+      JsonType v = (JsonType) value;
+      setter.accept(transform.apply(v));
+    }
+  } 
 
   public abstract String getInstrumentGroupShortCode();
   public abstract String getInstrumentGroupName();

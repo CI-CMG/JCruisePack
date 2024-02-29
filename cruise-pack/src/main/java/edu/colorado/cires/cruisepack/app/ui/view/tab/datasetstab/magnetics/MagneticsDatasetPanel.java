@@ -73,10 +73,10 @@ public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrume
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
-    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
     correctionModelPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       correctionModelOptions.toArray(new DropDownItem[0])
     ));
+    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
     sampleRatePanel.getField().setText(model.getSampleRate());
     towDistancePanel.getField().setText(model.getTowDistance());
     sensorDepthPanel.getField().setText(model.getSensorDepth());

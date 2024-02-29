@@ -8,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDrop
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidNavigationDatumDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -77,10 +78,10 @@ public class NavigationDatasetInstrumentModel extends BaseDatasetInstrumentModel
   }
 
   @Override
-  protected Map<String, Object> getAdditionalFields() {
-    return Map.of(
-        "navDatum", navDatum.getValue()
-    );
+  protected HashMap<String, Object> getAdditionalFields() {
+    HashMap<String, Object> map = new HashMap<>(0);
+    map.put("navDatum", navDatum.getValue());
+    return map;
   }
 
   public void setComments(String comments) {

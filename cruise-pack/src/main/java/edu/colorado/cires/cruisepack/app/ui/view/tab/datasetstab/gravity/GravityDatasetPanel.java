@@ -75,10 +75,10 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
-    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
     correctionModelPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       correctionModelOptions.toArray(new DropDownItem[0])
     ));
+    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
     obsRatePanel.getField().setText(model.getObservationRate());
     departureTiePanel.getField().setText(model.getDepartureTie());
     arrivalTiePanel.getField().setText(model.getArrivalTie());

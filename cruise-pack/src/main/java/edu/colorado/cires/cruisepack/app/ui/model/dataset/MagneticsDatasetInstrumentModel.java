@@ -8,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDrop
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidMagneticsCorrectionModelDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -90,11 +91,13 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   }
 
   @Override
-  protected Map<String, Object> getAdditionalFields() {
-    return Map.of("correctionModel", correctionModel.getValue(),
-        "sampleRate", sampleRate,
-    "towDistance", towDistance,
-        "sensorDepth", sensorDepth);
+  protected HashMap<String, Object> getAdditionalFields() {
+    HashMap<String, Object> map = new HashMap<>(0);
+    map.put("correctionModel", correctionModel.getValue());
+    map.put("sampleRate", sampleRate);
+    map.put("towDistance", towDistance);
+    map.put("sensorDepth", sensorDepth);
+    return map;
   }
 
   public void setComments(String comments) {

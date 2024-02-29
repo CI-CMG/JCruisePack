@@ -57,10 +57,10 @@ class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentMod
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
-    navDatumPanel.getInstrumentField().setSelectedItem(model.getNavDatum());
     navDatumPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       navigationDatumOptions.toArray(new DropDownItem[0])
     ));
+    navDatumPanel.getInstrumentField().setSelectedItem(model.getNavDatum());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));

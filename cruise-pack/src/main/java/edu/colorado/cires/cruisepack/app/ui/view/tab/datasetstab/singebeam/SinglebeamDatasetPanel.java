@@ -66,10 +66,10 @@ public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstru
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
-    verticalDatumPanel.getInstrumentField().setSelectedItem(model.getVerticalDatum());
     verticalDatumPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       verticalDatumOptions.toArray(new DropDownItem[0])
     ));
+    verticalDatumPanel.getInstrumentField().setSelectedItem(model.getVerticalDatum());
     obsRatePanel.getField().setText(model.getObsRate());
     soundVelocityPanel.getField().setText(model.getSoundVelocity());
 

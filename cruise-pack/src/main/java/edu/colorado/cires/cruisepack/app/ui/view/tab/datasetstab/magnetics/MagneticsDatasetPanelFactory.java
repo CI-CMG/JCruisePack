@@ -8,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstru
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
 import java.time.LocalDate;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,13 +42,42 @@ public class MagneticsDatasetPanelFactory extends
   @Override
   protected MagneticsDatasetInstrumentModel createModel(Instrument instrument) {
     MagneticsDatasetInstrumentModel model = createModel();
-//    model.setCorrectionModel(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
-//    model.setSampleRate(); TODO
     model.setProcessingLevel(instrument.getStatus());
-//    model.setSensorDepth(); TODO
-//    model.setTowDistance(); TODO
+
+    Map<String, Object> otherFields = instrument.getOtherFields();
+    setValueIfExists(
+        "sampleRate",
+        otherFields,
+        String.class,
+        (v) -> v,
+        model::setSampleRate
+    );
+    setValueIfExists(
+        "correctionModel",
+        otherFields,
+        String.class,
+        (v) -> magneticsCorrectionModelDatastore.getCorrectionModelDropDowns().stream()
+            .filter(dd -> dd.getValue().equals(v))
+            .findFirst()
+            .orElse(MagneticsCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL),
+        model::setCorrectionModel
+    );
+    setValueIfExists(
+        "sensorDepth",
+        otherFields,
+        String.class,
+        (v) -> v,
+        model::setSensorDepth
+    );
+    setValueIfExists(
+        "towDistance",
+        otherFields,
+        String.class,
+        (v) -> v,
+        model::setTowDistance
+    );
 //    model.setDataPath(); TODO
     if (instrument.getReleaseDate() != null) {
       model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));

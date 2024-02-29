@@ -8,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstr
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
 import java.time.LocalDate;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -43,10 +44,34 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
-//    model.setObsRate(); TODO
+
+    Map<String, Object> otherFields = instrument.getOtherFields();
+    setValueIfExists(
+        "obsRate",
+        otherFields,
+        String.class,
+        (v) -> v,
+        model::setObsRate
+    );
+    setValueIfExists(
+        "soundVelocity",
+        otherFields,
+        String.class,
+        (v) -> v,
+        model::setSoundVelocity
+    );
+    setValueIfExists(
+        "verticalDatum",
+        otherFields,
+        String.class,
+        (v) -> singlebeamVerticalDatumDatastore.getVerticalDatumDropDowns().stream()
+            .filter(dd -> dd.getValue().equals(v))
+            .findFirst()
+            .orElse(SinglebeamVerticalDatumDatastore.UNSELECTED_VERTICAL_DATUM),
+        model::setVerticalDatum
+    );
+    
     model.setProcessingLevel(instrument.getStatus());
-//    model.setSoundVelocity(); TODO
-//    model.setVerticalDatum(); TODO
     if (instrument.getReleaseDate() != null) {
       model.setPublicReleaseDate(LocalDate.parse(instrument.getReleaseDate()));
     }
