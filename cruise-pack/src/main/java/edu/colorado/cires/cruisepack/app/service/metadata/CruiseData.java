@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service.metadata;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -15,8 +16,10 @@ import java.util.Map;
 public class CruiseData extends CruiseMetadata {
 
   private boolean use;
+  @JsonIgnore
+  private boolean delete;
 
-  protected CruiseData(boolean use, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
+  protected CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists,
       List<String> projects, Omics omics, MetadataAuthor metadataAuthor, List<Instrument> instruments,
@@ -25,10 +28,15 @@ public class CruiseData extends CruiseMetadata {
         cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
     this.use = use;
+    this.delete = delete;
   }
 
   public boolean isUse() {
     return use;
+  }
+  
+  public boolean isDelete() {
+    return delete;
   }
   
   public static Builder dataBuilder(CruiseData data) {
@@ -45,7 +53,8 @@ public class CruiseData extends CruiseMetadata {
   
 
   public static class Builder {
-    private boolean use;
+    private boolean use = true;
+    private boolean delete = false;
     private String cruiseId;
     private String segmentId;
     private String packageId;
@@ -75,6 +84,7 @@ public class CruiseData extends CruiseMetadata {
 
     private Builder(CruiseData src) {
       use = src.isUse();
+      delete = src.isDelete();
       cruiseId = src.getCruiseId();
       segmentId = src.getSegmentId();
       packageId = src.getPackageId();
@@ -101,6 +111,7 @@ public class CruiseData extends CruiseMetadata {
     
     private Builder(CruiseMetadata src) {
       use = true;
+      delete = false;
       cruiseId = src.getCruiseId();
       segmentId = src.getSegmentId();
       packageId = src.getPackageId();
@@ -127,6 +138,11 @@ public class CruiseData extends CruiseMetadata {
     
     public Builder withUse(boolean use) {
       this.use = use;
+      return this;
+    }
+    
+    public Builder withDelete(boolean delete) {
+      this.delete = delete;
       return this;
     }
 
@@ -261,7 +277,7 @@ public class CruiseData extends CruiseMetadata {
     }
 
     public CruiseData build() {
-      return new CruiseData(use, cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid,
+      return new CruiseData(use, delete, cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid,
           departurePort, departureDate, arrivalPort, arrivalDate, seaArea, cruiseTitle, cruisePurpose,
           cruiseDescription, sponsors, funders, scientists, projects, omics,
           metadataAuthor, instruments, packageInstruments);

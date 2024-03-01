@@ -56,10 +56,18 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     cruiseDataList.forEach(cruiseData -> {
       String packageId = cruiseData.getPackageId();
       Path metadataFile = getCruiseMetadataDir().resolve(packageId + ".json");
-      try (OutputStream outputStream = new FileOutputStream(metadataFile.toFile())) {
-        objectMapper.writeValue(outputStream, cruiseData);
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to write cruise data: " + packageId, e);
+      if (cruiseData.isDelete()) {
+        try {
+          Files.deleteIfExists(metadataFile);
+        } catch (IOException e) {
+          throw new IllegalStateException("Unable to delete cruise data: " + metadataFile, e);
+        }
+      } else {
+        try (OutputStream outputStream = new FileOutputStream(metadataFile.toFile())) {
+          objectMapper.writeValue(outputStream, cruiseData);
+        } catch (IOException e) {
+          throw new IllegalStateException("Unable to write cruise data: " + metadataFile, e);
+        } 
       }
     });
     
@@ -91,7 +99,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   }
 
   private void setCruises(List<CruiseData> cruises) {
-    fireChangeEvent(Events.UPDATE_CRUISE_DATA_STORE, Collections.emptyList(), cruises);
+    fireChangeEvent(Events.UPDATE_CRUISE_DATA_STORE, null, cruises);
   }
 
   public List<DropDownItem> getDropDownItems() {

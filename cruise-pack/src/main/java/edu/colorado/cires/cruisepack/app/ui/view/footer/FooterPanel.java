@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FooterPanel extends JPanel implements ReactiveView {
 
-  private static final String HIDE_RECORDS_LABEL = "Hide Records";
+  private static final String MANAGE_RECORDS_LABEL = "Manage Records";
   private static final String IMPORT_EXPORT_LABEL = "Import / Export";
   private static final String CLEAR_FORM_LABEL = "Clear Form";
   private static final String STOP_LABEL = "Stop Packaging";
@@ -37,9 +37,9 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final FooterControlController footerControlController;
   private final FooterControlModel footerControlModel;
-  private final HideRecordsDialog hideRecordsDialog;
+  private final ManageRecordsDialog manageRecordsDialog;
 
-  private final JButton hideRecordsButton = new JButton(HIDE_RECORDS_LABEL);
+  private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
   private final JButton importExportButton = new JButton(IMPORT_EXPORT_LABEL);
   private final JButton clearFormButton = new JButton(CLEAR_FORM_LABEL);
   private final JButton stopButton = new JButton(STOP_LABEL);
@@ -61,11 +61,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel, HideRecordsDialog hideRecordsDialog, UiRefresher uiRefresher) {
+      FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, UiRefresher uiRefresher) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
-    this.hideRecordsDialog = hideRecordsDialog;
+    this.manageRecordsDialog = manageRecordsDialog;
     this.uiRefresher = uiRefresher;
   }
 
@@ -87,7 +87,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
     JPanel row1 = new JPanel();
     row1.setLayout(new GridBagLayout());
-    row1.add(hideRecordsButton, configureLayout(0, 0));
+    row1.add(manageRecordsButton, configureLayout(0, 0));
     row1.add(importExportButton, configureLayout(1, 0));
     row1.add(clearFormButton, configureLayout(2, 0));
     row1.add(stopButton, configureLayout(3, 0));
@@ -131,9 +131,9 @@ public class FooterPanel extends JPanel implements ReactiveView {
       }
     });
     
-    hideRecordsButton.addActionListener((evt) -> {
-      hideRecordsDialog.pack();
-      hideRecordsDialog.setVisible(true);
+    manageRecordsButton.addActionListener((evt) -> {
+      manageRecordsDialog.pack();
+      manageRecordsDialog.setVisible(true);
     });
   }
 

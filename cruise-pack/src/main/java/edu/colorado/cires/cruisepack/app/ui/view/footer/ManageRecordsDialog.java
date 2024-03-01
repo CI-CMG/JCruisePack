@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HideRecordsDialog extends JDialog implements ReactiveView {
+public class ManageRecordsDialog extends JDialog implements ReactiveView {
   private final CruiseDataController cruiseDataController;
   private final ReactiveViewRegistry reactiveViewRegistry;
   
@@ -37,7 +37,7 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   );
 
   @Autowired
-  public HideRecordsDialog(CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
+  public ManageRecordsDialog(CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
     super((JFrame) null, "Show or Hide Package Records", true);
     this.cruiseDataController = cruiseDataDatastore;
     this.reactiveViewRegistry = reactiveViewRegistry;
@@ -71,7 +71,7 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   private void addCruiseDataToTable() {
     cruiseDataController.getCruises().forEach(cruiseData ->
         tableModel.addRow(
-            new Object[]{ cruiseData.isUse(), cruiseData.getPackageId(), cruiseData }
+            new Object[]{ cruiseData.isUse(), cruiseData.getPackageId(), cruiseData, false }
         )
     );
   }
@@ -99,8 +99,10 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
     for (int i = 0; i < rowCount; i++) {
       CruiseData existingData = (CruiseData) tableModel.getValueAt(i, 2);
       boolean use = (boolean) tableModel.getValueAt(i, 0);
+      boolean delete = (boolean) tableModel.getValueAt(i, 3); 
       newData.add(CruiseData.dataBuilder(existingData)
           .withUse(use)
+          .withDelete(delete)
           .build());
     }
     cruiseDataController.updateCruises(newData);
@@ -118,7 +120,7 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   
   public static class CheckboxTableModel extends DefaultTableModel {
     public CheckboxTableModel() {
-      super(new String[] {"Show", "Package Name", ""}, 0);
+      super(new String[] {"Show", "Package Name", "", "Delete"}, 0);
     }
 
     @Override
@@ -133,12 +135,16 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
         clazz = CruiseData.class;
       }
       
+      if (columnIndex == 3) {
+        clazz = Boolean.class;
+      }
+      
       return clazz;
     }
 
     @Override
     public boolean isCellEditable(int row, int column) {
-      return column == 0;
+      return column == 0 || column == 3;
     }
   }
 }
