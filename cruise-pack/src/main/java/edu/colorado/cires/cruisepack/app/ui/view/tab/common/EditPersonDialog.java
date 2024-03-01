@@ -452,6 +452,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
                     closeAfterSaveDialog.getLabel().getText(),
                     String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
                 ));
+                break;
             default:
                 break;
         }

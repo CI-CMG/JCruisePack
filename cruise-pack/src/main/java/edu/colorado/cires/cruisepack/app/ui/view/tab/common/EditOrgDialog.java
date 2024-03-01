@@ -72,6 +72,10 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         "<html><B>Save changes before closing?</B></html>",
         List.of("Cancel", "No", "Yes")
     );
+    private final OptionDialog closeAfterSaveDialog = new OptionDialog(
+        "<html><B>Organization has been updated. Do you want to exit editor?</B></html>",
+        List.of("No", "Yes")
+    );
 
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final OrganizationDatastore organizationDatastore;
@@ -286,7 +290,16 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
             orgList.setSelectedItem(OrganizationDatastore.UNSELECTED_ORGANIZATION);
             organizationController.restoreDefaults();
         });
-        saveButton.addActionListener((e) -> organizationController.submit());
+        
+        closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
+        
+        saveButton.addActionListener((e) -> {
+            boolean success = organizationController.submit();
+            if (success) {
+                closeAfterSaveDialog.pack();
+                closeAfterSaveDialog.setVisible(true);
+            }
+        });
 
         optionDialog.addListener("No", (evt) -> setVisible(false));
         optionDialog.addListener("Yes", (evt) -> {
@@ -371,6 +384,15 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
                 break;
             case Events.UPDATE_ORGANIZATION_DATA_STORE:
                 updateComboBoxModel(orgList, organizationDatastore.getAllOrganizationDropDowns());
+                break;
+            case Events.EMIT_ORG_NAME:
+                updateLabelText(closeAfterSaveDialog.getLabel(), new PropertyChangeEvent(
+                    evt,
+                    "UPDATE_CLOSE_AFTER_SAVE_LABEL",
+                    closeAfterSaveDialog.getLabel().getText(),
+                    String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
+                ));
+                break;
             default:
                 break;
         }

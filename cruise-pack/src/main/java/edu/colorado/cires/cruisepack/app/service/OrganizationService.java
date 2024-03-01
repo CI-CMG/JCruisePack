@@ -72,7 +72,7 @@ public class OrganizationService {
             }
 
             organizationDatastore.save(organizationModel);
-
+            organizationModel.emitOrgName();
             return true;
         }
 

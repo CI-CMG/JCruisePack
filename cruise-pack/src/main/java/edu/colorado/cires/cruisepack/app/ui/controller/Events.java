@@ -131,6 +131,7 @@ public final class Events {
 
   // Organization
   public static final String UPDATE_ORG_NAME = "UPDATE_ORG_NAME";
+  public static final String EMIT_ORG_NAME = "EMIT_ORG_NAME";
   public static final String UPDATE_ORG_STREET = "UPDATE_ORG_STREET";
   public static final String UPDATE_ORG_CITY = "UPDATE_ORG_CITY";
   public static final String UPDATE_ORG_STATE = "UPDATE_ORG_STATE";

@@ -212,4 +212,8 @@ public class OrganizationModel extends PropertyChangeModel {
         setUse(false);
     }
     
+    public void emitOrgName() {
+        fireChangeEvent(Events.EMIT_ORG_NAME, null, name);
+    }
+    
 }
