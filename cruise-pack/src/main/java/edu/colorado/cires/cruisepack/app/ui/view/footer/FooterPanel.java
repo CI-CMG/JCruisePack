@@ -9,22 +9,17 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
-
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.Collections;
+import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,12 +47,16 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
   private final JProgressBar progressBar = new JProgressBar();
-  private final JDialog saveWarningDialog = new JDialog((JFrame) null, null, true);
-  private final JDialog saveExitAppDialog = new JDialog((JFrame) null, null, true);
-  private final JButton closeSaveWarningButton = new JButton("OK");
+  private final OptionDialog saveWarningDialog = new OptionDialog(
+      "<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>",
+      Collections.singletonList("OK")
+  );
+  private final OptionDialog saveExitAppDialog = new OptionDialog(
+      "<html><B>Record data has been updated. Do you want to exit editor?</B></html>",
+      List.of("No", "Yes")
+  );
   private final JButton closeExitAppButton = new JButton("No");
   private final JButton confirmExitAppButton = new JButton("Yes");
-  private final JLabel exitAppLabel = new JLabel("<html><B>Record data has been updated. Do you want to exit editor?</B></html>");
   private final UiRefresher uiRefresher;
 
   @Autowired
@@ -96,37 +95,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
     row1.add(packageButton, configureLayout(5, 0));
     add(row1, configureLayout(0, 0));
 
-    saveWarningDialog.setLayout(new GridBagLayout());
-    JLabel warningLabel = new JLabel("<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>");
-    warningLabel.setHorizontalAlignment(JLabel.CENTER);
-    saveWarningDialog.add(warningLabel, configureLayout(0, 0, c -> {
-      c.weighty = 100;
-      c.gridwidth = GridBagConstraints.REMAINDER;
-      c.insets = new Insets(20, 20, 20, 20);
-    }));
-    JPanel warningDialogPanel = new JPanel();
-    warningDialogPanel.setLayout(new BorderLayout());
-    warningDialogPanel.add(closeSaveWarningButton, BorderLayout.EAST);
-    saveWarningDialog.add(warningDialogPanel, configureLayout(0, 1, c -> c.weighty = 0));
-    saveWarningDialog.setVisible(false);
-
-    saveExitAppDialog.setLayout(new GridBagLayout());
-    exitAppLabel.setHorizontalAlignment(JLabel.CENTER);
-    saveExitAppDialog.add(exitAppLabel, configureLayout(0, 0, c -> {
-      c.weighty = 100;
-      c.gridwidth = GridBagConstraints.REMAINDER;
-      c.insets = new Insets(20, 20, 20, 20);
-    }));
-    JPanel exitAppPanel = new JPanel();
-    exitAppPanel.setLayout(new BorderLayout());
-    JPanel exitAppButtonPanel = new JPanel();
-    exitAppButtonPanel.setLayout(new GridBagLayout());
-    exitAppButtonPanel.add(closeExitAppButton, configureLayout(0, 0));
-    exitAppButtonPanel.add(confirmExitAppButton, configureLayout(1, 0));
-    exitAppPanel.add(exitAppButtonPanel, BorderLayout.EAST);
-    saveExitAppDialog.add(exitAppPanel, configureLayout(0, 1, c -> c.weighty = 0));
-    saveExitAppDialog.setVisible(false);
-
 
     JPanel row2 = new JPanel();
     row2.setLayout(new GridBagLayout());
@@ -143,16 +111,19 @@ public class FooterPanel extends JPanel implements ReactiveView {
       footerControlController.saveForms(false);
       uiRefresher.refresh();
     });
-    closeSaveWarningButton.addActionListener((evt) -> footerControlController.setSaveWarningDialogueVisible(false));
+    saveWarningDialog.addListener("OK", (evt) -> footerControlController.setSaveWarningDialogueVisible(false));
     saveWarningDialog.addWindowListener(new WindowAdapter() {
       @Override
-      public void windowClosing(WindowEvent event) {
+      public void windowClosing(WindowEvent e) {
         footerControlController.setSaveWarningDialogueVisible(false);
       }
     });
 
     closeExitAppButton.addActionListener((evt) -> footerControlController.setSaveExitAppDialogueVisible(false));
     confirmExitAppButton.addActionListener((evt) -> footerControlController.exitApplication());
+    
+    saveExitAppDialog.addListener("Yes", (evt) -> footerControlController.exitApplication());
+    saveExitAppDialog.addListener("No", (evt) -> footerControlController.setSaveExitAppDialogueVisible(false));
     saveExitAppDialog.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent event) {
@@ -211,11 +182,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
       }
       break;
       case Events.EMIT_PACKAGE_ID:
-        updateLabelText(exitAppLabel, new PropertyChangeEvent(
+        updateLabelText(saveExitAppDialog.getLabel(), new PropertyChangeEvent(
           evt,
           "UPDATE_APP_EXIT_LABEL",
-          exitAppLabel.getText(),
-          String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", (String) evt.getNewValue())
+          saveExitAppDialog.getLabel().getText(),
+          String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
         ));
         break;
       default:

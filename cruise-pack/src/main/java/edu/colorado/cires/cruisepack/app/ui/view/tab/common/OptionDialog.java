@@ -25,10 +25,12 @@ public class OptionDialog extends JDialog {
     private final String dialogMessage;
     private final Map<String, JButton> buttons;
     private final List<String> buttonLabels;
+    private final JLabel label;
 
     public OptionDialog(String dialogMessage, List<String> buttonLabels) {
         super((JFrame) null, null, true);
         this.dialogMessage = dialogMessage;
+        this.label = new JLabel(dialogMessage);
         this.buttonLabels = buttonLabels;
         this.buttons = buttonLabels.stream()
             .collect(Collectors.toMap(
@@ -36,6 +38,10 @@ public class OptionDialog extends JDialog {
                 JButton::new
             ));
         init();
+    }
+
+    public JLabel getLabel() {
+        return label;
     }
 
     public void addListener(String buttonLabel, ActionListener listener) {
@@ -56,7 +62,6 @@ public class OptionDialog extends JDialog {
     private void setupLayout() {
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         setLayout(new GridBagLayout());
-        JLabel label = new JLabel(dialogMessage);
         label.setHorizontalAlignment(JLabel.CENTER);
         add(label, configureLayout(0, 0, c -> {
             c.weighty = 100;
