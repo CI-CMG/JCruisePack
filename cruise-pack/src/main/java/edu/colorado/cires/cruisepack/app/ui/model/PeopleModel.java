@@ -1,33 +1,30 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidOrganizationDropDownItemModel;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItemModel;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
+import jakarta.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
-import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
-import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidOrganizationDropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import jakarta.validation.constraints.NotEmpty;
-
 @Component
 public class PeopleModel extends PropertyChangeModel {
     private String scientistsError = null;
     @NotEmpty
-    private List<@ValidPersonDropDownItemModel DropDownItemModel> scientists = new ArrayList<>(0);
+    private List<@ValidDropDownItemModel DropDownItemModel> scientists = new ArrayList<>(0);
     @NotEmpty
-    private List<@ValidOrganizationDropDownItemModel DropDownItemModel> sourceOrganizations = new ArrayList<>(0);
+    private List<@ValidDropDownItemModel DropDownItemModel> sourceOrganizations = new ArrayList<>(0);
     private String sourceOrganizationsError = null;
     @NotEmpty
-    private List<@ValidOrganizationDropDownItemModel DropDownItemModel> fundingOrganizations = new ArrayList<>(0);
+    private List<@ValidDropDownItemModel DropDownItemModel> fundingOrganizations = new ArrayList<>(0);
     private String fundingOrganizationsError = null;
     @ValidPersonDropDownItem
     private DropDownItem metadataAuthor = PersonDatastore.UNSELECTED_PERSON;

@@ -4,8 +4,8 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.DropDownItemModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel.ValidDropDownItemModelValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -18,10 +18,10 @@ import java.util.Objects;
 
 @Target({ FIELD, TYPE_USE })
 @Retention(RUNTIME)
-@Repeatable(ValidPersonDropDownItemModel.List.class)
-@Constraint(validatedBy = ValidPersonDropDownItemModel.ValidPersonDropDownItemModelValidator.class)
+@Repeatable(ValidDropDownItemModel.List.class)
+@Constraint(validatedBy = ValidDropDownItemModelValidator.class)
 @Documented
-public @interface ValidPersonDropDownItemModel {
+public @interface ValidDropDownItemModel {
   
   String message() default "invalid value";
   
@@ -33,14 +33,15 @@ public @interface ValidPersonDropDownItemModel {
   @Retention(RUNTIME)
   @Documented
   @interface List {
-    ValidPersonDropDownItemModel[] value();
+    ValidDropDownItemModel[] value();
   }
   
-  class ValidPersonDropDownItemModelValidator implements ConstraintValidator<ValidPersonDropDownItemModel, DropDownItemModel> {
+  class ValidDropDownItemModelValidator implements ConstraintValidator<ValidDropDownItemModel, DropDownItemModel> {
 
     @Override
     public boolean isValid(DropDownItemModel value, ConstraintValidatorContext context) {
-      return !Objects.equals(value.getItem(), PersonDatastore.UNSELECTED_PERSON);
+      return !Objects.equals(value.getItem().getId(), "");
     }
   }
+
 }

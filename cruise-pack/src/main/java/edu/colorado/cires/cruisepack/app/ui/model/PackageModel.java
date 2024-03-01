@@ -6,8 +6,8 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPortDropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidProjectDropDownItemModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSeaDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidShipDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -59,7 +59,7 @@ public class PackageModel extends PropertyChangeModel {
   private String packageDirectoryError = null;
 
   @NotEmpty
-  private List<@ValidProjectDropDownItemModel DropDownItemModel> projects = new ArrayList<>(0);
+  private List<@ValidDropDownItemModel DropDownItemModel> projects = new ArrayList<>(0);
   private String projectsError = null;
 
   public void restoreDefaults() {
