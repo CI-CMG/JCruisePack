@@ -52,6 +52,18 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     save(Collections.singletonList(data));
   }
   
+  public void delete(String packageId) {
+    save(
+        cruises.stream()
+            .filter(c -> c.getPackageId().equals(packageId))
+            .map(c ->
+                CruiseData.dataBuilder(c)
+                    .withDelete(true)
+                    .build()
+            ).toList()
+    );
+  }
+  
   public void save(List<CruiseData> cruiseDataList) {
     cruiseDataList.forEach(cruiseData -> {
       String packageId = cruiseData.getPackageId();

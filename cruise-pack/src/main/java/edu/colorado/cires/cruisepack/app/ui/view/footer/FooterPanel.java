@@ -55,6 +55,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
       "<html><B>Record data has been updated. Do you want to exit editor?</B></html>",
       List.of("No", "Yes")
   );
+  private final OptionDialog saveOrUpdateDialog = new OptionDialog(
+      "<html><B>The current package ID is different than the saved value. Click \"Update\" to update current record. Click \"Create New\" to create a new record for this new package ID.</B></html>",
+      List.of("Cancel", "Update", "Create New")
+  );
   private final JButton closeExitAppButton = new JButton("No");
   private final JButton confirmExitAppButton = new JButton("Yes");
   private final UiRefresher uiRefresher;
@@ -131,6 +135,22 @@ public class FooterPanel extends JPanel implements ReactiveView {
       }
     });
     
+    saveOrUpdateDialog.addListener("Cancel", (evt) -> footerControlController.setSaveOrUpdateDialogVisible(false));
+    saveOrUpdateDialog.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        footerControlController.setSaveOrUpdateDialogVisible(false);
+      }
+    });
+    saveOrUpdateDialog.addListener("Update", (evt) -> {
+      footerControlController.setSaveOrUpdateDialogVisible(false);
+      footerControlController.update(false);
+    });
+    saveOrUpdateDialog.addListener("Create New", (evt) -> {
+      footerControlController.setSaveOrUpdateDialogVisible(false);
+      footerControlController.create(false);
+    });
+    
     manageRecordsButton.addActionListener((evt) -> {
       manageRecordsDialog.pack();
       manageRecordsDialog.setVisible(true);
@@ -189,6 +209,13 @@ public class FooterPanel extends JPanel implements ReactiveView {
           String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
         ));
         break;
+      case Events.UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE: {
+        boolean newValue = (boolean) evt.getNewValue();
+        if (saveOrUpdateDialog.isVisible() != newValue) {
+          saveOrUpdateDialog.pack();
+          saveOrUpdateDialog.setVisible(newValue);
+        }
+      }
       default:
         break;
     }

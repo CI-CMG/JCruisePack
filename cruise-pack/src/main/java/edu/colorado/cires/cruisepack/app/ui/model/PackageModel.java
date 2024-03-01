@@ -102,7 +102,7 @@ public class PackageModel extends PropertyChangeModel {
     setExistingRecord(CruiseDataDatastore.UNSELECTED_CRUISE);
   }
 
-  public void updateFormState(CruiseMetadata cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore) {
+  public void updateFormState(CruiseMetadata cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, CruiseDataDatastore cruiseDataDatastore) {
     setCruiseId(cruiseMetadata.getCruiseId());
     setSegment(cruiseMetadata.getSegmentId());
     // setPackageDirectory
@@ -142,6 +142,13 @@ public class PackageModel extends PropertyChangeModel {
     if (cruiseMetadata.getMasterReleaseDate() != null) {
       setReleaseDate(LocalDate.parse(cruiseMetadata.getMasterReleaseDate()));
     }
+    
+    setExistingRecord(
+        cruiseDataDatastore.getByPackageId(
+            cruiseMetadata.getPackageId()
+        ).map(cd -> new DropDownItem(cd.getPackageId(), cd.getPackageId()))
+        .orElse(CruiseDataDatastore.UNSELECTED_CRUISE)
+    );
   }
 
   public String getCruiseId() {

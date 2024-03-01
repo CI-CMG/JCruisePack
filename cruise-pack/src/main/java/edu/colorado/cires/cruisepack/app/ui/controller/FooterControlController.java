@@ -98,13 +98,17 @@ public class FooterControlController implements PropertyChangeListener {
   public synchronized void setSaveExitAppDialogueVisible(boolean saveExitAppDialogueVisible) {
     footerControlModel.setSaveExitAppDialogueVisible(saveExitAppDialogueVisible);
   }
+  
+  public synchronized void setSaveOrUpdateDialogVisible(boolean saveOrUpdateDialogVisible) {
+    footerControlModel.setSaveOrUpdateDialogVisible(saveOrUpdateDialogVisible);
+  }
 
   public synchronized void startPackaging() {
     beanFactory.getBean(PackerService.class).startPacking();
   }
 
   public void updateFormState(CruiseMetadata cruiseMetadata) {
-    packageModel.updateFormState(cruiseMetadata, projectDatastore, portDatastore, shipDatastore, seaDatastore);
+    packageModel.updateFormState(cruiseMetadata, projectDatastore, portDatastore, shipDatastore, seaDatastore, cruiseDataDatastore);
     peopleModel.updateFormState(cruiseMetadata, personDatastore, organizationDatastore);
     cruiseInformationModel.updateFormState(cruiseMetadata);
     omicsModel.updateFormState(cruiseMetadata);
@@ -124,12 +128,42 @@ public class FooterControlController implements PropertyChangeListener {
       setSaveWarningDialogueVisible(true);
     } else {
       PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
-      cruiseDataDatastore.save(packJob);
-      emitPackageId(packJob.getPackageId());
-      if (!fromExitPrompt) {
-        setSaveExitAppDialogueVisible(true);
+      if (packageModel.getExistingRecord() != null && !packageModel.getExistingRecord().equals(CruiseDataDatastore.UNSELECTED_CRUISE) && !packJob.getPackageId().equals(packageModel.getExistingRecord().getValue())) {
+        setSaveOrUpdateDialogVisible(true);
+      } else {
+        save(packJob);
+        postSave(packJob.getPackageId(), fromExitPrompt);
       }
     }
+  }
+  
+  public void create(boolean fromExitPrompt) {
+    PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+    save(packJob);
+    postSave(packJob.getPackageId(), fromExitPrompt);
+  }
+  
+  public void update(boolean fromExitPrompt) {
+    PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+    save(packJob);
+    delete(packageModel.getExistingRecord().getValue());
+    postSave(packJob.getPackageId(), fromExitPrompt);
+  }
+  
+  private void postSave(String packageId, boolean fromExitPrompt) {
+    cruiseDataDatastore.getByPackageId(packageId).ifPresent(this::updateFormState);
+    emitPackageId(packageId);
+    if (!fromExitPrompt) {
+      setSaveExitAppDialogueVisible(true);
+    }
+  }
+  
+  private void save(PackJob packJob) {
+    cruiseDataDatastore.save(packJob);
+  }
+  
+  private void delete(String packageId) {
+    cruiseDataDatastore.delete(packageId);
   }
 
   private void emitPackageId(String packageId) {

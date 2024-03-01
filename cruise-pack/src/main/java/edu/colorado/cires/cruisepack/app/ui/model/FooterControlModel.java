@@ -11,6 +11,7 @@ public class FooterControlModel extends PropertyChangeModel {
   private boolean packageButtonEnabled = true;
   private boolean saveWarningDialogueVisible = false;
   private boolean saveExitAppDialogueVisible = false;
+  private boolean saveOrUpdateDialogVisible = false;
 
   public boolean isStopButtonEnabled() {
     return stopButtonEnabled;
@@ -56,5 +57,7 @@ public class FooterControlModel extends PropertyChangeModel {
     fireChangeEvent(Events.EMIT_PACKAGE_ID, null, packageId);
   }
 
-  
+  public void setSaveOrUpdateDialogVisible(boolean saveOrUpdateDialogVisible) {
+    setIfChanged(Events.UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE, saveOrUpdateDialogVisible, () -> this.saveOrUpdateDialogVisible, (v) -> this.saveOrUpdateDialogVisible = v);
+  }
 }
