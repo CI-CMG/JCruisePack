@@ -9,7 +9,10 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -17,42 +20,32 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-public class ExitDialog extends JDialog {
+public class OptionDialog extends JDialog {
 
     private final String dialogMessage;
-    private final boolean cancelOption;
-    private final JButton cancelButton = new JButton("Cancel");
-    private final JButton noButton = new JButton("No");
-    private final JButton yesButton = new JButton("Yes");
+    private final Map<String, JButton> buttons;
+    private final List<String> buttonLabels;
 
-    public ExitDialog(String dialogMessage) {
+    public OptionDialog(String dialogMessage, List<String> buttonLabels) {
         super((JFrame) null, null, true);
         this.dialogMessage = dialogMessage;
-        cancelOption = true;
-        init();
-    }
-    
-    public ExitDialog(String dialogMessage, boolean cancelOption) {
-        super((JFrame) null, null, true);
-        this.dialogMessage = dialogMessage;
-        this.cancelOption = cancelOption;
+        this.buttonLabels = buttonLabels;
+        this.buttons = buttonLabels.stream()
+            .collect(Collectors.toMap(
+                l -> l,
+                JButton::new
+            ));
         init();
     }
 
-    public void addNoListener(ActionListener listener) {
-        noButton.addActionListener(listener);
+    public void addListener(String buttonLabel, ActionListener listener) {
+        Optional.ofNullable(buttons.get(buttonLabel))
+            .ifPresent(b -> b.addActionListener(listener));
     }
 
-    public void removeNoListener(ActionListener listener) {
-        noButton.removeActionListener(listener);
-    }
-
-    public void addYesListener(ActionListener listener) {
-        yesButton.addActionListener(listener);
-    }
-
-    public void removeYesListener(ActionListener listener) {
-        yesButton.removeActionListener(listener);
+    public void removeListener(String buttonLabel, ActionListener listener) {
+        Optional.ofNullable(buttons.get(buttonLabel))
+            .ifPresent(b -> b.removeActionListener(listener));
     }
 
     private void init() {
@@ -76,20 +69,16 @@ public class ExitDialog extends JDialog {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
         
-        if (cancelOption) {
-            buttonPanel.add(cancelButton, configureLayout(0, 0));
+        for (int i = 0; i < buttons.size(); i++) {
+            buttonPanel.add(buttons.get(buttonLabels.get(i)), configureLayout(i, 0));
         }
-        buttonPanel.add(noButton, configureLayout(1, 0));
-        buttonPanel.add(yesButton, configureLayout(2, 0));
 
         panel.add(buttonPanel, BorderLayout.EAST);
         add(panel, configureLayout(0, 1, c -> c.weighty = 0));
     }
 
     private void setupDefaultListeners() {
-        cancelButton.addActionListener((evt) -> close());
-        noButton.addActionListener((evt) -> close());
-        yesButton.addActionListener((evt) -> close());
+        buttons.values().forEach(b -> b.addActionListener((evt) -> close()));
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event) {

@@ -7,7 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ExitDialog;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
@@ -31,7 +31,10 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   private final JTable table = new JTable();
   private final DefaultTableModel tableModel = new CheckboxTableModel();
   private final JButton saveButton = new JButton("Save");
-  private final ExitDialog exitAfterSaveDialog = new ExitDialog("<html><B>Package display status was updated. Do you want to exit editor?</B></html>", false);
+  private final OptionDialog exitAfterSaveDialog = new OptionDialog(
+      "<html><B>Package display status was updated. Do you want to exit editor?</B></html>",
+      List.of("No", "Yes")
+  );
 
   @Autowired
   public HideRecordsDialog(CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
@@ -86,7 +89,7 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
     
-    exitAfterSaveDialog.addYesListener((evt) -> setVisible(false));
+    exitAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
     saveButton.addActionListener((evt) -> save());
   }
   

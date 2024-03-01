@@ -5,12 +5,13 @@ import jakarta.annotation.PostConstruct;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import javax.swing.JFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ExitDialog;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 
 @Component
 public class MainFrame extends JFrame {
@@ -22,7 +23,10 @@ public class MainFrame extends JFrame {
   private final UiRefresher uiRefresher;
   private final RootPanel rootPanel;
   private final FooterControlController footerControlController;
-  private final ExitDialog exitDialog = new ExitDialog("<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>");
+  private final OptionDialog optionDialog = new OptionDialog(
+      "<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>",
+      List.of("Cancel", "No", "Yes")
+  );
 
   @Autowired
   public MainFrame(UiRefresher uiRefresher, RootPanel rootPanel, FooterControlController footerControlController) {
@@ -49,13 +53,13 @@ public class MainFrame extends JFrame {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent event) {
-        exitDialog.pack();
-        exitDialog.setVisible(true);
+        optionDialog.pack();
+        optionDialog.setVisible(true);
       }
     });
 
-    exitDialog.addNoListener((evt) -> footerControlController.exitApplication());
-    exitDialog.addYesListener((evt) -> {
+    optionDialog.addListener("No", (evt) -> footerControlController.exitApplication());
+    optionDialog.addListener("Yes", (evt) -> {
       footerControlController.saveForms(true);
       footerControlController.exitApplication();
     });

@@ -14,6 +14,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.DefaultComboBoxModel;
@@ -67,7 +68,10 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     private final StatefulRadioButton useField = new StatefulRadioButton("Display in pull-down lists:");
     private final JButton clearButton = new JButton("Clear");
     private final JButton saveButton = new JButton("Save");
-    private final ExitDialog exitDialog = new ExitDialog("<html><B>Save changes before closing?</B></html>");
+    private final OptionDialog optionDialog = new OptionDialog(
+        "<html><B>Save changes before closing?</B></html>",
+        List.of("Cancel", "No", "Yes")
+    );
 
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final OrganizationDatastore organizationDatastore;
@@ -284,8 +288,8 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         });
         saveButton.addActionListener((e) -> organizationController.submit());
 
-        exitDialog.addNoListener((evt) -> setVisible(false));
-        exitDialog.addYesListener((evt) -> {
+        optionDialog.addListener("No", (evt) -> setVisible(false));
+        optionDialog.addListener("Yes", (evt) -> {
             boolean saved = organizationController.submit();
             if (saved) {
                 setVisible(false);
@@ -295,8 +299,8 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event) {
-                exitDialog.pack();
-                exitDialog.setVisible(true);
+                optionDialog.pack();
+                optionDialog.setVisible(true);
             }
         });
     }
