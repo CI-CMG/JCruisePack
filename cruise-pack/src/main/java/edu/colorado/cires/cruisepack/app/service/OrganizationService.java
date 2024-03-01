@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import edu.colorado.cires.cruisepack.xml.organization.Organization;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public class OrganizationService {
         this.organizationDatastore = organizationDatastore;
     }
 
-    public boolean save(OrganizationModel organizationModel) {
+    public ResponseStatus save(OrganizationModel organizationModel) {
         Set<ConstraintViolation<OrganizationModel>> violations = validator.validate(organizationModel);
         String nameError = null;
         String streetError = null;
@@ -67,16 +69,32 @@ public class OrganizationService {
         organizationModel.setUuidError(uuidError);
 
         if (violations.isEmpty()) {
-            if (organizationModel.getUuid() == null) {
+            boolean organizationWithNameExists = organizationDatastore.getAllOrganizationDropDowns().stream().anyMatch(p -> p.getValue().equals(organizationModel.getName()));
+            
+            if (organizationModel.getUuid() == null || organizationModel.getUuid().isBlank()) {
+                if (organizationWithNameExists) {
+                    organizationModel.emitOrgName();
+                    return ResponseStatus.CONFLICT;
+                }
+                
                 organizationModel.setUuid(UUID.randomUUID().toString());
+            }
+
+            Optional<Organization> maybeOrganization = organizationDatastore.getByUUID(organizationModel.getUuid());
+            if (maybeOrganization.isPresent()) {
+                Organization existingOrganization = maybeOrganization.get();
+                if (!existingOrganization.getName().equals(organizationModel.getName()) && organizationWithNameExists) {
+                    organizationModel.emitOrgName();
+                    return ResponseStatus.CONFLICT;
+                }
             }
 
             organizationDatastore.save(organizationModel);
             organizationModel.emitOrgName();
-            return true;
+            return ResponseStatus.SUCCESS;
         }
 
-        return false;
+        return ResponseStatus.ERROR;
     }
     
 }

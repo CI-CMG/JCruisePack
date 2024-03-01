@@ -8,6 +8,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefu
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -75,6 +76,10 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     private final OptionDialog closeAfterSaveDialog = new OptionDialog(
         "<html><B>Organization has been updated. Do you want to exit editor?</B></html>",
         List.of("No", "Yes")
+    );
+    private final OptionDialog collisionDialog = new OptionDialog(
+        "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new organization, please modify the name to make it unique.</B></html>",
+        List.of("OK")
     );
 
     private final ReactiveViewRegistry reactiveViewRegistry;
@@ -294,18 +299,24 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
         
         saveButton.addActionListener((e) -> {
-            boolean success = organizationController.submit();
-            if (success) {
+            ResponseStatus status = organizationController.submit();
+            if (status.equals(ResponseStatus.SUCCESS)) {
                 closeAfterSaveDialog.pack();
                 closeAfterSaveDialog.setVisible(true);
+            } else if (status.equals(ResponseStatus.CONFLICT)) {
+                collisionDialog.pack();
+                collisionDialog.setVisible(true);
             }
         });
 
         optionDialog.addListener("No", (evt) -> setVisible(false));
         optionDialog.addListener("Yes", (evt) -> {
-            boolean saved = organizationController.submit();
-            if (saved) {
+            ResponseStatus status = organizationController.submit();
+            if (status.equals(ResponseStatus.SUCCESS)) {
                 setVisible(false);
+            } else if (status.equals(ResponseStatus.CONFLICT)) {
+                collisionDialog.pack();
+                collisionDialog.setVisible(true);
             }
         });
 
@@ -391,6 +402,12 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
                     "UPDATE_CLOSE_AFTER_SAVE_LABEL",
                     closeAfterSaveDialog.getLabel().getText(),
                     String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
+                ));
+                updateLabelText(collisionDialog.getLabel(), new PropertyChangeEvent(
+                    evt,
+                    "UPDATE_COLLISION_DIALOG_LABEL",
+                    collisionDialog.getLabel().getText(),
+                    String.format("<html><B>The name \"%s\" already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new organization, please modify the name to make it unique.</B></html>", evt.getNewValue())
                 ));
                 break;
             default:

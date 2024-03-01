@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
+import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -67,7 +68,7 @@ public class OrganizationController implements PropertyChangeListener {
         organizationModel.restoreDefaults();
     }
 
-    public boolean submit() {
+    public ResponseStatus submit() {
         return organizationService.save(organizationModel);
     }
 

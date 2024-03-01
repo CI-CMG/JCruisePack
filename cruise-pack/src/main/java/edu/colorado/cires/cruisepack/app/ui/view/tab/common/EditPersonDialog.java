@@ -467,7 +467,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
                 updateLabelText(collisionDialog.getLabel(), new PropertyChangeEvent(
                     evt,
                     "UPDATE_COLLISION_DIALOG_LABEL",
-                    closeAfterSaveDialog.getLabel().getText(),
+                    collisionDialog.getLabel().getText(),
                     String.format("<html><B>The name \"%s\" already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new person, please modify the name to make it unique.</B></html>", evt.getNewValue())
                 ));
                 break;
