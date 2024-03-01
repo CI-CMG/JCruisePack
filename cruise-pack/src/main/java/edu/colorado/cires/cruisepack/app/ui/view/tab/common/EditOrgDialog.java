@@ -38,7 +38,6 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import jakarta.annotation.PostConstruct;
 
 @Component
@@ -68,7 +67,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     private final StatefulRadioButton useField = new StatefulRadioButton("Display in pull-down lists:");
     private final JButton clearButton = new JButton("Clear");
     private final JButton saveButton = new JButton("Save");
-    private final SaveBeforeExitDialog saveBeforeExitDialog = new SaveBeforeExitDialog("<html><B>Save changes before closing?</B></html>");
+    private final ExitDialog exitDialog = new ExitDialog("<html><B>Save changes before closing?</B></html>");
 
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final OrganizationDatastore organizationDatastore;
@@ -285,8 +284,8 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         });
         saveButton.addActionListener((e) -> organizationController.submit());
 
-        saveBeforeExitDialog.addNoListener((evt) -> setVisible(false));
-        saveBeforeExitDialog.addYesListener((evt) -> {
+        exitDialog.addNoListener((evt) -> setVisible(false));
+        exitDialog.addYesListener((evt) -> {
             boolean saved = organizationController.submit();
             if (saved) {
                 setVisible(false);
@@ -296,8 +295,8 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event) {
-                saveBeforeExitDialog.pack();
-                saveBeforeExitDialog.setVisible(true);
+                exitDialog.pack();
+                exitDialog.setVisible(true);
             }
         });
     }

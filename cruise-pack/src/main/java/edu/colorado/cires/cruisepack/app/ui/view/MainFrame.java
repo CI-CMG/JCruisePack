@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.SaveBeforeExitDialog;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ExitDialog;
 
 @Component
 public class MainFrame extends JFrame {
@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
   private final UiRefresher uiRefresher;
   private final RootPanel rootPanel;
   private final FooterControlController footerControlController;
-  private final SaveBeforeExitDialog saveBeforeExitDialog = new SaveBeforeExitDialog("<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>");
+  private final ExitDialog exitDialog = new ExitDialog("<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>");
 
   @Autowired
   public MainFrame(UiRefresher uiRefresher, RootPanel rootPanel, FooterControlController footerControlController) {
@@ -49,13 +49,13 @@ public class MainFrame extends JFrame {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent event) {
-        saveBeforeExitDialog.pack();
-        saveBeforeExitDialog.setVisible(true);
+        exitDialog.pack();
+        exitDialog.setVisible(true);
       }
     });
 
-    saveBeforeExitDialog.addNoListener((evt) -> footerControlController.exitApplication());
-    saveBeforeExitDialog.addYesListener((evt) -> {
+    exitDialog.addNoListener((evt) -> footerControlController.exitApplication());
+    exitDialog.addYesListener((evt) -> {
       footerControlController.saveForms(true);
       footerControlController.exitApplication();
     });

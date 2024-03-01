@@ -17,16 +17,25 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-public class SaveBeforeExitDialog extends JDialog {
+public class ExitDialog extends JDialog {
 
     private final String dialogMessage;
+    private final boolean cancelOption;
     private final JButton cancelButton = new JButton("Cancel");
     private final JButton noButton = new JButton("No");
     private final JButton yesButton = new JButton("Yes");
 
-    public SaveBeforeExitDialog(String dialogMessage) {
+    public ExitDialog(String dialogMessage) {
         super((JFrame) null, null, true);
         this.dialogMessage = dialogMessage;
+        cancelOption = true;
+        init();
+    }
+    
+    public ExitDialog(String dialogMessage, boolean cancelOption) {
+        super((JFrame) null, null, true);
+        this.dialogMessage = dialogMessage;
+        this.cancelOption = cancelOption;
         init();
     }
 
@@ -66,7 +75,10 @@ public class SaveBeforeExitDialog extends JDialog {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
-        buttonPanel.add(cancelButton, configureLayout(0, 0));
+        
+        if (cancelOption) {
+            buttonPanel.add(cancelButton, configureLayout(0, 0));
+        }
         buttonPanel.add(noButton, configureLayout(1, 0));
         buttonPanel.add(yesButton, configureLayout(2, 0));
 

@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ExitDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
@@ -30,6 +31,7 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   private final JTable table = new JTable();
   private final DefaultTableModel tableModel = new CheckboxTableModel();
   private final JButton saveButton = new JButton("Save");
+  private final ExitDialog exitAfterSaveDialog = new ExitDialog("<html><B>Package display status was updated. Do you want to exit editor?</B></html>", false);
 
   @Autowired
   public HideRecordsDialog(CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
@@ -84,18 +86,24 @@ public class HideRecordsDialog extends JDialog implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
     
-    saveButton.addActionListener((evt) -> {
-      final int rowCount = tableModel.getRowCount();
-      List<CruiseData> newData = new ArrayList<>(0);
-      for (int i = 0; i < rowCount; i++) {
-        CruiseData existingData = (CruiseData) tableModel.getValueAt(i, 2);
-        boolean use = (boolean) tableModel.getValueAt(i, 0);
-        newData.add(CruiseData.dataBuilder(existingData)
-            .withUse(use)
-            .build());
-      }
-      cruiseDataController.updateCruises(newData);
-    });
+    exitAfterSaveDialog.addYesListener((evt) -> setVisible(false));
+    saveButton.addActionListener((evt) -> save());
+  }
+  
+  private void save() {
+    final int rowCount = tableModel.getRowCount();
+    List<CruiseData> newData = new ArrayList<>(0);
+    for (int i = 0; i < rowCount; i++) {
+      CruiseData existingData = (CruiseData) tableModel.getValueAt(i, 2);
+      boolean use = (boolean) tableModel.getValueAt(i, 0);
+      newData.add(CruiseData.dataBuilder(existingData)
+          .withUse(use)
+          .build());
+    }
+    cruiseDataController.updateCruises(newData);
+
+    exitAfterSaveDialog.pack();
+    exitAfterSaveDialog.setVisible(true);
   }
 
   @Override
