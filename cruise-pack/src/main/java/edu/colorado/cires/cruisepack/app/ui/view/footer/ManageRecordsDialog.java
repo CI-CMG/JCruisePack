@@ -38,7 +38,7 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
 
   @Autowired
   public ManageRecordsDialog(CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
-    super((JFrame) null, "Show or Hide Package Records", true);
+    super((JFrame) null, "Manage Package Records", true);
     this.cruiseDataController = cruiseDataDatastore;
     this.reactiveViewRegistry = reactiveViewRegistry;
   }

@@ -148,7 +148,16 @@ public final class FieldUtils {
   }
 
   public static void updateComboBoxModel(JComboBox<DropDownItem> comboBox, List<DropDownItem> items) {
+    DropDownItem selectedItem = (DropDownItem) comboBox.getSelectedItem();
     comboBox.setModel(new DefaultComboBoxModel<>(items.toArray(new DropDownItem[0])));
+    boolean selectedItemInItems = selectedItem != null && items.stream()
+        .anyMatch(dd -> dd.getId().equals(selectedItem.getId()) && dd.getValue().equals(selectedItem.getValue()));
+    
+    if (!selectedItemInItems) {
+      comboBox.setSelectedItem(items.get(0));
+    } else {
+      comboBox.setSelectedItem(selectedItem);
+    }
   }
 
   private FieldUtils() {
