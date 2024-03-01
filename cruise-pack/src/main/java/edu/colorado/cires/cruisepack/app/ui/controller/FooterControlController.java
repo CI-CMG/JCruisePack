@@ -102,6 +102,10 @@ public class FooterControlController implements PropertyChangeListener {
   public synchronized void setSaveOrUpdateDialogVisible(boolean saveOrUpdateDialogVisible) {
     footerControlModel.setSaveOrUpdateDialogVisible(saveOrUpdateDialogVisible);
   }
+  
+  public synchronized void setPackageIdCollisionDialogVisible(boolean packageIdCollisionDialogVisible) {
+    footerControlModel.setPackageIdCollisionDialogVisible(packageIdCollisionDialogVisible);
+  }
 
   public synchronized void startPackaging() {
     beanFactory.getBean(PackerService.class).startPacking();
@@ -131,23 +135,29 @@ public class FooterControlController implements PropertyChangeListener {
       if (packageModel.getExistingRecord() != null && !packageModel.getExistingRecord().equals(CruiseDataDatastore.UNSELECTED_CRUISE) && !packJob.getPackageId().equals(packageModel.getExistingRecord().getValue())) {
         setSaveOrUpdateDialogVisible(true);
       } else {
-        save(packJob);
-        postSave(packJob.getPackageId(), fromExitPrompt);
+        boolean success = save(packJob);
+        if (success) {
+          postSave(packJob.getPackageId(), fromExitPrompt);
+        }
       }
     }
   }
   
   public void create(boolean fromExitPrompt) {
     PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
-    save(packJob);
-    postSave(packJob.getPackageId(), fromExitPrompt);
+    boolean success = save(packJob);
+    if (success) {
+      postSave(packJob.getPackageId(), fromExitPrompt);
+    }
   }
   
   public void update(boolean fromExitPrompt) {
     PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
-    save(packJob);
-    delete(packageModel.getExistingRecord().getValue());
-    postSave(packJob.getPackageId(), fromExitPrompt);
+    boolean success = save(packJob);
+    if (success) {
+      delete(packageModel.getExistingRecord().getValue());
+      postSave(packJob.getPackageId(), fromExitPrompt);
+    }
   }
   
   private void postSave(String packageId, boolean fromExitPrompt) {
@@ -158,8 +168,17 @@ public class FooterControlController implements PropertyChangeListener {
     }
   }
   
-  private void save(PackJob packJob) {
+  private boolean save(PackJob packJob) {
+    String packageId = packJob.getPackageId();
+    boolean exists = cruiseDataDatastore.getByPackageId(packageId).isPresent();
+    String selectedValue = packageModel.getExistingRecord().getValue();
+    if (exists && !packageId.equals(selectedValue)) {
+      emitPackageId(packageId);
+      setPackageIdCollisionDialogVisible(true);
+      return false;
+    }
     cruiseDataDatastore.save(packJob);
+    return true;
   }
   
   private void delete(String packageId) {

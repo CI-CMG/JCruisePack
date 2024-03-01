@@ -59,6 +59,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
       "<html><B>The current package ID is different than the saved value. Click \"Update\" to update current record. Click \"Create New\" to create a new record for this new package ID.</B></html>",
       List.of("Cancel", "Update", "Create New")
   );
+  private final OptionDialog packageIdCollisionDialog = new OptionDialog(
+      "<html><B>This package name already exists. Please modify the Cruise ID or Segment or Leg value to create a unique package ID.</B></html>",
+      List.of("OK")
+  );
   private final JButton closeExitAppButton = new JButton("No");
   private final JButton confirmExitAppButton = new JButton("Yes");
   private final UiRefresher uiRefresher;
@@ -135,6 +139,14 @@ public class FooterPanel extends JPanel implements ReactiveView {
       }
     });
     
+    packageIdCollisionDialog.addListener("OK", (evt) -> footerControlController.setPackageIdCollisionDialogVisible(false));
+    packageIdCollisionDialog.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        footerControlController.setPackageIdCollisionDialogVisible(false);
+      }
+    });
+    
     saveOrUpdateDialog.addListener("Cancel", (evt) -> footerControlController.setSaveOrUpdateDialogVisible(false));
     saveOrUpdateDialog.addWindowListener(new WindowAdapter() {
       @Override
@@ -208,6 +220,12 @@ public class FooterPanel extends JPanel implements ReactiveView {
           saveExitAppDialog.getLabel().getText(),
           String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
         ));
+        updateLabelText(packageIdCollisionDialog.getLabel(), new PropertyChangeEvent(
+            evt,
+            "UPDATE_PACKAGE_ID_COLLISION_LABEL",
+            packageIdCollisionDialog.getLabel().getText(),
+            String.format("<html><B>The package name \"%s\" already exists. Please modify the Cruise ID or Segment or Leg value to create a unique package ID.</B></html>", evt.getNewValue())
+        ));
         break;
       case Events.UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
@@ -216,6 +234,15 @@ public class FooterPanel extends JPanel implements ReactiveView {
           saveOrUpdateDialog.setVisible(newValue);
         }
       }
+      break;
+      case Events.UPDATE_PACKAGE_ID_COLLISION_DIALOG_VISIBLE: {
+        boolean newValue = (boolean) evt.getNewValue();
+        if (packageIdCollisionDialog.isVisible() != newValue) {
+          packageIdCollisionDialog.pack();
+          packageIdCollisionDialog.setVisible(newValue);
+        }
+      }
+      break;
       default:
         break;
     }

@@ -12,6 +12,7 @@ public class FooterControlModel extends PropertyChangeModel {
   private boolean saveWarningDialogueVisible = false;
   private boolean saveExitAppDialogueVisible = false;
   private boolean saveOrUpdateDialogVisible = false;
+  private boolean packageIdCollisionDialogVisible = false;
 
   public boolean isStopButtonEnabled() {
     return stopButtonEnabled;
@@ -59,5 +60,9 @@ public class FooterControlModel extends PropertyChangeModel {
 
   public void setSaveOrUpdateDialogVisible(boolean saveOrUpdateDialogVisible) {
     setIfChanged(Events.UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE, saveOrUpdateDialogVisible, () -> this.saveOrUpdateDialogVisible, (v) -> this.saveOrUpdateDialogVisible = v);
+  }
+  
+  public void setPackageIdCollisionDialogVisible(boolean packageIdCollisionDialogVisible) {
+    setIfChanged(Events.UPDATE_PACKAGE_ID_COLLISION_DIALOG_VISIBLE, packageIdCollisionDialogVisible, () -> this.packageIdCollisionDialogVisible, (v) -> this.packageIdCollisionDialogVisible = v);
   }
 }
