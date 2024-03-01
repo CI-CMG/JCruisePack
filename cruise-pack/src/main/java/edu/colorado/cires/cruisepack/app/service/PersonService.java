@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import edu.colorado.cires.cruisepack.xml.person.Person;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public class PersonService {
         this.personDatastore = personDatastore;
     }
 
-    public boolean save(PersonModel personModel) {
+    public ResponseStatus save(PersonModel personModel) {
         Set<ConstraintViolation<PersonModel>> violations = validator.validate(personModel);
         String nameError = null;
         String positionError = null;
@@ -79,15 +81,30 @@ public class PersonService {
         personModel.setUuidError(uuidError);
         
         if (violations.isEmpty()) {
-            if (personModel.getUuid() == null) {
+            boolean personWithNameExists = personDatastore.getAllPersonDropDowns().stream().anyMatch(p -> p.getValue().equals(personModel.getName()));
+            
+            if (personModel.getUuid() == null || personModel.getUuid().isBlank()) {
+                if (personWithNameExists) {
+                    personModel.emitPersonName();
+                    return ResponseStatus.CONFLICT;
+                }
                 personModel.setUuid(UUID.randomUUID().toString());
+                
+            }
+            Optional<Person> maybePerson = personDatastore.getByUUID(personModel.getUuid());
+            if (maybePerson.isPresent()) {
+                Person existingPerson = maybePerson.get();
+                if (!existingPerson.getName().equals(personModel.getName()) && personWithNameExists) {
+                    personModel.emitPersonName();
+                    return ResponseStatus.CONFLICT;
+                }
             }
             personDatastore.save(personModel);
             personModel.emitPersonName();
-            return true;
+            return ResponseStatus.SUCCESS;
         }
 
-        return false;
+        return ResponseStatus.ERROR;
     }
     
 }

@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
+import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import org.springframework.stereotype.Component;
@@ -90,7 +91,7 @@ public class PersonController implements PropertyChangeListener {
         personModel.restoreDefaults();
     }
 
-    public boolean submit() {
+    public ResponseStatus submit() {
         return personService.save(personModel);
     }
     
