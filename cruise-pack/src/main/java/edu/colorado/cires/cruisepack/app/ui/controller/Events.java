@@ -103,6 +103,7 @@ public final class Events {
 
   // Person
   public static final String UPDATE_PERSON_NAME = "UPDATE_PERSON_NAME";
+  public static final String EMIT_PERSON_NAME = "EMIT_PERSON_NAME";
   public static final String UPDATE_PERSON_POSITION = "UPDATE_PERSON_POSITION";
   public static final String UPDATE_PERSON_ORGANIZATION = "UPDATE_PERSON_ORGANIZATION";
   public static final String UPDATE_PERSON_STREET = "UPDATE_PERSON_STREET";

@@ -275,6 +275,10 @@ public class PersonModel extends PropertyChangeModel {
     public void setUuidError(String uuidError) {
         setIfChanged(Events.UPDATE_PERSON_UUID_ERROR, uuidError, () -> this.uuidError, (e) -> this.uuidError = e);
     }
+    
+    public void emitPersonName() {
+        fireChangeEvent(Events.EMIT_PERSON_NAME, null, name);
+    }
 
     
 }

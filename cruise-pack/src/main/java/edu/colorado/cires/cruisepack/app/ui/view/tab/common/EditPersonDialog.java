@@ -77,6 +77,11 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
         "<html><B>Save changes before closing?</B></html>",
         List.of("Cancel", "No", "Yes")
     );
+    
+    private final OptionDialog closeAfterSaveDialog = new OptionDialog(
+        "<html><B>Person has been updated. Do you want to exit editor?</B></html>",
+        List.of("No", "Yes")
+    );
 
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final PersonDatastore personDatastore;
@@ -325,7 +330,16 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
             peopleList.setSelectedItem(PersonDatastore.UNSELECTED_PERSON);
             personController.restoreDefaults();
         });
-        saveButton.addActionListener((e) -> personController.submit());
+        
+        closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
+        
+        saveButton.addActionListener((e) -> {
+            boolean success = personController.submit();
+            if (success) {
+                closeAfterSaveDialog.pack();
+                closeAfterSaveDialog.setVisible(true);
+            }
+        });
 
         optionDialog.addListener("No", (evt) -> {
             setVisible(false);
@@ -431,6 +445,13 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
             case Events.UPDATE_PERSON_DATA_STORE:
                 updateComboBoxModel(peopleList, personDatastore.getAllPersonDropDowns());
                 break;
+            case Events.EMIT_PERSON_NAME:
+                updateLabelText(closeAfterSaveDialog.getLabel(), new PropertyChangeEvent(
+                    evt,
+                    "UPDATE_CLOSE_AFTER_SAVE_LABEL",
+                    closeAfterSaveDialog.getLabel().getText(),
+                    String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
+                ));
             default:
                 break;
         }

@@ -83,6 +83,7 @@ public class PersonService {
                 personModel.setUuid(UUID.randomUUID().toString());
             }
             personDatastore.save(personModel);
+            personModel.emitPersonName();
             return true;
         }
 
