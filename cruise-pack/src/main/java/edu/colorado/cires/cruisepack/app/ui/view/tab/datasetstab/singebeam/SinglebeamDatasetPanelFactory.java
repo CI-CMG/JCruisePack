@@ -47,21 +47,21 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
 
     Map<String, Object> otherFields = instrument.getOtherFields();
     setValueIfExists(
-        "obsRate",
+        "obs_rate",
         otherFields,
         String.class,
         (v) -> v,
         model::setObsRate
     );
     setValueIfExists(
-        "soundVelocity",
+        "sound_velocity",
         otherFields,
         String.class,
         (v) -> v,
         model::setSoundVelocity
     );
     setValueIfExists(
-        "verticalDatum",
+        "vertical_datum",
         otherFields,
         String.class,
         (v) -> singlebeamVerticalDatumDatastore.getVerticalDatumDropDowns().stream()

@@ -47,7 +47,7 @@ public class GravityDatasetPanelFactory extends
 
     Map<String, Object> otherFields = instrument.getOtherFields();
     setValueIfExists(
-        "correctionModel",
+        "correction_model",
         otherFields,
         String.class,
         (v) -> gravityCorrectionModelDatastore.getCorrectionModelDropDowns().stream()
@@ -57,28 +57,28 @@ public class GravityDatasetPanelFactory extends
         model::setCorrectionModel
     );
     setValueIfExists(
-        "arrivalTie",
+        "arrival_tie",
         otherFields,
         String.class,
         (v) -> v,
         model::setArrivalTie
     );
     setValueIfExists(
-        "departureTie",
+        "departure_tie",
         otherFields,
         String.class,
         (v) -> v,
         model::setDepartureTie
     );
     setValueIfExists(
-        "driftPerDay",
+        "drift_per_day",
         otherFields,
         String.class,
         (v) -> v,
         model::setDriftPerDay
     );
     setValueIfExists(
-        "observationRate",
+        "observation_rate",
         otherFields,
         String.class,
         (v) -> v,

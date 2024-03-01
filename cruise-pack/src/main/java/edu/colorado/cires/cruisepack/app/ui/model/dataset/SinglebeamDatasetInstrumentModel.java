@@ -88,9 +88,9 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
   @Override
   protected HashMap<String, Object> getAdditionalFields() {
     HashMap<String, Object> map = new HashMap<>();
-    map.put("verticalDatum", verticalDatum.getValue());
-    map.put("obsRate", obsRate);
-    map.put("soundVelocity", soundVelocity);
+    map.put("vertical_datum", verticalDatum.getValue());
+    map.put("obs_rate", obsRate);
+    map.put("sound_velocity", soundVelocity);
     return map;
   }
 

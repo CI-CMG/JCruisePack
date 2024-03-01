@@ -80,7 +80,7 @@ public class NavigationDatasetInstrumentModel extends BaseDatasetInstrumentModel
   @Override
   protected HashMap<String, Object> getAdditionalFields() {
     HashMap<String, Object> map = new HashMap<>(0);
-    map.put("navDatum", navDatum.getValue());
+    map.put("nav_datum", navDatum.getValue());
     return map;
   }
 

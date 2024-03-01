@@ -83,10 +83,10 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   @Override
   protected HashMap<String, Object> getAdditionalFields() {
     HashMap<String, Object> map = new HashMap<>(0);
-    map.put("calibrationState", calibrationState.getValue());
-    map.put("calibrationReportPath", calibrationReportPath);
-    map.put("calibrationDataPath", calibrationDataPath);
-    map.put("calibrationDate", calibrationDate.toString());
+    map.put("calibration_state", calibrationState.getValue());
+    map.put("calibration_report_path", calibrationReportPath);
+    map.put("calibration_data_path", calibrationDataPath);
+    map.put("calibration_date", calibrationDate.toString());
     return map;
   }
 

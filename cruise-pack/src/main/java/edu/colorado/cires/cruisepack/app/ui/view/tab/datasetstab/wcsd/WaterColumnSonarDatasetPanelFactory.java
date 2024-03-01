@@ -50,7 +50,7 @@ public class WaterColumnSonarDatasetPanelFactory extends
     Map<String, Object> otherFields = instrument.getOtherFields();
     
     setValueIfExists(
-        "calibrationState",
+        "calibration_state",
         otherFields,
         String.class,
         (v) -> waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns()
@@ -61,21 +61,21 @@ public class WaterColumnSonarDatasetPanelFactory extends
         model::setCalibrationState
     );
     setValueIfExists(
-        "calibrationDate",
+        "calibration_date",
         otherFields,
         String.class,
         (v) -> v == null ? null : LocalDate.parse(v),
         model::setCalibrationDate
     );
     setValueIfExists(
-        "calibrationDataPath",
+        "calibration_data_path",
         otherFields,
         String.class,
         Paths::get,
         model::setCalibrationDataPath
     );
     setValueIfExists(
-        "calibrationReportPath",
+        "calibration_report_path",
         otherFields,
         String.class,
         Paths::get,

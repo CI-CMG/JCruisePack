@@ -93,10 +93,10 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   @Override
   protected HashMap<String, Object> getAdditionalFields() {
     HashMap<String, Object> map = new HashMap<>(0);
-    map.put("correctionModel", correctionModel.getValue());
-    map.put("sampleRate", sampleRate);
-    map.put("towDistance", towDistance);
-    map.put("sensorDepth", sensorDepth);
+    map.put("correction_model", correctionModel.getValue());
+    map.put("sample_rate", sampleRate);
+    map.put("tow_distance", towDistance);
+    map.put("sensor_depth", sensorDepth);
     return map;
   }
 

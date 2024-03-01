@@ -98,11 +98,11 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   @Override
   protected HashMap<String, Object> getAdditionalFields() {
     HashMap<String, Object> map = new HashMap<>();
-    map.put("correctionModel", correctionModel.getValue());
-    map.put("observationRate", observationRate);
-    map.put("departureTie", departureTie);
-    map.put("arrivalTie", arrivalTie);
-    map.put("driftPerDay", driftPerDay);
+    map.put("correction_model", correctionModel.getValue());
+    map.put("observation_rate", observationRate);
+    map.put("departure_tie", departureTie);
+    map.put("arrival_tie", arrivalTie);
+    map.put("drift_per_day", driftPerDay);
     return map;
   }
 

@@ -48,14 +48,14 @@ public class MagneticsDatasetPanelFactory extends
 
     Map<String, Object> otherFields = instrument.getOtherFields();
     setValueIfExists(
-        "sampleRate",
+        "sample_rate",
         otherFields,
         String.class,
         (v) -> v,
         model::setSampleRate
     );
     setValueIfExists(
-        "correctionModel",
+        "correction_model",
         otherFields,
         String.class,
         (v) -> magneticsCorrectionModelDatastore.getCorrectionModelDropDowns().stream()
@@ -65,14 +65,14 @@ public class MagneticsDatasetPanelFactory extends
         model::setCorrectionModel
     );
     setValueIfExists(
-        "sensorDepth",
+        "sensor_depth",
         otherFields,
         String.class,
         (v) -> v,
         model::setSensorDepth
     );
     setValueIfExists(
-        "towDistance",
+        "tow_distance",
         otherFields,
         String.class,
         (v) -> v,

@@ -45,7 +45,7 @@ public class NavigationDatasetPanelFactory extends
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     setValueIfExists(
-        "navDatum",
+        "nav_datum",
         instrument.getOtherFields(),
         String.class,
         (v) -> navigationDatumDatastore.getNavigationDatumDropDowns().stream()
