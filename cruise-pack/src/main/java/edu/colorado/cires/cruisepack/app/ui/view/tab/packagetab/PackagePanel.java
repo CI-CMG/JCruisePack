@@ -154,7 +154,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private void initializeFields() {
     existingRecordList.setModel(new DefaultComboBoxModel<>(cruiseDataDatastore.getDropDownItems().toArray(new DropDownItem[0])));
-    existingRecordList.setSelectedItem(CruiseDataDatastore.UNSELECTED_CRUISE);
+    existingRecordList.setSelectedItem(packageModel.getExistingRecord());
 
     cruiseIdField.setText(packageModel.getCruiseId());
 
@@ -224,15 +224,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
     projectsField.addAddItemListener((i) -> packageController.addProject(i));
     projectsField.addRemoveItemListener((i) -> packageController.removeProject(i));
-    existingRecordList.addItemListener((evt) -> {
-      DropDownItem dropDownItem = (DropDownItem) evt.getItem();
-      Optional<CruiseData> maybeMetadata = cruiseDataDatastore.getByPackageId(dropDownItem.getId());
-      if (maybeMetadata.isPresent()) {
-        footerControlController.updateFormState(maybeMetadata.get());
-      } else {
-        footerControlController.restoreDefaultsGlobal();
-      }
-    });
+    existingRecordList.addItemListener((evt) -> packageController.setExistingRecord((DropDownItem) evt.getItem()));
   }
 
   private void handleDirValue(String value) {
@@ -329,6 +321,19 @@ public class PackagePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_CRUISE_DATA_STORE:
         updateComboBoxModel(existingRecordList, cruiseDataDatastore.getDropDownItems());
+        break;
+      case Events.UPDATE_EXISTING_RECORD:
+        updateComboBox(existingRecordList, evt);
+        DropDownItem dropDownItem = (DropDownItem) existingRecordList.getSelectedItem();
+        if (dropDownItem != null) {
+          Optional<CruiseData> maybeMetadata = cruiseDataDatastore.getByPackageId(dropDownItem.getId());
+          if (maybeMetadata.isPresent()) {
+            footerControlController.updateFormState(maybeMetadata.get());
+          } else {
+            footerControlController.restoreDefaultsGlobal();
+          }
+        }
+        break;
       default:
         break;
     }

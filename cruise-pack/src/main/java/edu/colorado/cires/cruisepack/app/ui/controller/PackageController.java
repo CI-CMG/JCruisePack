@@ -85,6 +85,10 @@ public class PackageController implements PropertyChangeListener {
     packageModel.removeProject(panel);
   }
   
+  public void setExistingRecord(DropDownItem item) {
+    packageModel.setExistingRecord(item);
+  }
+  
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     for (ReactiveView view : reactiveViewRegistry.getViews()) {

@@ -28,6 +28,7 @@ public final class Events {
   public static final String UPDATE_DEPARTURE_PORT_ERROR = "UPDATE_DEPARTURE_PORT_ERROR";
   public static final String UPDATE_SHIP_ERROR = "UPDATE_SHIP_ERROR";
   public static final String UPDATE_PROJECTS_ERROR = "UPDATE_PROJECTS_ERROR";
+  public static final String UPDATE_EXISTING_RECORD = "UPDATE_EXISTING_RECORD";
 
   // Footer Control
   public static final String UPDATE_STOP_BUTTON_ENABLED = "UPDATE_STOP_BUTTON_ENABLED";

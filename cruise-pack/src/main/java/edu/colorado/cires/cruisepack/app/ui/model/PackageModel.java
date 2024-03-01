@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
@@ -61,6 +62,8 @@ public class PackageModel extends PropertyChangeModel {
   @NotEmpty
   private List<@ValidDropDownItemModel DropDownItemModel> projects = new ArrayList<>(0);
   private String projectsError = null;
+  
+  private DropDownItem existingRecord = CruiseDataDatastore.UNSELECTED_CRUISE;
 
   public void restoreDefaults() {
     setCruiseId(null);
@@ -95,6 +98,8 @@ public class PackageModel extends PropertyChangeModel {
 
     clearProjects();
     setProjectsError(null);
+    
+    setExistingRecord(CruiseDataDatastore.UNSELECTED_CRUISE);
   }
 
   public void updateFormState(CruiseMetadata cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore) {
@@ -304,4 +309,11 @@ public class PackageModel extends PropertyChangeModel {
     }
   }
 
+  public DropDownItem getExistingRecord() {
+    return existingRecord;
+  }
+
+  public void setExistingRecord(DropDownItem existingRecord) {
+    setIfChanged(Events.UPDATE_EXISTING_RECORD, existingRecord, () -> this.existingRecord, (dd) -> this.existingRecord = dd);
+  }
 }
