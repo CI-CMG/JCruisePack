@@ -18,7 +18,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -129,7 +133,18 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   }
 
   private void setupMvc() {
-//    packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> handleDirValue(packageDirectoryField.getText()));
+    directoryPath.addKeyListener(new KeyListener() {
+      @Override
+      public void keyTyped(KeyEvent e) {}
+
+      @Override
+      public void keyPressed(KeyEvent e) {}
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        handleDirValue(directoryPath.getText());
+      }
+    });
     releaseDate.addDateChangeListener((evt) -> controller.setPublicReleaseDate(evt.getNewDate()));
     removeButton.addActionListener((evt) -> {
       for (DatasetListener listener : datasetRemovedListeners) {
@@ -152,4 +167,9 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   }
 
   protected abstract void customOnChange(PropertyChangeEvent evt);
+
+  private void handleDirValue(String value) {
+    Path path = Paths.get(value);
+    controller.setDataPath(path.toAbsolutePath().normalize());
+  }
 }
