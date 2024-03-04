@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.InstrumentNameHolder;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import jakarta.validation.constraints.NotBlank;
@@ -28,6 +29,7 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   private String publicReleaseDateError = null;;
   @NotNull(message = "must not be blank")
   @PathExists
+  @PathIsDirectory
   private Path dataPath;
   private String dataPathError = null;
   @NotBlank
