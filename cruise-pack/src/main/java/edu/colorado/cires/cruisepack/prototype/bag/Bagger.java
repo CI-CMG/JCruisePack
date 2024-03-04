@@ -15,6 +15,7 @@ import gov.loc.repository.bagit.exceptions.UnparsableVersionException;
 import gov.loc.repository.bagit.exceptions.UnsupportedAlgorithmException;
 import gov.loc.repository.bagit.exceptions.VerificationException;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
+import gov.loc.repository.bagit.hash.SupportedAlgorithm;
 import gov.loc.repository.bagit.reader.BagReader;
 import gov.loc.repository.bagit.verify.BagVerifier;
 import gov.loc.repository.bagit.writer.BagWriter;
@@ -23,16 +24,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 
 public class Bagger {
+  
+  private final Collection<SupportedAlgorithm> algorithms;
 
-  public static Bag readOrCreateBag(Path folder)
+  public Bagger(Collection<SupportedAlgorithm> algorithms) {
+    this.algorithms = algorithms;
+  }
+  
+  public Bagger() {
+    this.algorithms = Collections.singletonList(StandardSupportedAlgorithms.SHA256);
+  }
+
+  public Bag readOrCreateBag(Path folder)
       throws MaliciousPathException, UnparsableVersionException, UnsupportedAlgorithmException, InvalidBagitFileFormatException, IOException, NoSuchAlgorithmException {
     Path bagitFile = folder.resolve("bagit.txt");
     if (Files.exists(bagitFile)) {
@@ -41,19 +51,18 @@ public class Bagger {
     return bagInPlace(folder);
   }
 
-  public static Bag readBag(Path folder)
+  public Bag readBag(Path folder)
       throws MaliciousPathException, UnparsableVersionException, UnsupportedAlgorithmException, InvalidBagitFileFormatException, IOException {
     BagReader bagReader = new BagReader();
     return bagReader.read(folder);
   }
 
-  public static Bag bagInPlace(Path folder) throws NoSuchAlgorithmException, IOException {
-    StandardSupportedAlgorithms algorithm = StandardSupportedAlgorithms.MD5;
+  public Bag bagInPlace(Path folder) throws NoSuchAlgorithmException, IOException {
     boolean includeHiddenFiles = false;
-    return BagCreator.bagInPlace(folder, Arrays.asList(algorithm), includeHiddenFiles);
+    return BagCreator.bagInPlace(folder, algorithms, includeHiddenFiles);
   }
 
-  public static Bag reBag(Bag bag) throws NoSuchAlgorithmException, IOException {
+  public Bag reBag(Bag bag) throws NoSuchAlgorithmException, IOException {
     // TODO is there a more efficient way to do this?
     try(Stream<Path> fileStream = Files.list(bag.getRootDir())) {
       fileStream
@@ -84,12 +93,11 @@ public class Bagger {
   }
 
 
-  public static void bagIt()
+  public void bagIt()
       throws NoSuchAlgorithmException, IOException, MaliciousPathException, UnparsableVersionException, UnsupportedAlgorithmException, InvalidBagitFileFormatException, MissingPayloadManifestException, MissingPayloadDirectoryException, FileNotInPayloadDirectoryException, InterruptedException, MissingBagitFileException, CorruptChecksumException, VerificationException {
     Path folder = Paths.get("FolderYouWantToBag");
-    StandardSupportedAlgorithms algorithm = StandardSupportedAlgorithms.MD5;
     boolean includeHiddenFiles = false;
-    Bag bag = BagCreator.bagInPlace(folder, Arrays.asList(algorithm), includeHiddenFiles);
+    Bag bag = BagCreator.bagInPlace(folder, algorithms, includeHiddenFiles);
 
     Path outputDir = Paths.get("WhereYouWantToWriteTheBagTo");
     BagWriter.write(bag, outputDir); //where bag is a Bag object

@@ -20,6 +20,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
@@ -41,6 +42,7 @@ public class PackerService {
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
   private final MetadataService metadataService;
+  private final Bagger bagger = new Bagger();
 
   @Autowired
   public PackerService(
@@ -98,7 +100,7 @@ public class PackerService {
 
   private void packMainBag(PackJob packJob) {
     try {
-      Bagger.bagInPlace(packJob.getPackageDirectory().resolve(packJob.getPackageId()));
+      bagger.bagInPlace(packJob.getPackageDirectory().resolve(packJob.getPackageId()));
     } catch (NoSuchAlgorithmException | IOException e) {
       throw new IllegalStateException("Unable to create main bag, ", e);
     }
