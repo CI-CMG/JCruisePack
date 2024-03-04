@@ -1,7 +1,24 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
+import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DropDownItemModel;
+import edu.colorado.cires.cruisepack.app.ui.model.ExpectedAnalysesModel;
+import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
+import edu.colorado.cires.cruisepack.app.ui.model.SamplingTypesModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.EnoughDiskSpace;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
+import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
+import edu.colorado.cires.cruisepack.xml.person.Person;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,28 +27,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
-
+import java.util.Objects;
 import java.util.Set;
 
-import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
-import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
-import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
-import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
-import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
-import edu.colorado.cires.cruisepack.app.ui.model.ExpectedAnalysesModel;
-import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
-import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
-import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
-import edu.colorado.cires.cruisepack.app.ui.model.SamplingTypesModel;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
-import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
-import edu.colorado.cires.cruisepack.xml.person.Person;
-
+@EnoughDiskSpace
 public class PackJob {
 
   public static Builder builder() {
