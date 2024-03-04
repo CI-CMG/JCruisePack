@@ -49,6 +49,15 @@ public class CtdDatasetInstrumentModel extends BaseDatasetInstrumentModel {
     return InstrumentStatus.forValue(processingLevel);
   }
 
+  @Override
+  public void clearErrors() {
+    setPublicReleaseDateError(null);
+    setDataPathError(null);
+    setInstrumentError(null);
+    setProcessingLevelError(null);
+    setCommentsError(null);
+  }
+
   public DropDownItem getInstrument() {
     return instrument;
   }

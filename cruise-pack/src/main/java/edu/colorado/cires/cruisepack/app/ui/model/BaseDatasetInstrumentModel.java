@@ -93,11 +93,11 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
     return Collections.emptyList();
   }
 
-  private void setPublicReleaseDateError(String publicReleaseDateError) {
+  protected void setPublicReleaseDateError(String publicReleaseDateError) {
     setIfChanged(UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR, publicReleaseDateError, () -> this.publicReleaseDateError, (e) -> this.publicReleaseDateError = e);
   }
 
-  private void setDataPathError(String dataPathError) {
+  protected void setDataPathError(String dataPathError) {
     setIfChanged(UPDATE_DATASET_DATA_PATH_ERROR, dataPathError, () -> this.dataPathError, (e) -> this.dataPathError = e);
   }
 
@@ -110,6 +110,8 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
 
     setErrors(propertyPath, message);
   }
+  
+  public abstract void clearErrors();
 
   protected abstract void setErrors(String propertyPath, String message);
   public abstract String getComments();

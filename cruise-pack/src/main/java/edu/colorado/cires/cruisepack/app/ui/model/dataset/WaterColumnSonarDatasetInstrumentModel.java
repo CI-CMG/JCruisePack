@@ -139,6 +139,19 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
     return InstrumentStatus.forValue(processingLevel);
   }
 
+  @Override
+  public void clearErrors() {
+    setPublicReleaseDateError(null);
+    setDataPathError(null);
+    setInstrumentError(null);
+    setProcessingLevelError(null);
+    setCommentsError(null);
+    setCalibrationDateError(null);
+    setCalibrationStateError(null);
+    setCalibrationDataPathError(null);
+    setCalibrationReportPathError(null);
+  }
+
   private void setInstrumentError(String message) {
     setIfChanged(UPDATE_INSTRUMENT_ERROR, message, () -> this.instrumentError, (e) -> this.instrumentError = e);
   }

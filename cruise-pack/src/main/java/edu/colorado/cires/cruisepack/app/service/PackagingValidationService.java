@@ -285,6 +285,9 @@ public class PackagingValidationService {
   private void updateDatasetsErrors(Set<ConstraintViolation<DatasetsModel>> datasetsViolations) {
     LOGGER.warn("datasets {}", datasetsViolations);
     String datasetsError = null;
+    
+    datasetsModel.setDatasetsError(null);
+    datasetsModel.getDatasets().forEach(BaseDatasetInstrumentModel::clearErrors);
 
     for (ConstraintViolation<DatasetsModel> violation : datasetsViolations) {
       String propertyPath = violation.getPropertyPath().toString();

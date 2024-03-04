@@ -75,6 +75,20 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
     return InstrumentStatus.forValue(processingLevel);
   }
 
+  @Override
+  public void clearErrors() {
+    setDataPathError(null);
+    setPublicReleaseDateError(null);
+    setInstrumentError(null);
+    setProcessingLevelError(null);
+    setCommentsError(null);
+    setCorrectionModelError(null);
+    setObservationRateError(null);
+    setDepartureTieError(null);
+    setArrivalTieError(null);
+    setDriftPerDayError(null);
+  }
+
   public DropDownItem getInstrument() {
     return instrument;
   }

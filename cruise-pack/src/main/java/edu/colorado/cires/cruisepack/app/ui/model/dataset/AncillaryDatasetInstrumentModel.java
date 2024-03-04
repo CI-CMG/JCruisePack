@@ -44,6 +44,14 @@ public class AncillaryDatasetInstrumentModel extends BaseDatasetInstrumentModel 
     return InstrumentStatus.RAW;
   }
 
+  @Override
+  public void clearErrors() {
+    setPublicReleaseDateError(null);
+    setDataPathError(null);
+    setInstrumentError(null);
+    setCommentsError(null);
+  }
+
   public DropDownItem getInstrument() {
     return instrument;
   }

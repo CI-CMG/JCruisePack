@@ -70,6 +70,19 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
     return InstrumentStatus.forValue(processingLevel);
   }
 
+  @Override
+  public void clearErrors() {
+    setPublicReleaseDateError(null);
+    setDataPathError(null);
+    setInstrumentError(null);
+    setProcessingLevelError(null);
+    setCommentsError(null);
+    setCorrectionModelError(null);
+    setSampleRateError(null);
+    setTowDistanceError(null);
+    setSensorDepthError(null);
+  }
+
   public DropDownItem getInstrument() {
     return instrument;
   }
