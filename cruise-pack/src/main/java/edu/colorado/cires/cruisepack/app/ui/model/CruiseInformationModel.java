@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,6 +21,7 @@ public class CruiseInformationModel extends PropertyChangeModel {
   private String cruiseDescription;
   private String cruiseDescriptionError = null;
   @NotNull(message = "must not be blank")
+  @PathExists
   private Path documentsPath;
   private String documentsPathError;
 

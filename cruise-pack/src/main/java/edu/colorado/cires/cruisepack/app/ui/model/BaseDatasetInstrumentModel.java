@@ -4,17 +4,16 @@ import edu.colorado.cires.cruisepack.app.service.AdditionalFiles;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.InstrumentNameHolder;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
@@ -28,6 +27,7 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   private LocalDate publicReleaseDate;
   private String publicReleaseDateError = null;;
   @NotNull(message = "must not be blank")
+  @PathExists
   private Path dataPath;
   private String dataPathError = null;
   @NotBlank

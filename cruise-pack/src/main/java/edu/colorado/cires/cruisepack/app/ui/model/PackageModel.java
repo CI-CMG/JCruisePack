@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPortDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSeaDropDownItem;
@@ -55,7 +56,8 @@ public class PackageModel extends PropertyChangeModel {
   private LocalDate releaseDate = null;
   private String releaseDateError = null;
 
-  @NotNull(message = "must not be blank") //TODO add more validation, path exists, space?
+  @NotNull(message = "must not be blank") //TODO add more validation, space?
+  @PathExists
   private Path packageDirectory = null;
   private String packageDirectoryError = null;
 

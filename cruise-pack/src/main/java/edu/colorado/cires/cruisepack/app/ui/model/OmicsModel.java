@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSamplingTypes;
@@ -25,6 +26,7 @@ public class OmicsModel extends PropertyChangeModel {
     private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
     private String contactError = null;
     @NotNull(message = "must not be blank")
+    @PathExists
     private Path sampleTrackingSheet = null;
     private String sampleTrackingSheetError = null;
     @NotBlank
