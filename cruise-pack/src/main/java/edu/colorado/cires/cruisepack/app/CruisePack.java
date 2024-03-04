@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.ui.view.MainFrame;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -24,15 +25,12 @@ public class CruisePack {
 
   public static void main(String[] args) {
 
+    CruisePackPreSpringStarter.start();
+
     ConfigurableApplicationContext ctx = new SpringApplicationBuilder(CruisePack.class)
         .headless(false)
         .web(WebApplicationType.NONE)
         .run(args);
-
-    String[] beanNames = ctx.getBeanDefinitionNames(); // get beans
-    for (String beanName : beanNames) {
-      System.out.println("Bean --> "+ beanName); // print bean
-    }
 
 
     SwingUtilities.invokeLater(() -> {
