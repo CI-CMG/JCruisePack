@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.datastore.WaterColumnCalibrationStateDa
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsFile;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidWaterColumnCalibrationStateDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -48,10 +49,12 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   private String calibrationStateError = null;
   @NotNull
   @PathExists
+  @PathIsFile
   private Path calibrationReportPath;
   private String calibrationReportPathError = null;
   @NotNull
   @PathExists
+  @PathIsFile
   private Path calibrationDataPath;
   private String calibrationDataPathError = null;
   @NotNull
