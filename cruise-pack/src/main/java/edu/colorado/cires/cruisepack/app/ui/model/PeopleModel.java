@@ -46,16 +46,19 @@ public class PeopleModel extends PropertyChangeModel {
 
     public void updateFormState(CruiseMetadata cruiseMetadata, PersonDatastore personDatastore, OrganizationDatastore organizationDatastore) {
         for (PeopleOrg peopleOrg : cruiseMetadata.getScientists()) {
+            clearScientists();
             DropDownItemPanel panel = new DropDownItemPanel(personDatastore.getEnabledPersonDropDowns(), PersonDatastore.UNSELECTED_PERSON);
             panel.getModel().setItem(new DropDownItem(peopleOrg.getUuid(), peopleOrg.getName()));
             addScientist(panel);
         }
         for (PeopleOrg peopleOrg : cruiseMetadata.getFunders()) {
+            clearFundingOrganizations();
             DropDownItemPanel panel = new DropDownItemPanel(organizationDatastore.getEnabledOrganizationDropDowns(), OrganizationDatastore.UNSELECTED_ORGANIZATION);
             panel.getModel().setItem(new DropDownItem(peopleOrg.getUuid(), peopleOrg.getName()));
             addFundingOrganization(panel);
         }
         for (PeopleOrg peopleOrg : cruiseMetadata.getSponsors()) {
+            clearSourceOrganizations();
             DropDownItemPanel panel = new DropDownItemPanel(organizationDatastore.getEnabledOrganizationDropDowns(), OrganizationDatastore.UNSELECTED_ORGANIZATION);
             panel.getModel().setItem(new DropDownItem(peopleOrg.getUuid(), peopleOrg.getName()));
             addSourceOrganization(panel);
