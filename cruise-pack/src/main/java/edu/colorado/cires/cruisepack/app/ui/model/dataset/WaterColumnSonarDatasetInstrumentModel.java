@@ -4,6 +4,7 @@ import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.WaterColumnCalibrationStateDatastore;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidWaterColumnCalibrationStateDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -12,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,9 +47,11 @@ public class WaterColumnSonarDatasetInstrumentModel extends BaseDatasetInstrumen
   private DropDownItem calibrationState = WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE;
   private String calibrationStateError = null;
   @NotNull
+  @PathExists
   private Path calibrationReportPath;
   private String calibrationReportPathError = null;
   @NotNull
+  @PathExists
   private Path calibrationDataPath;
   private String calibrationDataPathError = null;
   @NotNull
