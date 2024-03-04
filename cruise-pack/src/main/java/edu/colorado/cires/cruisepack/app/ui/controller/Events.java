@@ -31,6 +31,7 @@ public final class Events {
   public static final String UPDATE_EXISTING_RECORD = "UPDATE_EXISTING_RECORD";
 
   // Footer Control
+  public static final String UPDATE_JOB_ERRORS = "UPDATE_JOB_ERRORS";
   public static final String UPDATE_STOP_BUTTON_ENABLED = "UPDATE_STOP_BUTTON_ENABLED";
   public static final String UPDATE_SAVE_BUTTON_ENABLED = "UPDATE_SAVE_BUTTON_ENABLED";
   public static final String UPDATE_PACKAGE_BUTTON_ENABLED = "UPDATE_PACKAGE_BUTTON_ENABLED";

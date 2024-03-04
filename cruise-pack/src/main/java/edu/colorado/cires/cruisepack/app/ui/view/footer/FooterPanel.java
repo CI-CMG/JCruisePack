@@ -63,6 +63,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
       "<html><B>This package name already exists. Please modify the Cruise ID or Segment or Leg value to create a unique package ID.</B></html>",
       List.of("OK")
   );
+  
+  private final OptionDialog jobErrorsDialog = new OptionDialog(
+      "<html><B>Packaging failed</B></html>",
+      List.of("OK")
+  );
   private final JButton closeExitAppButton = new JButton("No");
   private final JButton confirmExitAppButton = new JButton("Yes");
   private final UiRefresher uiRefresher;
@@ -240,6 +245,20 @@ public class FooterPanel extends JPanel implements ReactiveView {
         if (packageIdCollisionDialog.isVisible() != newValue) {
           packageIdCollisionDialog.pack();
           packageIdCollisionDialog.setVisible(newValue);
+        }
+      }
+      break;
+      case Events.UPDATE_JOB_ERRORS: {
+        String newValue = (String) evt.getNewValue();
+        if (newValue != null && !newValue.isBlank()) {
+          updateLabelText(jobErrorsDialog.getLabel(), new PropertyChangeEvent(
+              evt,
+              "UPDATE_JOB_ERRORS",
+              jobErrorsDialog.getLabel().getText(),
+              String.format("<html><B>%s</B></html>", newValue)
+          ));
+          jobErrorsDialog.pack();
+          jobErrorsDialog.setVisible(true);
         }
       }
       break;

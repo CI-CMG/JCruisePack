@@ -2,21 +2,20 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import jakarta.validation.Path.Node;
-
+import jakarta.validation.Validator;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +32,9 @@ public class PackagingValidationService {
   private final CruiseInformationModel cruiseInformationModel;
   private final DatasetsModel datasetsModel;
   private final PeopleModel peopleModel;
-  private final PackageController packageController;
-  private final FooterControlController footerControlController;
   private final InstrumentDatastore instrumentDatastore;
   private final PersonDatastore personDatastore;
+  private final FooterControlModel footerControlModel;
 
   @Autowired
   public PackagingValidationService(
@@ -45,22 +43,19 @@ public class PackagingValidationService {
       OmicsModel omicsModel,
       CruiseInformationModel cruiseInformationModel,
       DatasetsModel datasetsModel,
-      PackageController packageController,
-      FooterControlController footerControlController,
       InstrumentDatastore instrumentDatastore,
       PeopleModel peopleModel,
-      PersonDatastore personDatastore
+      PersonDatastore personDatastore, FooterControlModel footerControlModel
   ) {
     this.validator = validator;
     this.packageModel = packageModel;
     this.omicsModel = omicsModel;
     this.cruiseInformationModel = cruiseInformationModel;
     this.datasetsModel = datasetsModel;
-    this.packageController = packageController;
-    this.footerControlController = footerControlController;
     this.instrumentDatastore = instrumentDatastore;
     this.peopleModel = peopleModel;
     this.personDatastore = personDatastore;
+    this.footerControlModel = footerControlModel;
   }
 
   public Optional<PackJob> validate() {
@@ -75,14 +70,27 @@ public class PackagingValidationService {
     updateOmicsErrors(omicsViolations);
     updateDatasetsErrors(datasetsViolations);
     updatePeopleErrors(peopleViolations);
-
+    
     if (
         packageViolations.isEmpty() &&
             cruiseInformationViolations.isEmpty() &&
             omicsViolations.isEmpty() &&
             datasetsViolations.isEmpty() &&
             peopleViolations.isEmpty()) {
-      return Optional.of(PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore));
+      footerControlModel.setJobErrors(null);
+      
+      PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+
+      Set<ConstraintViolation<PackJob>> constraintViolations = validator.validate(packJob);
+      
+      String errorMessages = constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
+      footerControlModel.setJobErrors(errorMessages);
+      
+      if (errorMessages.isEmpty()) {
+        return Optional.of(packJob);
+      }
+      
+      return Optional.empty();
     }
     return Optional.empty();
   }
