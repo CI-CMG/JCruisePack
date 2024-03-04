@@ -22,7 +22,6 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.peopletab.PeopleList;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -46,15 +45,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OmicsPanel extends JPanel implements ReactiveView {
 
-  private final PeopleList peopleList;
-  private final BeanFactory beanFactory;
   private final OmicsModel omicsModel;
   private final PersonDatastore personDatastore;
   private final OmicsController omicsController;
@@ -96,9 +92,7 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JLabel additionalSamplingInformationErrorLabel = new JLabel();
 
   @Autowired
-  public OmicsPanel(PeopleList peopleList, BeanFactory beanFactory, OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry, EditPersonDialog editPersonDialog) {
-    this.peopleList = peopleList;
-    this.beanFactory = beanFactory;
+  public OmicsPanel(OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry, EditPersonDialog editPersonDialog) {
     this.omicsModel = omicsModel;
     this.personDatastore = personDatastore;
     this.omicsController = omicsController;
