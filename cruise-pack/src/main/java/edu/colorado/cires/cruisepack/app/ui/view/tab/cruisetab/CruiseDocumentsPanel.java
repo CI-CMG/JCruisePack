@@ -18,6 +18,7 @@ import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -57,8 +58,18 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
 
     reactiveViewRegistry.register(this);
 
+    selectDirectoryButton.addActionListener((evt) -> handleDirSelect());
+    
     pathTextField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(pathTextField.getText()));
 
+  }
+
+  private void handleDirSelect() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+      cruiseInformationController.setDocumentsPath(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+    }
   }
 
   @Override

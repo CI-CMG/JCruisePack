@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -145,6 +146,16 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
         listener.handle(this);
       }
     });
+    
+    dirSelectButton.addActionListener((evt) -> handleDirSelect());
+  }
+
+  private void handleDirSelect() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+      controller.setDataPath(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+    }
   }
 
   public void onChange(PropertyChangeEvent evt) {
