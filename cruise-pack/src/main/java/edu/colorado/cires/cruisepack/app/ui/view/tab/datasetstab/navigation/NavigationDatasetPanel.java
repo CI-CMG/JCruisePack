@@ -32,7 +32,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
-class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentModel, NavigationDatasetInstrumentController> {
+public class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentModel, NavigationDatasetInstrumentController> {
 
   public static final String INSTRUMENT_SHORT_CODE = "NAV";
 
