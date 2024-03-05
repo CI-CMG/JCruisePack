@@ -25,23 +25,13 @@ public class MagneticsDatasetPanelFactory extends
   }
 
   @Override
-  public String getInstrumentGroupShortCode() {
-    return MagneticsDatasetPanel.INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
-  public String getInstrumentGroupName() {
-    return "Magnetics";
-  }
-
-  @Override
-  protected MagneticsDatasetInstrumentModel createModel() {
-    return new MagneticsDatasetInstrumentModel(getInstrumentGroupShortCode());
+  protected MagneticsDatasetInstrumentModel createModel(String instrumentShortName) {
+    return new MagneticsDatasetInstrumentModel(MagneticsDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
   protected MagneticsDatasetInstrumentModel createModel(Instrument instrument) {
-    MagneticsDatasetInstrumentModel model = createModel();
+    MagneticsDatasetInstrumentModel model = createModel(instrument.getShortName());
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     model.setProcessingLevel(instrument.getStatus());

@@ -24,23 +24,13 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
   }
 
   @Override
-  public String getInstrumentGroupShortCode() {
-    return SinglebeamDatasetPanel.INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
-  public String getInstrumentGroupName() {
-    return "Singlebeam Bathymetry";
-  }
-
-  @Override
-  protected SinglebeamDatasetInstrumentModel createModel() {
-    return new SinglebeamDatasetInstrumentModel(getInstrumentGroupShortCode());
+  protected SinglebeamDatasetInstrumentModel createModel(String instrumentShortName) {
+    return new SinglebeamDatasetInstrumentModel(SinglebeamDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
   protected SinglebeamDatasetInstrumentModel createModel(Instrument instrument) {
-    SinglebeamDatasetInstrumentModel model = createModel();
+    SinglebeamDatasetInstrumentModel model = createModel(instrument.getShortName());
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));

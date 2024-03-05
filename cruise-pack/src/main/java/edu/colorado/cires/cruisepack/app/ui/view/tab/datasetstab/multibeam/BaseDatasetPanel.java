@@ -1,11 +1,11 @@
-package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ctd;
+package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.multibeam;
 
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel.UPDATE_COMMENTS;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel.UPDATE_INSTRUMENT;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -14,8 +14,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextFie
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
-import edu.colorado.cires.cruisepack.app.ui.controller.dataset.CtdDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.CtdDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
@@ -29,22 +29,22 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
-public class CtdDatasetPanel extends DatasetPanel<CtdDatasetInstrumentModel, CtdDatasetInstrumentController> {
-
-  public static final String INSTRUMENT_SHORT_CODE = "CTD";
+public class BaseDatasetPanel extends DatasetPanel<BaseDatasetInstrumentModel, BaseDatasetInstrumentController<BaseDatasetInstrumentModel>> {
 
   private final LabeledComboBoxPanel instrumentPanel = new LabeledComboBoxPanel();
   private final ProcessingLevelRadioPanel buttonPanel = new ProcessingLevelRadioPanel();
   private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel();
 
-  public CtdDatasetPanel(CtdDatasetInstrumentModel model, CtdDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore) {
+  public BaseDatasetPanel(BaseDatasetInstrumentModel model, BaseDatasetInstrumentController<BaseDatasetInstrumentModel> controller, InstrumentDatastore instrumentDatastore) {
     super(model, controller, instrumentDatastore);
   }
 
   @Override
   public void init() {
     super.init();
-    instrumentPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(INSTRUMENT_SHORT_CODE).toArray(new DropDownItem[0])));
+    instrumentPanel.getInstrumentField().setModel(
+        new DefaultComboBoxModel<>(instrumentDatastore.getInstrumentDropDownsForDatasetType(model.getInstrumentGroupShortCode()).toArray(new DropDownItem[0]))
+    );
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
@@ -52,11 +52,6 @@ public class CtdDatasetPanel extends DatasetPanel<CtdDatasetInstrumentModel, Ctd
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));
     commentsPanel.getCommentsField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> controller.setComments(commentsPanel.getCommentsField().getText()));
-  }
-
-  @Override
-  protected String getInstrumentShortCode() {
-    return INSTRUMENT_SHORT_CODE;
   }
 
   @Override
@@ -78,19 +73,27 @@ public class CtdDatasetPanel extends DatasetPanel<CtdDatasetInstrumentModel, Ctd
 
   @Override
   protected void customOnChange(PropertyChangeEvent evt) {
-    if (UPDATE_INSTRUMENT.equals(evt.getPropertyName())) {
-      updateComboBox(instrumentPanel.getInstrumentField(), evt);
-    } else if (UPDATE_PROCESSING_LEVEL.equals(evt.getPropertyName())) {
-      updateRadioButtonGroup(buttonPanel.getProcessingLevelGroup(), evt);
-    } else if (UPDATE_COMMENTS.equals(evt.getPropertyName())) {
-      updateTextField(commentsPanel.getCommentsField(), evt);
-    } else if (UPDATE_INSTRUMENT_ERROR.equals(evt.getPropertyName())) {
-      updateLabelText(instrumentPanel.getErrorLabel(), evt);
-    } else if (UPDATE_COMMENTS_ERROR.equals(evt.getPropertyName())) {
-      updateLabelText(commentsPanel.getErrorLabel(), evt);
-    } else if (UPDATE_PROCESSING_LEVEL_ERROR.equals(evt.getPropertyName())) {
-      updateLabelText(buttonPanel.getErrorLabel(), evt);
+    switch (evt.getPropertyName()) {
+      case UPDATE_INSTRUMENT:
+        updateComboBox(instrumentPanel.getInstrumentField(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL:
+        updateRadioButtonGroup(buttonPanel.getProcessingLevelGroup(), evt);
+        break;
+      case UPDATE_COMMENTS:
+        updateTextField(commentsPanel.getCommentsField(), evt);
+        break;
+      case UPDATE_INSTRUMENT_ERROR:
+        updateLabelText(instrumentPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_PROCESSING_LEVEL_ERROR:
+        updateLabelText(buttonPanel.getErrorLabel(), evt);
+        break;
+      case UPDATE_COMMENTS_ERROR:
+        updateLabelText(commentsPanel.getErrorLabel(), evt);
+        break;
+      default:
+        break;
     }
   }
-
 }

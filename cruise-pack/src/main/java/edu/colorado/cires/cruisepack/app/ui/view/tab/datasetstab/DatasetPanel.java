@@ -54,7 +54,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
 
   protected DatasetPanel(M model, C controller, InstrumentDatastore instrumentDatastore) {
-    dataTypeName = instrumentDatastore.getNameForShortCode(getInstrumentShortCode());
+    this.dataTypeName = instrumentDatastore.getNameForShortCode(model.getInstrumentGroupShortCode());
     this.model = model;
     this.controller = controller;
     this.instrumentDatastore = instrumentDatastore;
@@ -67,8 +67,6 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   public void removeDatasetRemovedListener(DatasetListener listener) {
     datasetRemovedListeners.remove(listener);
   }
-
-  protected abstract String getInstrumentShortCode();
 
   protected abstract JPanel createAndInitializeContentPanel();
 

@@ -25,23 +25,13 @@ public class GravityDatasetPanelFactory extends
   }
 
   @Override
-  public String getInstrumentGroupShortCode() {
-    return GravityDatasetPanel.INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
-  public String getInstrumentGroupName() {
-    return "Gravity";
-  }
-
-  @Override
-  protected GravityDatasetInstrumentModel createModel() {
-    return new GravityDatasetInstrumentModel(getInstrumentGroupShortCode());
+  protected GravityDatasetInstrumentModel createModel(String instrumentShortName) {
+    return new GravityDatasetInstrumentModel(GravityDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
   protected GravityDatasetInstrumentModel createModel(Instrument instrument) {
-    GravityDatasetInstrumentModel model = createModel();
+    GravityDatasetInstrumentModel model = createModel(instrument.getShortName());
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
 

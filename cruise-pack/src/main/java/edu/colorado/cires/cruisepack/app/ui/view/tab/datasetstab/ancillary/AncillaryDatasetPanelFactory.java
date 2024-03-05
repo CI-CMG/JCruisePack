@@ -21,23 +21,13 @@ public class AncillaryDatasetPanelFactory extends
   }
 
   @Override
-  public String getInstrumentGroupShortCode() {
-    return AncillaryDatasetPanel.INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
-  public String getInstrumentGroupName() {
-    return "Ancillary Data";
-  }
-
-  @Override
-  protected AncillaryDatasetInstrumentModel createModel() {
-    return new AncillaryDatasetInstrumentModel(getInstrumentGroupShortCode());
+  protected AncillaryDatasetInstrumentModel createModel(String instrumentShortName) {
+    return new AncillaryDatasetInstrumentModel(AncillaryDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
   protected AncillaryDatasetInstrumentModel createModel(Instrument instrument) {
-    AncillaryDatasetInstrumentModel model = createModel();
+    AncillaryDatasetInstrumentModel model = createModel(instrument.getShortName());
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     if (instrument.getReleaseDate() != null) {

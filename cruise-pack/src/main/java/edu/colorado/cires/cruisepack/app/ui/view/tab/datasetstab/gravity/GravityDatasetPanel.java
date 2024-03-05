@@ -96,11 +96,6 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
   }
 
   @Override
-  protected String getInstrumentShortCode() {
-    return INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
   protected JPanel createAndInitializeContentPanel() {
     JPanel panel = new JPanel();
     panel.setLayout(new GridBagLayout());

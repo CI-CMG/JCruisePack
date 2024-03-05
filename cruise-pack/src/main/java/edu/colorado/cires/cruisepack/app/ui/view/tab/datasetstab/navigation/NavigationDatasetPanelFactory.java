@@ -24,23 +24,13 @@ public class NavigationDatasetPanelFactory extends
   }
 
   @Override
-  public String getInstrumentGroupShortCode() {
-    return NavigationDatasetPanel.INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
-  public String getInstrumentGroupName() {
-    return "Navigation";
-  }
-
-  @Override
-  protected NavigationDatasetInstrumentModel createModel() {
-    return new NavigationDatasetInstrumentModel(getInstrumentGroupShortCode());
+  protected NavigationDatasetInstrumentModel createModel(String instrumentShortName) {
+    return new NavigationDatasetInstrumentModel(NavigationDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
   protected NavigationDatasetInstrumentModel createModel(Instrument instrument) {
-    NavigationDatasetInstrumentModel model = createModel();
+    NavigationDatasetInstrumentModel model = createModel(instrument.getShortName());
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));

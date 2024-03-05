@@ -26,23 +26,13 @@ public class WaterColumnSonarDatasetPanelFactory extends
   }
 
   @Override
-  public String getInstrumentGroupShortCode() {
-    return WaterColumnSonarDatasetPanel.INSTRUMENT_SHORT_CODE;
-  }
-
-  @Override
-  public String getInstrumentGroupName() {
-    return "Water Column Sonar";
-  }
-
-  @Override
-  protected WaterColumnSonarDatasetInstrumentModel createModel() {
-    return new WaterColumnSonarDatasetInstrumentModel(getInstrumentGroupShortCode());
+  protected WaterColumnSonarDatasetInstrumentModel createModel(String instrumentShortName) {
+    return new WaterColumnSonarDatasetInstrumentModel(WaterColumnSonarDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
   protected WaterColumnSonarDatasetInstrumentModel createModel(Instrument instrument) {
-    WaterColumnSonarDatasetInstrumentModel model = createModel();
+    WaterColumnSonarDatasetInstrumentModel model = createModel(instrument.getShortName());
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));

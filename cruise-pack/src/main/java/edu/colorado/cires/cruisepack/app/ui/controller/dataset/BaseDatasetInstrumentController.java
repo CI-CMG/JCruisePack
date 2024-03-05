@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.controller.dataset;
 
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,6 +31,18 @@ public abstract class BaseDatasetInstrumentController<M extends BaseDatasetInstr
 
   public void setDataPath(Path dataPath) {
     model.setDataPath(dataPath);
+  }
+  
+  public void setInstrument(DropDownItem instrument) {
+    model.setInstrument(instrument);
+  }
+  
+  public void setProcessingLevel(String processingLevel) {
+    model.setProcessingLevel(processingLevel);
+  }
+  
+  public void setComments(String comments) {
+    model.setComments(comments);
   }
 
   @Override
