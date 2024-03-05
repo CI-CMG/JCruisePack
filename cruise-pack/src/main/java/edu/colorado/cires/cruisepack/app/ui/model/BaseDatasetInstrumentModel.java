@@ -92,14 +92,14 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
     setIfChanged(UPDATE_COMMENTS, comments, () -> this.comments, (nv) -> this.comments = nv);
   }
 
-  private void setCommentsError(String message) {
+  protected void setCommentsError(String message) {
     setIfChanged(UPDATE_COMMENTS_ERROR, message, () -> this.commentsError, (e) -> this.commentsError = e);
   }
-  private void setProcessingLevelError(String message) {
+  protected void setProcessingLevelError(String message) {
     setIfChanged(UPDATE_PROCESSING_LEVEL_ERROR, message, () -> this.processingLevelError, (e) -> this.processingLevelError = e);
   }
 
-  private void setInstrumentError(String message) {
+  protected void setInstrumentError(String message) {
     setIfChanged(UPDATE_INSTRUMENT_ERROR, message, () -> this.instrumentError, (e) -> this.instrumentError = e);
   }
 

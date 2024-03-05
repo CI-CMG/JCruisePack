@@ -1,26 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
-import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SinglebeamVerticalDatumDatastore;
-import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSinglebeamVerticalDatumDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 
 public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel {
-
-  public static final String UPDATE_INSTRUMENT = "UPDATE_INSTRUMENT";
-  public static final String UPDATE_INSTRUMENT_ERROR = "UPDATE_INSTRUMENT_ERROR";
-  public static final String UPDATE_PROCESSING_LEVEL = "UPDATE_PROCESSING_LEVEL";
-  public static final String UPDATE_PROCESSING_LEVEL_ERROR = "UPDATE_PROCESSING_LEVEL_ERROR";
-  public static final String UPDATE_COMMENTS = "UPDATE_COMMENTS";
-  public static final String UPDATE_COMMENTS_ERROR = "UPDATE_COMMENTS_ERROR";
   public static final String UPDATE_VERTICAL_DATUM = "UPDATE_VERTICAL_DATUM";
   public static final String UPDATE_VERTICAL_DATUM_ERROR = "UPDATE_VERTICAL_DATUM_ERROR";
   public static final String UPDATE_OBS_RATE = "UPDATE_OBS_RATE";
@@ -28,16 +15,6 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
   public static final String UPDATE_SOUND_VELOCITY = "UPDATE_SOUND_VELOCITY";
   public static final String UPDATE_SOUND_VELOCITY_ERROR = "UPDATE_SOUND_VELOCITY_ERROR";
 
-  // TODO move this to datasource
-  @ValidInstrumentDropDownItem
-  private DropDownItem instrument = InstrumentDatastore.UNSELECTED_INSTRUMENT;
-  private String instrumentError = null;
-  @NotBlank
-  private String processingLevel = "Raw";
-  private String processingLevelError = null;
-  @NotBlank
-  private String comments;
-  private String commentsError = null;
   @ValidSinglebeamVerticalDatumDropDownItem
   private DropDownItem verticalDatum = SinglebeamVerticalDatumDatastore.UNSELECTED_VERTICAL_DATUM;
   private String verticalDatumError = null;
@@ -53,19 +30,6 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
   }
 
   @Override
-  public Optional<DropDownItem> getSelectedInstrument() {
-    if (instrument == null || StringUtils.isBlank(instrument.getId())) {
-      return Optional.empty();
-    }
-    return Optional.of(instrument);
-  }
-
-  @Override
-  protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
-    return InstrumentStatus.forValue(processingLevel);
-  }
-
-  @Override
   public void clearErrors() {
     setPublicReleaseDateError(null);
     setDataPathError(null);
@@ -77,26 +41,6 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
     setSoundVelocityError(null);
   }
 
-  public DropDownItem getInstrument() {
-    return instrument;
-  }
-
-  public void setInstrument(DropDownItem instrument) {
-    setIfChanged(UPDATE_INSTRUMENT, instrument, () -> this.instrument, (nv) -> this.instrument = nv);
-  }
-
-  public String getProcessingLevel() {
-    return processingLevel;
-  }
-
-  public void setProcessingLevel(String processingLevel) {
-    setIfChanged(UPDATE_PROCESSING_LEVEL, processingLevel, () -> this.processingLevel, (nv) -> this.processingLevel = nv);
-  }
-
-  public String getComments() {
-    return comments;
-  }
-
   @Override
   protected HashMap<String, Object> getAdditionalFields() {
     HashMap<String, Object> map = new HashMap<>();
@@ -104,10 +48,6 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
     map.put("obs_rate", obsRate);
     map.put("sound_velocity", soundVelocity);
     return map;
-  }
-
-  public void setComments(String comments) {
-    setIfChanged(UPDATE_COMMENTS, comments, () -> this.comments, (nv) -> this.comments = nv);
   }
 
   public DropDownItem getVerticalDatum() {
@@ -132,18 +72,6 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
 
   public void setSoundVelocity(String soundVelocity) {
     setIfChanged(UPDATE_SOUND_VELOCITY, soundVelocity, () -> this.soundVelocity, (nv) -> this.soundVelocity = nv);
-  }
-
-  private void setInstrumentError(String message) {
-    setIfChanged(UPDATE_INSTRUMENT_ERROR, message, () -> this.instrumentError, (e) -> this.instrumentError = e);
-  }
-
-  private void setProcessingLevelError(String message) {
-    setIfChanged(UPDATE_PROCESSING_LEVEL_ERROR, message, () -> this.processingLevelError, (e) -> this.processingLevelError = e);
-  }
-
-  private void setCommentsError(String message) {
-    setIfChanged(UPDATE_COMMENTS_ERROR, message, () -> this.commentsError, (e) -> this.commentsError = e);
   }
 
   private void setVerticalDatumError(String message) {
