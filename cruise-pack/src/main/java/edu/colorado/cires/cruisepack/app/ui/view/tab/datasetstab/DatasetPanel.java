@@ -64,10 +64,6 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     datasetRemovedListeners.add(listener);
   }
 
-  public void removeDatasetRemovedListener(DatasetListener listener) {
-    datasetRemovedListeners.remove(listener);
-  }
-
   protected abstract JPanel createAndInitializeContentPanel();
 
   public void init() {
