@@ -6,6 +6,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstru
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,13 +22,13 @@ public class BaseDatasetPanelFactory extends
   }
 
   @Override
-  protected BaseDatasetInstrumentModel createModel(String instrumentShortName) {
-    return new BaseDatasetInstrumentModel(instrumentShortName) {};
+  protected BaseDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
+    return new BaseDatasetInstrumentModel(groupName.getShortName()) {};
   }
 
   @Override
-  protected BaseDatasetInstrumentModel createModel(Instrument instrument) {
-    BaseDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected BaseDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    BaseDatasetInstrumentModel model = createModel(groupName);
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));

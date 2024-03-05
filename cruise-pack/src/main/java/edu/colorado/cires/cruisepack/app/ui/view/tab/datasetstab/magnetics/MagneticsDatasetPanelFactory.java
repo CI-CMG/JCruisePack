@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.MagneticsDatasetI
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class MagneticsDatasetPanelFactory extends
   }
 
   @Override
-  protected MagneticsDatasetInstrumentModel createModel(String instrumentShortName) {
+  protected MagneticsDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
     return new MagneticsDatasetInstrumentModel(MagneticsDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
-  protected MagneticsDatasetInstrumentModel createModel(Instrument instrument) {
-    MagneticsDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected MagneticsDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    MagneticsDatasetInstrumentModel model = createModel(groupName);
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     model.setProcessingLevel(instrument.getStatus());

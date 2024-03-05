@@ -44,7 +44,7 @@ public class DatasetPanelFactoryResolver {
     );
     return getFactory(
       groupName  
-    ).createPanel(groupName.getShortName());
+    ).createPanel(groupName);
   }
   
   private DatasetPanelFactory getFactory(InstrumentGroupName groupName) {
@@ -81,10 +81,11 @@ public class DatasetPanelFactoryResolver {
   }
   
   private BaseDatasetInstrumentModel createDatasetModel(Instrument instrument) {
+    InstrumentGroupName groupName = InstrumentGroupName.fromLongName(
+        instrument.getType()
+    );
     return getFactory(
-        InstrumentGroupName.fromLongName(
-            instrument.getType()
-        )
-    ).createModel(instrument);
+        groupName
+    ).createModel(groupName, instrument);
   }
 }

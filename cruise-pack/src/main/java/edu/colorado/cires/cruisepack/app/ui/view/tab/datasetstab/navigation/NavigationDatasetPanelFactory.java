@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.NavigationDataset
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,13 +25,13 @@ public class NavigationDatasetPanelFactory extends
   }
 
   @Override
-  protected NavigationDatasetInstrumentModel createModel(String instrumentShortName) {
+  protected NavigationDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
     return new NavigationDatasetInstrumentModel(NavigationDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
-  protected NavigationDatasetInstrumentModel createModel(Instrument instrument) {
-    NavigationDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected NavigationDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    NavigationDatasetInstrumentModel model = createModel(groupName);
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));

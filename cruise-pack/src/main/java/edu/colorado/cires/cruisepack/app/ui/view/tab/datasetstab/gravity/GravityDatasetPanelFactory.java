@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.GravityDatasetIns
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class GravityDatasetPanelFactory extends
   }
 
   @Override
-  protected GravityDatasetInstrumentModel createModel(String instrumentShortName) {
+  protected GravityDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
     return new GravityDatasetInstrumentModel(GravityDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
-  protected GravityDatasetInstrumentModel createModel(Instrument instrument) {
-    GravityDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected GravityDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    GravityDatasetInstrumentModel model = createModel(groupName);
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
 

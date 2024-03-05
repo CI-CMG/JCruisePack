@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.SinglebeamDataset
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
   }
 
   @Override
-  protected SinglebeamDatasetInstrumentModel createModel(String instrumentShortName) {
+  protected SinglebeamDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
     return new SinglebeamDatasetInstrumentModel(SinglebeamDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
-  protected SinglebeamDatasetInstrumentModel createModel(Instrument instrument) {
-    SinglebeamDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected SinglebeamDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    SinglebeamDatasetInstrumentModel model = createModel(groupName);
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));

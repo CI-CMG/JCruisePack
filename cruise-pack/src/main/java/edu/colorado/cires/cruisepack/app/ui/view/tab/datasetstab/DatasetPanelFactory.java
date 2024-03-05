@@ -16,8 +16,8 @@ public abstract class DatasetPanelFactory<M extends BaseDatasetInstrumentModel, 
     this.instrumentDatastore = instrumentDatastore;
   }
 
-  public V createPanel(String instrumentShortName) {
-    M model = createModel(instrumentShortName);
+  public V createPanel(InstrumentGroupName groupName) {
+    M model = createModel(groupName);
     return createPanel(model);
   }
   
@@ -43,8 +43,8 @@ public abstract class DatasetPanelFactory<M extends BaseDatasetInstrumentModel, 
     }
   } 
 
-  protected abstract M createModel(String instrumentShortName);
-  protected abstract M createModel(Instrument instrument);
+  protected abstract M createModel(InstrumentGroupName groupName);
+  protected abstract M createModel(InstrumentGroupName instrumentGroupName, Instrument instrument);
   protected abstract C createController(M model);
   protected abstract V createView(M model, C controller);
 

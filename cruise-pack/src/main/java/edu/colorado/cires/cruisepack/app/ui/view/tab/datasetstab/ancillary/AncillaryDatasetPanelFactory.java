@@ -6,6 +6,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.AncillaryDatasetI
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.AncillaryDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,13 +22,13 @@ public class AncillaryDatasetPanelFactory extends
   }
 
   @Override
-  protected AncillaryDatasetInstrumentModel createModel(String instrumentShortName) {
+  protected AncillaryDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
     return new AncillaryDatasetInstrumentModel(AncillaryDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
-  protected AncillaryDatasetInstrumentModel createModel(Instrument instrument) {
-    AncillaryDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected AncillaryDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    AncillaryDatasetInstrumentModel model = createModel(groupName);
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     if (instrument.getReleaseDate() != null) {

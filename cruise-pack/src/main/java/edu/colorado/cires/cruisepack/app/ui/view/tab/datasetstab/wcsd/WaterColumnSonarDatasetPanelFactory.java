@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.dataset.WaterColumnSonarD
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Map;
@@ -26,13 +27,13 @@ public class WaterColumnSonarDatasetPanelFactory extends
   }
 
   @Override
-  protected WaterColumnSonarDatasetInstrumentModel createModel(String instrumentShortName) {
+  protected WaterColumnSonarDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
     return new WaterColumnSonarDatasetInstrumentModel(WaterColumnSonarDatasetPanel.INSTRUMENT_SHORT_CODE);
   }
 
   @Override
-  protected WaterColumnSonarDatasetInstrumentModel createModel(Instrument instrument) {
-    WaterColumnSonarDatasetInstrumentModel model = createModel(instrument.getShortName());
+  protected WaterColumnSonarDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
+    WaterColumnSonarDatasetInstrumentModel model = createModel(groupName);
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
