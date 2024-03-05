@@ -34,9 +34,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ProcessingLevel
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
 import java.util.List;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
