@@ -13,21 +13,4 @@ public class AncillaryDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   protected InstrumentStatus getSelectedInstrumentProcessingLevel() {
     return InstrumentStatus.RAW;
   }
-
-  @Override
-  public void clearErrors() {
-    setPublicReleaseDateError(null);
-    setDataPathError(null);
-    setInstrumentError(null);
-    setCommentsError(null);
-  }
-
-  @Override
-  protected void setErrors(String propertyPath, String message) {
-    if (propertyPath.endsWith("instrument")) {
-      setInstrumentError(message);
-    } else if (propertyPath.endsWith("comments")) {
-      setCommentsError(message);
-    }
-  }
 }
