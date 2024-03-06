@@ -4,18 +4,19 @@ import edu.colorado.cires.cruisepack.app.datastore.GravityCorrectionModelDatasto
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.GravityDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GravityDatasetPanelFactory extends
-    DatasetPanelFactory<GravityDatasetInstrumentModel, GravityDatasetInstrumentController, GravityDatasetPanel> {
+    DatasetPanelFactory<BaseDatasetInstrumentModel<GravityAdditionalFieldsModel>, GravityDatasetInstrumentController, GravityDatasetPanel> {
 
   private final GravityCorrectionModelDatastore gravityCorrectionModelDatastore;
 
@@ -26,56 +27,20 @@ public class GravityDatasetPanelFactory extends
   }
 
   @Override
-  protected GravityDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
-    return new GravityDatasetInstrumentModel(GravityDatasetPanel.INSTRUMENT_SHORT_CODE);
+  protected BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> createModel(InstrumentGroupName groupName) {
+    BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model = new BaseDatasetInstrumentModel<>(groupName.getShortName()) {};
+    model.setAdditionalFieldsModel(new GravityAdditionalFieldsModel());
+    return model;
   }
 
   @Override
-  protected GravityDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
-    GravityDatasetInstrumentModel model = createModel(groupName);
+  protected BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> createModel(InstrumentGroupName groupName, Instrument instrument) {
+    BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model = createModel(groupName);
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
-
-    Map<String, Object> otherFields = instrument.getOtherFields();
-    setValueIfExists(
-        "correction_model",
-        otherFields,
-        String.class,
-        (v) -> gravityCorrectionModelDatastore.getCorrectionModelDropDowns().stream()
-            .filter(dd -> dd.getValue().equals(v))
-            .findFirst()
-            .orElse(GravityCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL),
-        model::setCorrectionModel
+    model.setAdditionalFieldsModel(
+        AdditionalFieldsModelFactory.gravity(instrument.getOtherFields(), gravityCorrectionModelDatastore.getCorrectionModelDropDowns(), GravityCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL)
     );
-    setValueIfExists(
-        "arrival_tie",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setArrivalTie
-    );
-    setValueIfExists(
-        "departure_tie",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setDepartureTie
-    );
-    setValueIfExists(
-        "drift_per_day",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setDriftPerDay
-    );
-    setValueIfExists(
-        "observation_rate",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setObservationRate
-    );
-    
     model.setProcessingLevel(instrument.getStatus());
 //    model.setDataPath(); TODO
     if (instrument.getReleaseDate() != null) {
@@ -85,12 +50,12 @@ public class GravityDatasetPanelFactory extends
   }
 
   @Override
-  protected GravityDatasetInstrumentController createController(GravityDatasetInstrumentModel model) {
+  protected GravityDatasetInstrumentController createController(BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model) {
     return new GravityDatasetInstrumentController(model);
   }
 
   @Override
-  protected GravityDatasetPanel createView(GravityDatasetInstrumentModel model, GravityDatasetInstrumentController controller) {
+  protected GravityDatasetPanel createView(BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model, GravityDatasetInstrumentController controller) {
     return new GravityDatasetPanel(model, controller, instrumentDatastore, gravityCorrectionModelDatastore.getCorrectionModelDropDowns());
   }
 

@@ -1,19 +1,19 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.magnetics;
 
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_COMMENTS;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_CORRECTION_MODEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_CORRECTION_MODEL_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_INSTRUMENT;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SAMPLE_RATE;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SAMPLE_RATE_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SENSOR_DEPTH;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_SENSOR_DEPTH_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_TOW_DISTANCE;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel.UPDATE_TOW_DISTANCE_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_CORRECTION_MODEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_CORRECTION_MODEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_SAMPLE_RATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_SAMPLE_RATE_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_SENSOR_DEPTH;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_SENSOR_DEPTH_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_TOW_DISTANCE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel.UPDATE_TOW_DISTANCE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -23,7 +23,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.MagneticsDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
@@ -39,7 +40,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
 
-public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrumentModel, MagneticsDatasetInstrumentController> {
+public class MagneticsDatasetPanel extends DatasetPanel<BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel>, MagneticsDatasetInstrumentController> {
 
   public static final String INSTRUMENT_SHORT_CODE = "MAG";
 
@@ -59,7 +60,7 @@ public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrume
   private final List<DropDownItem> correctionModelOptions;
 
 
-  public MagneticsDatasetPanel(MagneticsDatasetInstrumentModel model, MagneticsDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> correctionModelOptions) {
+  public MagneticsDatasetPanel(BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model, MagneticsDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> correctionModelOptions) {
     super(model, controller, instrumentDatastore);
     this.correctionModelOptions = correctionModelOptions;
   }
@@ -74,10 +75,10 @@ public class MagneticsDatasetPanel extends DatasetPanel<MagneticsDatasetInstrume
     correctionModelPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       correctionModelOptions.toArray(new DropDownItem[0])
     ));
-    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
-    sampleRatePanel.getField().setText(model.getSampleRate());
-    towDistancePanel.getField().setText(model.getTowDistance());
-    sensorDepthPanel.getField().setText(model.getSensorDepth());
+    correctionModelPanel.getInstrumentField().setSelectedItem(model.getAdditionalFieldsModel().getCorrectionModel());
+    sampleRatePanel.getField().setText(model.getAdditionalFieldsModel().getSampleRate());
+    towDistancePanel.getField().setText(model.getAdditionalFieldsModel().getTowDistance());
+    sensorDepthPanel.getField().setText(model.getAdditionalFieldsModel().getSensorDepth());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));

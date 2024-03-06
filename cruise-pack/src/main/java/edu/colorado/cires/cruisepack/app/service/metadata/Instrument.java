@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -208,7 +207,7 @@ public class Instrument {
 
     public Instrument build() {
       return new Instrument(uuid, type, instrument, shortName, releaseDate, status,
-          dataComment, dirName, bagName, Collections.unmodifiableMap(otherFields));
+          dataComment, dirName, bagName, otherFields);
     }
   }
 

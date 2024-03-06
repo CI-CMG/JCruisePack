@@ -4,18 +4,19 @@ import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.MagneticsCorrectionModelDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.MagneticsDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.time.LocalDate;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MagneticsDatasetPanelFactory extends
-    DatasetPanelFactory<MagneticsDatasetInstrumentModel, MagneticsDatasetInstrumentController, MagneticsDatasetPanel> {
+    DatasetPanelFactory<BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel>, MagneticsDatasetInstrumentController, MagneticsDatasetPanel> {
 
   private final MagneticsCorrectionModelDatastore magneticsCorrectionModelDatastore;
 
@@ -26,48 +27,24 @@ public class MagneticsDatasetPanelFactory extends
   }
 
   @Override
-  protected MagneticsDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
-    return new MagneticsDatasetInstrumentModel(MagneticsDatasetPanel.INSTRUMENT_SHORT_CODE);
+  protected BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> createModel(InstrumentGroupName groupName) {
+    BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model = new BaseDatasetInstrumentModel<>(groupName.getShortName()) {};
+    model.setAdditionalFieldsModel(new MagneticsAdditionalFieldsModel());
+    return model;
   }
 
   @Override
-  protected MagneticsDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
-    MagneticsDatasetInstrumentModel model = createModel(groupName);
+  protected BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> createModel(InstrumentGroupName groupName, Instrument instrument) {
+    BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model = createModel(groupName);
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     model.setProcessingLevel(instrument.getStatus());
-
-    Map<String, Object> otherFields = instrument.getOtherFields();
-    setValueIfExists(
-        "sample_rate",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setSampleRate
-    );
-    setValueIfExists(
-        "correction_model",
-        otherFields,
-        String.class,
-        (v) -> magneticsCorrectionModelDatastore.getCorrectionModelDropDowns().stream()
-            .filter(dd -> dd.getValue().equals(v))
-            .findFirst()
-            .orElse(MagneticsCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL),
-        model::setCorrectionModel
-    );
-    setValueIfExists(
-        "sensor_depth",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setSensorDepth
-    );
-    setValueIfExists(
-        "tow_distance",
-        otherFields,
-        String.class,
-        (v) -> v,
-        model::setTowDistance
+    model.setAdditionalFieldsModel(
+        AdditionalFieldsModelFactory.magnetics(
+            instrument.getOtherFields(),
+            magneticsCorrectionModelDatastore.getCorrectionModelDropDowns(),
+            MagneticsCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL
+        )
     );
 //    model.setDataPath(); TODO
     if (instrument.getReleaseDate() != null) {
@@ -77,12 +54,12 @@ public class MagneticsDatasetPanelFactory extends
   }
 
   @Override
-  protected MagneticsDatasetInstrumentController createController(MagneticsDatasetInstrumentModel model) {
+  protected MagneticsDatasetInstrumentController createController(BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model) {
     return new MagneticsDatasetInstrumentController(model);
   }
 
   @Override
-  protected MagneticsDatasetPanel createView(MagneticsDatasetInstrumentModel model, MagneticsDatasetInstrumentController controller) {
+  protected MagneticsDatasetPanel createView(BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model, MagneticsDatasetInstrumentController controller) {
     return new MagneticsDatasetPanel(model, controller, instrumentDatastore, magneticsCorrectionModelDatastore.getCorrectionModelDropDowns());
   }
 }

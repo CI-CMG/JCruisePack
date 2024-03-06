@@ -1,13 +1,14 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.SinglebeamVerticalDatumDatastore;
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSinglebeamVerticalDatumDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
+import java.util.Map;
 
-public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel {
+public class SinglebeamAdditionalFieldsModel extends AdditionalFieldsModel {
   public static final String UPDATE_VERTICAL_DATUM = "UPDATE_VERTICAL_DATUM";
   public static final String UPDATE_VERTICAL_DATUM_ERROR = "UPDATE_VERTICAL_DATUM_ERROR";
   public static final String UPDATE_OBS_RATE = "UPDATE_OBS_RATE";
@@ -25,25 +26,27 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
   private String soundVelocity;
   private String soundVelocityError = null;
 
-  public SinglebeamDatasetInstrumentModel(String instrumentGroupShortCode) {
-    super(instrumentGroupShortCode);
-  }
-
   @Override
   public void clearErrors() {
-    setPublicReleaseDateError(null);
-    setDataPathError(null);
-    setInstrumentError(null);
-    setProcessingLevelError(null);
-    setCommentsError(null);
     setVerticalDatumError(null);
     setObsRateError(null);
     setSoundVelocityError(null);
   }
 
   @Override
-  protected HashMap<String, Object> getAdditionalFields() {
-    HashMap<String, Object> map = new HashMap<>();
+  protected void setError(String propertyPath, String message) {
+    if (propertyPath.endsWith("verticalDatum")) {
+      setVerticalDatumError(message);
+    } else if (propertyPath.endsWith("obsRate")) {
+      setObsRateError(message);
+    } else if (propertyPath.endsWith("soundVelocity")) {
+      setSoundVelocityError(message);
+    }
+  }
+
+  @Override
+  public Map<String, Object> transform() {
+    HashMap<String, Object> map = new HashMap<>(0);
     map.put("vertical_datum", verticalDatum.getValue());
     map.put("obs_rate", obsRate);
     map.put("sound_velocity", soundVelocity);
@@ -84,22 +87,5 @@ public class SinglebeamDatasetInstrumentModel extends BaseDatasetInstrumentModel
 
   private void setSoundVelocityError(String message) {
     setIfChanged(UPDATE_SOUND_VELOCITY_ERROR, message, () -> this.soundVelocityError, (e) -> this.soundVelocityError = e);
-  }
-
-  @Override
-  protected void setErrors(String propertyPath, String message) {
-    if (propertyPath.endsWith("instrument")) {
-      setInstrumentError(message);
-    } else if (propertyPath.endsWith("processingLevel")) {
-      setProcessingLevelError(message);
-    } else if (propertyPath.endsWith("comments")) {
-      setCommentsError(message);
-    } else if (propertyPath.endsWith("verticalDatum")) {
-      setVerticalDatumError(message);
-    } else if (propertyPath.endsWith("obsRate")) {
-      setObsRateError(message);
-    } else if (propertyPath.endsWith("soundVelocity")) {
-      setSoundVelocityError(message);
-    }
   }
 }

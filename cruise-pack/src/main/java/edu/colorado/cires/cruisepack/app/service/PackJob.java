@@ -59,7 +59,7 @@ public class PackJob {
 
   private static Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> getDirNames(DatasetsModel datasetsModel, String packageId, InstrumentDatastore instrumentDatastore) {
     Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> namers = new LinkedHashMap<>();
-    for (BaseDatasetInstrumentModel instrumentModel : datasetsModel.getDatasets()) {
+    for (BaseDatasetInstrumentModel<?> instrumentModel : datasetsModel.getDatasets()) {
       instrumentModel.getPackageKey().ifPresent(key -> {
         instrumentDatastore.getInstrument(key).flatMap(instrumentModel::getInstrumentNameHolder).ifPresent(nameHolder -> {
           List<InstrumentNameHolder> holders = namers.computeIfAbsent(key, k -> new ArrayList<>());

@@ -1,6 +1,5 @@
 package edu.colorado.cires.cruisepack.app.service.metadata;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

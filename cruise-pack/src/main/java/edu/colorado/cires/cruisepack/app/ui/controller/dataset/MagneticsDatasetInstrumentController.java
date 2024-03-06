@@ -1,40 +1,29 @@
 package edu.colorado.cires.cruisepack.app.ui.controller.dataset;
 
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class MagneticsDatasetInstrumentController extends BaseDatasetInstrumentController<MagneticsDatasetInstrumentModel> {
+public class MagneticsDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel>> {
 
-  public MagneticsDatasetInstrumentController(MagneticsDatasetInstrumentModel model) {
+  public MagneticsDatasetInstrumentController(BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model) {
     super(model);
   }
 
-  public void setInstrument(DropDownItem instrument) {
-    model.setInstrument(instrument);
-  }
-
-  public void setProcessingLevel(String processingLevel) {
-    model.setProcessingLevel(processingLevel);
-  }
-
-  public void setComments(String comments) {
-    model.setComments(comments);
-  }
-
   public void setCorrectionModel(DropDownItem correctionModel) {
-    model.setCorrectionModel(correctionModel);
+    model.getAdditionalFieldsModel().setCorrectionModel(correctionModel);
   }
 
   public void setSampleRate(String sampleRate) {
-    model.setSampleRate(sampleRate);
+    model.getAdditionalFieldsModel().setSampleRate(sampleRate);
   }
 
   public void setTowDistance(String towDistance) {
-    model.setTowDistance(towDistance);
+    model.getAdditionalFieldsModel().setTowDistance(towDistance);
   }
 
   public void setSensorDepth(String sensorDepth) {
-    model.setSensorDepth(sensorDepth);
+    model.getAdditionalFieldsModel().setSensorDepth(sensorDepth);
   }
 }

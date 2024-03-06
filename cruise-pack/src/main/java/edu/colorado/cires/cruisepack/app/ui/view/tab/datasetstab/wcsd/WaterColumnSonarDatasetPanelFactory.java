@@ -4,11 +4,12 @@ import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.WaterColumnCalibrationStateDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.WaterColumnSonarDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnSonarDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.WaterColumnAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class WaterColumnSonarDatasetPanelFactory extends
-    DatasetPanelFactory<WaterColumnSonarDatasetInstrumentModel, WaterColumnSonarDatasetInstrumentController, WaterColumnSonarDatasetPanel> {
+    DatasetPanelFactory<BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel>, WaterColumnSonarDatasetInstrumentController, WaterColumnSonarDatasetPanel> {
 
   private final WaterColumnCalibrationStateDatastore waterColumnCalibrationStateDatastore;
 
@@ -27,50 +28,24 @@ public class WaterColumnSonarDatasetPanelFactory extends
   }
 
   @Override
-  protected WaterColumnSonarDatasetInstrumentModel createModel(InstrumentGroupName groupName) {
-    return new WaterColumnSonarDatasetInstrumentModel(WaterColumnSonarDatasetPanel.INSTRUMENT_SHORT_CODE);
+  protected BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> createModel(InstrumentGroupName groupName) {
+    BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> model = new BaseDatasetInstrumentModel<>(groupName.getShortName()) {};
+    model.setAdditionalFieldsModel(new WaterColumnAdditionalFieldsModel());
+    return model;
   }
 
   @Override
-  protected WaterColumnSonarDatasetInstrumentModel createModel(InstrumentGroupName groupName, Instrument instrument) {
-    WaterColumnSonarDatasetInstrumentModel model = createModel(groupName);
+  protected BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> createModel(InstrumentGroupName groupName, Instrument instrument) {
+    BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> model = createModel(groupName);
 //    model.setDataPath(); TODO
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
-
-    Map<String, Object> otherFields = instrument.getOtherFields();
-    
-    setValueIfExists(
-        "calibration_state",
-        otherFields,
-        String.class,
-        (v) -> waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns()
-            .stream()
-            .filter(dd -> dd.getValue().equals(v))
-            .findFirst()
-            .orElse(WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE),
-        model::setCalibrationState
-    );
-    setValueIfExists(
-        "calibration_date",
-        otherFields,
-        String.class,
-        (v) -> v == null ? null : LocalDate.parse(v),
-        model::setCalibrationDate
-    );
-    setValueIfExists(
-        "calibration_data_path",
-        otherFields,
-        String.class,
-        Paths::get,
-        model::setCalibrationDataPath
-    );
-    setValueIfExists(
-        "calibration_report_path",
-        otherFields,
-        String.class,
-        Paths::get,
-        model::setCalibrationReportPath
+    model.setAdditionalFieldsModel(
+        AdditionalFieldsModelFactory.waterColumn(
+            instrument.getOtherFields(),
+            waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns(),
+            WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE
+        )
     );
     model.setProcessingLevel(instrument.getStatus());
     if (instrument.getReleaseDate() != null) {
@@ -80,13 +55,12 @@ public class WaterColumnSonarDatasetPanelFactory extends
   }
 
   @Override
-  protected WaterColumnSonarDatasetInstrumentController createController(WaterColumnSonarDatasetInstrumentModel model) {
+  protected WaterColumnSonarDatasetInstrumentController createController(BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> model) {
     return new WaterColumnSonarDatasetInstrumentController(model);
   }
 
   @Override
-  protected WaterColumnSonarDatasetPanel createView(WaterColumnSonarDatasetInstrumentModel model,
-      WaterColumnSonarDatasetInstrumentController controller) {
+  protected WaterColumnSonarDatasetPanel createView(BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> model, WaterColumnSonarDatasetInstrumentController controller) {
     return new WaterColumnSonarDatasetPanel(
       model,
       controller,

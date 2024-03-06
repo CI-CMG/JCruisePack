@@ -15,12 +15,11 @@ import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
+public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel> extends PropertyChangeModel {
 
   public static final String UPDATE_PUBLIC_RELEASE_DATE = "UPDATE_PUBLIC_RELEASE_DATE";
   public static final String UPDATE_DATA_PATH = "UPDATE_DATA_PATH";
@@ -52,6 +51,8 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
   @NotBlank
   private String comments;
   private String commentsError = null;
+  
+  private T additionalFieldsModel = null;
 
   protected BaseDatasetInstrumentModel(String instrumentGroupShortCode) {
     this.instrumentGroupShortCode = instrumentGroupShortCode;
@@ -162,7 +163,7 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
               getAdditionalFiles(),
               getPublicReleaseDate(),
               getComments(),
-              getAdditionalFields()
+              additionalFieldsModel == null ? null : additionalFieldsModel.transform()
           )
       );
     }
@@ -192,8 +193,11 @@ public abstract class BaseDatasetInstrumentModel extends PropertyChangeModel {
     setErrors(propertyPath, message);
   }
 
-  protected HashMap<String, Object> getAdditionalFields() {
-    return new HashMap<>(0);
+  public T getAdditionalFieldsModel() {
+    return additionalFieldsModel;
   }
-  
+
+  public void setAdditionalFieldsModel(T additionalFieldsModel) {
+    this.additionalFieldsModel = additionalFieldsModel;
+  }
 }

@@ -1,17 +1,17 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.singebeam;
 
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_COMMENTS;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_INSTRUMENT;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_OBS_RATE;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_OBS_RATE_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_SOUND_VELOCITY;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_SOUND_VELOCITY_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_VERTICAL_DATUM;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel.UPDATE_VERTICAL_DATUM_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel.UPDATE_OBS_RATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel.UPDATE_OBS_RATE_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel.UPDATE_SOUND_VELOCITY;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel.UPDATE_SOUND_VELOCITY_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel.UPDATE_VERTICAL_DATUM;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel.UPDATE_VERTICAL_DATUM_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -21,7 +21,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.SinglebeamDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
@@ -36,7 +37,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
-public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstrumentModel, SinglebeamDatasetInstrumentController> {
+public class SinglebeamDatasetPanel extends DatasetPanel<BaseDatasetInstrumentModel<SinglebeamAdditionalFieldsModel>, SinglebeamDatasetInstrumentController> {
 
   public static final String INSTRUMENT_SHORT_CODE = "SB-BATHY";
 
@@ -52,7 +53,7 @@ public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstru
   private final LabeledTextFieldPanel soundVelocityPanel = new LabeledTextFieldPanel(SOUND_VELOCITY_LABEL);
   private final List<DropDownItem> verticalDatumOptions;
 
-  public SinglebeamDatasetPanel(SinglebeamDatasetInstrumentModel model, SinglebeamDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> verticalDatumOptions) {
+  public SinglebeamDatasetPanel(BaseDatasetInstrumentModel<SinglebeamAdditionalFieldsModel> model, SinglebeamDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> verticalDatumOptions) {
     super(model, controller, instrumentDatastore);
     this.verticalDatumOptions = verticalDatumOptions;
   }
@@ -67,9 +68,9 @@ public class SinglebeamDatasetPanel extends DatasetPanel<SinglebeamDatasetInstru
     verticalDatumPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       verticalDatumOptions.toArray(new DropDownItem[0])
     ));
-    verticalDatumPanel.getInstrumentField().setSelectedItem(model.getVerticalDatum());
-    obsRatePanel.getField().setText(model.getObsRate());
-    soundVelocityPanel.getField().setText(model.getSoundVelocity());
+    verticalDatumPanel.getInstrumentField().setSelectedItem(model.getAdditionalFieldsModel().getVerticalDatum());
+    obsRatePanel.getField().setText(model.getAdditionalFieldsModel().getObsRate());
+    soundVelocityPanel.getField().setText(model.getAdditionalFieldsModel().getSoundVelocity());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));

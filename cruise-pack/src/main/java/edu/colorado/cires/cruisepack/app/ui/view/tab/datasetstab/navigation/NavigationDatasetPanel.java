@@ -1,13 +1,13 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.navigation;
 
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_COMMENTS;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_INSTRUMENT;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_NAV_DATUM;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_NAV_DATUM_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationAdditionalFieldsModel.UPDATE_NAV_DATUM;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationAdditionalFieldsModel.UPDATE_NAV_DATUM_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -17,7 +17,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.NavigationDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
@@ -32,7 +33,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
-public class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstrumentModel, NavigationDatasetInstrumentController> {
+public class NavigationDatasetPanel extends DatasetPanel<BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel>, NavigationDatasetInstrumentController> {
 
   public static final String INSTRUMENT_SHORT_CODE = "NAV";
 
@@ -45,7 +46,7 @@ public class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstru
   private final List<DropDownItem> navigationDatumOptions;
 
 
-  public NavigationDatasetPanel(NavigationDatasetInstrumentModel model, NavigationDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> navigationDatumOptions) {
+  public NavigationDatasetPanel(BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel> model, NavigationDatasetInstrumentController controller, InstrumentDatastore instrumentDatastore, List<DropDownItem> navigationDatumOptions) {
     super(model, controller, instrumentDatastore);
     this.navigationDatumOptions = navigationDatumOptions;
   }
@@ -60,7 +61,7 @@ public class NavigationDatasetPanel extends DatasetPanel<NavigationDatasetInstru
     navDatumPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       navigationDatumOptions.toArray(new DropDownItem[0])
     ));
-    navDatumPanel.getInstrumentField().setSelectedItem(model.getNavDatum());
+    navDatumPanel.getInstrumentField().setSelectedItem(model.getAdditionalFieldsModel().getNavDatum());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));

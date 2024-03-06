@@ -1,13 +1,14 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.MagneticsCorrectionModelDatastore;
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidMagneticsCorrectionModelDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
+import java.util.Map;
 
-public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel {
+public class MagneticsAdditionalFieldsModel extends AdditionalFieldsModel {
   public static final String UPDATE_CORRECTION_MODEL = "UPDATE_CORRECTION_MODEL";
   public static final String UPDATE_CORRECTION_MODEL_ERROR = "UPDATE_CORRECTION_MODEL_ERROR";
   public static final String UPDATE_SAMPLE_RATE = "UPDATE_SAMPLE_RATE";
@@ -30,17 +31,8 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   private String sensorDepth;
   private String sensorDepthError = null;
 
-  public MagneticsDatasetInstrumentModel(String instrumentGroupShortCode) {
-    super(instrumentGroupShortCode);
-  }
-
   @Override
   public void clearErrors() {
-    setPublicReleaseDateError(null);
-    setDataPathError(null);
-    setInstrumentError(null);
-    setProcessingLevelError(null);
-    setCommentsError(null);
     setCorrectionModelError(null);
     setSampleRateError(null);
     setTowDistanceError(null);
@@ -48,7 +40,20 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
   }
 
   @Override
-  protected HashMap<String, Object> getAdditionalFields() {
+  protected void setError(String propertyPath, String message) {
+    if (propertyPath.endsWith("correctionModel")) {
+      setCorrectionModelError(message);
+    } else if (propertyPath.endsWith("sampleRate")) {
+      setSampleRateError(message);
+    } else if (propertyPath.endsWith("towDistance")) {
+      setTowDistanceError(message);
+    } else if (propertyPath.endsWith("sensorDepth")) {
+      setSensorDepthError(message);
+    }
+  }
+
+  @Override
+  public Map<String, Object> transform() {
     HashMap<String, Object> map = new HashMap<>(0);
     map.put("correction_model", correctionModel.getValue());
     map.put("sample_rate", sampleRate);
@@ -103,24 +108,5 @@ public class MagneticsDatasetInstrumentModel extends BaseDatasetInstrumentModel 
 
   private void setSensorDepthError(String message) {
     setIfChanged(UPDATE_SENSOR_DEPTH_ERROR, message, () -> this.sensorDepthError, (e) -> this.sensorDepthError = e);
-  }
-
-  @Override
-  protected void setErrors(String propertyPath, String message) {
-    if (propertyPath.endsWith("instrument")) {
-      setInstrumentError(message);
-    } else if (propertyPath.endsWith("processingLevel")) {
-      setProcessingLevelError(message);
-    } else if (propertyPath.endsWith("comments")) {
-      setCommentsError(message);
-    } else if (propertyPath.endsWith("correctionModel")) {
-      setCorrectionModelError(message);
-    } else if (propertyPath.endsWith("sampleRate")) {
-      setSampleRateError(message);
-    } else if (propertyPath.endsWith("towDistance")) {
-      setTowDistanceError(message);
-    } else if (propertyPath.endsWith("sensorDepth")) {
-      setSensorDepthError(message);
-    }
   }
 }

@@ -1,28 +1,17 @@
 package edu.colorado.cires.cruisepack.app.ui.controller.dataset;
 
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class NavigationDatasetInstrumentController extends BaseDatasetInstrumentController<NavigationDatasetInstrumentModel> {
+public class NavigationDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel>> {
 
-  public NavigationDatasetInstrumentController(NavigationDatasetInstrumentModel model) {
+  public NavigationDatasetInstrumentController(BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel> model) {
     super(model);
   }
 
-  public void setInstrument(DropDownItem instrument) {
-    model.setInstrument(instrument);
-  }
-
-  public void setProcessingLevel(String processingLevel) {
-    model.setProcessingLevel(processingLevel);
-  }
-
-  public void setComments(String comments) {
-    model.setComments(comments);
-  }
-
   public void setNavDatum(DropDownItem navDatum) {
-    model.setNavDatum(navDatum);
+    model.getAdditionalFieldsModel().setNavDatum(navDatum);
   }
 }

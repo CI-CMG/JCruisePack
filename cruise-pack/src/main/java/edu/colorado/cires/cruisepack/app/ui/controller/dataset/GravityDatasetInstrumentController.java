@@ -1,44 +1,33 @@
 package edu.colorado.cires.cruisepack.app.ui.controller.dataset;
 
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class GravityDatasetInstrumentController extends BaseDatasetInstrumentController<GravityDatasetInstrumentModel> {
+public class GravityDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<GravityAdditionalFieldsModel>> {
 
-  public GravityDatasetInstrumentController(GravityDatasetInstrumentModel model) {
+  public GravityDatasetInstrumentController(BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model) {
     super(model);
   }
 
-  public void setInstrument(DropDownItem instrument) {
-    model.setInstrument(instrument);
-  }
-
-  public void setProcessingLevel(String processingLevel) {
-    model.setProcessingLevel(processingLevel);
-  }
-
-  public void setComments(String comments) {
-    model.setComments(comments);
-  }
-
   public void setCorrectionModel(DropDownItem correctionModel) {
-    model.setCorrectionModel(correctionModel);
+    model.getAdditionalFieldsModel().setCorrectionModel(correctionModel);
   }
 
   public void setObservationRate(String observationRate) {
-    model.setObservationRate(observationRate);
+    model.getAdditionalFieldsModel().setObservationRate(observationRate);
   }
 
   public void setDepartureTie(String departureTie) {
-    model.setDepartureTie(departureTie);
+    model.getAdditionalFieldsModel().setDepartureTie(departureTie);
   }
 
   public void setArrivalTie(String arrivalTie) {
-    model.setArrivalTie(arrivalTie);
+    model.getAdditionalFieldsModel().setArrivalTie(arrivalTie);
   }
 
   public void setDriftPerDay(String driftPerDay) {
-    model.setDriftPerDay(driftPerDay);
+    model.getAdditionalFieldsModel().setDriftPerDay(driftPerDay);
   }
 }

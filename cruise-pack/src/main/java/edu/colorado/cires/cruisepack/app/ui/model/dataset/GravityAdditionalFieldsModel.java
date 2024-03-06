@@ -1,13 +1,14 @@
 package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.GravityCorrectionModelDatastore;
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidGravityCorrectionModelDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import java.util.HashMap;
+import java.util.Map;
 
-public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
+public class GravityAdditionalFieldsModel extends AdditionalFieldsModel {
   public static final String UPDATE_CORRECTION_MODEL = "UPDATE_CORRECTION_MODEL";
   public static final String UPDATE_CORRECTION_MODEL_ERROR = "UPDATE_CORRECTION_MODEL_ERROR";
   public static final String UPDATE_DEPARTURE_TIE = "UPDATE_DEPARTURE_TIE";
@@ -35,17 +36,8 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   private String driftPerDay; //TODO make this only accept floating point numbers
   private String driftPerDayError = null;
 
-  public GravityDatasetInstrumentModel(String instrumentGroupShortCode) {
-    super(instrumentGroupShortCode);
-  }
-
   @Override
   public void clearErrors() {
-    setDataPathError(null);
-    setPublicReleaseDateError(null);
-    setInstrumentError(null);
-    setProcessingLevelError(null);
-    setCommentsError(null);
     setCorrectionModelError(null);
     setObservationRateError(null);
     setDepartureTieError(null);
@@ -54,8 +46,23 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
   }
 
   @Override
-  protected HashMap<String, Object> getAdditionalFields() {
-    HashMap<String, Object> map = new HashMap<>();
+  protected void setError(String propertyPath, String message) {
+    if (propertyPath.endsWith("correctionModel")) {
+      setCorrectionModelError(message);
+    } else if (propertyPath.endsWith("observationRate")) {
+      setObservationRateError(message);
+    } else if (propertyPath.endsWith("departureTie")) {
+      setDepartureTieError(message);
+    } else if (propertyPath.endsWith("arrivalTie")) {
+      setArrivalTieError(message);
+    } else if (propertyPath.endsWith("driftPerDay")) {
+      setDriftPerDayError(message);
+    }
+  }
+
+  @Override
+  public Map<String, Object> transform() {
+    HashMap<String, Object> map = new HashMap<>(0);
     map.put("correction_model", correctionModel.getValue());
     map.put("observation_rate", observationRate);
     map.put("departure_tie", departureTie);
@@ -122,26 +129,5 @@ public class GravityDatasetInstrumentModel extends BaseDatasetInstrumentModel {
 
   private void setDriftPerDayError(String message) {
     setIfChanged(UPDATE_DRIFT_PER_DAY_ERROR, message, () -> this.driftPerDayError, (e) -> this.driftPerDayError = e);
-  }
-
-  @Override
-  protected void setErrors(String propertyPath, String message) {
-    if (propertyPath.endsWith("instrument")) {
-      setInstrumentError(message);
-    } else if (propertyPath.endsWith("processingLevel")) {
-      setProcessingLevelError(message);
-    } else if (propertyPath.endsWith("comments")) {
-      setCommentsError(message);
-    } else if (propertyPath.endsWith("correctionModel")) {
-      setCorrectionModelError(message);
-    } else if (propertyPath.endsWith("observationRate")) {
-      setObservationRateError(message);
-    } else if (propertyPath.endsWith("departureTie")) {
-      setDepartureTieError(message);
-    } else if (propertyPath.endsWith("arrivalTie")) {
-      setArrivalTieError(message);
-    } else if (propertyPath.endsWith("driftPerDay")) {
-      setDriftPerDayError(message);
-    }
   }
 }

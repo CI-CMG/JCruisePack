@@ -1,21 +1,21 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.gravity;
 
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_ARRIVAL_TIE;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_ARRIVAL_TIE_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_COMMENTS;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_CORRECTION_MODEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_CORRECTION_MODEL_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DEPARTURE_TIE;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DEPARTURE_TIE_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DRIFT_PER_DAY;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_DRIFT_PER_DAY_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_INSTRUMENT;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_OBSERVATION_RATE;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_OBSERVATION_RATE_ERROR;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
-import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_COMMENTS_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_INSTRUMENT_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_PROCESSING_LEVEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_ARRIVAL_TIE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_ARRIVAL_TIE_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_CORRECTION_MODEL;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_CORRECTION_MODEL_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_DEPARTURE_TIE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_DEPARTURE_TIE_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_DRIFT_PER_DAY;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_DRIFT_PER_DAY_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_OBSERVATION_RATE;
+import static edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel.UPDATE_OBSERVATION_RATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.setSelectedButton;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateComboBox;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
@@ -25,7 +25,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.GravityDatasetInstrumentController;
-import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.CommentsTextAreaPanel;
@@ -40,7 +41,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 
-public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentModel, GravityDatasetInstrumentController> {
+public class GravityDatasetPanel extends DatasetPanel<BaseDatasetInstrumentModel<GravityAdditionalFieldsModel>, GravityDatasetInstrumentController> {
 
   public static final String INSTRUMENT_SHORT_CODE = "GRAV";
 
@@ -60,7 +61,7 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
   private final LabeledTextFieldPanel driftPanel = new LabeledTextFieldPanel(DRIFT_LABEL);
   private final List<DropDownItem> correctionModelOptions;
 
-  public GravityDatasetPanel(GravityDatasetInstrumentModel model, GravityDatasetInstrumentController controller,
+  public GravityDatasetPanel(BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model, GravityDatasetInstrumentController controller,
       InstrumentDatastore instrumentDatastore, List<DropDownItem> correctionModelOptions) {
     super(model, controller, instrumentDatastore);
     this.correctionModelOptions = correctionModelOptions;
@@ -76,11 +77,11 @@ public class GravityDatasetPanel extends DatasetPanel<GravityDatasetInstrumentMo
     correctionModelPanel.getInstrumentField().setModel(new DefaultComboBoxModel<>(
       correctionModelOptions.toArray(new DropDownItem[0])
     ));
-    correctionModelPanel.getInstrumentField().setSelectedItem(model.getCorrectionModel());
-    obsRatePanel.getField().setText(model.getObservationRate());
-    departureTiePanel.getField().setText(model.getDepartureTie());
-    arrivalTiePanel.getField().setText(model.getArrivalTie());
-    driftPanel.getField().setText(model.getDriftPerDay());
+    correctionModelPanel.getInstrumentField().setSelectedItem(model.getAdditionalFieldsModel().getCorrectionModel());
+    obsRatePanel.getField().setText(model.getAdditionalFieldsModel().getObservationRate());
+    departureTiePanel.getField().setText(model.getAdditionalFieldsModel().getDepartureTie());
+    arrivalTiePanel.getField().setText(model.getAdditionalFieldsModel().getArrivalTie());
+    driftPanel.getField().setText(model.getAdditionalFieldsModel().getDriftPerDay());
 
     instrumentPanel.getInstrumentField().addItemListener((evt) -> controller.setInstrument((DropDownItem) evt.getItem()));
     buttonPanel.addActionListener((evt) -> controller.setProcessingLevel(buttonPanel.getSelectedButtonText()));

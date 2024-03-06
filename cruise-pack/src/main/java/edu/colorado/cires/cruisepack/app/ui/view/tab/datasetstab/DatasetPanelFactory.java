@@ -28,20 +28,6 @@ public abstract class DatasetPanelFactory<M extends BaseDatasetInstrumentModel, 
     view.init();
     return view;
   }
-  
-  protected <JsonType, ModelType> void setValueIfExists(
-      String key,
-      Map<String, Object> otherFields,
-      Class<JsonType> jsonTypeClass,
-      Function<JsonType, ModelType> transform,
-      Consumer<ModelType> setter
-  ) {
-    Object value = otherFields.get(key);
-    if (value != null && value.getClass().isAssignableFrom(jsonTypeClass)) {
-      JsonType v = (JsonType) value;
-      setter.accept(transform.apply(v));
-    }
-  } 
 
   protected abstract M createModel(InstrumentGroupName groupName);
   protected abstract M createModel(InstrumentGroupName instrumentGroupName, Instrument instrument);
