@@ -5,8 +5,8 @@
 
     <RollingRandomAccessFile
       name="File"
-      fileName="${sys:cruisepack.home}/log/application.log"
-      filePattern="${sys:cruisepack.home}/log/application-%i.log.gz">
+      fileName="${sys:cruise-pack.work-dir}/log/application.log"
+      filePattern="${sys:cruise-pack.work-dir}/log/application-%i.log.gz">
       <PatternLayout>
         <Pattern>%d{ISO8601} %5level %pid{-} --- [%15.15t] %c : %m%n%throwable</Pattern>
       </PatternLayout>

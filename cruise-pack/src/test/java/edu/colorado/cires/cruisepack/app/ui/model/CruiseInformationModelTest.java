@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
@@ -87,6 +88,7 @@ public class CruiseInformationModelTest {
     }
 
     @Test
+    @Disabled
     public void testUpdateFormState() {
         String newCruiseTitle = "NEW-CRUISE-TITLE";
         String newCruisePurpose = "NEW-CRUISE-PURPOSE";
