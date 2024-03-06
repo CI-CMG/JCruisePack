@@ -27,6 +27,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import com.github.lgooddatepicker.components.DatePicker;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
@@ -50,7 +51,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C extends BaseDatasetInstrumentController<M>> extends JPanel {
+public abstract class DatasetPanel<T extends AdditionalFieldsModel, C extends BaseDatasetInstrumentController<T>> extends JPanel {
 
   private static final String PUBLIC_RELEASE_DATE = "Public Release Date";
   private static final String REMOVE = "Remove";
@@ -62,7 +63,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
 
 
   private final String dataTypeName;
-  protected final M model;
+  protected final BaseDatasetInstrumentModel<T> model;
   protected final C controller;
   protected final InstrumentDatastore instrumentDatastore;
 
@@ -80,8 +81,9 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private final LabeledComboBoxPanel instrumentPanel = new LabeledComboBoxPanel();
   private final ProcessingLevelRadioPanel buttonPanel = new ProcessingLevelRadioPanel();
   private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel();
+  private AdditionalFieldsPanel<T, C> additionalFieldsPanel;
   
-  protected DatasetPanel(M model, C controller, InstrumentDatastore instrumentDatastore) {
+  protected DatasetPanel(BaseDatasetInstrumentModel<T> model, C controller, InstrumentDatastore instrumentDatastore) {
     this.dataTypeName = instrumentDatastore.getNameForShortCode(model.getInstrumentGroupShortCode());
     this.model = model;
     this.controller = controller;
@@ -92,7 +94,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     datasetRemovedListeners.add(listener);
   }
 
-  protected abstract JPanel createAndInitializeContentPanel();
+  protected abstract AdditionalFieldsPanel<T, C> createAndInitializeContentPanel();
 
   public void init() {
     controller.setView(this);
@@ -101,7 +103,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     setupMvc();
   }
 
-  public M getModel() {
+  public BaseDatasetInstrumentModel<T> getModel() {
     return model;
   }
 
@@ -123,9 +125,9 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     
     add(setupHeaderLayout(), BorderLayout.NORTH);
     
-    JPanel contentPanel = createAndInitializeContentPanel();
-    if (contentPanel != null) {
-      add(createAndInitializeContentPanel(), BorderLayout.CENTER);
+    additionalFieldsPanel = createAndInitializeContentPanel();
+    if (additionalFieldsPanel != null) {
+      add(additionalFieldsPanel, BorderLayout.CENTER);
     }
     
     add(setupFooterLayout(), BorderLayout.SOUTH);
@@ -208,7 +210,7 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
         handleDirValue(ancillaryPath.getText(), controller::setAncillaryPath);
       }
     });
-    ancillaryDetails.addKeyListener(new KeyAdapter() {
+    ancillaryDetails.getCommentsField().addKeyListener(new KeyAdapter() {
       @Override
       public void keyReleased(KeyEvent e) {
         controller.setAncillaryDetails(ancillaryDetails.getCommentsField().getText());
@@ -255,10 +257,10 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
       case UPDATE_COMMENTS_ERROR -> updateLabelText(commentsPanel.getErrorLabel(), evt);
     }
     
-    customOnChange(evt);
+    if (additionalFieldsPanel != null) {
+      additionalFieldsPanel.onChange(evt);
+    }
   }
-
-  protected abstract void customOnChange(PropertyChangeEvent evt);
 
   private void handleDirValue(String value, Consumer<Path> consumer) {
     Path path = Paths.get(value);

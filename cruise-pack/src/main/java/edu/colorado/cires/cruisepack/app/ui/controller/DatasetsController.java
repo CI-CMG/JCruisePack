@@ -1,6 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
-import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
@@ -27,11 +27,11 @@ public class DatasetsController implements PropertyChangeListener {
     datasetsModel.addChangeListener(this);
   }
 
-  public void addDataset(DatasetPanel<?, ?> row) {
+  public void addDataset(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
     datasetsModel.addDataset(row);
   }
 
-  public void removeDataset(DatasetPanel<?, ?> row) {
+  public void removeDataset(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
     datasetsModel.removeDataset(row);
   }
 

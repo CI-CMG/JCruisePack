@@ -5,7 +5,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalField
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class GravityDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<GravityAdditionalFieldsModel>> {
+public class GravityDatasetInstrumentController extends BaseDatasetInstrumentController<GravityAdditionalFieldsModel> {
 
   public GravityDatasetInstrumentController(BaseDatasetInstrumentModel<GravityAdditionalFieldsModel> model) {
     super(model);

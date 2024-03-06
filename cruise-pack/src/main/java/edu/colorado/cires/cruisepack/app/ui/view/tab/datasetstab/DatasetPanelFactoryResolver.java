@@ -1,11 +1,11 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.gravity.GravityDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.magnetics.MagneticsDatasetPanelFactory;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.multibeam.BaseDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.navigation.NavigationDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.singebeam.SinglebeamDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.wcsd.WaterColumnSonarDatasetPanelFactory;
@@ -37,7 +37,7 @@ public class DatasetPanelFactoryResolver {
     return shortCodes;
   }
 
-  public DatasetPanel createDatasetPanel(DropDownItem dataType) {
+  public DatasetPanel<? extends AdditionalFieldsModel, ?> createDatasetPanel(DropDownItem dataType) {
     InstrumentGroupName groupName = InstrumentGroupName.fromShortName(
         dataType.getId()
     );
@@ -48,7 +48,7 @@ public class DatasetPanelFactoryResolver {
   
   private DatasetPanelFactory getFactory(InstrumentGroupName groupName) {
     Class<?> clazz = switch (groupName) {
-      case SUB_BOTTOM, SIDE_SCAN, MULTIBEAM, OTHER, ADCP, XBT, CTD -> BaseDatasetPanelFactory.class;
+      case SUB_BOTTOM, SIDE_SCAN, MULTIBEAM, OTHER, ADCP, XBT, CTD -> DefaultDatasetPanelFactory.class;
       case NAVIGATION -> NavigationDatasetPanelFactory.class;
       case MAGNETICS -> MagneticsDatasetPanelFactory.class;
       case GRAVITY -> GravityDatasetPanelFactory.class;
@@ -69,8 +69,8 @@ public class DatasetPanelFactoryResolver {
         );
   }
   
-  public DatasetPanel createDatasetPanel(Instrument instrument) {
-    BaseDatasetInstrumentModel model = createDatasetModel(instrument);
+  public DatasetPanel<? extends AdditionalFieldsModel, ?> createDatasetPanel(Instrument instrument) {
+    BaseDatasetInstrumentModel<? extends AdditionalFieldsModel> model = createDatasetModel(instrument);
     return getFactory(
         InstrumentGroupName.fromLongName(
             instrument.getType()
@@ -78,7 +78,7 @@ public class DatasetPanelFactoryResolver {
     ).createPanel(model);
   }
   
-  private BaseDatasetInstrumentModel createDatasetModel(Instrument instrument) {
+  private BaseDatasetInstrumentModel<? extends AdditionalFieldsModel> createDatasetModel(Instrument instrument) {
     InstrumentGroupName groupName = InstrumentGroupName.fromLongName(
         instrument.getType()
     );

@@ -10,6 +10,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidInstrumentDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
@@ -56,6 +57,8 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
   private String comments;
   private String commentsError = null;
   @NotNull(message = "must not be blank")
+  @PathExists
+  @PathIsDirectory
   private Path ancillaryPath;
   private String ancillaryPathError = null;
   
@@ -63,6 +66,7 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
   private String ancillaryDetails;
   private String ancillaryDetailsError = null;
   
+  @Valid
   private T additionalFieldsModel = null;
 
   protected BaseDatasetInstrumentModel(String instrumentGroupShortCode) {
@@ -133,6 +137,10 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
     setCommentsError(null);
     setAncillaryPathError(null);
     setAncillaryDetailsError(null);
+    
+    if (additionalFieldsModel != null) {
+      additionalFieldsModel.clearErrors();
+    }
   }
 
   public String getInstrumentGroupShortCode() {
@@ -240,6 +248,10 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
     }
 
     setErrors(propertyPath, message);
+    
+    if (additionalFieldsModel != null && propertyPath.contains(".additionalFieldsModel.")) {
+      additionalFieldsModel.setError(propertyPath, message);
+    }
   }
 
   public T getAdditionalFieldsModel() {

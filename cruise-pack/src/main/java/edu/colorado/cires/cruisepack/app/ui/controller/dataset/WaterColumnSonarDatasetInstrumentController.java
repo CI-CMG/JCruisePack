@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 
 
-public class WaterColumnSonarDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel>> {
+public class WaterColumnSonarDatasetInstrumentController extends BaseDatasetInstrumentController<WaterColumnAdditionalFieldsModel> {
 
   public WaterColumnSonarDatasetInstrumentController(BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> model) {
     super(model);

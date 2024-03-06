@@ -18,7 +18,7 @@ public class DatasetsModel extends PropertyChangeModel {
   private  final DatasetPanelFactoryResolver factoryResolver;
 
   @NotEmpty
-  private List<@Valid ? extends BaseDatasetInstrumentModel> datasets = new ArrayList<>();
+  private List<@Valid ? extends BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> datasets = new ArrayList<>();
   private String datasetsError = null;
 
   @Autowired
@@ -35,45 +35,41 @@ public class DatasetsModel extends PropertyChangeModel {
     clearDatasets();
     
     for (Instrument instrument : metadata.getInstruments()) {
-      DatasetPanel<?, ?> panel = factoryResolver.createDatasetPanel(instrument);
+      DatasetPanel<? extends AdditionalFieldsModel, ?> panel = factoryResolver.createDatasetPanel(instrument);
       addDataset(panel);
     }
   }
 
-  public List<? extends BaseDatasetInstrumentModel> getDatasets() {
+  public List<? extends BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> getDatasets() {
     return datasets;
   }
 
   private void clearDatasets() {
-    List<BaseDatasetInstrumentModel> oldDatasets = new ArrayList<>(datasets);
+    List<BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> oldDatasets = new ArrayList<>(datasets);
     datasets = new ArrayList<>(0);
     fireChangeEvent(Events.CLEAR_DATASET_LIST, oldDatasets, datasets);
   }
 
-  public void addDataset(DatasetPanel<?, ?> row) {
-    List<BaseDatasetInstrumentModel> oldDatasets = new ArrayList<>(datasets);
-    BaseDatasetInstrumentModel dataset = row.getModel();
+  public void addDataset(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
+    List<BaseDatasetInstrumentModel<?>> oldDatasets = new ArrayList<>(datasets);
+    BaseDatasetInstrumentModel<? extends AdditionalFieldsModel> dataset = row.getModel();
     if (!oldDatasets.contains(dataset)) {
-      List<BaseDatasetInstrumentModel> newDatasets = new ArrayList<>(datasets);
+      List<BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> newDatasets = new ArrayList<>(datasets);
       newDatasets.add(dataset);
       datasets = newDatasets;
       fireChangeEvent(Events.ADD_DATASET, null, row);
     }
   }
 
-  public void removeDataset(DatasetPanel<?, ?> row) {
-    List<BaseDatasetInstrumentModel> oldDatasets = new ArrayList<>(datasets);
-    BaseDatasetInstrumentModel dataset = row.getModel();
+  public void removeDataset(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
+    List<BaseDatasetInstrumentModel<?>> oldDatasets = new ArrayList<>(datasets);
+    BaseDatasetInstrumentModel<? extends AdditionalFieldsModel> dataset = row.getModel();
     if (oldDatasets.contains(dataset)) {
-      List<BaseDatasetInstrumentModel> newDatasets = new ArrayList<>(datasets);
+      List<BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> newDatasets = new ArrayList<>(datasets);
       newDatasets.remove(dataset);
       datasets = newDatasets;
       fireChangeEvent(Events.REMOVE_DATASET, row, null);
     }
-  }
-
-  public String getDatasetsError() {
-      return datasetsError;
   }
 
   public void setDatasetsError(String datasetsError) {

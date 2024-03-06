@@ -5,7 +5,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.MagneticsAdditionalFie
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class MagneticsDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel>> {
+public class MagneticsDatasetInstrumentController extends BaseDatasetInstrumentController<MagneticsAdditionalFieldsModel> {
 
   public MagneticsDatasetInstrumentController(BaseDatasetInstrumentModel<MagneticsAdditionalFieldsModel> model) {
     super(model);

@@ -5,9 +5,11 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationAdditionalFi
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class NavigationDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel>> {
+public class NavigationDatasetInstrumentController extends BaseDatasetInstrumentController<NavigationAdditionalFieldsModel> {
 
-  public NavigationDatasetInstrumentController(BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel> model) {
+
+  public NavigationDatasetInstrumentController(
+      BaseDatasetInstrumentModel<NavigationAdditionalFieldsModel> model) {
     super(model);
   }
 

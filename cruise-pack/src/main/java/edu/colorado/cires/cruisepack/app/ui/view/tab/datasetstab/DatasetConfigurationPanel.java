@@ -7,6 +7,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -38,7 +39,7 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   private final List<DatasetListener> datasetCreatedListeners = new ArrayList<>(0);
   private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
 
-  private List<DatasetPanel> rows = new ArrayList<>();
+  private List<DatasetPanel<? extends AdditionalFieldsModel, ?>> rows = new ArrayList<>();
   private JLabel datasetsErrorLabel = createErrorLabel();
   private JPanel fluff = new JPanel();
   private DropDownItem[] dataTypes;
@@ -130,14 +131,14 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
         InstrumentDatastore.UNSELECTED_DATASET_TYPE);
 
     if (dataType != null && !dataType.equals(InstrumentDatastore.UNSELECTED_DATASET_TYPE)) {
-      DatasetPanel<?, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
+      DatasetPanel<? extends AdditionalFieldsModel, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
       for (DatasetListener listener : datasetCreatedListeners) {
         listener.handle(row);
       }
     }
   }
   
-  public void createRow(DatasetPanel<?, ?> row) {
+  public void createRow(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
     row.addDatasetRemovedListener((evt) -> handleRowRemove(row));
     remove(fluff);
     add(row, configureLayout(0, rows.size(), c -> {
@@ -150,20 +151,20 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
     uiRefresher.refresh();
   }
 
-  public void removeRow(DatasetPanel row) {
+  public void removeRow(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
     remove(row);
     rows.remove(row);
     uiRefresher.refresh();
   }
   
   public void removeAllRows() {
-    List<DatasetPanel> panels = new ArrayList<>(rows);
-    for (DatasetPanel<?, ?> panel : panels) {
+    List<DatasetPanel<? extends AdditionalFieldsModel, ?>> panels = new ArrayList<>(rows);
+    for (DatasetPanel<? extends AdditionalFieldsModel, ?> panel : panels) {
       removeRow(panel);
     }
   }
   
-  private void handleRowRemove(DatasetPanel<?, ?> row) {
+  private void handleRowRemove(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
     for (DatasetListener listener : datasetRemovedListeners) {
       listener.handle(row);
     }

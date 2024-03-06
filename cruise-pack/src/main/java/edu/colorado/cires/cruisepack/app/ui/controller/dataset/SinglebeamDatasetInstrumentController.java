@@ -5,7 +5,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.SinglebeamAdditionalFi
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 
 
-public class SinglebeamDatasetInstrumentController extends BaseDatasetInstrumentController<BaseDatasetInstrumentModel<SinglebeamAdditionalFieldsModel>> {
+public class SinglebeamDatasetInstrumentController extends BaseDatasetInstrumentController<SinglebeamAdditionalFieldsModel> {
 
   public SinglebeamDatasetInstrumentController(BaseDatasetInstrumentModel<SinglebeamAdditionalFieldsModel> model) {
     super(model);

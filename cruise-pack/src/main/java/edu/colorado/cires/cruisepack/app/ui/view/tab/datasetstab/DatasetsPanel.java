@@ -5,6 +5,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.ui.controller.DatasetsController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagConstraints;
@@ -68,8 +69,8 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
   @Override
   public void onChange(PropertyChangeEvent evt) {
     switch (evt.getPropertyName()) {
-      case Events.ADD_DATASET -> datasetConfigurationPanel.createRow((DatasetPanel<?, ?>) evt.getNewValue());
-      case Events.REMOVE_DATASET -> datasetConfigurationPanel.removeRow((DatasetPanel<?, ?>) evt.getOldValue());
+      case Events.ADD_DATASET -> datasetConfigurationPanel.createRow((DatasetPanel<? extends AdditionalFieldsModel, ?>) evt.getNewValue());
+      case Events.REMOVE_DATASET -> datasetConfigurationPanel.removeRow((DatasetPanel<? extends AdditionalFieldsModel, ?>) evt.getOldValue());
       case Events.CLEAR_DATASET_LIST -> datasetConfigurationPanel.removeAllRows();
     }
   }
