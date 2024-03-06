@@ -5,15 +5,18 @@ import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
+import java.beans.PropertyChangeEvent;
 import java.time.LocalDate;
+import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BaseDatasetPanelFactory extends
-    DatasetPanelFactory<BaseDatasetInstrumentModel, BaseDatasetInstrumentController<BaseDatasetInstrumentModel>, BaseDatasetPanel> {
+    DatasetPanelFactory<BaseDatasetInstrumentModel, BaseDatasetInstrumentController<BaseDatasetInstrumentModel>, DatasetPanel<BaseDatasetInstrumentModel, BaseDatasetInstrumentController<BaseDatasetInstrumentModel>>> {
 
 
   @Autowired
@@ -46,7 +49,15 @@ public class BaseDatasetPanelFactory extends
   }
 
   @Override
-  protected BaseDatasetPanel createView(BaseDatasetInstrumentModel model, BaseDatasetInstrumentController<BaseDatasetInstrumentModel> controller) {
-    return new BaseDatasetPanel(model, controller, instrumentDatastore);
+  protected DatasetPanel<BaseDatasetInstrumentModel, BaseDatasetInstrumentController<BaseDatasetInstrumentModel>> createView(BaseDatasetInstrumentModel model, BaseDatasetInstrumentController<BaseDatasetInstrumentModel> controller) {
+    return new DatasetPanel<>(model, controller, instrumentDatastore) {
+      @Override
+      protected JPanel createAndInitializeContentPanel() {
+        return null;
+      }
+
+      @Override
+      protected void customOnChange(PropertyChangeEvent evt) {}
+    };
   }
 }

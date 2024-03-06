@@ -4,9 +4,6 @@ import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class DatasetPanelFactory<M extends BaseDatasetInstrumentModel, C extends BaseDatasetInstrumentController<M>, V extends DatasetPanel<M, C>> {
 
