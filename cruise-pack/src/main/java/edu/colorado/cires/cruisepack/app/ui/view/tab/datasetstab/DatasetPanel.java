@@ -1,5 +1,9 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_ANCILLARY_DETAILS;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_ANCILLARY_DETAILS_ERROR;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_ANCILLARY_PATH;
+import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_ANCILLARY_PATH_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_DATASET_DATA_PATH_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR;
 import static edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel.UPDATE_DATA_PATH;
@@ -8,6 +12,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.createErrorLa
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateDatePicker;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import com.github.lgooddatepicker.components.DatePicker;
@@ -18,13 +23,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -38,6 +44,8 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private static final String REMOVE = "Remove";
   private static final String SELECT_DIR_LABEL = "...";
   private static final String PATH_LABEL = "Path To Data Files";
+  private static final String ANCILLARY_PATH_LABEL = "Path to Ancillary Files";
+  private static final String ANCILLARY_DETAILS_LABEL = "Ancillary Data Details";
 
 
 
@@ -53,7 +61,11 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
   private final JLabel dataPathErrorLabel = createErrorLabel();
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
   private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
-
+  private final JTextField ancillaryPath = new JTextField();
+  private final JLabel ancillaryPathErrorLabel = createErrorLabel();
+  private final CommentsTextAreaPanel ancillaryDetails = new CommentsTextAreaPanel(ANCILLARY_DETAILS_LABEL);
+  private final JButton ancillaryPathSelectButton = new JButton(SELECT_DIR_LABEL);
+  
   protected DatasetPanel(M model, C controller, InstrumentDatastore instrumentDatastore) {
     this.dataTypeName = instrumentDatastore.getNameForShortCode(model.getInstrumentGroupShortCode());
     this.model = model;
@@ -123,21 +135,37 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
     directorySelectPanel.add(directoryPath, configureLayout(0, 1, c -> c.weightx = 1));
     directorySelectPanel.add(dirSelectButton, configureLayout(1, 1, c -> c.weightx = 0));
     header.add(directorySelectPanel, configureLayout(0, 1));
+    
+    JPanel ancillaryPathPanel = new JPanel();
+    ancillaryPathPanel.setLayout(new GridBagLayout());
+    ancillaryPathPanel.setBackground(Color.WHITE);
+    ancillaryPathPanel.setBorder(BorderFactory.createTitledBorder(ANCILLARY_PATH_LABEL));
+    ancillaryPathPanel.add(ancillaryPathErrorLabel, configureLayout(0 , 0, c -> c.weightx = 1));
+    ancillaryPathPanel.add(ancillaryPath, configureLayout(0, 1, c -> c.weightx = 1));
+    ancillaryPathPanel.add(ancillaryPathSelectButton, configureLayout(1, 1, c -> c.weightx = 0));
+    header.add(ancillaryPathPanel, configureLayout(0, 2));
+    header.add(ancillaryDetails, configureLayout(0, 3));
 
     return header;
   }
 
   private void setupMvc() {
-    directoryPath.addKeyListener(new KeyListener() {
-      @Override
-      public void keyTyped(KeyEvent e) {}
-
-      @Override
-      public void keyPressed(KeyEvent e) {}
-
+    directoryPath.addKeyListener(new KeyAdapter() {
       @Override
       public void keyReleased(KeyEvent e) {
-        handleDirValue(directoryPath.getText());
+        handleDirValue(directoryPath.getText(), controller::setDataPath);
+      }
+    });
+    ancillaryPath.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        handleDirValue(ancillaryPath.getText(), controller::setAncillaryPath);
+      }
+    });
+    ancillaryDetails.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        controller.setAncillaryDetails(ancillaryDetails.getCommentsField().getText());
       }
     });
     releaseDate.addDateChangeListener((evt) -> controller.setPublicReleaseDate(evt.getNewDate()));
@@ -147,14 +175,15 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
       }
     });
     
-    dirSelectButton.addActionListener((evt) -> handleDirSelect());
+    dirSelectButton.addActionListener((evt) -> handleDirSelect(controller::setDataPath));
+    ancillaryPathSelectButton.addActionListener((evt) -> handleDirSelect(controller::setAncillaryPath));
   }
 
-  private void handleDirSelect() {
+  private void handleDirSelect(Consumer<Path> consumer) {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-      controller.setDataPath(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+      consumer.accept(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
     }
   }
 
@@ -167,14 +196,22 @@ public abstract class DatasetPanel<M extends BaseDatasetInstrumentModel, C exten
       updateLabelText(dataPathErrorLabel, evt);
     } else if (UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR.equals(evt.getPropertyName())) {
       updateLabelText(publicReleaseDateErrorLabel, evt);
+    } else if (UPDATE_ANCILLARY_PATH.equals(evt.getPropertyName())) {
+      updatePathField(ancillaryPath, evt);
+    } else if (UPDATE_ANCILLARY_PATH_ERROR.equals(evt.getPropertyName())) {
+      updateLabelText(ancillaryPathErrorLabel, evt);
+    } else if (UPDATE_ANCILLARY_DETAILS.equals(evt.getPropertyName())) {
+      updateTextField(ancillaryDetails.getCommentsField(), evt);
+    } else if (UPDATE_ANCILLARY_DETAILS_ERROR.equals(evt.getPropertyName())) {
+      updateLabelText(ancillaryDetails.getErrorLabel(), evt);
     }
     customOnChange(evt);
   }
 
   protected abstract void customOnChange(PropertyChangeEvent evt);
 
-  private void handleDirValue(String value) {
+  private void handleDirValue(String value, Consumer<Path> consumer) {
     Path path = Paths.get(value);
-    controller.setDataPath(path.toAbsolutePath().normalize());
+    consumer.accept(path.toAbsolutePath().normalize());
   }
 }

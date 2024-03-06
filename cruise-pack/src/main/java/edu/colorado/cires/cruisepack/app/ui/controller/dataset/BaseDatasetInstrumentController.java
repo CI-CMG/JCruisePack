@@ -44,6 +44,14 @@ public abstract class BaseDatasetInstrumentController<M extends BaseDatasetInstr
   public void setComments(String comments) {
     model.setComments(comments);
   }
+  
+  public void setAncillaryPath(Path ancillaryPath) {
+    model.setAncillaryPath(ancillaryPath);
+  }
+  
+  public void setAncillaryDetails(String ancillaryDetails) {
+    model.setAncillaryDetails(ancillaryDetails);
+  }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
