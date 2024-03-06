@@ -3,7 +3,6 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.ancillary.AncillaryDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.gravity.GravityDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.magnetics.MagneticsDatasetPanelFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.multibeam.BaseDatasetPanelFactory;
@@ -52,7 +51,6 @@ public class DatasetPanelFactoryResolver {
       case SUB_BOTTOM, SIDE_SCAN, MULTIBEAM, OTHER, ADCP, XBT, CTD -> BaseDatasetPanelFactory.class;
       case NAVIGATION -> NavigationDatasetPanelFactory.class;
       case MAGNETICS -> MagneticsDatasetPanelFactory.class;
-      case ANCILLARY -> AncillaryDatasetPanelFactory.class;
       case GRAVITY -> GravityDatasetPanelFactory.class;
       case WATER_COLUMN -> WaterColumnSonarDatasetPanelFactory.class;
       case SINGLE_BEAM -> SinglebeamDatasetPanelFactory.class;

@@ -12,7 +12,6 @@ public enum InstrumentGroupName {
   MAGNETICS("MAG", "Magnetics"),
   GRAVITY("GRAV", "Gravity"),
   CTD("CTD", "CTD"),
-  ANCILLARY("ANCILLARY", "Ancillary Data"),
   ADCP("ADCP", "ADCP");
 
   private final String shortName;
@@ -46,8 +45,6 @@ public enum InstrumentGroupName {
       return GRAVITY;
     } else if (shortName.equals(CTD.shortName)) {
       return CTD;
-    } else if (shortName.equals(ANCILLARY.shortName)) {
-      return ANCILLARY;
     } else if (shortName.equals(ADCP.shortName)) {
       return ADCP;
     } else {
@@ -78,8 +75,6 @@ public enum InstrumentGroupName {
       return GRAVITY;
     } else if (longName.equals(CTD.longName)) {
       return CTD;
-    } else if (longName.equals(ANCILLARY.longName)) {
-      return ANCILLARY;
     } else if (longName.equals(ADCP.longName)) {
       return ADCP;
     } else {
