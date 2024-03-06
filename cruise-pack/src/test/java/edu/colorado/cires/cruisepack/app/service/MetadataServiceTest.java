@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,21 @@ public class MetadataServiceTest {
   private Path output = Paths.get("target/metadata.json").toAbsolutePath().normalize();
   private Path metadata1 = Paths.get("src/test/resources/metadata1.json");
 
+  private static final Path workDir = Paths.get("target/MetadataServiceTest");
 
   @BeforeEach
   public void beforeEach() throws Exception {
+    System.setProperty("cruise-pack.work-dir", workDir.toAbsolutePath().normalize().toString());
+    FileUtils.deleteQuietly(workDir.toFile());
     FileUtils.deleteQuietly(output.toFile());
     Files.createDirectories(output.getParent());
+  }
+
+  @AfterEach
+  public void afterEach() throws Exception {
+    System.clearProperty("cruise-pack.work-dir");
+    FileUtils.deleteQuietly(workDir.toFile());
+    FileUtils.deleteQuietly(output.toFile());
   }
 
   @Autowired

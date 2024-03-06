@@ -21,17 +21,18 @@ public class CruisePackPreSpringStarterTest {
 
   @BeforeEach
   public void beforeEach() throws Exception {
+    System.setProperty("cruise-pack.work-dir", testDir.toAbsolutePath().normalize().toString());
     FileUtils.deleteQuietly(testDir.toFile());
   }
 
   @AfterEach
   public void afterEach() throws Exception {
+    System.clearProperty("cruise-pack.work-dir");
     FileUtils.deleteQuietly(testDir.toFile());
   }
 
   @Test
   public void testCreateAll() throws Exception {
-    System.setProperty("cruise-pack.work-dir", testDir.toAbsolutePath().normalize().toString());
     CruisePackPreSpringStarter.start();
     Set<Path> paths = new TreeSet<>();
     try(Stream<Path> pathStream = Files.walk(testDir)) {
