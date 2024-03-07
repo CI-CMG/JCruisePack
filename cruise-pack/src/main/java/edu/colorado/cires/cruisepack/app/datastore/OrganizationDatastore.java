@@ -92,7 +92,7 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         newOrganizationData.setOrganizations(newOrganizationList);
         List<Organization> mergedOrganizations = mergeOrganizations(
             readOrganizations("local-data"),
-             newOrganizationData
+             Optional.of(newOrganizationData)
         );
 
         OrganizationData organizationData = new OrganizationData();
@@ -132,22 +132,22 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         return organization;
     }
 
-    private List<Organization> mergeOrganizations(OrganizationData defaults, OrganizationData overrides) {
+    private List<Organization> mergeOrganizations(Optional<OrganizationData> defaults, Optional<OrganizationData> overrides) {
         Map<String, Organization> merged = new HashMap<>(0);
-        defaults.getOrganizations().getOrganizations().forEach(o -> merged.put(o.getUuid(), o));
-        overrides.getOrganizations().getOrganizations().forEach(o -> merged.put(o.getUuid(), o));
+        defaults.map(od -> od.getOrganizations().getOrganizations()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+        overrides.map(od -> od.getOrganizations().getOrganizations()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
 
         return merged.values().stream()
             .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
             .collect(Collectors.toList());
     }
 
-    private OrganizationData readOrganizations(String dir) {
+    private Optional<OrganizationData> readOrganizations(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
         Path peopleFile = dataDir.resolve("organizations.xml");
         if (!Files.isRegularFile(peopleFile)) {
-            throw new IllegalStateException("Unable to read " + peopleFile);
+            return Optional.empty();
         }
         OrganizationData organizationData;
         try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
@@ -156,7 +156,7 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         } catch (IOException | JAXBException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
-        return organizationData;
+        return Optional.of(organizationData);
     }
     
     public Optional<Organization> getByUUID(String uuid) {

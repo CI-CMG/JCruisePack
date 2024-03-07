@@ -1,0 +1,11 @@
+                     ${AnsiColor.CYAN}%    ${AnsiColor.GREEN}*    ${AnsiColor.MAGENTA}#
+                 ${AnsiColor.CYAN}%%%% ${AnsiColor.GREEN}**** ${AnsiColor.MAGENTA}#######
+             ${AnsiColor.CYAN}%%%% ${AnsiColor.GREEN}**** ${AnsiColor.MAGENTA}#############
+         ${AnsiColor.CYAN}%%%% ${AnsiColor.GREEN}**** ${AnsiColor.MAGENTA}###################
+     ${AnsiColor.CYAN}%%%% ${AnsiColor.GREEN}**** ${AnsiColor.MAGENTA}#########################
+ ${AnsiColor.CYAN}%%%% ${AnsiColor.GREEN}**** ${AnsiColor.MAGENTA}###############################${AnsiColor.DEFAULT}
+   ____    ___    ____     _____    ____
+  / ___|  |_ _|  |  _ \   | ____|  / ___|
+ | |       | |   | |_) |  |  _|    \___ \
+ | |___    | |   |  _ <   | |___    ___) |
+  \____|  |___|  |_| \_\  |_____|  |____/ ${AnsiBackground.DEFAULT}

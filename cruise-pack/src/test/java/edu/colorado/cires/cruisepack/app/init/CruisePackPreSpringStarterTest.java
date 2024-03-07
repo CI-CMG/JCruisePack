@@ -42,6 +42,7 @@ public class CruisePackPreSpringStarterTest {
         testDir,
         testDir.resolve("log"),
         testDir.resolve("local-data"),
+        testDir.resolve("local-data/cruise-metadata"),
         testDir.resolve("config"),
         testDir.resolve("data"),
         testDir.resolve("config/application.properties"),

@@ -69,12 +69,12 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         setIfChanged(Events.UPDATE_PERSON_DATA_STORE, items, () -> new ArrayList<DropDownItem>(0), (i) -> this.personDropDowns = i);
     }
 
-    private PersonData readPeople(String dir) {
+    private Optional<PersonData> readPeople(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
         Path peopleFile = dataDir.resolve("people.xml");
         if (!Files.isRegularFile(peopleFile)) {
-            throw new IllegalStateException("Unable to read " + peopleFile);
+            return Optional.empty();
         }
         PersonData personData;
         try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
@@ -84,7 +84,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
         
-        return personData;
+        return Optional.of(personData);
     }
 
     public List<DropDownItem> getEnabledPersonDropDowns() {
@@ -100,10 +100,10 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         return personDropDowns;
     }
 
-    private List<Person> mergeDropDownItemLists(PersonData defaults, PersonData overrides) {
+    private List<Person> mergeDropDownItemLists(Optional<PersonData> defaults, Optional<PersonData> overrides) {
         Map<String, Person> merged = new HashMap<>(0);
-        defaults.getPeople().getPersons().forEach(i -> merged.put(i.getUuid(), i));
-        overrides.getPeople().getPersons().forEach(i -> merged.put(i.getUuid(), i));
+        defaults.map(pd -> pd.getPeople().getPersons()).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
+        overrides.map(pd -> pd.getPeople().getPersons()).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
 
         return merged.values().stream()
             .sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()))
@@ -119,7 +119,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         newPersonData.setPeople(newPersonList);
         List<Person> mergedPeople = mergeDropDownItemLists(
             readPeople("local-data"),
-             newPersonData
+             Optional.of(newPersonData)
         );
 
         PersonData personData = new PersonData();

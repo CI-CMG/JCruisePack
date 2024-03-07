@@ -17,7 +17,13 @@
         "jar": "target/JCruisePack-${project.version}-exe.jar",
         "title": "JCruisePack",
         "bundles": ["mac-x64", "mac-arm64", "win", "linux"],
-        "installers" : ["mac-x64", "mac-arm64", "win", "linux"]
+        "installers" : ["mac-x64", "mac-arm64", "win", "linux"],
+        "args": [
+            "-Dcruise-pack.work-dir={{ user.home }}/.cruise-pack",
+            "-Dlog4j2.configurationFile=${svc.home}/config/log4j2.xml",
+            "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager",
+            "-Dspring.config.additional-location={{ user.home }}/.cruise-pack/config/application.properties"
+        ]
     },
     "files": [
         "jdeploy-bundle"
@@ -35,11 +41,5 @@
     "homepage": "${homepage}",
     "publishConfig": {
         "access": "public"
-    },
-    "args": [
-        "-Dcruise-pack.work-dir={{ user.home }}/.cruise-pack",
-        "-Dlog4j2.configurationFile=${svc.home}/config/log4j2.xml",
-        "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager",
-        "-Dspring.config.additional-location={{ user.home }}/.cruise-pack/config/application.properties"
-    ]
+    }
 }

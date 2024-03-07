@@ -26,8 +26,9 @@ public class CruisePackPreSpringStarter {
       Files.createDirectories(configDir);
       Path dataDir = workDir.resolve("data");
       Files.createDirectories(dataDir);
-      Path localDataDir = workDir.resolve("local-data");
-      Files.createDirectories(localDataDir);
+      Path cruiseMetadataDir = workDir.resolve("local-data/cruise-metadata");
+      Files.createDirectories(cruiseMetadataDir);
+
 
       Path applicationProperties = configDir.resolve("application.properties");
       Path log4jXml = configDir.resolve("log4j2.xml");
