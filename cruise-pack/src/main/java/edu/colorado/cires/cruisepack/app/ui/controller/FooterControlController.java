@@ -10,7 +10,7 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackerService;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
@@ -111,7 +111,7 @@ public class FooterControlController implements PropertyChangeListener {
     beanFactory.getBean(PackerService.class).startPacking();
   }
 
-  public void updateFormState(CruiseMetadata cruiseMetadata) {
+  public void updateFormState(Cruise cruiseMetadata) {
     packageModel.updateFormState(cruiseMetadata, projectDatastore, portDatastore, shipDatastore, seaDatastore, cruiseDataDatastore);
     peopleModel.updateFormState(cruiseMetadata, personDatastore, organizationDatastore);
     cruiseInformationModel.updateFormState(cruiseMetadata);

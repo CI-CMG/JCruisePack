@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
@@ -44,7 +45,7 @@ public class PeopleModel extends PropertyChangeModel {
         setMetadataAuthorError(null);
     }
 
-    public void updateFormState(CruiseMetadata cruiseMetadata, PersonDatastore personDatastore, OrganizationDatastore organizationDatastore) {
+    public void updateFormState(Cruise cruiseMetadata, PersonDatastore personDatastore, OrganizationDatastore organizationDatastore) {
         for (PeopleOrg peopleOrg : cruiseMetadata.getScientists()) {
             clearScientists();
             DropDownItemPanel panel = new DropDownItemPanel(personDatastore.getEnabledPersonDropDowns(), PersonDatastore.UNSELECTED_PERSON);

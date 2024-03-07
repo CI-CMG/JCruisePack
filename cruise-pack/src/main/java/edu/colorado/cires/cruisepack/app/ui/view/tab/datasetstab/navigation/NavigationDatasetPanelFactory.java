@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.navigation;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.NavigationDatumDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.NavigationDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;

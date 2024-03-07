@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
@@ -106,7 +107,7 @@ public class PackageModel extends PropertyChangeModel {
     setExistingRecord(CruiseDataDatastore.UNSELECTED_CRUISE);
   }
 
-  public void updateFormState(CruiseMetadata cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, CruiseDataDatastore cruiseDataDatastore) {
+  public void updateFormState(Cruise cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, CruiseDataDatastore cruiseDataDatastore) {
     setCruiseId(cruiseMetadata.getCruiseId());
     setSegment(cruiseMetadata.getSegmentId());
     // setPackageDirectory

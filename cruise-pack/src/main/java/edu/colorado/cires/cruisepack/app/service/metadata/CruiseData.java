@@ -12,13 +12,13 @@ import java.util.Map;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = CruiseData.Builder.class)
-public class CruiseData extends CruiseMetadata {
+public class CruiseData extends Cruise {
 
-  private boolean use;
+  private final boolean use;
   @JsonIgnore
-  private boolean delete;
+  private final boolean delete;
 
-  protected CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
+  private CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists,
       List<String> projects, Omics omics, MetadataAuthor metadataAuthor, List<Instrument> instruments,
@@ -38,18 +38,14 @@ public class CruiseData extends CruiseMetadata {
     return delete;
   }
   
-  public static Builder dataBuilder(CruiseData data) {
+  public static Builder builder(CruiseMetadata data) {
     return new Builder(data);
   }
   
-  public static Builder dataBuilderFromMetadata(CruiseMetadata metadata) {
-    return new Builder(metadata);
+  public static Builder builder(CruiseData data) {
+    return new Builder(data);
   }
-  
-  public static Builder dataBuilder() {
-    return new Builder();
-  }
-  
+
 
   public static class Builder {
     private boolean use = true;
@@ -81,33 +77,6 @@ public class CruiseData extends CruiseMetadata {
 
     }
 
-    private Builder(CruiseData src) {
-      use = src.isUse();
-      delete = src.isDelete();
-      cruiseId = src.getCruiseId();
-      segmentId = src.getSegmentId();
-      packageId = src.getPackageId();
-      masterReleaseDate = src.getMasterReleaseDate();
-      ship = src.getShip();
-      shipUuid = src.getShipUuid();
-      departurePort = src.getDeparturePort();
-      departureDate = src.getDepartureDate();
-      arrivalPort = src.getArrivalPort();
-      arrivalDate = src.getArrivalDate();
-      seaArea = src.getSeaArea();
-      cruiseTitle = src.getCruiseTitle();
-      cruisePurpose = src.getCruisePurpose();
-      cruiseDescription = src.getCruiseDescription();
-      sponsors = src.getSponsors();
-      funders = src.getFunders();
-      scientists = src.getScientists();
-      projects = src.getProjects();
-      omics = src.getOmics();
-      metadataAuthor = src.getMetadataAuthor();
-      instruments = src.getInstruments();
-      packageInstruments = src.getPackageInstruments();
-    }
-    
     private Builder(CruiseMetadata src) {
       use = true;
       delete = false;
@@ -134,7 +103,34 @@ public class CruiseData extends CruiseMetadata {
       instruments = src.getInstruments();
       packageInstruments = src.getPackageInstruments();
     }
-    
+
+    private Builder(CruiseData src) {
+      use = src.isUse();
+      delete = src.isDelete();
+      cruiseId = src.getCruiseId();
+      segmentId = src.getSegmentId();
+      packageId = src.getPackageId();
+      masterReleaseDate = src.getMasterReleaseDate();
+      ship = src.getShip();
+      shipUuid = src.getShipUuid();
+      departurePort = src.getDeparturePort();
+      departureDate = src.getDepartureDate();
+      arrivalPort = src.getArrivalPort();
+      arrivalDate = src.getArrivalDate();
+      seaArea = src.getSeaArea();
+      cruiseTitle = src.getCruiseTitle();
+      cruisePurpose = src.getCruisePurpose();
+      cruiseDescription = src.getCruiseDescription();
+      sponsors = src.getSponsors();
+      funders = src.getFunders();
+      scientists = src.getScientists();
+      projects = src.getProjects();
+      omics = src.getOmics();
+      metadataAuthor = src.getMetadataAuthor();
+      instruments = src.getInstruments();
+      packageInstruments = src.getPackageInstruments();
+    }
+
     public Builder withUse(boolean use) {
       this.use = use;
       return this;
@@ -257,7 +253,7 @@ public class CruiseData extends CruiseMetadata {
       return this;
     }
 
-    public Builder withInstruments(List<Instrument> instruments) {
+    public Builder withInstruments(List<InstrumentData> instruments) {
       if (instruments == null) {
         instruments = new ArrayList<>(0);
       }

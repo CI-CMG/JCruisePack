@@ -2,10 +2,12 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
@@ -47,8 +49,31 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   }
 
   public void save(PackJob packJob) {
-    CruiseMetadata metadata = metadataService.createMetadata(packJob);
-    CruiseData data = CruiseData.dataBuilderFromMetadata(metadata).build();
+    CruiseMetadata metadata = metadataService.createMetadata(packJob); 
+    CruiseData data = CruiseData.builder(metadata)
+        .withInstruments(
+            metadata.getInstruments().stream()
+                .map(instrument -> {
+                  
+                  InstrumentData.Builder builder = InstrumentData.builder(instrument);
+
+                  InstrumentDetail instrumentDetail = packJob.getInstruments().values().stream()
+                      .flatMap(List::stream)
+                      .filter(i -> i.getShortName().equals(instrument.getShortName()))
+                      .findFirst()
+                      .orElse(null);
+                  
+                  if (instrumentDetail == null) {
+                    return builder.build();
+                  }
+                  
+                  return builder
+                      .withDataPath(instrumentDetail.getDataPath())
+                      .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath())
+                      .build();
+                }).collect(Collectors.toList())
+        )
+        .build();
     save(Collections.singletonList(data));
   }
   
@@ -57,7 +82,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
         cruises.stream()
             .filter(c -> c.getPackageId().equals(packageId))
             .map(c ->
-                CruiseData.dataBuilder(c)
+                CruiseData.builder(c)
                     .withDelete(true)
                     .build()
             ).toList()

@@ -1,25 +1,16 @@
 package edu.colorado.cires.cruisepack.app.service.metadata;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.util.LinkedHashMap;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import java.util.Map;
 import java.util.Objects;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonDeserialize(builder = Instrument.Builder.class)
-public class Instrument {
-
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  public static Builder builder(Instrument src) {
-    return new Builder(src);
-  }
+@JsonTypeInfo(use = Id.NONE)
+@JsonSubTypes({ @Type(InstrumentMetadata.class), @Type(InstrumentData.class ) })
+public abstract class Instrument {
 
   private final String uuid;
   private final String type;
@@ -33,8 +24,8 @@ public class Instrument {
   private final Map<String, Object> otherFields;
   private final String ancillaryDataDetails;
 
-  private Instrument(String uuid, String type, String instrument, String shortName, String releaseDate, String status,
-      String dataComment, String dirName, String bagName, Map<String, Object> otherFields, String ancillaryDataDetails) {
+  protected Instrument(String uuid, String type, String instrument, String shortName, String releaseDate, String status, String dataComment,
+      String dirName, String bagName, Map<String, Object> otherFields, String ancillaryDataDetails) {
     this.uuid = uuid;
     this.type = type;
     this.instrument = instrument;
@@ -46,11 +37,6 @@ public class Instrument {
     this.bagName = bagName;
     this.otherFields = otherFields;
     this.ancillaryDataDetails = ancillaryDataDetails;
-  }
-
-  @JsonAnyGetter
-  public Map<String, Object> getOtherFields() {
-    return otherFields;
   }
 
   public String getUuid() {
@@ -73,7 +59,6 @@ public class Instrument {
     return releaseDate;
   }
 
-
   public String getStatus() {
     return status;
   }
@@ -88,6 +73,11 @@ public class Instrument {
 
   public String getBagName() {
     return bagName;
+  }
+
+  @JsonAnyGetter
+  public Map<String, Object> getOtherFields() {
+    return otherFields;
   }
 
   public String getAncillaryDataDetails() {
@@ -130,100 +120,4 @@ public class Instrument {
         ", ancillaryDataDetails='" + ancillaryDataDetails + '\'' +
         '}';
   }
-
-  public static class Builder {
-
-    private String uuid;
-    private String type;
-    private String instrument;
-    private String shortName;
-    private String releaseDate;
-    private String status;
-    private String dataComment;
-    private String dirName;
-    private String bagName;
-    private Map<String, Object> otherFields = new LinkedHashMap<>();
-    private String ancillaryDataDetails;
-
-    private Builder() {
-
-    }
-
-    private Builder(Instrument src) {
-      uuid = src.uuid;
-      type = src.type;
-      instrument = src.instrument;
-      shortName = src.shortName;
-      releaseDate = src.releaseDate;
-      status = src.status;
-      dataComment = src.dataComment;
-      dirName = src.dirName;
-      bagName = src.bagName;
-      otherFields = src.otherFields;
-      ancillaryDataDetails = src.ancillaryDataDetails;
-    }
-
-    public Builder withUuid(String uuid) {
-      this.uuid = uuid;
-      return this;
-    }
-
-    public Builder withType(String type) {
-      this.type = type;
-      return this;
-    }
-
-    public Builder withInstrument(String instrument) {
-      this.instrument = instrument;
-      return this;
-    }
-
-    public Builder withShortName(String shortName) {
-      this.shortName = shortName;
-      return this;
-    }
-
-    public Builder withReleaseDate(String releaseDate) {
-      this.releaseDate = releaseDate;
-      return this;
-    }
-
-    public Builder withStatus(String status) {
-      this.status = status;
-      return this;
-    }
-
-    public Builder withDataComment(String dataComment) {
-      this.dataComment = dataComment;
-      return this;
-    }
-
-    public Builder withDirName(String dirName) {
-      this.dirName = dirName;
-      return this;
-    }
-
-    public Builder withBagName(String bagName) {
-      this.bagName = bagName;
-      return this;
-    }
-
-    @JsonAnySetter
-    public Builder withOtherField(String name, Object value) {
-      this.otherFields.put(name, value);
-      return this;
-    }
-    
-    public Builder withAncillaryDataDetails(String ancillaryDataDetails) {
-      this.ancillaryDataDetails = ancillaryDataDetails;
-      return this;
-    }
-
-    public Instrument build() {
-      return new Instrument(uuid, type, instrument, shortName, releaseDate, status,
-          dataComment, dirName, bagName, otherFields, ancillaryDataDetails);
-    }
-  }
-
-
 }

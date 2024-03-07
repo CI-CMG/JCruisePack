@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
@@ -88,8 +89,8 @@ public class MetadataService {
         .build();
   }
 
-  private List<Instrument> getInstrumentsJson(PackJob packJob) {
-    List<Instrument> instruments = new ArrayList<>();
+  private List<InstrumentMetadata> getInstrumentsJson(PackJob packJob) {
+    List<InstrumentMetadata> instruments = new ArrayList<>();
     for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
         instruments.add(instrumentDetailToJson(entry.getKey(), instrumentDetail));
@@ -98,9 +99,9 @@ public class MetadataService {
     return instruments;
   }
 
-  private Instrument instrumentDetailToJson(InstrumentDetailPackageKey key, InstrumentDetail instrumentDetail) {
+  private InstrumentMetadata instrumentDetailToJson(InstrumentDetailPackageKey key, InstrumentDetail instrumentDetail) {
     
-    Instrument.Builder builder = Instrument.builder()
+    InstrumentMetadata.Builder builder = InstrumentMetadata.builder()
         .withUuid(instrumentDetail.getUuid())
         .withType(instrumentDatastore.getNameForShortCode(key.getInstrumentGroupShortType()))
         .withInstrument(instrumentDetail.getInstrument())

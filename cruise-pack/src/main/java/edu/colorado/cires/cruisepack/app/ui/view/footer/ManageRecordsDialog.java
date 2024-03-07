@@ -100,7 +100,7 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
       CruiseData existingData = (CruiseData) tableModel.getValueAt(i, 2);
       boolean use = (boolean) tableModel.getValueAt(i, 0);
       boolean delete = (boolean) tableModel.getValueAt(i, 3); 
-      newData.add(CruiseData.dataBuilder(existingData)
+      newData.add(CruiseData.builder(existingData)
           .withUse(use)
           .withDelete(delete)
           .build());

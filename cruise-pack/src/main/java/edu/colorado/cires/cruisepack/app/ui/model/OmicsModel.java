@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
 import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
@@ -80,7 +81,7 @@ public class OmicsModel extends PropertyChangeModel {
         setAdditionalSamplingInformationError(null);
     }
 
-    public void updateFormState(CruiseMetadata cruiseMetadata) {
+    public void updateFormState(Cruise cruiseMetadata) {
         Omics omicsMetadata = cruiseMetadata.getOmics();
         if (omicsMetadata != null) {
             for (String samplingType : omicsMetadata.getSamplingTypes()) {

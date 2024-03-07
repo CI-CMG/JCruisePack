@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
@@ -41,7 +42,11 @@ public abstract class DatasetPanelFactory<T extends AdditionalFieldsModel, C ext
   protected BaseDatasetInstrumentModel<T> createModel(InstrumentGroupName groupName, Instrument instrument) {
     BaseDatasetInstrumentModel<T> model = createModel(groupName);
 
-    //    model.setDataPath(); TODO
+    if (instrument instanceof InstrumentData) {
+      model.setDataPath(((InstrumentData) instrument).getDataPath());
+      model.setAncillaryPath(((InstrumentData) instrument).getAncillaryDataPath());
+    }
+    
     model.setComments(instrument.getDataComment());
     model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
 //    model.setAncillaryPath(); TODO

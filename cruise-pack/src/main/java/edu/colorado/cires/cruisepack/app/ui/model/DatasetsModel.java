@@ -1,7 +1,8 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactoryResolver;
@@ -31,7 +32,7 @@ public class DatasetsModel extends PropertyChangeModel {
     clearDatasets();
   }
   
-  public void updateFormState(CruiseMetadata metadata) {
+  public void updateFormState(Cruise metadata) {
     clearDatasets();
     
     for (Instrument instrument : metadata.getInstruments()) {
