@@ -18,6 +18,8 @@ public class InstrumentNameHolder {
   private final String dataComment;
   private final List<AdditionalFiles> additionalFiles;
   private final Map<String, Object> additionalFields;
+  private final Path ancillaryDataPath;
+  private final String ancillaryDataDetails;
 
 
   public InstrumentNameHolder(
@@ -29,7 +31,9 @@ public class InstrumentNameHolder {
       List<AdditionalFiles> additionalFiles,
       LocalDate releaseDate,
       String dataComment,
-      Map<String, Object> additionalFields
+      Map<String, Object> additionalFields, 
+      Path ancillaryDataPath,
+      String ancillaryDataDetails
   ) {
     this.uuid = uuid;
     this.instrument = instrument;
@@ -40,6 +44,8 @@ public class InstrumentNameHolder {
     this.releaseDate = releaseDate;
     this.dataComment = dataComment;
     this.additionalFields = additionalFields;
+    this.ancillaryDataPath = ancillaryDataPath;
+    this.ancillaryDataDetails = ancillaryDataDetails;
   }
 
   public String getUuid() {
@@ -92,5 +98,13 @@ public class InstrumentNameHolder {
 
   public Map<String, Object> getAdditionalFields() {
     return additionalFields;
+  }
+
+  public Path getAncillaryDataPath() {
+    return ancillaryDataPath;
+  }
+
+  public String getAncillaryDataDetails() {
+    return ancillaryDataDetails;
   }
 }

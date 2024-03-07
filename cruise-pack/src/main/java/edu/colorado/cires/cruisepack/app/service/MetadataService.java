@@ -109,7 +109,8 @@ public class MetadataService {
         .withStatus(instrumentDetail.getStatus() == null ? null : instrumentDetail.getStatus().getStrValue())
         .withDataComment(instrumentDetail.getDataComment())
         .withDirName(instrumentDetail.getDirName())
-        .withBagName(instrumentDetail.getBagName());
+        .withBagName(instrumentDetail.getBagName())
+        .withAncillaryDataDetails(instrumentDetail.getAncillaryDataDetails());
     
     for (Entry<String, Object> entry : instrumentDetail.getAdditionalFields().entrySet()) {
       builder = builder.withOtherField(entry.getKey(), entry.getValue());

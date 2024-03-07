@@ -101,7 +101,9 @@ public class PackJob {
             .setBagName(nameHolder.getBagName())
             .setAdditionalFiles(nameHolder.getAdditionalFiles())
             .setReleaseDate(nameHolder.getReleaseDate())
-            .setDataComment(nameHolder.getDataComment());
+            .setDataComment(nameHolder.getDataComment())
+            .setAncillaryDataPath(nameHolder.getAncillaryDataPath())
+            .setAncillaryDataDetails(nameHolder.getAncillaryDataDetails());
         
         if (nameHolder.getAdditionalFields() != null) {
           for (Entry<String, Object> e : nameHolder.getAdditionalFields().entrySet()) {
