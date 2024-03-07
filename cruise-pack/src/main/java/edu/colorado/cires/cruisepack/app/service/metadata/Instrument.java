@@ -31,9 +31,10 @@ public class Instrument {
   private final String dirName;
   private final String bagName;
   private final Map<String, Object> otherFields;
+  private final String ancillaryDataDetails;
 
   private Instrument(String uuid, String type, String instrument, String shortName, String releaseDate, String status,
-      String dataComment, String dirName, String bagName, Map<String, Object> otherFields) {
+      String dataComment, String dirName, String bagName, Map<String, Object> otherFields, String ancillaryDataDetails) {
     this.uuid = uuid;
     this.type = type;
     this.instrument = instrument;
@@ -44,6 +45,7 @@ public class Instrument {
     this.dirName = dirName;
     this.bagName = bagName;
     this.otherFields = otherFields;
+    this.ancillaryDataDetails = ancillaryDataDetails;
   }
 
   @JsonAnyGetter
@@ -88,24 +90,28 @@ public class Instrument {
     return bagName;
   }
 
+  public String getAncillaryDataDetails() {
+    return ancillaryDataDetails;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof Instrument that)) {
       return false;
     }
-    Instrument that = (Instrument) o;
     return Objects.equals(uuid, that.uuid) && Objects.equals(type, that.type) && Objects.equals(instrument,
         that.instrument) && Objects.equals(shortName, that.shortName) && Objects.equals(releaseDate, that.releaseDate)
         && Objects.equals(status, that.status) && Objects.equals(dataComment, that.dataComment) && Objects.equals(dirName,
-        that.dirName) && Objects.equals(bagName, that.bagName) && Objects.equals(otherFields, that.otherFields);
+        that.dirName) && Objects.equals(bagName, that.bagName) && Objects.equals(otherFields, that.otherFields)
+        && Objects.equals(ancillaryDataDetails, that.ancillaryDataDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(uuid, type, instrument, shortName, releaseDate, status, dataComment, dirName, bagName, otherFields);
+    return Objects.hash(uuid, type, instrument, shortName, releaseDate, status, dataComment, dirName, bagName, otherFields, ancillaryDataDetails);
   }
 
   @Override
@@ -121,6 +127,7 @@ public class Instrument {
         ", dirName='" + dirName + '\'' +
         ", bagName='" + bagName + '\'' +
         ", otherFields=" + otherFields +
+        ", ancillaryDataDetails='" + ancillaryDataDetails + '\'' +
         '}';
   }
 
@@ -136,6 +143,7 @@ public class Instrument {
     private String dirName;
     private String bagName;
     private Map<String, Object> otherFields = new LinkedHashMap<>();
+    private String ancillaryDataDetails;
 
     private Builder() {
 
@@ -152,6 +160,7 @@ public class Instrument {
       dirName = src.dirName;
       bagName = src.bagName;
       otherFields = src.otherFields;
+      ancillaryDataDetails = src.ancillaryDataDetails;
     }
 
     public Builder withUuid(String uuid) {
@@ -204,10 +213,15 @@ public class Instrument {
       this.otherFields.put(name, value);
       return this;
     }
+    
+    public Builder withAncillaryDataDetails(String ancillaryDataDetails) {
+      this.ancillaryDataDetails = ancillaryDataDetails;
+      return this;
+    }
 
     public Instrument build() {
       return new Instrument(uuid, type, instrument, shortName, releaseDate, status,
-          dataComment, dirName, bagName, otherFields);
+          dataComment, dirName, bagName, otherFields, ancillaryDataDetails);
     }
   }
 

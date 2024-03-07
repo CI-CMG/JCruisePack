@@ -116,6 +116,8 @@ public abstract class DatasetPanel<T extends AdditionalFieldsModel, C extends Ba
     instrumentPanel.getInstrumentField().setSelectedItem(model.getInstrument());
     setSelectedButton(buttonPanel.getProcessingLevelGroup(), model.getProcessingLevel());
     commentsPanel.getCommentsField().setText(model.getComments());
+    ancillaryPath.setText(model.getAncillaryPath() == null ? null : model.getAncillaryPath().toAbsolutePath().normalize().toString());
+    ancillaryDetails.getCommentsField().setText(model.getAncillaryDetails());
   }
 
   private void setupLayout() {

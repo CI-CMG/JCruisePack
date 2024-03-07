@@ -184,7 +184,9 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
               getAdditionalFiles(),
               getPublicReleaseDate(),
               getComments(),
-              additionalFieldsModel == null ? null : additionalFieldsModel.transform()
+              additionalFieldsModel == null ? null : additionalFieldsModel.transform(),
+              ancillaryPath,
+              ancillaryDetails
           )
       );
     }
