@@ -10,6 +10,9 @@ target/
 
 cruise-pack/package.json
 cruise-pack/package-lock.json
+#cruise-pack/icon.png
+#cruise-pack/splash.png
+#cruise-pack/installsplash.png
 
 node_modules/
 jdeploy/
