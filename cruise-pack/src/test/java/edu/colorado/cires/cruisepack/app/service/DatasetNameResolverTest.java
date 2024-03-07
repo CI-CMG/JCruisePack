@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -20,6 +21,8 @@ public class DatasetNameResolverTest {
     String mainName = "TST200400";
     Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> instruments = new HashMap<>();
     InstrumentDetailPackageKey key = new InstrumentDetailPackageKey("MB-BATHY", "EM122");
+    Path ancillaryDataPath = Paths.get("src/test/resources/test-src/test/path/to/ancillary/data");
+    String ancillaryDataDetails = "TEST ANCILLARY DETAILS";
     instruments.put(key, Arrays.asList(
         new InstrumentNameHolder(
             UUID.randomUUID().toString(),
@@ -30,7 +33,9 @@ public class DatasetNameResolverTest {
             Collections.emptyList(),
             LocalDate.now(),
             "TEST-COMMENT",
-            Collections.emptyMap()
+            Collections.emptyMap(),
+            ancillaryDataPath,
+            ancillaryDataDetails
         ),
         new InstrumentNameHolder(
             UUID.randomUUID().toString(),
@@ -41,7 +46,9 @@ public class DatasetNameResolverTest {
             Collections.emptyList(),
             LocalDate.now(),
             "TEST-COMMENT",
-            Collections.emptyMap()
+            Collections.emptyMap(),
+            ancillaryDataPath,
+            ancillaryDataDetails
         ),
         new InstrumentNameHolder(
             UUID.randomUUID().toString(),
@@ -52,7 +59,9 @@ public class DatasetNameResolverTest {
             Collections.emptyList(),
             LocalDate.now(),
             "TEST-COMMENT",
-            Collections.emptyMap()
+            Collections.emptyMap(),
+            ancillaryDataPath,
+            ancillaryDataDetails
         ),
         new InstrumentNameHolder(
             UUID.randomUUID().toString(),
@@ -63,7 +72,9 @@ public class DatasetNameResolverTest {
             Collections.emptyList(),
             LocalDate.now(),
             "TEST-COMMENT",
-            Collections.emptyMap()
+            Collections.emptyMap(),
+            ancillaryDataPath,
+            ancillaryDataDetails
         )
         ));
 
