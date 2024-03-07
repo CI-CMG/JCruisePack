@@ -18,8 +18,12 @@
   "scientists": [],
   "projects": [],
   "omics": {
-    "samplingTypes": [],
-    "analysesTypes": []
+    "sampling_types": ["sample1", "sample2"],
+    "analyses_types": ["Analysis1", "Analysis2"],
+    "omics_comment": "AdditionalSamplingInformation",
+    "omics_poc": {
+      "uuid": "cca227a1-f644-4028-b01f-ebb7bc58eff9"
+    }
    },
   "instruments": [
     {

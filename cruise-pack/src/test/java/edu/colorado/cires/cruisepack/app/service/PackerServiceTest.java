@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import java.nio.charset.StandardCharsets;
@@ -24,25 +25,30 @@ import java.util.Optional;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.SpringBootTest.UseMainMethod;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(
-    webEnvironment = WebEnvironment.NONE,
-    classes = {
-        PackerService.class,
-        JacksonAutoConfiguration.class
-    }
+    properties = {
+        "cruise-pack.work-dir=target/PackerServiceTest",
+        "cruise-pack.ui=false"
+    },
+    useMainMethod = UseMainMethod.ALWAYS
 )
+@DirtiesContext
 public class PackerServiceTest {
 
   private Path mainBagRootDir = Paths.get("target/test-output").toAbsolutePath().normalize();
 
+  private static final Path workDir = Paths.get("target/PackerServiceTest");
 
   @Autowired
   private PackerService packerService;
@@ -56,14 +62,31 @@ public class PackerServiceTest {
   @MockBean
   private PackagingValidationService validationService;
 
-  @MockBean
-  private ServiceProperties serviceProperties;
+  @BeforeAll
+  public static void beforeAll() {
+    System.setProperty("cruise-pack.work-dir", workDir.toAbsolutePath().normalize().toString());
+
+  }
+
+  @AfterAll
+  public static void afterAll() {
+    System.clearProperty("cruise-pack.work-dir");
+  }
 
   @BeforeEach
   public void beforeEach() throws Exception {
-    doReturn("../sample-work-dir").when(serviceProperties).getWorkDir();
+    FileUtils.deleteQuietly(workDir.toFile());
+    Files.createDirectories(workDir.resolve("local-data"));
+    Files.createFile(workDir.resolve("local-data").resolve("people.xml"));
+    Files.createFile(workDir.resolve("local-data").resolve("organizations.xml"));
     FileUtils.deleteQuietly(mainBagRootDir.toFile());
     Files.createDirectories(mainBagRootDir);
+    CruisePackPreSpringStarter.start();
+  }
+
+  @AfterEach
+  public void afterEach() {
+    FileUtils.deleteQuietly(workDir.toFile());
   }
 
   @Test

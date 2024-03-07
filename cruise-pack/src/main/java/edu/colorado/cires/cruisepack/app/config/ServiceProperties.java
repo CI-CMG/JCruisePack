@@ -16,6 +16,16 @@ public class ServiceProperties {
   @NotBlank
   private String lookAndFeel;
 
+  private boolean ui;
+
+  public boolean isUi() {
+    return ui;
+  }
+
+  public void setUi(boolean ui) {
+    this.ui = ui;
+  }
+
   public String getWorkDir() {
     return workDir;
   }
