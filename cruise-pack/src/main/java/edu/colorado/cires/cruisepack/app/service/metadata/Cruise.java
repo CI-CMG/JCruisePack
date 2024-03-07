@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@JsonTypeInfo(use = Id.DEDUCTION)
+@JsonTypeInfo(use = Id.NONE)
 @JsonSubTypes({ @Type(CruiseMetadata.class), @Type(CruiseData.class) })
 public abstract class Cruise {
 
