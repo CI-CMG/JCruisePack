@@ -91,4 +91,7 @@ public enum InstrumentGroupName {
     return shortName;
   }
 
+  public String getLongName() {
+    return longName;
+  }
 }

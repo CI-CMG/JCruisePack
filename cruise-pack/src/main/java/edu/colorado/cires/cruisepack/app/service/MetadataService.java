@@ -2,26 +2,35 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.app.ui.model.ImportModel;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,15 +44,19 @@ public class MetadataService {
   private final PortDatastore portDatastore;
   private final SeaDatastore seaDatastore;
   private final InstrumentDatastore instrumentDatastore;
+  private final PersonDatastore personDatastore;
+  private final OrganizationDatastore organizationDatastore;
 
   @Autowired
   public MetadataService(ObjectMapper objectMapper, ShipDatastore shipDatastore, PortDatastore portDatastore, SeaDatastore seaDatastore,
-      InstrumentDatastore instrumentDatastore) {
+      InstrumentDatastore instrumentDatastore, PersonDatastore personDatastore, OrganizationDatastore organizationDatastore) {
     this.objectMapper = objectMapper;
     this.shipDatastore = shipDatastore;
     this.portDatastore = portDatastore;
     this.seaDatastore = seaDatastore;
     this.instrumentDatastore = instrumentDatastore;
+    this.personDatastore = personDatastore;
+    this.organizationDatastore = organizationDatastore;
   }
 
   public CruiseMetadata createMetadata(PackJob packJob) {
@@ -87,6 +100,111 @@ public class MetadataService {
         .build())
         .withInstruments(getInstrumentsJson(packJob))
         .build();
+  }
+  
+  public CruiseData createMetadata(ImportRow row, ImportModel importModel) {
+    return CruiseData.builder()
+        .withUse(true)
+        .withDelete(false)
+        .withPackageDirectory(importModel.getDestinationPath())
+        .withMetadataAuthor(personDatastore.findByName(importModel.getMetadataAuthor().getValue()).map(
+            person -> MetadataAuthor.builder()
+                .withUuid(person.getUuid())
+                .withName(person.getName())
+                .withEmail(person.getEmail())
+                .withPhone(person.getPhone())
+                .build()
+        ).orElse(null))
+        .withShip(row.getShipName())
+        .withCruiseId(row.getCruiseID())
+        .withSegmentId(row.getLeg())
+        .withScientists(
+            personDatastore.findByName(row.getChiefScientist())
+                .map(p -> Collections.singletonList(
+                    PeopleOrg.builder()
+                        .withUuid(p.getUuid())
+                        .withName(p.getName())
+                        .build()
+                ))
+                .orElse(null)
+        )
+        .withSponsors(
+            organizationDatastore.findByName(row.getSponsorOrganization())
+                .map(o -> Collections.singletonList(
+                    PeopleOrg.builder()
+                        .withUuid(o.getUuid())
+                        .withName(o.getName())
+                        .build()
+                ))
+                .orElse(null)
+        )
+        .withFunders(
+            organizationDatastore.findByName(row.getFundingOrganization())
+                .map(o -> Collections.singletonList(
+                    PeopleOrg.builder()
+                        .withUuid(o.getUuid())
+                        .withName(o.getName())
+                        .build()
+                ))
+                .orElse(null)
+        )
+        .withDeparturePort(row.getDeparturePort())
+        .withDepartureDate(row.getStartDate())
+        .withArrivalPort(row.getArrivalPort())
+        .withArrivalDate(row.getEndDate())
+        .withSeaArea(row.getSeaArea())
+        .withProjects(Collections.singletonList(
+            row.getProjectName()
+        )).withCruiseTitle(row.getCruiseTitle())
+        .withCruisePurpose(row.getCruisePurpose())
+        .withInstruments(getInstrumentsJson(row))
+        // .withComments() TODO
+        .build();
+  }
+  
+  private List<InstrumentData> getInstrumentsJson(ImportRow row) {
+    List<InstrumentData> instruments = new ArrayList<>();
+    
+    instruments.addAll(getGroupInstruments(
+        row.getADCPInstruments(),
+        InstrumentGroupName.ADCP
+    ));
+    instruments.addAll(getGroupInstruments(
+       row.getCTDInstruments(),
+       InstrumentGroupName.CTD 
+    ));
+    instruments.addAll(getGroupInstruments(
+        row.getMBESInstruments(),
+        InstrumentGroupName.MULTIBEAM
+    ));
+    instruments.addAll(getGroupInstruments(
+        row.getSBESInstruments(),
+        InstrumentGroupName.SINGLE_BEAM
+    ));
+    instruments.addAll(getGroupInstruments(
+        row.getWaterColumnInstruments(),
+        InstrumentGroupName.WATER_COLUMN
+    ));
+    
+    
+    return instruments;
+  }
+  
+  private List<InstrumentData> getGroupInstruments(List<String> instrumentNames, InstrumentGroupName groupName) {
+    return instrumentNames.stream()
+        .map(instrumentName ->
+            instrumentDatastore.getInstrument(new InstrumentDetailPackageKey(
+                groupName.getShortName(),
+                instrumentName
+        ))).filter(Optional::isPresent)
+        .map(Optional::get)
+        .map(instrument -> InstrumentData.builder()
+            .withUuid(instrument.getUuid())
+            .withType(groupName.getLongName())
+            .withInstrument(instrument.getName())
+            .withShortName(instrument.getShortName())
+            .build())
+        .toList();
   }
 
   private List<InstrumentMetadata> getInstrumentsJson(PackJob packJob) {

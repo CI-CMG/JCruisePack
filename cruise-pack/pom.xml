@@ -15,6 +15,7 @@
   <properties>
     <node.version>v16.17.1</node.version>
     <npm.version>8.15.0</npm.version>
+    <fastexcel.version>0.17.0</fastexcel.version>
   </properties>
 
   <dependencies>
@@ -69,6 +70,12 @@
     <dependency>
       <groupId>com.github.lgooddatepicker</groupId>
       <artifactId>LGoodDatePicker</artifactId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.dhatim/fastexcel -->
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel-reader</artifactId>
+      <version>${fastexcel.version}</version>
     </dependency>
 
     <dependency>
