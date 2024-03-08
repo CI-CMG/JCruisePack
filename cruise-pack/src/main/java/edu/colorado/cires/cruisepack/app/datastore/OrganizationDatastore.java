@@ -164,6 +164,12 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
             .filter(o -> o.getUuid().equals(uuid))
             .findFirst();
     }
+    
+    public Optional<Organization> findByName(String name) {
+        return organizations.stream()
+            .filter(o -> o.getName().equals(name))
+            .findFirst();
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

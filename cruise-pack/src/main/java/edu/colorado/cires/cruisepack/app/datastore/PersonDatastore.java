@@ -176,4 +176,10 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
             .findFirst();
     }
     
+    public Optional<Person> findByName(String name) {
+        return people.stream()
+            .filter(p -> p.getName().equals(name))
+            .findFirst();
+    }
+    
 }
