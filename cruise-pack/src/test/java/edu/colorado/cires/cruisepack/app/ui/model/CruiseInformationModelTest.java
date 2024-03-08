@@ -3,6 +3,8 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Path;
@@ -10,13 +12,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
-import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 
 public class CruiseInformationModelTest {
 
@@ -88,17 +85,17 @@ public class CruiseInformationModelTest {
     }
 
     @Test
-    @Disabled
     public void testUpdateFormState() {
         String newCruiseTitle = "NEW-CRUISE-TITLE";
         String newCruisePurpose = "NEW-CRUISE-PURPOSE";
         String newCruiseDescription = "NEW-CRUISE-DESCRIPTION";
         Path newDocumentsPath = Paths.get("NEW-DOCUMENTS-PATH");
 
-        cruiseInformationModel.updateFormState(CruiseMetadata.builder()
+        cruiseInformationModel.updateFormState(CruiseData.builder()
             .withCruiseTitle(newCruiseTitle)
             .withCruisePurpose(newCruisePurpose)
             .withCruiseDescription(newCruiseDescription)
+            .withDocumentsPath(newDocumentsPath)
         .build());
 
         assertPropertChangeEvent(Events.UPDATE_CRUISE_TITLE, CRUISE_TITLE, newCruiseTitle, cruiseInformationModel::getCruiseTitle);
