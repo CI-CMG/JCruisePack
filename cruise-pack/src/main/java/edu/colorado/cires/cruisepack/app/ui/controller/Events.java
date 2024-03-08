@@ -157,6 +157,14 @@ public final class Events {
   public static final String UPDATE_CRUISE_DATA_STORE = "UPDATE_CRUISE_DATA_STORE";
   public static final String UPDATE_PERSON_DATA_STORE = "UPDATE_PERSON_DATA_STORE";
   public static final String UPDATE_ORGANIZATION_DATA_STORE = "UPDATE_ORGANIZATION_DATA_STORE";
+  
+  // Import form
+  public static final String UPDATE_IMPORT_PATH = "UPDATE_IMPORT_PATH";
+  public static final String UPDATE_IMPORT_PATH_ERROR = "UPDATE_IMPORT_PATH_ERROR";
+  public static final String UPDATE_IMPORT_DESTINATION_PATH = "UPDATE_IMPORT_DESTINATION_PATH";
+  public static final String UPDATE_IMPORT_DESTINATION_PATH_ERROR = "UPDATE_IMPORT_DESTINATION_PATH_ERROR";
+  public static final String UPDATE_IMPORT_METADATA_AUTHOR = "UPDATE_IMPORT_METADATA_AUTHOR";
+  public static final String UPDATE_IMPORT_METADATA_AUTHOR_ERROR = "UPDATE_IMPORT_METADATA_AUTHOR_ERROR";
 
   private Events() {
 

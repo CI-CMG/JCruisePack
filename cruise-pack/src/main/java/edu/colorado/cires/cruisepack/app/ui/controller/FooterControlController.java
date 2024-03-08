@@ -177,7 +177,7 @@ public class FooterControlController implements PropertyChangeListener {
       setPackageIdCollisionDialogVisible(true);
       return false;
     }
-    cruiseDataDatastore.save(packJob);
+    cruiseDataDatastore.saveCruise(packJob);
     return true;
   }
   
