@@ -38,6 +38,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final FooterControlController footerControlController;
   private final FooterControlModel footerControlModel;
   private final ManageRecordsDialog manageRecordsDialog;
+  private final ImportExportDialog importExportDialog;
 
   private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
   private final JButton importExportButton = new JButton(IMPORT_EXPORT_LABEL);
@@ -74,11 +75,12 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, UiRefresher uiRefresher) {
+      FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, ImportExportDialog importExportDialog, UiRefresher uiRefresher) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
     this.manageRecordsDialog = manageRecordsDialog;
+    this.importExportDialog = importExportDialog;
     this.uiRefresher = uiRefresher;
   }
 
@@ -171,6 +173,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
     manageRecordsButton.addActionListener((evt) -> {
       manageRecordsDialog.pack();
       manageRecordsDialog.setVisible(true);
+    });
+    
+    importExportButton.addActionListener((evt) -> {
+      importExportDialog.pack();
+      importExportDialog.setVisible(true);
     });
   }
 
