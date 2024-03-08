@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.core.io.Resource;
 
 public class CruisePackPreSpringStarter {
@@ -18,16 +17,17 @@ public class CruisePackPreSpringStarter {
     try (InputStream inputStream = CruisePackPreSpringStarter.class.getResourceAsStream(classPathFile)) {
       Files.copy(inputStream, target);
     } catch (IOException e) {
-      throw new RuntimeException("Unable to copy resource: "+ classPathFile, e);
+      throw new RuntimeException("Unable to copy resource: " + classPathFile, e);
     }
   }
 
-  public static void start()  {
+  public static void start() {
     try {
-      Path workDir = Paths.get(System.getProperty(
-          "cruise-pack.work-dir",
-          Paths.get(System.getProperty("user.home")).resolve(".cruise-pack").toString()
-      )).toAbsolutePath().normalize();
+      if (System.getProperty("cruise-pack.work-dir") == null) {
+        System.setProperty("cruise-pack.work-dir",
+            Paths.get(System.getProperty("user.home")).resolve(".cruise-pack").toAbsolutePath().normalize().toString());
+      }
+      Path workDir = Paths.get(System.getProperty("cruise-pack.work-dir")).toAbsolutePath().normalize();
       Path logDir = workDir.resolve("log");
       Files.createDirectories(logDir);
       Path configDir = workDir.resolve("config");
@@ -36,7 +36,6 @@ public class CruisePackPreSpringStarter {
       Files.createDirectories(dataDir);
       Path cruiseMetadataDir = workDir.resolve("local-data/cruise-metadata");
       Files.createDirectories(cruiseMetadataDir);
-
 
       Path applicationProperties = configDir.resolve("application.properties");
       Path log4jXml = configDir.resolve("log4j2.xml");
@@ -51,7 +50,7 @@ public class CruisePackPreSpringStarter {
         copyFromClassPath(log4jXml, "/edu/colorado/cires/cruisepack/app/init/log4j2.xml");
       }
 
-      Configurator.reconfigure(log4jXml.toUri());
+      System.setProperty("logging.config", log4jXml.toString());
 
       if (System.getProperty("spring.config.additional-location") == null) {
         System.setProperty("spring.config.additional-location", applicationProperties.toString());
@@ -60,7 +59,7 @@ public class CruisePackPreSpringStarter {
       Resource[] resources = CruisePackDataInitializer.getPackagedData();
       for (Resource resource : resources) {
         Path dataFile = dataDir.resolve(resource.getFilename());
-        if(!Files.isRegularFile(dataFile)) {
+        if (!Files.isRegularFile(dataFile)) {
           System.out.println("Initializing " + resource.getFilename());
           Files.write(dataFile, resource.getContentAsByteArray());
         }

@@ -10,3 +10,5 @@ spring:
     serialization:
       fail_on_empty_beans: false
     property-naming-strategy: SNAKE_CASE
+  main:
+    banner-mode: log
