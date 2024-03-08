@@ -19,18 +19,20 @@ public class CruiseData extends Cruise {
   @JsonIgnore
   private final boolean delete;
   private final Path documentsPath;
+  private final Path packageDirectory;
 
   private CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists,
       List<String> projects, Omics omics, MetadataAuthor metadataAuthor, List<Instrument> instruments,
-      Map<String, PackageInstrument> packageInstruments, Path documentsPath) {
+      Map<String, PackageInstrument> packageInstruments, Path documentsPath, Path packageDirectory) {
     super(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate, seaArea,
         cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
     this.use = use;
     this.delete = delete;
     this.documentsPath = documentsPath;
+    this.packageDirectory = packageDirectory;
   }
 
   public boolean isUse() {
@@ -43,6 +45,10 @@ public class CruiseData extends Cruise {
 
   public Path getDocumentsPath() {
     return documentsPath;
+  }
+
+  public Path getPackageDirectory() {
+    return packageDirectory;
   }
 
   public static Builder builder(CruiseMetadata data) {
@@ -84,6 +90,7 @@ public class CruiseData extends Cruise {
     private List<Instrument> instruments = Collections.emptyList();
     private Map<String, PackageInstrument> packageInstruments;
     private Path documentsPath;
+    private Path packageDirectory;
 
     private Builder() {
 
@@ -93,6 +100,7 @@ public class CruiseData extends Cruise {
       use = true;
       delete = false;
       documentsPath = null;
+      packageDirectory = null;
       cruiseId = src.getCruiseId();
       segmentId = src.getSegmentId();
       packageId = src.getPackageId();
@@ -121,6 +129,7 @@ public class CruiseData extends Cruise {
       use = src.isUse();
       delete = src.isDelete();
       documentsPath = src.getDocumentsPath();
+      packageDirectory = src.getPackageDirectory();
       cruiseId = src.getCruiseId();
       segmentId = src.getSegmentId();
       packageId = src.getPackageId();
@@ -289,12 +298,17 @@ public class CruiseData extends Cruise {
       this.documentsPath = documentsPath;
       return this;
     }
+    
+    public Builder withPackageDirectory(Path packageDirectory) {
+      this.packageDirectory = packageDirectory;
+      return this;
+    }
 
     public CruiseData build() {
       return new CruiseData(use, delete, cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid,
           departurePort, departureDate, arrivalPort, arrivalDate, seaArea, cruiseTitle, cruisePurpose,
           cruiseDescription, sponsors, funders, scientists, projects, omics,
-          metadataAuthor, instruments, packageInstruments, documentsPath);
+          metadataAuthor, instruments, packageInstruments, documentsPath, packageDirectory);
     }
   }
 }
