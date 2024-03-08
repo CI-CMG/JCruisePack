@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,15 +46,15 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     this.objectMapper = objectMapper;
     this.reactiveViewRegistry = reactiveViewRegistry;
   }
-
-  public void save(PackJob packJob) {
-    CruiseMetadata metadata = metadataService.createMetadata(packJob); 
+  
+  public void saveCruiseToPath(PackJob packJob, Path path) {
+    CruiseMetadata metadata = metadataService.createMetadata(packJob);
     CruiseData data = CruiseData.builder(metadata)
         .withDocumentsPath(packJob.getDocumentsPath())
         .withInstruments(
             metadata.getInstruments().stream()
                 .map(instrument -> {
-                  
+
                   InstrumentData.Builder builder = InstrumentData.builder(instrument);
 
                   InstrumentDetail instrumentDetail = packJob.getInstruments().values().stream()
@@ -63,11 +62,11 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
                       .filter(i -> i.getShortName().equals(instrument.getShortName()))
                       .findFirst()
                       .orElse(null);
-                  
+
                   if (instrumentDetail == null) {
                     return builder.build();
                   }
-                  
+
                   return builder
                       .withDataPath(instrumentDetail.getDataPath())
                       .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath())
@@ -75,41 +74,52 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
                 }).collect(Collectors.toList())
         )
         .build();
-    save(Collections.singletonList(data));
+    saveCruise(data, path);
+  }
+
+  public void saveCruise(PackJob packJob) {
+    saveCruiseToPath(packJob, getMetadataPath(packJob.getPackageId()));
+  }
+  
+  private Path getMetadataPath(String packageId) {
+    return getCruiseMetadataDir().resolve(packageId + ".json");
   }
   
   public void delete(String packageId) {
-    save(
+    saveCruises(
         cruises.stream()
             .filter(c -> c.getPackageId().equals(packageId))
             .map(c ->
                 CruiseData.builder(c)
                     .withDelete(true)
                     .build()
-            ).toList()
+            )
     );
   }
   
-  public void save(List<CruiseData> cruiseDataList) {
-    cruiseDataList.forEach(cruiseData -> {
-      String packageId = cruiseData.getPackageId();
-      Path metadataFile = getCruiseMetadataDir().resolve(packageId + ".json");
-      if (cruiseData.isDelete()) {
-        try {
-          Files.deleteIfExists(metadataFile);
-        } catch (IOException e) {
-          throw new IllegalStateException("Unable to delete cruise data: " + metadataFile, e);
-        }
-      } else {
-        try (OutputStream outputStream = new FileOutputStream(metadataFile.toFile())) {
-          objectMapper.writeValue(outputStream, cruiseData);
-        } catch (IOException e) {
-          throw new IllegalStateException("Unable to write cruise data: " + metadataFile, e);
-        } 
-      }
-    });
-    
+  public void saveCruises(Stream<CruiseData> cruiseDataStream) {
+    cruiseDataStream.forEach(this::saveCruise);
     load();
+  }
+  
+  public void saveCruise(CruiseData cruiseData, Path path) {
+    if (cruiseData.isDelete()) {
+      try {
+        Files.deleteIfExists(path);
+      } catch (IOException e) {
+        throw new IllegalStateException("Unable to delete cruise data: " + path, e);
+      }
+    } else {
+      try (OutputStream outputStream = new FileOutputStream(path.toFile())) {
+        objectMapper.writeValue(outputStream, cruiseData);
+      } catch (IOException e) {
+        throw new IllegalStateException("Unable to write cruise data: " + path, e);
+      }
+    }
+  }
+  
+  public void saveCruise(CruiseData cruiseData) {
+    saveCruise(cruiseData, getMetadataPath(cruiseData.getPackageId()));
   }
 
   @PostConstruct

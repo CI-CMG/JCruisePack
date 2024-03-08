@@ -21,6 +21,6 @@ public class CruiseDataController {
   }
   
   public void updateCruises(List<CruiseData> cruises) {
-    cruiseDataDatastore.save(cruises);
+    cruiseDataDatastore.saveCruises(cruises.stream());
   }
 }
