@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.init;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +29,7 @@ public class CruisePackPreSpringStarterTest {
   @AfterEach
   public void afterEach() throws Exception {
     System.clearProperty("cruise-pack.work-dir");
+    System.clearProperty("spring.config.additional-location");
     FileUtils.deleteQuietly(testDir.toFile());
   }
 
@@ -60,6 +62,8 @@ public class CruisePackPreSpringStarterTest {
         testDir.resolve("data/singlebeamVerticalDatums.xml"),
         testDir.resolve("data/waterColumnCalibrationStates.xml")
     ));
-    assertEquals(expected, paths);
+    expected.stream().forEach(f -> {
+      assertTrue(paths.contains(f));
+    });
   }
 }

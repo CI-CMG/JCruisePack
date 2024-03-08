@@ -5,9 +5,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.core.io.Resource;
 
 public class CruisePackPreSpringStarter {
+
+  static {
+    System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
+  }
 
   private static void copyFromClassPath(Path target, String classPathFile) {
     try (InputStream inputStream = CruisePackPreSpringStarter.class.getResourceAsStream(classPathFile)) {
@@ -19,7 +24,10 @@ public class CruisePackPreSpringStarter {
 
   public static void start()  {
     try {
-      Path workDir = Paths.get(System.getProperty("cruise-pack.work-dir"));
+      Path workDir = Paths.get(System.getProperty(
+          "cruise-pack.work-dir",
+          Paths.get(System.getProperty("user.home")).resolve(".cruise-pack").toString()
+      )).toAbsolutePath().normalize();
       Path logDir = workDir.resolve("log");
       Files.createDirectories(logDir);
       Path configDir = workDir.resolve("config");
@@ -41,6 +49,12 @@ public class CruisePackPreSpringStarter {
       if (!Files.isRegularFile(log4jXml)) {
         System.out.println("Initializing log4j2.xml");
         copyFromClassPath(log4jXml, "/edu/colorado/cires/cruisepack/app/init/log4j2.xml");
+      }
+
+      Configurator.reconfigure(log4jXml.toUri());
+
+      if (System.getProperty("spring.config.additional-location") == null) {
+        System.setProperty("spring.config.additional-location", applicationProperties.toString());
       }
 
       Resource[] resources = CruisePackDataInitializer.getPackagedData();

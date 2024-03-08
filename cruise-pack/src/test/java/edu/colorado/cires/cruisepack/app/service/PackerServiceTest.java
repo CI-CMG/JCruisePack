@@ -71,6 +71,7 @@ public class PackerServiceTest {
   @AfterAll
   public static void afterAll() {
     System.clearProperty("cruise-pack.work-dir");
+    System.clearProperty("spring.config.additional-location");
   }
 
   @BeforeEach
