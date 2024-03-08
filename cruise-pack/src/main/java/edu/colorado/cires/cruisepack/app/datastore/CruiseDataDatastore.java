@@ -51,6 +51,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   public void save(PackJob packJob) {
     CruiseMetadata metadata = metadataService.createMetadata(packJob); 
     CruiseData data = CruiseData.builder(metadata)
+        .withDocumentsPath(packJob.getDocumentsPath())
         .withInstruments(
             metadata.getInstruments().stream()
                 .map(instrument -> {

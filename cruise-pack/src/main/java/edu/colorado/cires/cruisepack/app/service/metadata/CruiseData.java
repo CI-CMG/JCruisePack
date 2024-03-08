@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -17,17 +18,19 @@ public class CruiseData extends Cruise {
   private final boolean use;
   @JsonIgnore
   private final boolean delete;
+  private final Path documentsPath;
 
   private CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists,
       List<String> projects, Omics omics, MetadataAuthor metadataAuthor, List<Instrument> instruments,
-      Map<String, PackageInstrument> packageInstruments) {
+      Map<String, PackageInstrument> packageInstruments, Path documentsPath) {
     super(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate, seaArea,
         cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
     this.use = use;
     this.delete = delete;
+    this.documentsPath = documentsPath;
   }
 
   public boolean isUse() {
@@ -37,13 +40,21 @@ public class CruiseData extends Cruise {
   public boolean isDelete() {
     return delete;
   }
-  
+
+  public Path getDocumentsPath() {
+    return documentsPath;
+  }
+
   public static Builder builder(CruiseMetadata data) {
     return new Builder(data);
   }
   
   public static Builder builder(CruiseData data) {
     return new Builder(data);
+  }
+  
+  public static Builder builder() {
+    return new Builder();
   }
 
 
@@ -72,6 +83,7 @@ public class CruiseData extends Cruise {
     private MetadataAuthor metadataAuthor;
     private List<Instrument> instruments = Collections.emptyList();
     private Map<String, PackageInstrument> packageInstruments;
+    private Path documentsPath;
 
     private Builder() {
 
@@ -80,6 +92,7 @@ public class CruiseData extends Cruise {
     private Builder(CruiseMetadata src) {
       use = true;
       delete = false;
+      documentsPath = null;
       cruiseId = src.getCruiseId();
       segmentId = src.getSegmentId();
       packageId = src.getPackageId();
@@ -107,6 +120,7 @@ public class CruiseData extends Cruise {
     private Builder(CruiseData src) {
       use = src.isUse();
       delete = src.isDelete();
+      documentsPath = src.getDocumentsPath();
       cruiseId = src.getCruiseId();
       segmentId = src.getSegmentId();
       packageId = src.getPackageId();
@@ -270,12 +284,17 @@ public class CruiseData extends Cruise {
       }
       return this;
     }
+    
+    public Builder withDocumentsPath(Path documentsPath) {
+      this.documentsPath = documentsPath;
+      return this;
+    }
 
     public CruiseData build() {
       return new CruiseData(use, delete, cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid,
           departurePort, departureDate, arrivalPort, arrivalDate, seaArea, cruiseTitle, cruisePurpose,
           cruiseDescription, sponsors, funders, scientists, projects, omics,
-          metadataAuthor, instruments, packageInstruments);
+          metadataAuthor, instruments, packageInstruments, documentsPath);
     }
   }
 }

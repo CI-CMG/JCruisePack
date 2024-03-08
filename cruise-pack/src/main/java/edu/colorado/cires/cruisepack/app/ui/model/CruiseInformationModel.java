@@ -1,13 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.nio.file.Path;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +48,10 @@ public class CruiseInformationModel extends PropertyChangeModel {
     setCruisePurposeError(null);
     setCruiseDescription(cruiseMetadata.getCruiseDescription());
     setCruiseDescriptionError(null);
-    setDocumentsPath(null); // TODO: Get from metadata
+    
+    if (cruiseMetadata instanceof CruiseData) {
+      setDocumentsPath(((CruiseData) cruiseMetadata).getDocumentsPath());
+    }
     setDocumentsPathError(null);
   }
 
