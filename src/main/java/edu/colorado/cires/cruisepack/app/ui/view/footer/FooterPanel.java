@@ -186,6 +186,8 @@ public class FooterPanel extends JPanel implements ReactiveView {
       importExportDialog.pack();
       importExportDialog.setVisible(true);
     });
+    
+    stopButton.addActionListener((evt) -> footerControlController.stopPackaging());
   }
 
   private void handlePackage() {

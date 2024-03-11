@@ -8,7 +8,7 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDi
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.model.PackProgressModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.prototype.bag.Bagger;
 import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
@@ -42,7 +42,7 @@ public class PackerService {
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
   private final MetadataService metadataService;
-  private final PackProgressModel packProgressModel;
+  private final PackStateModel packStateModel;
   private final Bagger bagger = new Bagger();
 
   @Autowired
@@ -50,19 +50,19 @@ public class PackerService {
       ServiceProperties serviceProperties,
       PackagingValidationService validationService,
       FooterControlController footerControlController,
-      MetadataService metadataService, PackProgressModel packProgressModel
+      MetadataService metadataService, PackStateModel packStateModel
   ) {
     this.serviceProperties = serviceProperties;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
     this.metadataService = metadataService;
-    this.packProgressModel = packProgressModel;
+    this.packStateModel = packStateModel;
   }
 
   public void startPacking() {
     footerControlController.setPackageButtonEnabled(false);
     footerControlController.setSaveButtonEnabled(false);
-    footerControlController.setStopButtonEnabled(false);
+    footerControlController.setStopButtonEnabled(true);
     try {
       Optional<PackJob> maybePackJob = validationService.validate();
       if (maybePackJob.isPresent()) {
@@ -79,32 +79,40 @@ public class PackerService {
       LOGGER.error("An error occurred while initiating pack job", e);
     }
   }
+  
+  public void stopPacking() {
+    packStateModel.stopThread();
+  }
 
   private void startPackingThread(PackJob packJob) {
     // TODO put in queue?
-    new Thread(() -> {
+    Thread thread = new Thread(() -> {
       try {
 ////    rawCheck(packJob); //TODO add to validation phase
-        packProgressModel.setProgress(0);
+        packStateModel.setProgress(0);
         resetBagDirs(packJob);
-        packProgressModel.setProgress(20);
+        packStateModel.setProgress(20);
         copyDocs(packJob);
-        packProgressModel.setProgress(40);
+        packStateModel.setProgress(40);
         copyOmics(packJob);
-        packProgressModel.setProgress(60);
+        packStateModel.setProgress(60);
         packData(packJob);
-        packProgressModel.setProgress(80);
+        packStateModel.setProgress(80);
         packMainBag(packJob);
-        packProgressModel.setProgress(100);
+        packStateModel.setProgress(100);
       } catch (Exception e) {
         LOGGER.error("An error occurred while packing", e);
       } finally {
         footerControlController.setPackageButtonEnabled(true);
         footerControlController.setSaveButtonEnabled(true);
         footerControlController.setStopButtonEnabled(false);
-        packProgressModel.setProgress(0);
+        packStateModel.setProgress(0);
+        packStateModel.setThread(null);
       }
-    }).start();
+    });
+    
+    packStateModel.setThread(thread);
+    thread.start();
   }
 
   private void packMainBag(PackJob packJob) {

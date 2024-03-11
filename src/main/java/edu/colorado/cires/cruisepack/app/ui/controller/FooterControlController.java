@@ -15,7 +15,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
-import edu.colorado.cires.cruisepack.app.ui.model.PackProgressModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
@@ -48,7 +48,7 @@ public class FooterControlController implements PropertyChangeListener {
   private final SeaDatastore seaDatastore;
   private final PersonDatastore personDatastore;
   private final OrganizationDatastore organizationDatastore;
-  private final PackProgressModel packProgressModel;
+  private final PackStateModel packStateModel;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
@@ -56,7 +56,7 @@ public class FooterControlController implements PropertyChangeListener {
       CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, 
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
       PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
-      OrganizationDatastore organizationDatastore, PackProgressModel packProgressModel) {
+      OrganizationDatastore organizationDatastore, PackStateModel packStateModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -74,13 +74,13 @@ public class FooterControlController implements PropertyChangeListener {
     this.seaDatastore = seaDatastore;
     this.personDatastore = personDatastore;
     this.organizationDatastore = organizationDatastore;
-    this.packProgressModel = packProgressModel;
+    this.packStateModel = packStateModel;
   }
 
   @PostConstruct
   public void init() {
     footerControlModel.addChangeListener(this);
-    packProgressModel.addChangeListener(this);
+    packStateModel.addChangeListener(this);
   }
 
   public synchronized void setStopButtonEnabled(boolean stopButtonEnabled) {
@@ -113,6 +113,10 @@ public class FooterControlController implements PropertyChangeListener {
 
   public synchronized void startPackaging() {
     beanFactory.getBean(PackerService.class).startPacking();
+  }
+  
+  public synchronized void stopPackaging() {
+    beanFactory.getBean(PackerService.class).stopPacking();
   }
 
   public void updateFormState(Cruise cruiseMetadata) {
