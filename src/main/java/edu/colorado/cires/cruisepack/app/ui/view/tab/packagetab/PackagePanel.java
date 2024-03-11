@@ -51,9 +51,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class PackagePanel extends JPanel implements ReactiveView {
 
 

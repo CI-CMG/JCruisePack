@@ -6,9 +6,11 @@ import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class RootPanel extends JPanel {
 
   private final ApplicationTabs applicationTabs;
