@@ -1,4 +1,4 @@
-name: maven-build-linux
+name: maven-build
 on: [push]
 jobs:
   build:
