@@ -36,7 +36,7 @@ public class CruisePack implements ApplicationListener<ApplicationStartingEvent>
 
     ConfigurableApplicationContext ctx = new SpringApplicationBuilder(CruisePack.class)
         .listeners(new CruisePack())
-        .headless(false)
+//        .headless(false)
         .web(WebApplicationType.NONE)
         .run(args);
 
