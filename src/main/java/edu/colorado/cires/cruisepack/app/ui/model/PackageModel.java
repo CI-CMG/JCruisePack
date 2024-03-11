@@ -63,8 +63,7 @@ public class PackageModel extends PropertyChangeModel {
   @PathIsDirectory
   private Path packageDirectory = null;
   private String packageDirectoryError = null;
-
-  @NotEmpty
+  
   private List<@ValidDropDownItemModel DropDownItemModel> projects = new ArrayList<>(0);
   private String projectsError = null;
   
