@@ -103,7 +103,7 @@ public class ImportDialog extends JDialog implements ReactiveView {
     
     JPanel metadataAuthorPanel = new JPanel();
     metadataAuthorPanel.setLayout(new GridBagLayout());
-    metadataAuthorPanel.add(createLabelWithErrorPanel("Metadata Author", metadataAuthorErrorLabel), configureLayout(0, 0));
+    metadataAuthorPanel.add(createLabelWithErrorPanel("Data Packager", metadataAuthorErrorLabel), configureLayout(0, 0));
     metadataAuthorPanel.add(metadataAuthorField, configureLayout(0, 1));
     add(metadataAuthorPanel, configureLayout(0, 3, c -> c.weighty = 100));
     

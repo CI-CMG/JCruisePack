@@ -43,7 +43,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private static final String ADD_SCIENTIST_LABEL = "Add Scientist";
   private static final String ADD_SOURCE_ORG_LABEL = "Add Source Organization";
   private static final String ADD_FUNDING_ORG_LABEL = "Add Funding Organization";
-  private static final String METADATA_AUTHOR_LABEL = "Metadata Author";
+  private static final String METADATA_AUTHOR_LABEL = "Data Packager";
   private static final String CREATE_PEOPLE_LABEL = "Create / Edit People";
   private static final String CREATE_ORG_LABEL = "Create / Edit Organizations";
   
