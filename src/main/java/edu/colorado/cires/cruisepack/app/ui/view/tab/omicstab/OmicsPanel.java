@@ -19,7 +19,6 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 import jakarta.annotation.PostConstruct;
@@ -30,6 +29,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -261,8 +262,18 @@ public class OmicsPanel extends JPanel implements ReactiveView {
 
     samplingConductedField.addValueChangeListener((v) -> omicsController.setSamplingConducted(v));
     contactField.addItemListener((e) -> omicsController.setContact((DropDownItem) e.getItem()));
-    trackingSheetField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handlePathValue(trackingSheetField.getText()));
-    bioProjectAcessionField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> omicsController.setBioProjectAccession(bioProjectAcessionField.getText()));
+    trackingSheetField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        handlePathValue(trackingSheetField.getText());
+      }
+    });
+    bioProjectAcessionField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        omicsController.setBioProjectAccession(bioProjectAcessionField.getText());
+      }
+    });
     waterField.addItemListener(createItemListener(omicsController::setWaterSamplingType));
     soilSedimentField.addItemListener(createItemListener(omicsController::setSoilSedimentSamplingType));
     organicTissueField.addItemListener(createItemListener(omicsController::setOrganicTissueSamplingType));
@@ -279,7 +290,12 @@ public class OmicsPanel extends JPanel implements ReactiveView {
     metaproteomicsField.addItemListener(createItemListener(omicsController::setMetaproteomicsExpectedAnalysis));
     metametabolomicsField.addItemListener(createItemListener(omicsController::setMetametabolomicsExpectedAnalysis));
     microbiomeField.addItemListener(createItemListener(omicsController::setMicrobiomeExpectedAnalysis));
-    additionalSamplingInformationField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> omicsController.setAdditionalSamplingInformation(additionalSamplingInformationField.getText()));
+    additionalSamplingInformationField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        omicsController.setAdditionalSamplingInformation(additionalSamplingInformationField.getText());
+      }
+    });
     editPeopleButton.addActionListener(e -> {
       editPersonDialog.pack();
       editPersonDialog.setVisible(true);
