@@ -165,6 +165,9 @@ public final class Events {
   public static final String UPDATE_IMPORT_DESTINATION_PATH_ERROR = "UPDATE_IMPORT_DESTINATION_PATH_ERROR";
   public static final String UPDATE_IMPORT_METADATA_AUTHOR = "UPDATE_IMPORT_METADATA_AUTHOR";
   public static final String UPDATE_IMPORT_METADATA_AUTHOR_ERROR = "UPDATE_IMPORT_METADATA_AUTHOR_ERROR";
+  
+  // Progress bar
+  public static final String UPDATE_PROGRESS = "UPDATE_PROGRESS";
 
   private Events() {
 
