@@ -61,7 +61,7 @@ public class ImportService {
   private void importSheet(Sheet sheet, ImportModel model) {
     try (Stream<Row> stream = sheet.openStream()) {
       stream.map(this::fromRow)
-          .map(r -> metadataService.createMetadata(r, model))
+          .map(r -> metadataService.createData(r, model))
           .forEach(datastore::saveCruise);
     } catch (IOException e) {
       throw new IllegalStateException("Could not read sheet", e);

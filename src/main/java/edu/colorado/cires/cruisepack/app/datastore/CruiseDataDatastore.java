@@ -48,33 +48,10 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   }
   
   public void saveCruiseToPath(PackJob packJob, Path path) {
-    CruiseMetadata metadata = metadataService.createMetadata(packJob);
-    CruiseData data = CruiseData.builder(metadata)
-        .withDocumentsPath(packJob.getDocumentsPath())
-        .withInstruments(
-            metadata.getInstruments().stream()
-                .map(instrument -> {
-
-                  InstrumentData.Builder builder = InstrumentData.builder(instrument);
-
-                  InstrumentDetail instrumentDetail = packJob.getInstruments().values().stream()
-                      .flatMap(List::stream)
-                      .filter(i -> i.getShortName().equals(instrument.getShortName()))
-                      .findFirst()
-                      .orElse(null);
-
-                  if (instrumentDetail == null) {
-                    return builder.build();
-                  }
-
-                  return builder
-                      .withDataPath(instrumentDetail.getDataPath())
-                      .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath())
-                      .build();
-                }).collect(Collectors.toList())
-        )
-        .build();
-    saveCruise(data, path);
+    saveCruise(
+        metadataService.createData(packJob),
+        path
+    );
   }
 
   public void saveCruise(PackJob packJob) {

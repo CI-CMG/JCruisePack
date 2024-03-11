@@ -6,7 +6,7 @@ import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
@@ -110,7 +110,9 @@ public class PackageModel extends PropertyChangeModel {
   public void updateFormState(Cruise cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, CruiseDataDatastore cruiseDataDatastore) {
     setCruiseId(cruiseMetadata.getCruiseId());
     setSegment(cruiseMetadata.getSegmentId());
-    // setPackageDirectory
+    if (cruiseMetadata instanceof CruiseData) {
+      setPackageDirectory(((CruiseData) cruiseMetadata).getPackageDirectory());
+    }
     if (cruiseMetadata.getShipUuid() != null && cruiseMetadata.getShip() != null) {
       DropDownItem dropDownItem = shipDatastore.getShipDropDowns().stream()
         .filter(i -> i.getId().equals(cruiseMetadata.getShipUuid())).findFirst().orElse(null);

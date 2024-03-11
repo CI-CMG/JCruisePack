@@ -102,7 +102,54 @@ public class MetadataService {
         .build();
   }
   
-  public CruiseData createMetadata(ImportRow row, ImportModel importModel) {
+  public CruiseData createData(PackJob packJob) {
+    return CruiseData.builder()
+        .withUse(true)
+        .withDelete(false)
+        .withDocumentsPath(packJob.getDocumentsPath())
+        .withPackageDirectory(packJob.getPackageDirectory())
+        .withCruiseId(packJob.getCruiseId())
+        .withSegmentId(packJob.getSegment())
+        .withPackageId(packJob.getPackageId())
+        .withMasterReleaseDate(packJob.getReleaseDate() == null ? null : packJob.getReleaseDate().format(DTF))
+        .withShip(packJob.getShipUuid() == null ? null : shipDatastore.getShipNameForUuid(packJob.getShipUuid()))
+        .withShipUuid(packJob.getShipUuid())
+        .withProjects(packJob.getProjects())
+        .withDeparturePort(packJob.getDeparturePortUuid() == null ? null : portDatastore.getPortNameForUuid(packJob.getDeparturePortUuid()))
+        .withDepartureDate(packJob.getDepartureDate() == null ? null : packJob.getDepartureDate().format(DTF))
+        .withArrivalPort(packJob.getArrivalPortUuid() == null ? null : portDatastore.getPortNameForUuid(packJob.getArrivalPortUuid()))
+        .withArrivalDate(packJob.getArrivalDate() == null ? null : packJob.getArrivalDate().format(DTF))
+        .withSeaArea(packJob.getSeaUuid() == null ? null : seaDatastore.getSeaNameForUuid(packJob.getSeaUuid()))
+        .withCruiseTitle(packJob.getCruiseTitle())
+        .withCruisePurpose(packJob.getCruisePurpose())
+        .withCruiseDescription(packJob.getCruiseDescription())
+        .withSponsors(packJob.getSources())
+        .withFunders(packJob.getFunders())
+        .withMetadataAuthor(packJob.getMetadataAuthor() == null ? null : MetadataAuthor.builder()
+            .withUuid(packJob.getMetadataAuthor().getUuid())
+            .withName(packJob.getMetadataAuthor().getName())
+            .withEmail(packJob.getMetadataAuthor().getEmail())
+            .withPhone(packJob.getMetadataAuthor().getPhone())
+            .build())
+        //        .withProjects()
+        .withScientists(packJob.getScientists())
+        .withOmics(Omics.builder()
+            .withSamplingTypes(packJob.getOmicsSamplingTypes())
+            .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
+            .withOmicsPoc(OmicsPoc.builder()
+                .withUuid(packJob.getOmicsContactUuid())
+                .withName(packJob.getOmicsContactName())
+                .withEmail(packJob.getOmicsContactEmail())
+                .withPhone(packJob.getOmicsContactPhone())
+                .build())
+            .withNcbiAccession(packJob.getOmicsBioProjectAccession())
+            .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
+            .build())
+        .withInstruments(getInstrumentDataJson(packJob))
+        .build();
+  }
+  
+  public CruiseData createData(ImportRow row, ImportModel importModel) {
     return CruiseData.builder()
         .withUse(true)
         .withDelete(false)
@@ -212,6 +259,19 @@ public class MetadataService {
     for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
         instruments.add(instrumentDetailToJson(entry.getKey(), instrumentDetail));
+      }
+    }
+    return instruments;
+  }
+  
+  private List<InstrumentData> getInstrumentDataJson(PackJob packJob) {
+    List<InstrumentData> instruments = new ArrayList<>();
+    for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
+      for (InstrumentDetail instrumentDetail : entry.getValue()) {
+        instruments.add(InstrumentData.builder(instrumentDetailToJson(entry.getKey(), instrumentDetail))
+                .withDataPath(instrumentDetail.getDataPath())
+                .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath())
+            .build());
       }
     }
     return instruments;
