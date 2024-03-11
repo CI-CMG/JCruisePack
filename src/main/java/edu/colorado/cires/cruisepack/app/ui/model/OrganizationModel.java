@@ -12,32 +12,25 @@ public class OrganizationModel extends PropertyChangeModel {
     @NotBlank
     private String name;
     private String nameError = null;
-
-    @NotBlank
+    
     private String street;
     private String streetError = null;
 
-    @NotBlank
     private String city;
     private String cityError = null;
 
-    @NotBlank
     private String state;
     private String stateError = null;
 
-    @NotBlank
     private String zip;
     private String zipError = null;
 
-    @NotBlank
     private String country = "USA";
     private String countryError = null;
 
-    @NotBlank
     private String phone;
     private String phoneError = null;
 
-    @NotBlank
     private String email;
     private String emailError = null;
 
