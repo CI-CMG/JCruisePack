@@ -14,7 +14,7 @@
     "version": "${project.version}",
     "jdeploy": {
         "javaVersion": "17",
-        "jar": "target/JCruisePack-${project.version}-exe.jar",
+        "jar": "target/cruise-pack-${project.version}-exe.jar",
         "title": "JCruisePack",
         "bundles": ["mac-x64", "mac-arm64", "win", "linux"],
         "installers" : ["mac-x64", "mac-arm64", "win", "linux"]

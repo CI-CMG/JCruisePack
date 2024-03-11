@@ -12,9 +12,8 @@
   </parent>
 
   <groupId>io.github.ci-cmg.cruise-pack</groupId>
-  <artifactId>JCruisePack-parent</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
+  <artifactId>cruise-pack</artifactId>
+  <version>0.2.0-SNAPSHOT</version>
 
   <name>${project.groupId}:${project.artifactId}</name>
   <description>CruisePack is a data packaging and metadata gathering software tool NCEI developed to simplify data submission preparation for cruise-based data</description>
@@ -26,6 +25,13 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <developer.name>CIRES / NCEI Marine Geology and Geophysics Software Developers</developer.name>
     <homepage>https://github.com/CI-CMG/JCruisePack</homepage>
+
+    <node.version>v16.17.1</node.version>
+    <npm.version>8.15.0</npm.version>
+
+    <javadoc.version>3.3.1</javadoc.version>
+    <jacoco.version>0.8.7</jacoco.version>
+
   </properties>
 
   <licenses>
@@ -55,11 +61,6 @@
       <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
-
-
-  <modules>
-    <module>cruise-pack</module>
-  </modules>
 
   <repositories>
     <repository>
@@ -150,6 +151,80 @@
     </dependencies>
   </dependencyManagement>
 
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>spring-boot-starter-logging</artifactId>
+          <groupId>org.springframework.boot</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-json</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.ci-cmg.cruise-pack</groupId>
+      <artifactId>cruise-pack-jaxb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>gov.loc</groupId>
+      <artifactId>bagit</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.lgooddatepicker</groupId>
+      <artifactId>LGoodDatePicker</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.ci-cmg.cruise-pack</groupId>
+      <artifactId>cruise-pack-data</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -224,6 +299,404 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}</directory>
+              <includes>
+                <include>node_modules/</include>
+                <include>dist/</include>
+                <include>coverage/</include>
+                <include>package.json</include>
+                <include>package-lock.json</include>
+                <include>icon.png</include>
+                <include>installsplash.png</include>
+                <include>splash.png</include>
+                <include>jdeploy/</include>
+                <include>jdeploy-bundle/</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>package.json</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <useDefaultDelimiters>true</useDefaultDelimiters>
+              <outputDirectory>${basedir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>package-resources</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>package.json</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>package-resource</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <overwrite>true</overwrite>
+              <outputDirectory>${basedir}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>package-resources</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>icon.png</include>
+                    <include>installsplash.png</include>
+                    <include>splash.png</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <classifier>exe</classifier>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release,site-publish</releaseProfiles>
+          <goals>deploy site</goals>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+          <!--          <arguments>-Pdep-check</arguments>-->
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.8.3.1</version>
+        <!-- TODO enable and fix -->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>check</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+        <configuration>
+          <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <configuration>
+          <nodeVersion>${node.version}</nodeVersion>
+          <npmVersion>${npm.version}</npmVersion>
+          <workingDirectory>${basedir}</workingDirectory>
+          <installDirectory>target/node-install</installDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install-node</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>set-cache</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>config set cache-folder target/npm-cache</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>${basedir}</workingDirectory>
+              <arguments>run package</arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+
+
   </build>
+
+  <profiles>
+
+    <profile>
+      <id>dep-check</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>6.5.0</version>
+            <configuration>
+              <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>get-the-git-infos</id>
+                <goals>
+                  <goal>revision</goal>
+                </goals>
+                <phase>pre-site</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <injectAllReactorProjects>true</injectAllReactorProjects>
+              <failOnNoGitDirectory>false</failOnNoGitDirectory>
+              <offline>true</offline>
+              <replacementProperties>
+                <replacementProperty>
+                  <property>git.remote.origin.url</property>
+                  <propertyOutputSuffix>suffix</propertyOutputSuffix>
+                  <token>^.+/(.+).git$</token>
+                  <value>$1</value>
+                  <regex>true</regex>
+                </replacementProperty>
+              </replacementProperties>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.2.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <configuration>
+              <!-- Prevent gpg from using pinentry programs -->
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>site-publish</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+          </plugin>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+              <execution>
+                <id>index.html</id>
+                <phase>site</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/site-resources</outputDirectory>
+                  <useDefaultDelimiters>false</useDefaultDelimiters>
+                  <delimiters>
+                    <delimiter>@</delimiter>
+                  </delimiters>
+                  <resources>
+                    <resource>
+                      <directory>site-resources</directory>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>publish-site</id>
+                <phase>site</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <delete dir="${project.build.directory}/project-documentation" quiet="true" />
+                    <exec dir="${project.build.directory}" executable="git">
+                      <arg value="clone" />
+                      <arg value="--depth=1" />
+                      <arg value="https://github.com/CI-CMG/project-documentation.git" />
+                    </exec>
+                    <exec dir="${project.build.directory}/project-documentation" executable="git">
+                      <arg value="remote" />
+                      <arg value="add" />
+                      <arg value="javadoc" />
+                      <arg value="https://github.com/CI-CMG/project-documentation.git" />
+                    </exec>
+                    <exec dir="${project.build.directory}/project-documentation" executable="git" failonerror="false">
+                      <arg value="rm" />
+                      <arg value="-r" />
+                      <arg value="${git.remote.origin.url.suffix}/${project.version}" />
+                    </exec>
+                    <mkdir dir="${project.build.directory}/project-documentation/${git.remote.origin.url.suffix}" />
+                    <copy todir="${project.build.directory}/project-documentation/${git.remote.origin.url.suffix}">
+                      <fileset file="${project.build.directory}/site-resources/index.html" />
+                    </copy>
+                    <copy todir="${project.build.directory}/project-documentation/${git.remote.origin.url.suffix}/${project.version}">
+                      <fileset dir="${project.build.directory}/site" />
+                    </copy>
+                    <exec dir="${project.build.directory}/project-documentation" executable="git">
+                      <arg value="add" />
+                      <arg value="${git.remote.origin.url.suffix}/index.html" />
+                    </exec>
+                    <exec dir="${project.build.directory}/project-documentation" executable="git">
+                      <arg value="add" />
+                      <arg value="${git.remote.origin.url.suffix}/${project.version}" />
+                    </exec>
+                    <exec dir="${project.build.directory}/project-documentation" executable="git">
+                      <arg value="commit" />
+                      <arg value="-m" />
+                      <arg value="Update Documentation: ${git.remote.origin.url.suffix}/${project.version}" />
+                    </exec>
+                    <exec dir="${project.build.directory}/project-documentation" executable="git">
+                      <arg value="push" />
+                      <arg value="javadoc" />
+                      <arg value="trunk" />
+                    </exec>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
 
 </project>

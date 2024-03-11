@@ -8,11 +8,11 @@ target/
 ### Mac OS ###
 .DS_Store
 
-cruise-pack/package.json
-cruise-pack/package-lock.json
-cruise-pack/icon.png
-cruise-pack/splash.png
-cruise-pack/installsplash.png
+/package.json
+/package-lock.json
+/icon.png
+/splash.png
+/installsplash.png
 
 node_modules/
 jdeploy/
