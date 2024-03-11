@@ -4,6 +4,7 @@ import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.EnoughDiskSpace.EnoughDiskSpaceValidator;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -18,7 +19,9 @@ import java.lang.annotation.Target;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.commons.io.FileUtils;
 
@@ -51,6 +54,14 @@ public @interface EnoughDiskSpace {
         for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : value.getInstruments().entrySet() ) {
           for (InstrumentDetail instrumentDetail : entry.getValue()) {
               available = subtractIfExists(available, instrumentDetail.getDataPath());
+              available = subtractIfExists(available, instrumentDetail.getAncillaryDataPath());
+              if (instrumentDetail.getShortName().equals(InstrumentGroupName.WATER_COLUMN.getShortName())) {
+                available = subtractAdditionalPathFields(
+                    available,
+                    List.of("calibration_report_path", "calibration_data_path"),
+                    instrumentDetail.getAdditionalFields()
+                );
+              }
           }
         }
         
@@ -65,6 +76,19 @@ public @interface EnoughDiskSpace {
       
       if (directorySize != null) {
         bigInteger = bigInteger.subtract(directorySize);
+      }
+      
+      return bigInteger;
+    }
+    
+    private static BigInteger subtractAdditionalPathFields(BigInteger bigInteger, List<String> pathFields, Map<String,  Object> additionalFields) {
+      for (String field : pathFields) {
+        Object value = additionalFields.get(field);
+        if (value instanceof String) {
+          try {
+            bigInteger = subtractIfExists(bigInteger, Paths.get((String) value)); 
+          } catch (Exception ignored) {}
+        }
       }
       
       return bigInteger;
