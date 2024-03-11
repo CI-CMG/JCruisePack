@@ -68,4 +68,8 @@ public class ImportController implements PropertyChangeListener {
   public void setMetadataAuthor(DropDownItem metadataAuthor) {
     importModel.setMetadataAuthor(metadataAuthor);
   }
+  
+  public void saveTemplate(Path path) {
+    importService.saveTemplate(path);
+  }
 }

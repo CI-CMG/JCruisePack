@@ -51,6 +51,7 @@ public class ImportDialog extends JDialog implements ReactiveView {
   private final JButton importButton = new JButton("Import Records");
   private final JButton selectFileButton = new JButton("Select Excel File");
   private final JButton selectDirectoryButton = new JButton("Select Directory");
+  private final JButton saveButton = new JButton("Download Template");
 
   public ImportDialog(PersonDatastore personDatastore, ImportController importController, ReactiveViewRegistry reactiveViewRegistry) {
     super((JFrame) null, "Import Excel Spreadsheet", true);
@@ -83,7 +84,7 @@ public class ImportDialog extends JDialog implements ReactiveView {
     templatePanel.add(new JLabel(
         "Import cruise metadata using an Excel spreadsheet. The file must be in the proper format. Download template if needed."
     ), configureLayout(0, 0, c -> c.weightx = 100));
-    templatePanel.add(new JButton("Download Template"), configureLayout(1, 0, c -> c.weightx = 0));
+    templatePanel.add(saveButton, configureLayout(1, 0, c -> c.weightx = 0));
     add(templatePanel, configureLayout(0, 0, c -> c.weighty = 0));
 
     JPanel pathPanel = new JPanel();
@@ -136,7 +137,8 @@ public class ImportDialog extends JDialog implements ReactiveView {
     importButton.addActionListener((evt) -> importController.importCruises());
     
     selectFileButton.addActionListener((evt) -> handleFileSelect());
-    selectDirectoryButton.addActionListener((evt) -> handleDirectorySelect());
+    selectDirectoryButton.addActionListener((evt) -> handleDirectorySelect(importController::setDestinationPath));
+    saveButton.addActionListener((evt) -> handleDirectorySelect(importController::saveTemplate));
   }
 
   private void handlePathValue(String value, Consumer<Path> consumer) {
@@ -144,11 +146,11 @@ public class ImportDialog extends JDialog implements ReactiveView {
     consumer.accept(path.toAbsolutePath().normalize());
   }
 
-  private void handleDirectorySelect() {
+  private void handleDirectorySelect(Consumer<Path> consumer) {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-      importController.setDestinationPath(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+      consumer.accept(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
     }
   }
   
