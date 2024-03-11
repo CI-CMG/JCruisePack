@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsFile;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidWaterColumnCalibrationStateDropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidWaterColumnFields;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+@ValidWaterColumnFields
 public class WaterColumnAdditionalFieldsModel extends AdditionalFieldsModel {
   public static final String UPDATE_CALIBRATION_STATE = "UPDATE_CALIBRATION_STATE";
   public static final String UPDATE_CALIBRATION_STATE_ERROR = "UPDATE_CALIBRATION_STATE_ERROR";
@@ -25,17 +27,14 @@ public class WaterColumnAdditionalFieldsModel extends AdditionalFieldsModel {
   @ValidWaterColumnCalibrationStateDropDownItem
   private DropDownItem calibrationState = WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE;
   private String calibrationStateError = null;
-  @NotNull
   @PathExists
   @PathIsFile
   private Path calibrationReportPath;
   private String calibrationReportPathError = null;
-  @NotNull
   @PathExists
   @PathIsFile
   private Path calibrationDataPath;
   private String calibrationDataPathError = null;
-  @NotNull
   private LocalDate calibrationDate;
   private String calibrationDateError = null;
 

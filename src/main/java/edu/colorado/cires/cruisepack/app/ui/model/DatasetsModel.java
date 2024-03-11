@@ -19,7 +19,7 @@ public class DatasetsModel extends PropertyChangeModel {
   private  final DatasetPanelFactoryResolver factoryResolver;
 
   @NotEmpty
-  private List<@Valid ? extends BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> datasets = new ArrayList<>();
+  private List<@Valid ? extends BaseDatasetInstrumentModel<@Valid ? extends AdditionalFieldsModel>> datasets = new ArrayList<>();
   private String datasetsError = null;
 
   @Autowired
