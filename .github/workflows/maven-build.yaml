@@ -1,6 +1,8 @@
 name: maven-build
 on:
   push:
+    branches:
+      - '0.3'
   workflow_dispatch:
 jobs:
   build:
