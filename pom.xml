@@ -205,6 +205,11 @@
       <groupId>com.github.lgooddatepicker</groupId>
       <artifactId>LGoodDatePicker</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.dhatim</groupId>
+      <artifactId>fastexcel-reader</artifactId>
+      <version>0.17.0</version>
+    </dependency>
 
     <dependency>
       <groupId>org.junit.jupiter</groupId>
