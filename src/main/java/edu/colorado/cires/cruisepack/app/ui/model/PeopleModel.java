@@ -3,7 +3,6 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel;
@@ -19,12 +18,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PeopleModel extends PropertyChangeModel {
     private String scientistsError = null;
-    @NotEmpty
     private List<@ValidDropDownItemModel DropDownItemModel> scientists = new ArrayList<>(0);
     @NotEmpty
     private List<@ValidDropDownItemModel DropDownItemModel> sourceOrganizations = new ArrayList<>(0);
     private String sourceOrganizationsError = null;
-    @NotEmpty
     private List<@ValidDropDownItemModel DropDownItemModel> fundingOrganizations = new ArrayList<>(0);
     private String fundingOrganizationsError = null;
     @ValidPersonDropDownItem
