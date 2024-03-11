@@ -8,6 +8,7 @@ import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDi
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
+import edu.colorado.cires.cruisepack.app.ui.model.PackProgressModel;
 import edu.colorado.cires.cruisepack.prototype.bag.Bagger;
 import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
@@ -20,7 +21,6 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
@@ -42,6 +42,7 @@ public class PackerService {
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
   private final MetadataService metadataService;
+  private final PackProgressModel packProgressModel;
   private final Bagger bagger = new Bagger();
 
   @Autowired
@@ -49,12 +50,13 @@ public class PackerService {
       ServiceProperties serviceProperties,
       PackagingValidationService validationService,
       FooterControlController footerControlController,
-      MetadataService metadataService
+      MetadataService metadataService, PackProgressModel packProgressModel
   ) {
     this.serviceProperties = serviceProperties;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
     this.metadataService = metadataService;
+    this.packProgressModel = packProgressModel;
   }
 
   public void startPacking() {
@@ -83,17 +85,24 @@ public class PackerService {
     new Thread(() -> {
       try {
 ////    rawCheck(packJob); //TODO add to validation phase
+        packProgressModel.setProgress(0);
         resetBagDirs(packJob);
+        packProgressModel.setProgress(20);
         copyDocs(packJob);
+        packProgressModel.setProgress(40);
         copyOmics(packJob);
+        packProgressModel.setProgress(60);
         packData(packJob);
+        packProgressModel.setProgress(80);
         packMainBag(packJob);
+        packProgressModel.setProgress(100);
       } catch (Exception e) {
         LOGGER.error("An error occurred while packing", e);
       } finally {
         footerControlController.setPackageButtonEnabled(true);
         footerControlController.setSaveButtonEnabled(true);
         footerControlController.setStopButtonEnabled(false);
+        packProgressModel.setProgress(0);
       }
     }).start();
   }
