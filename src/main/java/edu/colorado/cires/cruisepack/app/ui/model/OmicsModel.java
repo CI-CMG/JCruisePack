@@ -2,21 +2,19 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
-import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
-import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
+import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsFile;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.nio.file.Path;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +27,7 @@ public class OmicsModel extends PropertyChangeModel {
     private String contactError = null;
     @NotNull(message = "must not be blank")
     @PathExists
-    @PathIsDirectory
+    @PathIsFile
     private Path sampleTrackingSheet = null;
     private String sampleTrackingSheetError = null;
     @NotBlank
