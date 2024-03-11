@@ -50,8 +50,8 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:CI-CMG/JCruisePack.git</connection>
-    <developerConnection>scm:git:git@github.com:CI-CMG/JCruisePack.git</developerConnection>
+    <connection>scm:git:https://github.com/CI-CMG/JCruisePack.git</connection>
+    <developerConnection>scm:git:https://github.com/CI-CMG/JCruisePack.git</developerConnection>
     <url>${project.url}</url>
   </scm>
 
