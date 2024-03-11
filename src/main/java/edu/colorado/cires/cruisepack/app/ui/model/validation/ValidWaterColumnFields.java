@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface ValidWaterColumnFields {
   
-  String message() default "Calibration date and files must be specified";
+  String message() default "calibration date and files must be specified";
   Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};
   
@@ -33,13 +33,13 @@ public @interface ValidWaterColumnFields {
           context.disableDefaultConstraintViolation();
           
           if (value.getCalibrationDataPath() == null) {
-            context.buildConstraintViolationWithTemplate("Must not be blank")
+            context.buildConstraintViolationWithTemplate("must not be blank")
                 .addPropertyNode("calibrationDataPath")
                 .addConstraintViolation();
           }
           
           if (value.getCalibrationReportPath() == null) {
-            context.buildConstraintViolationWithTemplate("Must not be blank")
+            context.buildConstraintViolationWithTemplate("must not be blank")
                 .addPropertyNode("calibrationReportPath")
                 .addConstraintViolation();
           }
@@ -50,7 +50,7 @@ public @interface ValidWaterColumnFields {
         if (calibrationState.getValue().contains("Calibrated") && value.getCalibrationDate() == null) {
           context.disableDefaultConstraintViolation();
           
-          context.buildConstraintViolationWithTemplate("Must not be blank")
+          context.buildConstraintViolationWithTemplate("must not be blank")
               .addPropertyNode("calibrationDate")
               .addConstraintViolation();
           

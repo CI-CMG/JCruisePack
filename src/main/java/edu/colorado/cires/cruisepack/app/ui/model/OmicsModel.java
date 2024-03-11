@@ -10,6 +10,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsFile;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidOmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -19,27 +20,20 @@ import java.nio.file.Path;
 import org.springframework.stereotype.Component;
 
 @Component
+@ValidOmicsModel
 public class OmicsModel extends PropertyChangeModel {
 
     private boolean samplingConducted = false;
-    @ValidPersonDropDownItem
     private DropDownItem contact = PersonDatastore.UNSELECTED_PERSON;
     private String contactError = null;
-    @NotNull(message = "must not be blank")
-    @PathExists
-    @PathIsFile
     private Path sampleTrackingSheet = null;
     private String sampleTrackingSheetError = null;
-    @NotBlank
     private String bioProjectAccession = null;
     private String bioProjectAcessionError = null;
-    @ValidSamplingTypes
     private SamplingTypesModel samplingTypes = new SamplingTypesModel();
     private String samplingTypesError = null;
-    @ValidExpectedAnalyses
     private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
     private String expectedAnalysesError = null;
-    @NotBlank
     private String additionalSamplingInformation = null;
     private String additionalSamplingInformationError = null;
 
