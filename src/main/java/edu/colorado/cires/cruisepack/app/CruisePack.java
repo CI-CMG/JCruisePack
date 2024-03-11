@@ -30,15 +30,31 @@ public class CruisePack implements ApplicationListener<ApplicationStartingEvent>
   private static final String SYSTEM_LAF = "system";
   private static final String CROSS_PLATFORM_LAF = "cross-platform";
 
+
+  private static ConfigurableApplicationContext createCtx(String[] args) {
+    ConfigurableApplicationContext ctx;
+    try {
+      ctx = new SpringApplicationBuilder(CruisePack.class)
+          .listeners(new CruisePack())
+          .headless(false)
+          .web(WebApplicationType.NONE)
+          .run(args);
+    } catch (Exception e) {
+      LOGGER.warn("Failed first attempt to start context. Trying in headless mode.", e);
+      ctx = new SpringApplicationBuilder(CruisePack.class)
+          .listeners(new CruisePack())
+          .headless(true)
+          .web(WebApplicationType.NONE)
+          .run(args);
+    }
+    return ctx;
+  }
+
   public static void main(String[] args) {
 
     CruisePackPreSpringStarter.start();
 
-    ConfigurableApplicationContext ctx = new SpringApplicationBuilder(CruisePack.class)
-        .listeners(new CruisePack())
-        .headless(false)
-        .web(WebApplicationType.NONE)
-        .run(args);
+    ConfigurableApplicationContext ctx = createCtx(args);
 
     SwingUtilities.invokeLater(() -> {
       if (ctx.getBeanNamesForType(MainFrame.class).length > 0 ) {
