@@ -21,35 +21,27 @@ public class PersonModel extends PropertyChangeModel {
     private String organization = null;
     private String organizationError = null;
 
-    @NotBlank
     private String street = null;
     private String streetError = null;
 
-    @NotBlank
     private String city = null;
     private String cityError = null;
 
-    @NotBlank
     private String state = null;
     private String stateError = null;
 
-    @NotBlank
     private String zip = null;
     private String zipError = null;
 
-    @NotBlank
     private String country = "USA";
     private String countryError = null;
 
-    @NotBlank
     private String phone = null;
     private String phoneError = null;
 
-    @NotBlank
     private String email = null;
     private String emailError = null;
 
-    @NotBlank
     private String orcidID = null;
     private String orcidIDError = null;
 
