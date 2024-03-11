@@ -6,7 +6,6 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +14,12 @@ public class CruiseInformationModel extends PropertyChangeModel {
   @NotBlank
   private String cruiseTitle;
   private String cruiseTitleError = null;
-  @NotBlank
   private String cruisePurpose;
   private String cruisePurposeError = null;
   @NotBlank
   private String cruiseDescription;
   private String cruiseDescriptionError = null;
-  @NotNull(message = "must not be blank")
+
   @PathExists
   @PathIsDirectory
   private Path documentsPath;
