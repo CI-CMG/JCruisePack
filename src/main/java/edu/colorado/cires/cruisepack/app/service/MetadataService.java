@@ -86,18 +86,19 @@ public class MetadataService {
        .build())
        //        .withProjects()
        .withScientists(packJob.getScientists())
-       .withOmics(Omics.builder()
-          .withSamplingTypes(packJob.getOmicsSamplingTypes())
-          .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
-          .withOmicsPoc(OmicsPoc.builder()
-           .withUuid(packJob.getOmicsContactUuid())
-            .withName(packJob.getOmicsContactName())
-            .withEmail(packJob.getOmicsContactEmail())
-            .withPhone(packJob.getOmicsContactPhone())
-          .build())
-          .withNcbiAccession(packJob.getOmicsBioProjectAccession())
-          .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
-        .build())
+        .withOmics(new Omics(
+            packJob.getOmicsBioProjectAccession(),
+            packJob.getOmicsSamplingTypes(),
+            packJob.getOmicsExpectedAnalyses(),
+            packJob.getOmicsAdditionalSamplingInformation(),
+            OmicsPoc.builder()
+                .withUuid(packJob.getOmicsContactUuid())
+                .withName(packJob.getOmicsContactName())
+                .withEmail(packJob.getOmicsContactEmail())
+                .withPhone(packJob.getOmicsContactPhone())
+                .build()
+            
+        ))
         .withInstruments(getInstrumentsJson(packJob))
         .build();
   }
@@ -133,18 +134,19 @@ public class MetadataService {
             .build())
         //        .withProjects()
         .withScientists(packJob.getScientists())
-        .withOmics(Omics.builder()
-            .withSamplingTypes(packJob.getOmicsSamplingTypes())
-            .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
-            .withOmicsPoc(OmicsPoc.builder()
+        .withOmics(new Omics(
+            packJob.getOmicsBioProjectAccession(),
+            packJob.getOmicsSamplingTypes(),
+            packJob.getOmicsExpectedAnalyses(),
+            packJob.getOmicsAdditionalSamplingInformation(),
+            OmicsPoc.builder()
                 .withUuid(packJob.getOmicsContactUuid())
                 .withName(packJob.getOmicsContactName())
                 .withEmail(packJob.getOmicsContactEmail())
                 .withPhone(packJob.getOmicsContactPhone())
-                .build())
-            .withNcbiAccession(packJob.getOmicsBioProjectAccession())
-            .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
-            .build())
+                .build()
+
+        ))
         .withInstruments(getInstrumentDataJson(packJob))
         .build();
   }
