@@ -21,9 +21,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class FooterPanel extends JPanel implements ReactiveView {
 
   private static final String MANAGE_RECORDS_LABEL = "Manage Records";

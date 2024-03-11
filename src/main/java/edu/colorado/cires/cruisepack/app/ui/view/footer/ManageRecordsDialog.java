@@ -21,9 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class ManageRecordsDialog extends JDialog implements ReactiveView {
   private final CruiseDataController cruiseDataController;
   private final ReactiveViewRegistry reactiveViewRegistry;
