@@ -59,6 +59,7 @@ public abstract class DatasetPanel<T extends AdditionalFieldsModel, C extends Ba
   private static final String PATH_LABEL = "Path To Data Files";
   private static final String ANCILLARY_PATH_LABEL = "Path to Ancillary Files";
   private static final String ANCILLARY_DETAILS_LABEL = "Ancillary Data Details";
+  private static final String PRIMARY_DATA_DETAILS_LABEL = "Primary Data Details";
 
 
 
@@ -80,7 +81,7 @@ public abstract class DatasetPanel<T extends AdditionalFieldsModel, C extends Ba
   private final JButton ancillaryPathSelectButton = new JButton(SELECT_DIR_LABEL);
   private final LabeledComboBoxPanel instrumentPanel = new LabeledComboBoxPanel();
   private final ProcessingLevelRadioPanel buttonPanel = new ProcessingLevelRadioPanel();
-  private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel();
+  private final CommentsTextAreaPanel commentsPanel = new CommentsTextAreaPanel(PRIMARY_DATA_DETAILS_LABEL);
   private AdditionalFieldsPanel<T, C> additionalFieldsPanel;
   
   protected DatasetPanel(BaseDatasetInstrumentModel<T> model, C controller, InstrumentDatastore instrumentDatastore) {
