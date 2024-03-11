@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import javax.swing.AbstractButton;
+import javax.swing.BoundedRangeModel;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -157,6 +158,16 @@ public final class FieldUtils {
       comboBox.setSelectedItem(items.get(0));
     } else {
       comboBox.setSelectedItem(selectedItem);
+    }
+  }
+  
+  public static void updateProgressBarModel(BoundedRangeModel model, PropertyChangeEvent event) {
+    if (event.getNewValue() instanceof Integer) {
+      int newValue = (int) event.getNewValue();
+      int oldValue = model.getValue();
+      if (newValue != oldValue) {
+        model.setValue(newValue);
+      }
     }
   }
 

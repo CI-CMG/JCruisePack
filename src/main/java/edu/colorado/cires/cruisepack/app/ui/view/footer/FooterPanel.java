@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view.footer;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgressBarModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
@@ -17,6 +18,8 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.BoundedRangeModel;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -50,6 +53,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
   private final JProgressBar progressBar = new JProgressBar();
+  private final BoundedRangeModel progressBarModel = new DefaultBoundedRangeModel();
   private final OptionDialog saveWarningDialog = new OptionDialog(
       "<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>",
       Collections.singletonList("OK")
@@ -97,6 +101,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
     stopButton.setEnabled(footerControlModel.isStopButtonEnabled());
     packageButton.setEnabled(footerControlModel.isPackageButtonEnabled());
     saveButton.setEnabled(footerControlModel.isSaveButtonEnabled());
+    progressBar.setModel(progressBarModel);
   }
 
   private void setupLayout() {
@@ -271,6 +276,8 @@ public class FooterPanel extends JPanel implements ReactiveView {
         }
       }
       break;
+      case Events.UPDATE_PROGRESS:
+        updateProgressBarModel(progressBarModel, evt);
       default:
         break;
     }
