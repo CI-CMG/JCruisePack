@@ -463,6 +463,9 @@
           <npmVersion>${npm.version}</npmVersion>
           <workingDirectory>${basedir}</workingDirectory>
           <installDirectory>target/node-install</installDirectory>
+          <environmentVariables>
+            <GITHUB_REPOSITORY>CI-CMG/JCruisePack</GITHUB_REPOSITORY>
+          </environmentVariables>
         </configuration>
         <executions>
           <execution>
@@ -494,7 +497,7 @@
             </goals>
             <configuration>
               <workingDirectory>${basedir}</workingDirectory>
-              <arguments>run package</arguments>
+              <arguments>run github-prepare-release</arguments>
             </configuration>
           </execution>
         </executions>
