@@ -387,6 +387,7 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <classifier>exe</classifier>
+          <attach>false</attach>
         </configuration>
       </plugin>
 
@@ -599,6 +600,33 @@
                 <goals>
                   <goal>sign</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.ragedunicorn.tools.maven</groupId>
+            <artifactId>github-release-maven-plugin</artifactId>
+            <version>1.0.7</version>
+            <executions>
+              <execution>
+                <id>github-release</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>github-release</goal>
+                </goals>
+                <configuration>
+                  <owner>ci-cmg</owner>
+                  <repository>cruise-pack-data</repository>
+                  <tagName>v${project.version}</tagName>
+                  <targetCommitish>trunk</targetCommitish>
+                  <body>v${project.version}</body>
+                  <assets>
+                    <asset>target/cruise-pack-${project.version}-javadoc.jar</asset>
+                    <asset>target/cruise-pack-${project.version}-sources.jar</asset>
+                    <asset>target/cruise-pack-${project.version}.jar</asset>
+                    <asset>target/cruise-pack-${project.version}-exe.jar</asset>
+                  </assets>
+                </configuration>
               </execution>
             </executions>
           </plugin>
