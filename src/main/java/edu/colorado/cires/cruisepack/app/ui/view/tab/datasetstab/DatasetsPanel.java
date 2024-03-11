@@ -15,9 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class DatasetsPanel extends JPanel implements ReactiveView {
 
   private static final String ADD_DATASET_LABEL = "Add Additional Dataset";

@@ -24,9 +24,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
 
   private static final String DIALOG_MESSAGE = "Select Dataset Type";

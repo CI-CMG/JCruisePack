@@ -23,9 +23,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
 
   private static final String DOCUMENTS_PATH_LABEL = "Documents Path";

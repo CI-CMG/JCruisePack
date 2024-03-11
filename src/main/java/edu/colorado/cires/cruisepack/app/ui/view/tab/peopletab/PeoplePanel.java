@@ -30,9 +30,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class PeoplePanel extends JPanel implements ReactiveView {
 
   private static final String SCIENTISTS_LABEL = "Scientists";

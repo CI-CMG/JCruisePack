@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
@@ -43,6 +44,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import jakarta.annotation.PostConstruct;
 
 @Component
+@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class EditOrgDialog extends JDialog implements ReactiveView {
 
     private static final String ORG_EDITOR_HEADER = "Organization Editor";
