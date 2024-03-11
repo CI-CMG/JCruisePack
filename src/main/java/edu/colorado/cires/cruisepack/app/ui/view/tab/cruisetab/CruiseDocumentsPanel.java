@@ -14,6 +14,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,7 +64,12 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
 
     selectDirectoryButton.addActionListener((evt) -> handleDirSelect());
     
-    pathTextField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(pathTextField.getText()));
+    pathTextField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyReleased(KeyEvent e) {
+        handleDirValue(pathTextField.getText());
+      }
+    });
 
   }
 
