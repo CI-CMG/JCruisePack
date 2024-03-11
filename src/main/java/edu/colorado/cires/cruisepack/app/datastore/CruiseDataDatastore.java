@@ -79,7 +79,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     load();
   }
   
-  public void saveCruise(CruiseData cruiseData, Path path) {
+  private void saveCruise(CruiseData cruiseData, Path path) {
     if (cruiseData.isDelete()) {
       try {
         Files.deleteIfExists(path);
@@ -105,7 +105,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     load();
   }
 
-  private void load() {
+  public void load() {
     Path cruiseMetadataDir = getCruiseMetadataDir();
     cruises = new ArrayList<>(0);
     try (Stream<Path> paths = Files.walk(cruiseMetadataDir).filter(p -> !p.toFile().isDirectory())) {
