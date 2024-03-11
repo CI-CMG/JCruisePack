@@ -165,6 +165,7 @@ public class FooterControlController implements PropertyChangeListener {
   }
   
   private void postSave(String packageId, boolean fromExitPrompt) {
+    cruiseDataDatastore.load();
     cruiseDataDatastore.getByPackageId(packageId).ifPresent(this::updateFormState);
     emitPackageId(packageId);
     if (!fromExitPrompt) {
