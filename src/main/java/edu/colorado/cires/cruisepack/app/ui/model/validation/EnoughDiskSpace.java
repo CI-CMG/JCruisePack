@@ -72,10 +72,10 @@ public @interface EnoughDiskSpace {
     }
     
     private static BigInteger subtractIfExists(BigInteger bigInteger, Path path) {
-      BigInteger directorySize = getDirectorySize(path);
+      BigInteger size = getSize(path);
       
-      if (directorySize != null) {
-        bigInteger = bigInteger.subtract(directorySize);
+      if (size != null) {
+        bigInteger = bigInteger.subtract(size);
       }
       
       return bigInteger;
@@ -94,10 +94,31 @@ public @interface EnoughDiskSpace {
       return bigInteger;
     }
     
+    private static BigInteger getSize(Path path) {
+      if (path != null) {
+        File file = path.toFile();
+        if (file.isFile()) {
+          return getFileSize(path);
+        } else if (file.isDirectory()) {
+          return getDirectorySize(path);
+        }
+      }
+      
+      return null;
+    }
+
     private static BigInteger getDirectorySize(Path path) {
       if (path != null) {
         File file = path.toFile();
         return FileUtils.sizeOfDirectoryAsBigInteger(file);
+      }
+
+      return null;
+    }
+    
+    private static BigInteger getFileSize(Path path) {
+      if (path != null) {
+        return FileUtils.sizeOfAsBigInteger(path.toFile());
       }
       
       return null;
