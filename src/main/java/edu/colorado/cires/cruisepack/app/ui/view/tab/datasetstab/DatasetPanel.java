@@ -193,9 +193,9 @@ public abstract class DatasetPanel<T extends AdditionalFieldsModel, C extends Ba
     ancillaryPathPanel.add(ancillaryPath, configureLayout(0, 1, c -> c.weightx = 1));
     ancillaryPathPanel.add(ancillaryPathSelectButton, configureLayout(1, 1, c -> c.weightx = 0));
     
-    footer.add(ancillaryPathPanel, configureLayout(0, 0));
-    footer.add(ancillaryDetails, configureLayout(0, 1));
-    footer.add(commentsPanel, configureLayout(0, 2));
+    footer.add(commentsPanel, configureLayout(0, 0));
+    footer.add(ancillaryPathPanel, configureLayout(0, 1));
+    footer.add(ancillaryDetails, configureLayout(0, 2));
     
     return footer;
   }
