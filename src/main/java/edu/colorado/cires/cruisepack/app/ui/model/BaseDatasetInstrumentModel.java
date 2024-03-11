@@ -53,7 +53,6 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
   @NotBlank
   private String processingLevel = "Raw";
   private String processingLevelError = null;
-  @NotBlank
   private String comments;
   private String commentsError = null;
   @NotNull(message = "must not be blank")
@@ -61,8 +60,6 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
   @PathIsDirectory
   private Path ancillaryPath;
   private String ancillaryPathError = null;
-  
-  @NotBlank
   private String ancillaryDetails;
   private String ancillaryDetailsError = null;
   
