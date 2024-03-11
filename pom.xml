@@ -622,15 +622,27 @@
                 </goals>
                 <configuration>
                   <owner>ci-cmg</owner>
-                  <repository>cruise-pack-data</repository>
+                  <repository>JCruisePack</repository>
                   <tagName>v${project.version}</tagName>
                   <targetCommitish>trunk</targetCommitish>
-                  <body>v${project.version}</body>
+                  <releaseNotes>github-release-files/jdeploy-release-notes.md</releaseNotes>
+
                   <assets>
                     <asset>target/cruise-pack-${project.version}-javadoc.jar</asset>
                     <asset>target/cruise-pack-${project.version}-sources.jar</asset>
                     <asset>target/cruise-pack-${project.version}.jar</asset>
                     <asset>target/cruise-pack-${project.version}-exe.jar</asset>
+
+                    <asset>github-release-files/cruise-pack-0.2.0-SNAPSHOT.tgz</asset>
+                    <asset>github-release-files/icon.png</asset>
+                    <asset>github-release-files/installsplash.png</asset>
+                    <asset>github-release-files/JCruisePack.Installer-linux-x64-0.2.0-SNAPSHOT_25KP.gz</asset>
+                    <asset>github-release-files/JCruisePack.Installer-mac-arm64-0.2.0-SNAPSHOT_25KP.tgz</asset>
+                    <asset>github-release-files/JCruisePack.Installer-mac-x64-0.2.0-SNAPSHOT_25KP.tgz</asset>
+                    <asset>github-release-files/JCruisePack.Installer-win-x64-0.2.0-SNAPSHOT_25KP.exe</asset>
+                    <asset>github-release-files/jdeploy-release-notes.md</asset>
+                    <asset>github-release-files/package-info.json</asset>
+
                   </assets>
                 </configuration>
               </execution>
