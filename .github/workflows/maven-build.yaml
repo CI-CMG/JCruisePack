@@ -48,7 +48,7 @@ jobs:
       - name: Package jar as dmg installer
         run: "jpackage --name CruisePack-Mac-x86-Installer -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
       - name: View artifacts
-        run: dir
+        run: ls -l
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -71,7 +71,7 @@ jobs:
       - name: Package jar as dmg installer
         run: "jpackage --name CruisePack-Mac-arm64-Installer -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
       - name: View artifacts
-        run: dir
+        run: ls -l
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
@@ -94,7 +94,7 @@ jobs:
       - name: Package jar as deb installer
         run: "jpackage --name CruisePack-Linux-x64-Installer --type deb -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
       - name: View artifacts
-        run: dir
+        run: ls -l
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
