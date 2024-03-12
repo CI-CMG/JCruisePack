@@ -118,7 +118,7 @@
       <dependency>
         <groupId>io.github.ci-cmg.cruise-pack</groupId>
         <artifactId>cruise-pack-jaxb</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.1.0</version>
       </dependency>
       <dependency>
         <groupId>gov.loc</groupId>
@@ -133,7 +133,7 @@
       <dependency>
         <groupId>io.github.ci-cmg.cruise-pack</groupId>
         <artifactId>cruise-pack-data</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.1.14</version>
       </dependency>
 
 
@@ -633,13 +633,13 @@
                     <asset>target/cruise-pack-${project.version}.jar</asset>
                     <asset>target/cruise-pack-${project.version}-exe.jar</asset>
 
-                    <asset>github-release-files/cruise-pack-0.2.0-SNAPSHOT.tgz</asset>
+                    <asset>github-release-files/cruise-pack-${project.version}.tgz</asset>
                     <asset>github-release-files/icon.png</asset>
                     <asset>github-release-files/installsplash.png</asset>
-                    <asset>github-release-files/JCruisePack.Installer-linux-x64-0.2.0-SNAPSHOT_25KP.gz</asset>
-                    <asset>github-release-files/JCruisePack.Installer-mac-arm64-0.2.0-SNAPSHOT_25KP.tgz</asset>
-                    <asset>github-release-files/JCruisePack.Installer-mac-x64-0.2.0-SNAPSHOT_25KP.tgz</asset>
-                    <asset>github-release-files/JCruisePack.Installer-win-x64-0.2.0-SNAPSHOT_25KP.exe</asset>
+                    <asset>github-release-files/JCruisePack.Installer-linux-x64-${project.version}_25KP.gz</asset>
+                    <asset>github-release-files/JCruisePack.Installer-mac-arm64-${project.version}_25KP.tgz</asset>
+                    <asset>github-release-files/JCruisePack.Installer-mac-x64-${project.version}_25KP.tgz</asset>
+                    <asset>github-release-files/JCruisePack.Installer-win-x64-${project.version}_25KP.exe</asset>
                     <asset>github-release-files/jdeploy-release-notes.md</asset>
                     <asset>github-release-files/package-info.json</asset>
 
