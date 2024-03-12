@@ -25,10 +25,10 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
       - run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-      - run: export ARTIFACT_VERSION="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-      - run: echo "$ARTIFACT_VERSION"
+      - run: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) > version.txt
+      - run: cat version.txt
       - id: version
-        run: echo "version=$ARTIFACT_VERSION" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(cat version.txt)" >> "$GITHUB_OUTPUT"
       - name: Upload Jar
         uses: actions/upload-artifact@v4
         with:
