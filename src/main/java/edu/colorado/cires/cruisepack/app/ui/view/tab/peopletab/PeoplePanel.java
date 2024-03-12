@@ -200,29 +200,9 @@ public class PeoplePanel extends JPanel implements ReactiveView {
         scientistsField.updateOptions(options);
         break;
       case Events.UPDATE_ORGANIZATION_DATA_STORE:
-//        options = organizationDatasore.getEnabledOrganizationDropDowns();
-//        fundingOrganizationsField.setOptions(options);
-//        sourceOrganizationsField.setOptions(options);
-//        enabledUUIDs = options.stream()
-//          .map(i -> i.getId())
-//          .collect(Collectors.toList());
-//        
-//        updateAppendableTable(fundingOrganizationsField, new PropertyChangeEvent(
-//          evt,
-//          "UPDATE_FUNDING_TABLE",
-//          Collections.emptyList(),
-//          fundingOrganizationsField.getDropDowns().stream()
-//            .filter(i -> enabledUUIDs.contains(i.getId()))
-//            .collect(Collectors.toList())
-//        ));
-//        updateAppendableTable(sourceOrganizationsField, new PropertyChangeEvent(
-//          evt,
-//          "UPDATE_SOURCE_TABLE",
-//          Collections.emptyList(),
-//          sourceOrganizationsField.getDropDowns().stream()
-//            .filter(i -> enabledUUIDs.contains(i.getId()))
-//            .collect(Collectors.toList())
-//        ));
+        options = organizationDatasore.getEnabledOrganizationDropDowns();
+        fundingOrganizationsField.updateOptions(options);
+        sourceOrganizationsField.updateOptions(options);
         break;
       default:
         break;
