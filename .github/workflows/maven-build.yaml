@@ -79,7 +79,8 @@ jobs:
           path: "CruisePack-Mac-arm64-Installer*.dmg"
   linux-x64:
     needs: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+#    runs-on: ubuntu-20.04
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -98,8 +99,8 @@ jobs:
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: CruisePack-Mac-arm64-Installer
-          path: "CruisePack-Mac-arm64-Installer*.deb"
+          name: CCruisePack-Linux-x64-Installer
+          path: "CruisePack-Linux-x64-Installer*.deb"
   windows-x64:
     needs: build
     runs-on: windows-2019
