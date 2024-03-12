@@ -625,7 +625,7 @@
                   <repository>JCruisePack</repository>
                   <tagName>v${project.version}</tagName>
                   <targetCommitish>trunk</targetCommitish>
-                  <releaseNotes>github-release-files/jdeploy-release-notes.md</releaseNotes>
+                  <releaseNotes>jdeploy/github-release-files/jdeploy-release-notes.md</releaseNotes>
 
                   <assets>
                     <asset>target/cruise-pack-${project.version}-javadoc.jar</asset>
@@ -633,15 +633,15 @@
                     <asset>target/cruise-pack-${project.version}.jar</asset>
                     <asset>target/cruise-pack-${project.version}-exe.jar</asset>
 
-                    <asset>github-release-files/cruise-pack-${project.version}.tgz</asset>
-                    <asset>github-release-files/icon.png</asset>
-                    <asset>github-release-files/installsplash.png</asset>
-                    <asset>github-release-files/JCruisePack.Installer-linux-x64-${project.version}_25KP.gz</asset>
-                    <asset>github-release-files/JCruisePack.Installer-mac-arm64-${project.version}_25KP.tgz</asset>
-                    <asset>github-release-files/JCruisePack.Installer-mac-x64-${project.version}_25KP.tgz</asset>
-                    <asset>github-release-files/JCruisePack.Installer-win-x64-${project.version}_25KP.exe</asset>
-                    <asset>github-release-files/jdeploy-release-notes.md</asset>
-                    <asset>github-release-files/package-info.json</asset>
+                    <asset>jdeploy/github-release-files/cruise-pack-${project.version}.tgz</asset>
+                    <asset>jdeploy/github-release-files/icon.png</asset>
+                    <asset>jdeploy/github-release-files/installsplash.png</asset>
+                    <asset>jdeploy/github-release-files/JCruisePack.Installer-linux-x64-${project.version}_25KP.gz</asset>
+                    <asset>jdeploy/github-release-files/JCruisePack.Installer-mac-arm64-${project.version}_25KP.tgz</asset>
+                    <asset>jdeploy/github-release-files/JCruisePack.Installer-mac-x64-${project.version}_25KP.tgz</asset>
+                    <asset>jdeploy/github-release-files/JCruisePack.Installer-win-x64-${project.version}_25KP.exe</asset>
+                    <asset>jdeploy/github-release-files/jdeploy-release-notes.md</asset>
+                    <asset>jdeploy/github-release-files/package-info.json</asset>
 
                   </assets>
                 </configuration>
