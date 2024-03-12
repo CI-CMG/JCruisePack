@@ -44,6 +44,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: exe-jar
+          path: jars
+      - name: Package jar as dmg installer
+        run: "jpackage --name CruisePack-Mac-x86-Installer -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
+      - name: View artifacts
+        run: dir
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: CruisePack-Mac-x86-Installer
+          path: "CruisePack-Mac-x86-Installer*.dmg"
   osx-arm64:
     needs: build
     runs-on: macos-14
@@ -57,6 +67,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: exe-jar
+          path: jars
+      - name: Package jar as dmg installer
+        run: "jpackage --name CruisePack-Mac-arm64-Installer -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
+      - name: View artifacts
+        run: dir
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: CruisePack-Mac-arm64-Installer
+          path: "CruisePack-Mac-arm64-Installer*.dmg"
   linux-x64:
     needs: build
     runs-on: ubuntu-20.04
@@ -70,6 +90,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: exe-jar
+          path: jars
+      - name: Package jar as deb installer
+        run: "jpackage --name CruisePack-Linux-x64-Installer --type deb -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
+      - name: View artifacts
+        run: dir
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: CruisePack-Mac-arm64-Installer
+          path: "CruisePack-Mac-arm64-Installer*.deb"
   windows-x64:
     needs: build
     runs-on: windows-2019
@@ -85,12 +115,12 @@ jobs:
           name: exe-jar
           path: jars
       - name: Package jar as msi
-        run: "jpackage --name CruisePack --type msi -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar --win-dir-chooser"
+        run: "jpackage --name CruisePack-Win-x86-Installer --type msi -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar --win-dir-chooser"
       - name: View artifacts
         run: dir
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: msis
-          path: "CruisePack.msi"
+          name: CruisePack-Win-x86-Installer
+          path: "CruisePack-Win-x86-Installer*.msi"
 
