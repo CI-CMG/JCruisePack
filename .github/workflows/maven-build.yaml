@@ -24,8 +24,9 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-      - run: export ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-      - run: echo $ARTIFACT_VERSION
+      - run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
+      - run: export ARTIFACT_VERSION="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+      - run: echo "$ARTIFACT_VERSION"
       - id: version
         run: echo "version=$ARTIFACT_VERSION" >> "$GITHUB_OUTPUT"
       - name: Upload Jar
