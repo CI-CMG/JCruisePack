@@ -58,15 +58,15 @@ jobs:
       - name: Package jar as dmg installer
         run: |
           jpackage \
-          --icon cruise_pack.icns \
-          --vendor 'CIRES / University of Colorado' \  
-          --java-options '-splash:$APPDIR/splash.png' \
-          --name Cruise Pack \
-          -i jars \
-          --main-class org.springframework.boot.loader.launch.JarLauncher \
-          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar \
-          --about-url https://github.com/CI-CMG/JCruisePack \
-          --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
+            --icon cruise_pack.icns \
+            --vendor 'CIRES / University of Colorado' \  
+            --java-options '-splash:$APPDIR/splash.png' \
+            --name Cruise Pack \
+            -i jars \
+            --main-class org.springframework.boot.loader.launch.JarLauncher \
+            --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar \
+            --about-url https://github.com/CI-CMG/JCruisePack \
+            --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
       - name: View artifacts
         run: ls -l
       - name: Upload installer
@@ -96,15 +96,15 @@ jobs:
       - name: Package jar as dmg installer
         run: |
           jpackage \
-          --icon cruise_pack.icns \
-          --vendor 'CIRES / University of Colorado' \  
-          --java-options '-splash:$APPDIR/splash.png' \
-          --name Cruise Pack \
-          -i jars \
-          --main-class org.springframework.boot.loader.launch.JarLauncher \
-          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar \
-          --about-url https://github.com/CI-CMG/JCruisePack \
-          --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
+            --icon cruise_pack.icns \
+            --vendor 'CIRES / University of Colorado' \  
+            --java-options '-splash:$APPDIR/splash.png' \
+            --name Cruise Pack \
+            -i jars \
+            --main-class org.springframework.boot.loader.launch.JarLauncher \
+            --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar \
+            --about-url https://github.com/CI-CMG/JCruisePack \
+            --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
       - name: View artifacts
         run: ls -l
       - name: Upload installer
