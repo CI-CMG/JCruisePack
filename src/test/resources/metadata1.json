@@ -18,6 +18,7 @@
   "scientists": [],
   "projects": [],
   "omics": {
+    "NCBI_accession": "OmicsBioProjectAccession",
     "sampling_types": ["sample1", "sample2"],
     "analyses_types": ["Analysis1", "Analysis2"],
     "omics_comment": "AdditionalSamplingInformation",
