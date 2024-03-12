@@ -25,7 +25,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
       - run: mvn help:evaluate -Dexpression=project.version -q -DforceStdout
-      - run: $(mvn help:evaluate -Dexpression=project.version -q -DforceStdout) > version.txt
+      - run: echo "$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" > version.txt
       - run: cat version.txt
       - id: version
         run: echo "version=$(cat version.txt)" >> "$GITHUB_OUTPUT"
