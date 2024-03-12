@@ -25,7 +25,7 @@ jobs:
       - name: Debug
         run: ls target/*-exe.jar
       - name: Upload Jar
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: exe-jar
           path: "target/*-exe.jar"
