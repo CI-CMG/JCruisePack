@@ -415,7 +415,7 @@
           <releaseProfiles>release,site-publish</releaseProfiles>
           <goals>deploy site</goals>
           <tagNameFormat>v@{project.version}</tagNameFormat>
-          <!--          <arguments>-Pdep-check</arguments>-->
+          <arguments>-PskipTests</arguments>
         </configuration>
       </plugin>
 
