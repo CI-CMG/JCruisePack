@@ -42,8 +42,6 @@ jobs:
           distribution: 'temurin'
       - name: Download Jar
         uses: actions/download-artifact@v4
-        with:
-          name: exe-jar
   osx-arm64:
     needs: build
     runs-on: macos-14
@@ -57,8 +55,6 @@ jobs:
           distribution: 'temurin'
       - name: Download Jar
         uses: actions/download-artifact@v4
-        with:
-          name: exe-jar
   linux-x64:
     needs: build
     runs-on: ubuntu-20.04
@@ -72,8 +68,6 @@ jobs:
           distribution: 'temurin'
       - name: Download Jar
         uses: actions/download-artifact@v4
-        with:
-          name: exe-jar
   windows-x64:
     needs: build
     runs-on: windows-2019
@@ -87,6 +81,4 @@ jobs:
           distribution: 'temurin'
       - name: Download Jar
         uses: actions/download-artifact@v4
-        with:
-          name: exe-jar
 
