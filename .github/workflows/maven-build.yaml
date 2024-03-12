@@ -6,7 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -21,3 +22,69 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+      - name: Upload Jar
+        uses: actions/upload-artifact@v1
+        with:
+          name: exe-jar
+          path: "target/*-exe.jar"
+  osx-x64:
+    needs: build
+    runs-on: macos-11
+    steps:
+      - name: Download Jar
+        uses: actions/upload-artifact@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+  osx-arm64:
+    needs: build
+    runs-on: macos-14
+    steps:
+      - name: Download Jar
+        uses: actions/upload-artifact@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+  linux-x64:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download Jar
+        uses: actions/upload-artifact@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+  windows-x64:
+    needs: build
+    runs-on: windows-2019
+    steps:
+      - name: Download Jar
+        uses: actions/upload-artifact@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+
