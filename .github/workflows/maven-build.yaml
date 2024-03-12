@@ -25,6 +25,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
       - run: ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+      - run: echo $ARTIFACT_VERSION
       - id: version
         run: echo "version=$ARTIFACT_VERSION" >> "$GITHUB_OUTPUT"
       - name: Upload Jar
@@ -75,6 +76,9 @@ jobs:
     needs: build
     runs-on: windows-2019
     steps:
+      - env:
+          ARTIFACT_VERSION: ${{needs.build.outputs.version}}
+        run: echo "$ARTIFACT_VERSION"
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -86,7 +90,7 @@ jobs:
           name: exe-jar
           path: jars
       - name: Package jar as msi
-        run: "jpackage --name CruisePack --type msi --app-version ${{ needs.build.outputs.version }} -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar --win-dir-chooser"
+        run: "jpackage --name CruisePack --type msi --app-version $ARTIFACT_VERSION -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar  cruise-pack-$ARTIFACT_VERSION-exe.jar --win-dir-chooser"
       - name: View artifacts
         run: dir
       - name: Upload installer
