@@ -465,6 +465,8 @@
           <installDirectory>target/node-install</installDirectory>
           <environmentVariables>
             <GITHUB_REPOSITORY>CI-CMG/JCruisePack</GITHUB_REPOSITORY>
+            <GITHUB_REF_TYPE>tag</GITHUB_REF_TYPE>
+            <GITHUB_REF_NAME>v${project.version}</GITHUB_REF_NAME>
           </environmentVariables>
         </configuration>
         <executions>
@@ -644,6 +646,34 @@
                     <asset>jdeploy/github-release-files/package-info.json</asset>
 
                   </assets>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+<!--            <configuration>-->
+<!--              <nodeVersion>${node.version}</nodeVersion>-->
+<!--              <npmVersion>${npm.version}</npmVersion>-->
+<!--              <workingDirectory>${basedir}</workingDirectory>-->
+<!--              <installDirectory>target/node-install</installDirectory>-->
+<!--              <environmentVariables>-->
+<!--                <GITHUB_REPOSITORY>CI-CMG/JCruisePack</GITHUB_REPOSITORY>-->
+<!--                <GITHUB_REF_TYPE>tag</GITHUB_REF_TYPE>-->
+<!--                <GITHUB_REF_NAME>v${project.version}</GITHUB_REF_NAME>-->
+<!--              </environmentVariables>-->
+<!--            </configuration>-->
+            <executions>
+              <execution>
+                <id>deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <workingDirectory>${basedir}</workingDirectory>
+                  <arguments>run deploy</arguments>
                 </configuration>
               </execution>
             </executions>
