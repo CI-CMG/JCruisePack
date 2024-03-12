@@ -5,6 +5,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.build.outputs.version.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,8 +24,9 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-      - name: Debug
-        run: ls target/*-exe.jar
+      - run: ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+      - id: version
+        run: echo "version=$ARTIFACT_VERSION" >> "$GITHUB_OUTPUT"
       - name: Upload Jar
         uses: actions/upload-artifact@v4
         with:
@@ -81,8 +84,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: exe-jar
+          path: jars
       - name: Package jar as msi
-        run: "jpackage --name CruisePack --type msi --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar *-exe.jar --win-dir-chooser"
+        run: "jpackage --name CruisePack --type msi --app-version ${{ needs.build.outputs.version }} -i jars --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar --win-dir-chooser"
       - name: View artifacts
         run: dir
       - name: Upload installer
