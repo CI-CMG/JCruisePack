@@ -22,6 +22,8 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+      - name: Debug
+        run: ls target/*-exe.jar
       - name: Upload Jar
         uses: actions/upload-artifact@v1
         with:
