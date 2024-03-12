@@ -81,4 +81,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: exe-jar
+      - name: Package jar as msi
+        run: "jpackage --name CruisePack --type msi --main-class edu.colorado.cires.cruisepack.app.CruisePack --main-jar *-exe.jar --win-dir-chooser"
+      - name: View artifacts
+        run: dir
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: msis
+          path: "CruisePack.msi"
 
