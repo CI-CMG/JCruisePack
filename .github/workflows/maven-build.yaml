@@ -264,6 +264,7 @@ jobs:
           path: "per-machine/*.exe"
   release:
     needs:
+      - build
       - osx-x64
       - osx-arm64
       - linux-x64
@@ -271,13 +272,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
-      - name: View artifacts
-        run: ls -l
+      - run: mkdir release
+      - run: cp cruise-pack-install-mac-arm64.dmg/*.dmg release/cruise-pack-install-mac-arm64-${{ needs.build.outputs.version }}.dmg
+      - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
+      - run: cp cruise-pack-install-win-per-machine.exe/*.exe release/cruise-pack-install-win-per-machine-${{ needs.build.outputs.version }}.exe
+      - run: cp cruise-pack-install-win-per-machine.msi/*.msi release/cruise-pack-install-win-per-machine-${{ needs.build.outputs.version }}.msi
+      - run: cp cruise-pack-install-win-per-user-x64.exe/*.exe release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.exe
+      - run: cp cruise-pack-install-win-per-user-x64.msi/*.msi release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.msi
+      - run: cp exe-jar/* release
+      - run: ls -l release
 #      - name: Update branch release
 #        uses: eine/tip@master
 #        with:
 #          tag: ${{ github.action_ref }}-latest
 #          rm: true
 #          token: ${{ secrets.RELEASE_PAT }}
-#          files: build/libs/*.*
+#          files: release/*
 
