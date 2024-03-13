@@ -178,7 +178,7 @@ jobs:
           --win-dir-chooser
           --win-help-url https://github.com/CI-CMG/JCruisePack
           -t msi
-          --icon ..\package-resources\cruise_pack_icon.ico
+          --icon package-resources\cruise_pack_icon.ico
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
@@ -197,7 +197,7 @@ jobs:
           --win-dir-chooser
           --win-help-url https://github.com/CI-CMG/JCruisePack
           -t exe
-          --icon ..\package-resources\cruise_pack_icon.ico
+          --icon package-resources\cruise_pack_icon.ico
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
@@ -216,7 +216,7 @@ jobs:
           --win-dir-chooser
           --win-help-url https://github.com/CI-CMG/JCruisePack
           -t msi
-          --icon ..\package-resources\cruise_pack_icon.ico
+          --icon package-resources\cruise_pack_icon.ico
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
@@ -234,7 +234,7 @@ jobs:
           --win-dir-chooser
           --win-help-url https://github.com/CI-CMG/JCruisePack
           -t exe
-          --icon ..\package-resources\cruise_pack_icon.ico
+          --icon package-resources\cruise_pack_icon.ico
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
