@@ -255,7 +255,7 @@ jobs:
       - name: Upload installer per-machine msi
         uses: actions/upload-artifact@v4
         with:
-          name: cruise-pack-install-win-per-user-x64.msi
+          name: cruise-pack-install-win-per-machine-x64.msi
           path: "per-machine/*.msi"
       - name: Upload installer per-machine exe
         uses: actions/upload-artifact@v4
