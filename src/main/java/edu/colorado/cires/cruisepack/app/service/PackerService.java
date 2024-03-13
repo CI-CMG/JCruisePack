@@ -1,5 +1,9 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.appendToManifest;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.cleanDir;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.computeChecksum;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.concatManifests;
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.copy;
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterHidden;
 import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
@@ -9,10 +13,11 @@ import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
-import edu.colorado.cires.cruisepack.prototype.bag.Bagger;
 import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,9 +25,10 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +49,6 @@ public class PackerService {
   private final FooterControlController footerControlController;
   private final MetadataService metadataService;
   private final PackStateModel packStateModel;
-  private final Bagger bagger = new Bagger();
 
   @Autowired
   public PackerService(
@@ -116,17 +121,71 @@ public class PackerService {
   }
 
   private void packMainBag(PackJob packJob) {
+    Path mainBagPath = packJob.getPackageDirectory().resolve(packJob.getPackageId());
     try {
-      bagger.bagInPlace(packJob.getPackageDirectory().resolve(packJob.getPackageId()));
+      BagCreator.bagInPlace(
+          mainBagPath,
+          Collections.emptyList(), // intentionally empty. Child bags have already had checksums generated. Checksums for the main bag need to be generated manually
+          false
+      );
     } catch (NoSuchAlgorithmException | IOException e) {
       throw new IllegalStateException("Unable to create main bag, ", e);
+    }
+    
+    Path manifestFile = mainBagPath.resolve("manifest-sha256.txt");
+    try (FileWriter fileWriter = new FileWriter(manifestFile.toFile(), StandardCharsets.UTF_8, true)) {
+
+      try (Stream<Path> paths = Files.walk(mainBagPath)) {
+        paths.filter(p -> p.toFile().isFile())
+            .filter(p -> p.toString().endsWith("sha256.txt"))
+            .forEach(p -> concatManifests(p, mainBagPath, fileWriter));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+      
+      Path omicsPath = mainBagPath.resolve("data").resolve("omics");
+      if (omicsPath.toFile().exists()) {
+        appendToManifest(omicsPath, mainBagPath, fileWriter);
+      }
+      
+      Path docsPath = mainBagPath.resolve("data").resolve("docs");
+      if (docsPath.toFile().exists()) {
+        appendToManifest(docsPath, mainBagPath, fileWriter);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    
+    Path tagManifestFile = mainBagPath.resolve("tagmanifest-sha256.txt");
+    try (FileWriter fileWriter = new FileWriter(tagManifestFile.toFile(), StandardCharsets.UTF_8, true)) {
+      Path bagInfoFile = mainBagPath.resolve("bag-info.txt");
+      fileWriter.write(String.format(
+          "%s  %s\n",
+          computeChecksum(bagInfoFile), mainBagPath.relativize(bagInfoFile)
+      ));
+
+      Path bagitFile = mainBagPath.resolve("bagit.txt");
+      fileWriter.write(String.format(
+          "%s  %s\n",
+          computeChecksum(bagitFile), mainBagPath.relativize(bagitFile)
+      ));
+      
+      fileWriter.write(String.format(
+          "%s  %s\n",
+          computeChecksum(manifestFile), mainBagPath.relativize(manifestFile)
+      ));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 
   private void resetBagDirs(PackJob packJob) {
-    mkDir(packJob.getPackageDirectory().resolve(packJob.getPackageId()));
-    // if there is an existing bag, move everything in data dir up to top level in preparation for packing
-    // TODO
+    Path packageDirectory = packJob.getPackageDirectory();
+    if (!packageDirectory.toFile().exists()) {
+      mkDir(packageDirectory.resolve(packJob.getPackageId()));
+    } else {
+      cleanDir(packageDirectory); // TODO test
+    }
   }
 
   /*
@@ -340,7 +399,7 @@ public class PackerService {
 
 
       try {
-        BagCreator.bagInPlace(instrumentBagRootDir, Arrays.asList(StandardSupportedAlgorithms.MD5), false);
+        BagCreator.bagInPlace(instrumentBagRootDir, Collections.singletonList(StandardSupportedAlgorithms.SHA256), false);
       } catch (NoSuchAlgorithmException | IOException e) {
         throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
       }
