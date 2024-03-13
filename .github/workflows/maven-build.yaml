@@ -284,7 +284,7 @@ jobs:
       - name: Update branch release
         uses: eine/tip@master
         with:
-          tag: ${{ github.action_ref }}-latest
+          tag: ${{ github.ref_name }}-latest
           rm: true
           token: ${{ secrets.RELEASE_PAT }}
           files: release/*
