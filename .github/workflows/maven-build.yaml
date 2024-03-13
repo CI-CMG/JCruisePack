@@ -262,4 +262,22 @@ jobs:
         with:
           name: cruise-pack-install-win-per-machine-x64.exe
           path: "per-machine/*.exe"
+  release:
+    needs:
+      - osx-x64
+      - osx-arm64
+      - linux-x64
+      - windows-x64
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: View artifacts
+        run: ls -l
+#      - name: Update branch release
+#        uses: eine/tip@master
+#        with:
+#          tag: ${{ github.action_ref }}-latest
+#          rm: true
+#          token: ${{ secrets.RELEASE_PAT }}
+#          files: build/libs/*.*
 
