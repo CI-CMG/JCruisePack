@@ -275,8 +275,8 @@ jobs:
       - run: mkdir release
       - run: cp cruise-pack-install-mac-arm64.dmg/*.dmg release/cruise-pack-install-mac-arm64-${{ needs.build.outputs.version }}.dmg
       - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
-      - run: cp cruise-pack-install-win-per-machine.exe/*.exe release/cruise-pack-install-win-per-machine-${{ needs.build.outputs.version }}.exe
-      - run: cp cruise-pack-install-win-per-machine.msi/*.msi release/cruise-pack-install-win-per-machine-${{ needs.build.outputs.version }}.msi
+      - run: cp cruise-pack-install-win-per-machine-x64.exe/*.exe release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.exe
+      - run: cp cruise-pack-install-win-per-machine-x64.msi/*.msi release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.msi
       - run: cp cruise-pack-install-win-per-user-x64.exe/*.exe release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.exe
       - run: cp cruise-pack-install-win-per-user-x64.msi/*.msi release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.msi
       - run: cp exe-jar/* release
