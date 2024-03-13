@@ -182,7 +182,7 @@ jobs:
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
-          --java-options "-splash:\$APPDIR/splash.png"
+          --java-options '-splash:$APPDIR/splash.png'
           --vendor "CIRES - University of Colorado"
           --win-per-user-install
       - name: Package jar as exe per-user
@@ -201,7 +201,7 @@ jobs:
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
-          --java-options "-splash:\$APPDIR/splash.png"
+          --java-options '-splash:$APPDIR/splash.png'
           --vendor "CIRES - University of Colorado"
           --win-per-user-install
       - name: Package jar as msi per-machine
@@ -220,7 +220,7 @@ jobs:
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
-          --java-options "-splash:\$APPDIR/splash.png"
+          --java-options '-splash:$APPDIR/splash.png'
           --vendor "CIRES - University of Colorado"
       - name: Package jar as exe per-machine
         run: >
@@ -238,7 +238,7 @@ jobs:
           --win-menu
           --win-shortcut
           --win-shortcut-prompt
-          --java-options "-splash:\$APPDIR/splash.png"
+          --java-options '-splash:$APPDIR/splash.png'
           --vendor "CIRES - University of Colorado"
       - name: View artifacts
         run: dir
