@@ -281,11 +281,11 @@ jobs:
       - run: cp cruise-pack-install-win-per-user-x64.msi/*.msi release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.msi
       - run: cp exe-jar/* release
       - run: ls -l release
-#      - name: Update branch release
-#        uses: eine/tip@master
-#        with:
-#          tag: ${{ github.action_ref }}-latest
-#          rm: true
-#          token: ${{ secrets.RELEASE_PAT }}
-#          files: release/*
+      - name: Update branch release
+        uses: eine/tip@master
+        with:
+          tag: ${{ github.action_ref }}-latest
+          rm: true
+          token: ${{ secrets.RELEASE_PAT }}
+          files: release/*
 
