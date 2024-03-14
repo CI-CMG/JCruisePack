@@ -95,7 +95,7 @@ public class CruiseInformationModelTest {
             .withCruiseTitle(newCruiseTitle)
             .withCruisePurpose(newCruisePurpose)
             .withCruiseDescription(newCruiseDescription)
-            .withDocumentsPath(newDocumentsPath)
+            .withDocumentsPath(newDocumentsPath.toString())
         .build());
 
         assertPropertChangeEvent(Events.UPDATE_CRUISE_TITLE, CRUISE_TITLE, newCruiseTitle, cruiseInformationModel::getCruiseTitle);

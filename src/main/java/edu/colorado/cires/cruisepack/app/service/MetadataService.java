@@ -107,8 +107,8 @@ public class MetadataService {
     return CruiseData.builder()
         .withUse(true)
         .withDelete(false)
-        .withDocumentsPath(packJob.getDocumentsPath())
-        .withPackageDirectory(packJob.getPackageDirectory())
+        .withDocumentsPath(packJob.getDocumentsPath() == null ? null : packJob.getDocumentsPath().toString())
+        .withPackageDirectory(packJob.getPackageDirectory() == null ? null : packJob.getPackageDirectory().toString())
         .withCruiseId(packJob.getCruiseId())
         .withSegmentId(packJob.getSegment())
         .withPackageId(packJob.getPackageId())
@@ -152,10 +152,11 @@ public class MetadataService {
   }
   
   public CruiseData createData(ImportRow row, ImportModel importModel) {
+    Path destPath = importModel.getDestinationPath();
     return CruiseData.builder()
         .withUse(true)
         .withDelete(false)
-        .withPackageDirectory(importModel.getDestinationPath())
+        .withPackageDirectory(destPath == null ? null : destPath.toString())
         .withMetadataAuthor(personDatastore.findByName(importModel.getMetadataAuthor().getValue()).map(
             person -> MetadataAuthor.builder()
                 .withUuid(person.getUuid())

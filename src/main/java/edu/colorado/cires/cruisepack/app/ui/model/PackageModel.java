@@ -20,6 +20,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,7 +111,8 @@ public class PackageModel extends PropertyChangeModel {
     setCruiseId(cruiseMetadata.getCruiseId());
     setSegment(cruiseMetadata.getSegmentId());
     if (cruiseMetadata instanceof CruiseData) {
-      setPackageDirectory(((CruiseData) cruiseMetadata).getPackageDirectory());
+      String packDir = ((CruiseData) cruiseMetadata).getPackageDirectory();
+      setPackageDirectory(packDir == null ? null : Paths.get(packDir));
     }
     if (cruiseMetadata.getShipUuid() != null && cruiseMetadata.getShip() != null) {
       DropDownItem dropDownItem = shipDatastore.getShipDropDowns().stream()

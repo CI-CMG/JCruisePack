@@ -83,8 +83,7 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         .collect(Collectors.toList());
     }
 
-    public void save(OrganizationModel organizationModel) {
-        Organization organization = organizationFromModel(organizationModel);
+    public void save(Organization organization) {
         OrganizationData newOrganizationData = new OrganizationData();
         OrganizationList newOrganizationList = new OrganizationList();
         List<Organization> listWithNewOrganization = newOrganizationList.getOrganizations();
@@ -115,6 +114,10 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         }
 
         load();
+    }
+
+    public void save(OrganizationModel organizationModel) {
+        save(organizationFromModel(organizationModel));
     }
 
     private Organization organizationFromModel(OrganizationModel organizationModel) {

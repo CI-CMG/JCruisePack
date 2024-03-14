@@ -110,8 +110,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
             .collect(Collectors.toList());
     }
 
-    public void save(PersonModel personModel) {
-        Person person = personFromModel(personModel);
+    public void save(Person person) {
         PersonData newPersonData = new PersonData();
         PersonList newPersonList = new PersonList();
         List<Person> listWithNewPerson = newPersonList.getPersons();
@@ -119,7 +118,7 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         newPersonData.setPeople(newPersonList);
         List<Person> mergedPeople = mergeDropDownItemLists(
             readPeople("local-data"),
-             Optional.of(newPersonData)
+            Optional.of(newPersonData)
         );
 
         PersonData personData = new PersonData();
@@ -142,6 +141,10 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         }
 
         load();
+    }
+
+    public void save(PersonModel personModel) {
+        save(personFromModel(personModel));
     }
 
     private Person personFromModel(PersonModel personModel) {

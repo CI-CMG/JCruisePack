@@ -18,14 +18,14 @@ public class CruiseData extends Cruise {
   private final boolean use;
   @JsonIgnore
   private final boolean delete;
-  private final Path documentsPath;
-  private final Path packageDirectory;
+  private final String documentsPath;
+  private final String packageDirectory;
 
   private CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
       String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists,
       List<String> projects, Omics omics, MetadataAuthor metadataAuthor, List<Instrument> instruments,
-      Map<String, PackageInstrument> packageInstruments, Path documentsPath, Path packageDirectory) {
+      Map<String, PackageInstrument> packageInstruments, String documentsPath, String packageDirectory) {
     super(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate, seaArea,
         cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
@@ -43,11 +43,11 @@ public class CruiseData extends Cruise {
     return delete;
   }
 
-  public Path getDocumentsPath() {
+  public String getDocumentsPath() {
     return documentsPath;
   }
 
-  public Path getPackageDirectory() {
+  public String getPackageDirectory() {
     return packageDirectory;
   }
 
@@ -89,8 +89,8 @@ public class CruiseData extends Cruise {
     private MetadataAuthor metadataAuthor;
     private List<Instrument> instruments = Collections.emptyList();
     private Map<String, PackageInstrument> packageInstruments;
-    private Path documentsPath;
-    private Path packageDirectory;
+    private String documentsPath;
+    private String packageDirectory;
 
     private Builder() {
 
@@ -294,12 +294,12 @@ public class CruiseData extends Cruise {
       return this;
     }
     
-    public Builder withDocumentsPath(Path documentsPath) {
+    public Builder withDocumentsPath(String documentsPath) {
       this.documentsPath = documentsPath;
       return this;
     }
     
-    public Builder withPackageDirectory(Path packageDirectory) {
+    public Builder withPackageDirectory(String packageDirectory) {
       this.packageDirectory = packageDirectory;
       return this;
     }

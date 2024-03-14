@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import jakarta.validation.constraints.NotBlank;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -48,7 +49,8 @@ public class CruiseInformationModel extends PropertyChangeModel {
     setCruiseDescriptionError(null);
     
     if (cruiseMetadata instanceof CruiseData) {
-      setDocumentsPath(((CruiseData) cruiseMetadata).getDocumentsPath());
+      String docPath = ((CruiseData) cruiseMetadata).getDocumentsPath();
+      setDocumentsPath(docPath == null ? null : Paths.get(docPath));
     }
     setDocumentsPathError(null);
   }
