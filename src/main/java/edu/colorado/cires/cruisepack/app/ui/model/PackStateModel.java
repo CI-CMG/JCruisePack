@@ -7,21 +7,19 @@ import org.springframework.stereotype.Component;
 public class PackStateModel extends PropertyChangeModel {
   
   private int progress;
-  private boolean processing;
+  private Thread thread;
 
   public void setProgress(int progress) {
     setIfChanged(Events.UPDATE_PROGRESS, progress, () -> this.progress, (p) -> this.progress = p);
   }
 
-  public int getProgress() {
-    return progress;
+  public void setThread(Thread thread) {
+    this.thread = thread;
   }
-
-  public boolean isProcessing() {
-    return processing;
-  }
-
-  public void setProcessing(boolean processing) {
-    this.processing = processing;
+  
+  public void stopThread() {
+    if (thread != null) {
+      thread.interrupt();
+    }
   }
 }

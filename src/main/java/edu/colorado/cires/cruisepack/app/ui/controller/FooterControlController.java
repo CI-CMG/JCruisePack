@@ -116,7 +116,7 @@ public class FooterControlController implements PropertyChangeListener {
   }
   
   public synchronized void stopPackaging() {
-    packStateModel.setProcessing(false);
+    beanFactory.getBean(PackerService.class).stopPacking();
   }
 
   public void updateFormState(Cruise cruiseMetadata) {
