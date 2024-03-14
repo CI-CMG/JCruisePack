@@ -1,10 +1,19 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.appendToManifest;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.cleanDir;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.computeChecksum;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.concatManifests;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.copy;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterHidden;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.filterTimeSize;
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
+
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.app.service.io.PackerFileController;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
+import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,21 +48,21 @@ public class PackerService {
   private final ServiceProperties serviceProperties;
   private final PackagingValidationService validationService;
   private final FooterControlController footerControlController;
+  private final MetadataService metadataService;
   private final PackStateModel packStateModel;
-  private final PackerFileController packerFileController;
 
   @Autowired
   public PackerService(
       ServiceProperties serviceProperties,
       PackagingValidationService validationService,
       FooterControlController footerControlController,
-      PackStateModel packStateModel, PackerFileController packerFileController
+      MetadataService metadataService, PackStateModel packStateModel
   ) {
     this.serviceProperties = serviceProperties;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
+    this.metadataService = metadataService;
     this.packStateModel = packStateModel;
-    this.packerFileController = packerFileController;
   }
 
   public void startPacking() {
@@ -76,13 +85,16 @@ public class PackerService {
       LOGGER.error("An error occurred while initiating pack job", e);
     }
   }
+  
+  public void stopPacking() {
+    packStateModel.stopThread();
+  }
 
   private void startPackingThread(PackJob packJob) {
     // TODO put in queue?
-    new Thread(() -> {
+    Thread thread = new Thread(() -> {
       try {
 ////    rawCheck(packJob); //TODO add to validation phase
-        packStateModel.setProcessing(true);
         packStateModel.setProgress(0);
         resetBagDirs(packJob);
         packStateModel.setProgress(20);
@@ -101,17 +113,21 @@ public class PackerService {
         footerControlController.setSaveButtonEnabled(true);
         footerControlController.setStopButtonEnabled(false);
         packStateModel.setProgress(0);
-        packStateModel.setProcessing(false);
+        packStateModel.setThread(null);
       }
-    }).start();
+    });
+    
+    packStateModel.setThread(thread);
+    thread.start();
   }
 
   private void packMainBag(PackJob packJob) {
     Path mainBagPath = packJob.getPackageDirectory().resolve(packJob.getPackageId());
     try {
-      packerFileController.bagInPlace(
+      BagCreator.bagInPlace(
           mainBagPath,
-          Collections.emptyList() // intentionally empty. Child bags have already had checksums generated. Checksums for the main bag need to be generated manually
+          Collections.emptyList(), // intentionally empty. Child bags have already had checksums generated. Checksums for the main bag need to be generated manually
+          false
       );
     } catch (NoSuchAlgorithmException | IOException e) {
       throw new IllegalStateException("Unable to create main bag, ", e);
@@ -123,29 +139,42 @@ public class PackerService {
       try (Stream<Path> paths = Files.walk(mainBagPath)) {
         paths.filter(p -> p.toFile().isFile())
             .filter(p -> p.toString().endsWith("sha256.txt"))
-            .forEach(p -> packerFileController.concatManifests(p, mainBagPath, fileWriter));
+            .forEach(p -> concatManifests(p, mainBagPath, fileWriter));
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
       
       Path omicsPath = mainBagPath.resolve("data").resolve("omics");
       if (omicsPath.toFile().exists()) {
-        packerFileController.appendToManifest(omicsPath, mainBagPath, fileWriter);
+        appendToManifest(omicsPath, mainBagPath, fileWriter);
       }
       
       Path docsPath = mainBagPath.resolve("data").resolve("docs");
       if (docsPath.toFile().exists()) {
-        packerFileController.appendToManifest(docsPath, mainBagPath, fileWriter);
+        appendToManifest(docsPath, mainBagPath, fileWriter);
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
     
     Path tagManifestFile = mainBagPath.resolve("tagmanifest-sha256.txt");
-    try (FileWriter tagManifestWriter = new FileWriter(tagManifestFile.toFile(), StandardCharsets.UTF_8, true)) {
-      packerFileController.appendToManifest(mainBagPath.resolve("bag-info.txt"), mainBagPath, tagManifestWriter);
-      packerFileController.appendToManifest(mainBagPath.resolve("bagit.txt"), mainBagPath, tagManifestWriter);
-      packerFileController.appendToManifest(manifestFile, mainBagPath, tagManifestWriter);
+    try (FileWriter fileWriter = new FileWriter(tagManifestFile.toFile(), StandardCharsets.UTF_8, true)) {
+      Path bagInfoFile = mainBagPath.resolve("bag-info.txt");
+      fileWriter.write(String.format(
+          "%s  %s\n",
+          computeChecksum(bagInfoFile), mainBagPath.relativize(bagInfoFile)
+      ));
+
+      Path bagitFile = mainBagPath.resolve("bagit.txt");
+      fileWriter.write(String.format(
+          "%s  %s\n",
+          computeChecksum(bagitFile), mainBagPath.relativize(bagitFile)
+      ));
+      
+      fileWriter.write(String.format(
+          "%s  %s\n",
+          computeChecksum(manifestFile), mainBagPath.relativize(manifestFile)
+      ));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -154,9 +183,9 @@ public class PackerService {
   private void resetBagDirs(PackJob packJob) {
     Path packageDirectory = packJob.getPackageDirectory();
     if (!packageDirectory.toFile().exists()) {
-      packerFileController.mkDir(packageDirectory.resolve(packJob.getPackageId()));
+      mkDir(packageDirectory.resolve(packJob.getPackageId()));
     } else {
-      packerFileController.cleanDir(packageDirectory); // TODO test
+      cleanDir(packageDirectory); // TODO test
     }
   }
 
@@ -280,9 +309,9 @@ public class PackerService {
           public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
             Path sourceFile = file.toAbsolutePath().normalize();
             Path targetFile = targetDocs.resolve(docsDir.relativize(sourceFile));
-            if (packerFileController.filterHidden(sourceFile) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-              packerFileController.mkDir(targetFile.getParent());
-              packerFileController.copy(sourceFile, targetFile);
+            if (filterHidden(sourceFile) && filterTimeSize(sourceFile, targetFile)) {
+              mkDir(targetFile.getParent());
+              copy(sourceFile, targetFile);
             }
             return super.visitFile(file, attr);
           }
@@ -306,7 +335,7 @@ public class PackerService {
         file_list = self.copy_prep(docs_dir, self.main_bag, dir_name='docs')
 
         for file in file_list:
-            hash_value = self.file_packerFileController.copy(file[0], file[1])
+            hash_value = self.file_copy(file[0], file[1])
             path = os.path.relpath(file[1], self.main_bag.bag)
             path = path.replace('\\', '/')  # Set as Unix separator
             self.main_manifest.write('{0}  {1}\n'.format(hash_value, path))
@@ -318,9 +347,9 @@ public class PackerService {
       Path omicsFile = packJob.getOmicsSampleTrackingSheetPath().toAbsolutePath().normalize();
       Path omicsDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("omics").toAbsolutePath().normalize();
       Path targetFile = omicsDir.resolve(omicsFile.getFileName());
-      if (packerFileController.filterHidden(omicsFile)) {
-        packerFileController.mkDir(omicsDir);
-        packerFileController.copy(omicsFile, targetFile);
+      if (filterHidden(omicsFile)) {
+        mkDir(omicsDir);
+        copy(omicsFile, targetFile);
       }
     }
   }
@@ -336,7 +365,7 @@ public class PackerService {
             source_file = self.ui.omics.tracking_path.text()
             dest_file = os.path.join(omics_dest, os.path.basename(source_file))
 
-            hash_value = self.file_packerFileController.copy(source_file, dest_file)
+            hash_value = self.file_copy(source_file, dest_file)
             path = os.path.relpath(dest_file, self.main_bag.bag)
             path = path.replace('\\', '/')  # Set as Unix separator
             self.main_manifest.write('{0}  {1}\n'.format(hash_value, path))
@@ -349,16 +378,14 @@ public class PackerService {
   private void packData(PackJob packJob) {
     Path mainBagDataDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).toAbsolutePath().normalize();
 
-    CruiseMetadata cruiseMetadata = packerFileController.createAndWriteCruiseMetadata(
-        packJob,
-        mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json")
-    );
+    CruiseMetadata cruiseMetadata = metadataService.createMetadata(packJob);
+    metadataService.writeMetadata(cruiseMetadata, mainBagDataDir.resolve(packJob.getPackageId() + "-metadata.json"));
 
     for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
       String instrumentBagName = instruments.get(0).getBagName();
       Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
 
-      packerFileController.mkDir(instrumentBagRootDir);
+      mkDir(instrumentBagRootDir);
 
       boolean bagContainsData = false;
       for (InstrumentDetail dataset : instruments) {
@@ -372,17 +399,11 @@ public class PackerService {
 
       if (bagContainsData) {
         copyLocalData(serviceProperties, instrumentBagRootDir);
-        packerFileController.createAndWriteDatasetMetadata(
-            cruiseMetadata,
-            instruments,
-            instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json")
-        );
+        CruiseMetadata packageMetadata = metadataService.createDatasetMetadata(cruiseMetadata, instruments);
+        metadataService.writeMetadata(packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
 
         try {
-          packerFileController.bagInPlace(
-              instrumentBagRootDir,
-              Collections.singletonList(StandardSupportedAlgorithms.SHA256)
-          );
+          BagCreator.bagInPlace(instrumentBagRootDir, Collections.singletonList(StandardSupportedAlgorithms.SHA256), false);
         } catch (NoSuchAlgorithmException | IOException e) {
           throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
         }
@@ -471,18 +492,18 @@ public class PackerService {
                                                              full_path))
    */
 
-  private void copyLocalData(ServiceProperties serviceProperties, Path instrumentBagDataDir) {
+  private static void copyLocalData(ServiceProperties serviceProperties, Path instrumentBagDataDir) {
     Path systemLocalData = Paths.get(serviceProperties.getWorkDir()).resolve(LOCAL_DATA);
     Path people = systemLocalData.resolve(PEOPLE_XML);
     Path organizations = systemLocalData.resolve(ORGANIZATIONS_XML);
     Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);
     if (Files.isRegularFile(people)) {
-      packerFileController.mkDir(localData);
-      packerFileController.copy(people, localData.resolve(PEOPLE_XML));
+      mkDir(localData);
+      copy(people, localData.resolve(PEOPLE_XML));
     }
     if (Files.isRegularFile(organizations)) {
-      packerFileController.mkDir(localData);
-      packerFileController.copy(organizations, localData.resolve(ORGANIZATIONS_XML));
+      mkDir(localData);
+      copy(organizations, localData.resolve(ORGANIZATIONS_XML));
     }
   }
 
@@ -523,9 +544,9 @@ public class PackerService {
         public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
           Path sourceFile = file.toAbsolutePath().normalize();
           Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
-          if (packerFileController.filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-            packerFileController.mkDir(targetFile.getParent());
-            packerFileController.copy(sourceFile, targetFile);
+          if (filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && filterTimeSize(sourceFile, targetFile)) {
+            mkDir(targetFile.getParent());
+            copy(sourceFile, targetFile);
           }
           return super.visitFile(file, attr);
         }
@@ -554,18 +575,18 @@ public class PackerService {
           public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
             Path sourceFile = file.toAbsolutePath().normalize();
             Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceFile);
-            if (packerFileController.filterHidden(sourceFile) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-              packerFileController.mkDir(targetFile.getParent());
-              packerFileController.copy(sourceFile, targetFile);
+            if (filterHidden(sourceFile) && filterTimeSize(sourceFile, targetFile)) {
+              mkDir(targetFile.getParent());
+              copy(sourceFile, targetFile);
             }
             return super.visitFile(file, attr);
           }
         });
       } else if (Files.isRegularFile(sourceDataPath) && !Files.isHidden(sourceDataPath)) {
         Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceDataPath);
-        if (packerFileController.filterTimeSize(sourceDataPath, targetFile)) {
-          packerFileController.mkDir(targetFile.getParent());
-          packerFileController.copy(sourceDataPath, targetFile);
+        if (filterTimeSize(sourceDataPath, targetFile)) {
+          mkDir(targetFile.getParent());
+          copy(sourceDataPath, targetFile);
         }
       } else {
         throw new IllegalStateException("Unable to read " + sourceDataPath);

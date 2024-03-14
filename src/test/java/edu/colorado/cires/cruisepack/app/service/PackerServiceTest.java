@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -62,9 +61,6 @@ public class PackerServiceTest {
 
   @MockBean
   private PackagingValidationService validationService;
-  
-  @Autowired
-  private PackStateModel packStateModel;
 
   @BeforeAll
   public static void beforeAll() {
@@ -185,89 +181,6 @@ public class PackerServiceTest {
 
     assertEquals(expected, actual);
 
-  }
-
-  @Test
-  public void testStopPacking() throws Exception {
-    Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments = new LinkedHashMap<>();
-    List<InstrumentDetail> instrumentDetails = Arrays.asList(
-        InstrumentDetail.builder()
-            .setStatus(InstrumentStatus.RAW)
-            .setInstrument("longem122")
-            .setShortName("EM122")
-            .setDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122"))
-            .setDirName("EM122")
-            .setBagName("TST200400_MB-BATHY_EM122")
-            .build(),
-        InstrumentDetail.builder()
-            .setStatus(InstrumentStatus.PROCESSED)
-            .setInstrument("longem122")
-            .setShortName("EM122")
-            .setDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed"))
-            .setDirName("EM122_processed")
-            .setBagName("TST200400_MB-BATHY_EM122")
-            .build(),
-        InstrumentDetail.builder()
-            .setStatus(InstrumentStatus.PROCESSED)
-            .setInstrument("longem122")
-            .setShortName("EM122")
-            .setDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1"))
-            .setDirName("EM122_processed-1")
-            .setBagName("TST200400_MB-BATHY_EM122")
-            .build(),
-        InstrumentDetail.builder()
-            .setStatus(InstrumentStatus.PRODUCTS)
-            .setInstrument("longem122")
-            .setShortName("EM122")
-            .setDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products"))
-            .setDirName("EM122_products")
-            .setBagName("TST200400_MB-BATHY_EM122")
-            .build()
-    );
-    instruments.put(new InstrumentDetailPackageKey("MB-BATHY", "EM122"), instrumentDetails);
-
-    PackJob packJob = PackJob.builder()
-        .setCruiseId("TST200400")
-        .setPackageId("TST200400")
-        .setReleaseDate(LocalDate.now())
-        .setPackageDirectory(mainBagRootDir)
-        .setInstruments(instruments)
-        .setDocumentsPath(Paths.get("src/test/resources/test-src/TST200400/data/documents"))
-        .setOmicsSampleTrackingSheetPath(Paths.get("src/test/resources/test-src/TST200400/data/omics-sheet/omics-file.txt"))
-        .build();
-
-    doReturn(Optional.of(packJob)).when(validationService).validate();
-
-    CruiseMetadata cruiseMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createMetadata(packJob)).thenReturn(cruiseMetadata);
-
-    Path metadataPath = mainBagRootDir.resolve("TST200400/TST200400-metadata.json");
-    doAnswer(invocation -> {
-      packStateModel.setProcessing(false);
-      
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
-
-    CruiseMetadata instrumentMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createDatasetMetadata(cruiseMetadata, instrumentDetails)).thenReturn(instrumentMetadata);
-
-    Path datasetMetadataPath = mainBagRootDir.resolve("TST200400/TST200400_MB-BATHY_EM122/TST200400_MB-BATHY_EM122-metadata.json");
-    doAnswer(invocation -> {
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(instrumentMetadata), eq(datasetMetadataPath));
-
-    packerService.startPacking();
-
-    Thread.sleep(1000); //TODO be smarter with wait
-
-    verify(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
-
-    Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
-    assertFalse(actualRoot.toFile().exists());
   }
 
   @Test
