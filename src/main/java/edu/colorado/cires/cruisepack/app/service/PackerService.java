@@ -79,45 +79,47 @@ public class PackerService {
 
   private void startPackingThread(PackJob packJob) {
     // TODO put in queue?
-    try {
+    new Thread(() -> {
+      try {
 ////    rawCheck(packJob); //TODO add to validation phase
-      packStateModel.setProcessing(true);
-      setProgressIncrement(packJob);
-      resetBagDirs(packJob);
-      copyDocs(packJob);
-      copyOmics(packJob);
-      packData(packJob);
-      packMainBag(packJob);
-    } catch (Exception e) {
-      LOGGER.error("An error occurred while packing", e);
-    } finally {
-      footerControlController.setPackageButtonEnabled(true);
-      footerControlController.setSaveButtonEnabled(true);
-      footerControlController.setStopButtonEnabled(false);
-      packStateModel.setProcessing(false);
-    }
+        packStateModel.setProcessing(true);
+        packStateModel.setProgressIncrement(100f / getTotalFiles(packJob));
+        resetBagDirs(packJob);
+        copyDocs(packJob);
+        copyOmics(packJob);
+        packData(packJob);
+        packMainBag(packJob);
+      } catch (Exception e) {
+        LOGGER.error("An error occurred while packing", e);
+      } finally {
+        footerControlController.setPackageButtonEnabled(true);
+        footerControlController.setSaveButtonEnabled(true);
+        footerControlController.setStopButtonEnabled(false);
+        packStateModel.setProcessing(false);
+      }
+    }).start();
   }
   
-  private void setProgressIncrement(PackJob packJob) {
+  public long getTotalFiles(PackJob packJob) {
     long totalFiles = 0;
-    
+
     totalFiles += packerFileController.getFileCount(packJob.getOmicsSampleTrackingSheetPath());
     totalFiles += packerFileController.getFileCount(packJob.getDocumentsPath());
     totalFiles += packJob.getInstruments().values().stream()
         .flatMap(List::stream)
-        .map(instrumentDetail -> 
+        .map(instrumentDetail ->
             instrumentDetail.getAdditionalFiles().stream()
-              .map(AdditionalFiles::getSourceFileOrDirectory)
-              .map(packerFileController::getFileCount)
-              .mapToLong(Long::valueOf)
-              .sum() +
-            packerFileController.getFileCount(instrumentDetail.getDataPath()) +
-            packerFileController.getFileCount(instrumentDetail.getAncillaryDataPath())
+                .map(AdditionalFiles::getSourceFileOrDirectory)
+                .map(packerFileController::getFileCount)
+                .mapToLong(Long::valueOf)
+                .sum() +
+                packerFileController.getFileCount(instrumentDetail.getDataPath()) +
+                packerFileController.getFileCount(instrumentDetail.getAncillaryDataPath())
         )
         .mapToLong(Long::valueOf)
         .sum();
     
-    packStateModel.setProgressIncrement(100D / totalFiles);
+    return totalFiles;
   }
 
   private void packMainBag(PackJob packJob) {
@@ -393,6 +395,7 @@ public class PackerService {
             instruments,
             instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json")
         );
+
         try {
           packerFileController.bagInPlace(
               instrumentBagRootDir,

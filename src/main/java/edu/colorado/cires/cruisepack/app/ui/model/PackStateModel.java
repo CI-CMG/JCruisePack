@@ -6,20 +6,39 @@ import org.springframework.stereotype.Component;
 @Component
 public class PackStateModel extends PropertyChangeModel {
   
-  private int progress;
-  private Thread thread;
+  private float progress;
+  private float progressIncrement;
+  private boolean processing;
 
-  public void setProgress(int progress) {
-    setIfChanged(Events.UPDATE_PROGRESS, progress, () -> this.progress, (p) -> this.progress = p);
+  private void setProgress(float progress) {
+    float oldValue = this.progress;
+    this.progress = progress;
+    
+    int roundedOldValue = (int) Math.floor(oldValue);
+    int roundedNewValue = (int) Math.floor(progress);
+    
+    if (roundedOldValue != roundedNewValue) {
+      fireChangeEvent(Events.UPDATE_PROGRESS, roundedOldValue, roundedNewValue);
+    }
   }
 
-  public void setThread(Thread thread) {
-    this.thread = thread;
+  public void incrementProgress() {
+    setProgress(this.progress + progressIncrement);
   }
   
-  public void stopThread() {
-    if (thread != null) {
-      thread.interrupt();
+  public void setProgressIncrement(float progressIncrement) {
+    this.progressIncrement = progressIncrement;
+  }
+
+  public boolean isProcessing() {
+    return processing;
+  }
+
+  public void setProcessing(boolean processing) {
+    this.processing = processing;
+    if (!processing) {
+      setProgressIncrement(0f);
+      setProgress(0f);
     }
   }
 }

@@ -164,7 +164,7 @@ public final class FieldUtils {
   public static void updateProgressBarModel(BoundedRangeModel model, PropertyChangeEvent event) {
     if (event.getNewValue() instanceof Integer) {
       int newValue = (int) event.getNewValue();
-      int oldValue = model.getValue();
+      int oldValue = (int) event.getOldValue();
       if (newValue != oldValue) {
         model.setValue(newValue);
       }
