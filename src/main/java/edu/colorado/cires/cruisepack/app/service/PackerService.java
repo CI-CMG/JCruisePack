@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -386,34 +385,25 @@ public class PackerService {
       Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
 
       mkDir(instrumentBagRootDir);
+      copyLocalData(serviceProperties, instrumentBagRootDir);
 
-      boolean bagContainsData = false;
       for (InstrumentDetail dataset : instruments) {
         Path datasetDir = instrumentBagRootDir.resolve(dataset.getDirName());
 
         copyMainDatasetFiles(datasetDir, dataset);
         dataset.getAdditionalFiles().forEach(additionalFile -> copyAdditionalFiles(datasetDir, additionalFile));
-        
-        bagContainsData = datasetDir.toFile().exists();
       }
 
-      if (bagContainsData) {
-        copyLocalData(serviceProperties, instrumentBagRootDir);
-        CruiseMetadata packageMetadata = metadataService.createDatasetMetadata(cruiseMetadata, instruments);
-        metadataService.writeMetadata(packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
+      CruiseMetadata packageMetadata = metadataService.createDatasetMetadata(cruiseMetadata, instruments);
+      metadataService.writeMetadata(packageMetadata, instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json"));
 
-        try {
-          BagCreator.bagInPlace(instrumentBagRootDir, Collections.singletonList(StandardSupportedAlgorithms.SHA256), false);
-        } catch (NoSuchAlgorithmException | IOException e) {
-          throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
-        }
-      } else {
-        try {
-          FileUtils.deleteDirectory(instrumentBagRootDir.toFile());
-        } catch (IOException e) {
-          throw new IllegalStateException("Unable to delete empty bag: " + instrumentBagRootDir, e);
-        }
+
+      try {
+        BagCreator.bagInPlace(instrumentBagRootDir, Collections.singletonList(StandardSupportedAlgorithms.SHA256), false);
+      } catch (NoSuchAlgorithmException | IOException e) {
+        throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);
       }
+
     }
   }
 
