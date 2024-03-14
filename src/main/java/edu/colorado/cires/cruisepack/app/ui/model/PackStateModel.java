@@ -6,15 +6,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class PackStateModel extends PropertyChangeModel {
   
-  private int progress;
+  private Double progress = 0D;
+  private Double progressIncrement = null;
   private boolean processing;
 
-  public void setProgress(int progress) {
+  private void setProgress(Double progress) {
     setIfChanged(Events.UPDATE_PROGRESS, progress, () -> this.progress, (p) -> this.progress = p);
   }
+  
+  public void incrementProgress() {
+    if (progressIncrement == null) {
+      setProgress(null);
+    } else {
+      setProgress(progress + progressIncrement);
+    }
+  }
 
-  public int getProgress() {
-    return progress;
+  public void setProgressIncrement(Double progressIncrement) {
+    this.progressIncrement = progressIncrement;
   }
 
   public boolean isProcessing() {
@@ -23,5 +32,9 @@ public class PackStateModel extends PropertyChangeModel {
 
   public void setProcessing(boolean processing) {
     this.processing = processing;
+    if (!processing) {
+      setProgressIncrement(null);
+      setProgress(0D);
+    }
   }
 }

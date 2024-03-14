@@ -79,31 +79,45 @@ public class PackerService {
 
   private void startPackingThread(PackJob packJob) {
     // TODO put in queue?
-    new Thread(() -> {
-      try {
+    try {
 ////    rawCheck(packJob); //TODO add to validation phase
-        packStateModel.setProcessing(true);
-        packStateModel.setProgress(0);
-        resetBagDirs(packJob);
-        packStateModel.setProgress(20);
-        copyDocs(packJob);
-        packStateModel.setProgress(40);
-        copyOmics(packJob);
-        packStateModel.setProgress(60);
-        packData(packJob);
-        packStateModel.setProgress(80);
-        packMainBag(packJob);
-        packStateModel.setProgress(100);
-      } catch (Exception e) {
-        LOGGER.error("An error occurred while packing", e);
-      } finally {
-        footerControlController.setPackageButtonEnabled(true);
-        footerControlController.setSaveButtonEnabled(true);
-        footerControlController.setStopButtonEnabled(false);
-        packStateModel.setProgress(0);
-        packStateModel.setProcessing(false);
-      }
-    }).start();
+      packStateModel.setProcessing(true);
+      setProgressIncrement(packJob);
+      resetBagDirs(packJob);
+      copyDocs(packJob);
+      copyOmics(packJob);
+      packData(packJob);
+      packMainBag(packJob);
+    } catch (Exception e) {
+      LOGGER.error("An error occurred while packing", e);
+    } finally {
+      footerControlController.setPackageButtonEnabled(true);
+      footerControlController.setSaveButtonEnabled(true);
+      footerControlController.setStopButtonEnabled(false);
+      packStateModel.setProcessing(false);
+    }
+  }
+  
+  private void setProgressIncrement(PackJob packJob) {
+    long totalFiles = 0;
+    
+    totalFiles += packerFileController.getFileCount(packJob.getOmicsSampleTrackingSheetPath());
+    totalFiles += packerFileController.getFileCount(packJob.getDocumentsPath());
+    totalFiles += packJob.getInstruments().values().stream()
+        .flatMap(List::stream)
+        .map(instrumentDetail -> 
+            instrumentDetail.getAdditionalFiles().stream()
+              .map(AdditionalFiles::getSourceFileOrDirectory)
+              .map(packerFileController::getFileCount)
+              .mapToLong(Long::valueOf)
+              .sum() +
+            packerFileController.getFileCount(instrumentDetail.getDataPath()) +
+            packerFileController.getFileCount(instrumentDetail.getAncillaryDataPath())
+        )
+        .mapToLong(Long::valueOf)
+        .sum();
+    
+    packStateModel.setProgressIncrement(100D / totalFiles);
   }
 
   private void packMainBag(PackJob packJob) {
@@ -283,6 +297,7 @@ public class PackerService {
             if (packerFileController.filterHidden(sourceFile) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
               packerFileController.mkDir(targetFile.getParent());
               packerFileController.copy(sourceFile, targetFile);
+              packStateModel.incrementProgress();
             }
             return super.visitFile(file, attr);
           }
@@ -321,6 +336,7 @@ public class PackerService {
       if (packerFileController.filterHidden(omicsFile)) {
         packerFileController.mkDir(omicsDir);
         packerFileController.copy(omicsFile, targetFile);
+        packStateModel.incrementProgress();
       }
     }
   }
@@ -377,7 +393,6 @@ public class PackerService {
             instruments,
             instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json")
         );
-
         try {
           packerFileController.bagInPlace(
               instrumentBagRootDir,
@@ -526,6 +541,7 @@ public class PackerService {
           if (packerFileController.filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
             packerFileController.mkDir(targetFile.getParent());
             packerFileController.copy(sourceFile, targetFile);
+            packStateModel.incrementProgress();
           }
           return super.visitFile(file, attr);
         }
@@ -557,6 +573,7 @@ public class PackerService {
             if (packerFileController.filterHidden(sourceFile) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
               packerFileController.mkDir(targetFile.getParent());
               packerFileController.copy(sourceFile, targetFile);
+              packStateModel.incrementProgress();
             }
             return super.visitFile(file, attr);
           }
@@ -566,6 +583,7 @@ public class PackerService {
         if (packerFileController.filterTimeSize(sourceDataPath, targetFile)) {
           packerFileController.mkDir(targetFile.getParent());
           packerFileController.copy(sourceDataPath, targetFile);
+          packStateModel.incrementProgress();
         }
       } else {
         throw new IllegalStateException("Unable to read " + sourceDataPath);

@@ -47,7 +47,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext
 public class PackerServiceTest {
 
-  private Path mainBagRootDir = Paths.get("target/test-output").toAbsolutePath().normalize();
+  private final Path mainBagRootDir = Paths.get("target/test-output").toAbsolutePath().normalize();
 
   private static final Path workDir = Paths.get("target/PackerServiceTest");
 
