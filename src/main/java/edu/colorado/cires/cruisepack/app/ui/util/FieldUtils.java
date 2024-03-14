@@ -162,12 +162,11 @@ public final class FieldUtils {
   }
   
   public static void updateProgressBarModel(BoundedRangeModel model, PropertyChangeEvent event) {
-    model.setValueIsAdjusting(event.getNewValue() == null);
-    if (event.getNewValue() instanceof Double) {
-      double newValue = (double) event.getNewValue();
-      double oldValue = model.getValue();
+    if (event.getNewValue() instanceof Integer) {
+      int newValue = (int) event.getNewValue();
+      int oldValue = model.getValue();
       if (newValue != oldValue) {
-        model.setValue((int) Math.floor(newValue));
+        model.setValue(newValue);
       }
     }
   }
