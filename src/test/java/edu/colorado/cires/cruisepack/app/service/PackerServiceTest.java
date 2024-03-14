@@ -135,8 +135,6 @@ public class PackerServiceTest {
         .setReleaseDate(LocalDate.now())
         .setPackageDirectory(mainBagRootDir)
         .setInstruments(instruments)
-        .setDocumentsPath(Paths.get("src/test/resources/test-src/TST200400/data/documents"))
-        .setOmicsSampleTrackingSheetPath(Paths.get("src/test/resources/test-src/TST200400/data/omics-sheet/omics-file.txt"))
         .build();
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
