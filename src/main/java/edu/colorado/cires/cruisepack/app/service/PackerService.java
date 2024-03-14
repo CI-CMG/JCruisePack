@@ -139,16 +139,17 @@ public class PackerService {
       try (Stream<Path> paths = Files.walk(mainBagPath)) {
         paths.filter(p -> p.toFile().isFile())
             .filter(p -> p.toString().endsWith("sha256.txt"))
+            .filter(p -> !p.equals(manifestFile))
             .forEach(p -> packerFileController.concatManifests(p, mainBagPath, fileWriter));
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
-      
+
       Path omicsPath = mainBagPath.resolve("data").resolve("omics");
       if (omicsPath.toFile().exists()) {
         packerFileController.appendToManifest(omicsPath, mainBagPath, fileWriter);
       }
-      
+
       Path docsPath = mainBagPath.resolve("data").resolve("docs");
       if (docsPath.toFile().exists()) {
         packerFileController.appendToManifest(docsPath, mainBagPath, fileWriter);
@@ -156,7 +157,7 @@ public class PackerService {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    
+
     Path tagManifestFile = mainBagPath.resolve("tagmanifest-sha256.txt");
     try (FileWriter tagManifestWriter = new FileWriter(tagManifestFile.toFile(), StandardCharsets.UTF_8, true)) {
       packerFileController.appendToManifest(mainBagPath.resolve("bag-info.txt"), mainBagPath, tagManifestWriter);
@@ -296,9 +297,11 @@ public class PackerService {
           public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
             Path sourceFile = file.toAbsolutePath().normalize();
             Path targetFile = targetDocs.resolve(docsDir.relativize(sourceFile));
-            if (packerFileController.filterHidden(sourceFile) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-              packerFileController.mkDir(targetFile.getParent());
-              packerFileController.copy(sourceFile, targetFile);
+            if (packerFileController.filterHidden(sourceFile)) {
+              if (packerFileController.filterTimeSize(sourceFile, targetFile)) {
+                packerFileController.mkDir(targetFile.getParent());
+                packerFileController.copy(sourceFile, targetFile);
+              }
               packStateModel.incrementProgress();
             }
             return super.visitFile(file, attr);
@@ -541,9 +544,11 @@ public class PackerService {
         public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
           Path sourceFile = file.toAbsolutePath().normalize();
           Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
-          if (packerFileController.filterHidden(sourceFile) && filterExtension(sourceFile, dataset) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-            packerFileController.mkDir(targetFile.getParent());
-            packerFileController.copy(sourceFile, targetFile);
+          if (packerFileController.filterHidden(sourceFile)) {
+            if (filterExtension(sourceFile, dataset) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
+              packerFileController.mkDir(targetFile.getParent());
+              packerFileController.copy(sourceFile, targetFile);
+            }
             packStateModel.incrementProgress();
           }
           return super.visitFile(file, attr);
@@ -573,9 +578,11 @@ public class PackerService {
           public FileVisitResult visitFile(Path file, BasicFileAttributes attr) throws IOException {
             Path sourceFile = file.toAbsolutePath().normalize();
             Path targetFile = resolveFinalPath(resolvedDatasetDir, sourceDataPath, sourceFile);
-            if (packerFileController.filterHidden(sourceFile) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-              packerFileController.mkDir(targetFile.getParent());
-              packerFileController.copy(sourceFile, targetFile);
+            if (packerFileController.filterHidden(sourceFile)) {
+              if (packerFileController.filterTimeSize(sourceFile, targetFile)) {
+                packerFileController.mkDir(targetFile.getParent());
+                packerFileController.copy(sourceFile, targetFile);
+              }
               packStateModel.incrementProgress();
             }
             return super.visitFile(file, attr);
@@ -586,8 +593,8 @@ public class PackerService {
         if (packerFileController.filterTimeSize(sourceDataPath, targetFile)) {
           packerFileController.mkDir(targetFile.getParent());
           packerFileController.copy(sourceDataPath, targetFile);
-          packStateModel.incrementProgress();
         }
+        packStateModel.incrementProgress();
       } else {
         throw new IllegalStateException("Unable to read " + sourceDataPath);
       }
