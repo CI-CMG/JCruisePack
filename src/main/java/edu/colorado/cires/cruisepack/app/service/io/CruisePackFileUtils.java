@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.app.service;
+package edu.colorado.cires.cruisepack.app.service.io;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 
-public final class CruisePackFileUtils {
+final class CruisePackFileUtils {
 
   public static boolean filterTimeSize(Path source, Path target) {
     try {
