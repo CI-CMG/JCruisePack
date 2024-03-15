@@ -33,7 +33,7 @@ public @interface PathIsXLSXFormat {
       if (value == null) {
         return true; // Checked in separate annotation
       }
-      return value.endsWith("xlsx");
+      return value.toString().endsWith("xlsx");
     }
   }
 
