@@ -2,17 +2,14 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
+import edu.colorado.cires.cruisepack.xml.person.Person;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -55,14 +52,11 @@ public class PackerServiceTest {
   private PackerService packerService;
 
   @MockBean
-  private MetadataService metadataService;
-
-  @MockBean
   private FooterControlController footerControlController;
 
   @MockBean
   private PackagingValidationService validationService;
-
+  
   @Autowired
   private PackStateModel packStateModel;
 
@@ -133,43 +127,37 @@ public class PackerServiceTest {
     );
     instruments.put(new InstrumentDetailPackageKey("MB-BATHY", "EM122"), instrumentDetails);
 
+    Person person = new Person();
+    person.setName("TEST_NAME");
+    person.setPhone("TEST_PHONE");
+    person.setEmail("TEST_EMAIL");
+
     PackJob packJob = PackJob.builder()
         .setCruiseId("TST200400")
+        .setCruiseTitle("TST200400_title")
+        .setCruiseDescription("TST200400_description")
         .setPackageId("TST200400")
+        .setSources(List.of(
+            PeopleOrg.builder()
+                .withName("SOURCE-ORG-1")
+                .build(),
+            PeopleOrg.builder()
+                .withName("SOURCE-ORG-2")
+                .build()
+        ))
         .setReleaseDate(LocalDate.now())
         .setPackageDirectory(mainBagRootDir)
         .setInstruments(instruments)
         .setDocumentsPath(Paths.get("src/test/resources/test-src/TST200400/data/documents"))
         .setOmicsSampleTrackingSheetPath(Paths.get("src/test/resources/test-src/TST200400/data/omics-sheet/omics-file.txt"))
+        .setMetadataAuthor(person)
         .build();
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    CruiseMetadata cruiseMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createMetadata(packJob)).thenReturn(cruiseMetadata);
-
-    Path metadataPath = mainBagRootDir.resolve("TST200400/TST200400-metadata.json");
-    doAnswer(invocation -> {
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
-
-    CruiseMetadata instrumentMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createDatasetMetadata(cruiseMetadata, instrumentDetails)).thenReturn(instrumentMetadata);
-
-    Path datasetMetadataPath = mainBagRootDir.resolve("TST200400/TST200400_MB-BATHY_EM122/TST200400_MB-BATHY_EM122-metadata.json");
-    doAnswer(invocation -> {
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(instrumentMetadata), eq(datasetMetadataPath));
-
     packerService.startPacking();
 
     Thread.sleep(1000); //TODO be smarter with wait
-
-    verify(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
 
     Path expectedRoot = Paths.get("src/test/resources/test-bags/TST200400/data/TST200400_MB-BATHY_EM122");
     TreeSet<Path> expected = new TreeSet<>();
@@ -185,6 +173,15 @@ public class PackerServiceTest {
 
     assertEquals(expected, actual);
 
+    assertEquals(
+        FileUtils.readFileToString(new File("src/test/resources/test-bags/TST200400/bag-info.txt"), StandardCharsets.UTF_8),
+        FileUtils.readFileToString(new File("target/test-output/TST200400/bag-info.txt"), StandardCharsets.UTF_8)
+    );
+    
+    assertEquals(
+        FileUtils.readFileToString(new File("src/test/resources/test-bags/TST200400/data/TST200400_MB-BATHY_EM122/bag-info.txt"), StandardCharsets.UTF_8),
+        FileUtils.readFileToString(new File("target/test-output/TST200400/data/TST200400_MB-BATHY_EM122/bag-info.txt"), StandardCharsets.UTF_8)
+    );
   }
 
   @Test
@@ -238,33 +235,10 @@ public class PackerServiceTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    CruiseMetadata cruiseMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createMetadata(packJob)).thenReturn(cruiseMetadata);
-
-    Path metadataPath = mainBagRootDir.resolve("TST200400/TST200400-metadata.json");
-    doAnswer(invocation -> {
-      packStateModel.setProcessing(false);
-
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
-
-    CruiseMetadata instrumentMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createDatasetMetadata(cruiseMetadata, instrumentDetails)).thenReturn(instrumentMetadata);
-
-    Path datasetMetadataPath = mainBagRootDir.resolve("TST200400/TST200400_MB-BATHY_EM122/TST200400_MB-BATHY_EM122-metadata.json");
-    doAnswer(invocation -> {
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(instrumentMetadata), eq(datasetMetadataPath));
-
     packerService.startPacking();
-
+    Thread.sleep(5);
+    packStateModel.setProcessing(false);
     Thread.sleep(1000); //TODO be smarter with wait
-
-    verify(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
 
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
     assertFalse(actualRoot.toFile().exists());
@@ -321,31 +295,9 @@ public class PackerServiceTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    CruiseMetadata cruiseMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createMetadata(packJob)).thenReturn(cruiseMetadata);
-
-    Path metadataPath = mainBagRootDir.resolve("TST200400/TST200400-metadata.json");
-    doAnswer(invocation -> {
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
-
-    CruiseMetadata instrumentMetadata = mock(CruiseMetadata.class);
-    when(metadataService.createDatasetMetadata(cruiseMetadata, instrumentDetails)).thenReturn(instrumentMetadata);
-
-    Path datasetMetadataPath = mainBagRootDir.resolve("TST200400/TST200400_MB-BATHY_EM122/TST200400_MB-BATHY_EM122-metadata.json");
-    doAnswer(invocation -> {
-      Path path = invocation.getArgument(1, Path.class);
-      FileUtils.write(path.toFile(), "", StandardCharsets.UTF_8);
-      return null;
-    }).when(metadataService).writeMetadata(eq(instrumentMetadata), eq(datasetMetadataPath));
-
     packerService.startPacking();
 
     Thread.sleep(1000); //TODO be smarter with wait
-
-    verify(metadataService).writeMetadata(eq(cruiseMetadata), eq(metadataPath));
 
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
     assertFalse(actualRoot.toFile().exists());

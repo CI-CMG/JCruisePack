@@ -3,8 +3,14 @@ package edu.colorado.cires.cruisepack.app.service;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.io.PackerFileController;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
+import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
+import edu.colorado.cires.cruisepack.xml.person.Person;
+import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,9 +22,12 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -127,6 +136,7 @@ public class PackerService {
     try {
       packerFileController.bagInPlace(
           mainBagPath,
+          createMetadataFromPackJob(packJob),
           Collections.emptyList() // intentionally empty. Child bags have already had checksums generated. Checksums for the main bag need to be generated manually
       );
     } catch (NoSuchAlgorithmException | IOException e) {
@@ -393,7 +403,7 @@ public class PackerService {
 
       if (bagContainsData) {
         copyLocalData(serviceProperties, instrumentBagRootDir);
-        packerFileController.createAndWriteDatasetMetadata(
+        CruiseMetadata datasetMetadata = packerFileController.createAndWriteDatasetMetadata(
             cruiseMetadata,
             instruments,
             instrumentBagRootDir.resolve(instrumentBagName + "-metadata.json")
@@ -402,6 +412,7 @@ public class PackerService {
         try {
           packerFileController.bagInPlace(
               instrumentBagRootDir,
+              createMetadataFromCruiseMetadata(datasetMetadata),
               Collections.singletonList(StandardSupportedAlgorithms.SHA256)
           );
         } catch (NoSuchAlgorithmException | IOException e) {
@@ -601,6 +612,109 @@ public class PackerService {
     } catch (IOException e) {
       throw new IllegalStateException("Unable to process files " + sourceDataPath, e);
     }
+  }
+  
+  private Metadata createMetadataFromPackJob(PackJob packJob) {
+    Person metadataAuthor = packJob.getMetadataAuthor();
+    LocalDate releaseDate = packJob.getReleaseDate();
+    
+    Metadata metadata = new Metadata();
+    metadata.addAll(List.of(
+        new SimpleImmutableEntry<>(
+            "Source-Organization",
+            String.join(
+                ", ",
+                packJob.getSources().stream()
+                    .map(PeopleOrg::getName)
+                    .collect(Collectors.toSet())
+            )
+        ),
+        new SimpleImmutableEntry<>(
+            "Contact-Name",
+            metadataAuthor == null ? null : metadataAuthor.getName()
+        ),
+        new SimpleImmutableEntry<>(
+            "Contact-Phone",
+            metadataAuthor == null ? null : metadataAuthor.getPhone()
+        ),
+        new SimpleImmutableEntry<>(
+            "Contact-Email",
+            metadataAuthor == null ? null : metadataAuthor.getEmail()
+        ),
+        new SimpleImmutableEntry<>(
+            "External-Description",
+            packJob.getCruiseDescription()
+        ),
+        new SimpleImmutableEntry<>(
+            "External-Identifier",
+            packJob.getCruiseId()
+        ),
+        new SimpleImmutableEntry<>(
+            "Cruise Name",
+            packJob.getCruiseTitle()
+        ),
+        new SimpleImmutableEntry<>(
+            "Bagging-Date",
+            releaseDate == null ? null : releaseDate.toString()
+        )
+    ));
+    return metadata;
+  }
+
+  private Metadata createMetadataFromCruiseMetadata(CruiseMetadata cruiseMetadata) {
+    MetadataAuthor metadataAuthor = cruiseMetadata.getMetadataAuthor();
+    
+    Metadata metadata = new Metadata();
+    metadata.addAll(List.of(
+        new SimpleImmutableEntry<>(
+            "Source-Organization",
+            String.join(
+                ", ",
+                cruiseMetadata.getSponsors().stream()
+                    .map(PeopleOrg::getName)
+                    .collect(Collectors.toSet())
+            )
+        ),
+        new SimpleImmutableEntry<>(
+            "Contact-Name",
+            metadataAuthor == null ? null : metadataAuthor.getName()
+        ),
+        new SimpleImmutableEntry<>(
+            "Contact-Phone",
+            metadataAuthor == null ? null : metadataAuthor.getPhone()
+        ),
+        new SimpleImmutableEntry<>(
+            "Contact-Email",
+            metadataAuthor == null ? null : metadataAuthor.getEmail()
+        ),
+        new SimpleImmutableEntry<>(
+            "External-Description",
+            cruiseMetadata.getCruiseDescription()
+        ),
+        new SimpleImmutableEntry<>(
+            "External-Identifier",
+            cruiseMetadata.getCruiseId()
+        ),
+        new SimpleImmutableEntry<>(
+            "Cruise Name",
+            cruiseMetadata.getCruiseTitle()
+        ),
+        new SimpleImmutableEntry<>(
+            "Instrument",
+            String.join(
+                ", ",
+                cruiseMetadata.getPackageInstruments().values().stream()
+                    .map(PackageInstrument::getInstrument)
+                    .map(Instrument::getInstrument)
+                    .collect(Collectors.toSet())
+            )
+        ),
+        new SimpleImmutableEntry<>(
+            "Bagging-Date",
+            cruiseMetadata.getMasterReleaseDate()
+        )
+    ));
+    return metadata;
   }
 
 }

@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import gov.loc.repository.bagit.creator.BagCreator;
+import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.SupportedAlgorithm;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -73,15 +74,16 @@ public class PackerFileController {
     return cruiseMetadata;
   }
   
-  public void createAndWriteDatasetMetadata(CruiseMetadata cruiseMetadata, List<InstrumentDetail> instrumentDetails, Path target) {
+  public CruiseMetadata createAndWriteDatasetMetadata(CruiseMetadata cruiseMetadata, List<InstrumentDetail> instrumentDetails, Path target) {
     checkPackState();
     CruiseMetadata datasetMetadata = metadataService.createDatasetMetadata(cruiseMetadata, instrumentDetails);
     metadataService.writeMetadata(datasetMetadata, target);
+    return datasetMetadata;
   }
   
-  public void bagInPlace(Path mainBagPath, Collection<SupportedAlgorithm> algorithms) throws NoSuchAlgorithmException, IOException {
+  public void bagInPlace(Path mainBagPath, Metadata metadata, Collection<SupportedAlgorithm> algorithms) throws NoSuchAlgorithmException, IOException {
     checkPackState();
-    BagCreator.bagInPlace(mainBagPath, algorithms, false);
+    BagCreator.bagInPlace(mainBagPath, algorithms, false, metadata);
   }
 
   public long getFileCount(Path path) {

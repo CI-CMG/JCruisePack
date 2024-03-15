@@ -1,9 +1,10 @@
-Source-Organization: AFSC
-Contact-Name: Chuck Anderson
-Contact-Phone: 303-497-4742
-Contact-Email: charles.anderson@noaa.gov
-External-Description: Test cruise alpha
-External-Identifier: CruiseID
-Cruise Name: CruiseID
-Instrument: Kongsberg EM122
-Bagging-Date: 2022-02-25 09:31:00.842108
+Source-Organization: SOURCE-ORG-1, SOURCE-ORG-2
+Contact-Name: TEST_NAME
+Contact-Phone: TEST_PHONE
+Contact-Email: TEST_EMAIL
+External-Description: TST200400_description
+External-Identifier: TST200400
+Cruise Name: TST200400_title
+Instrument: longem122
+Payload-Oxum: 161764.12
+Bagging-Date: 2024-03-14
