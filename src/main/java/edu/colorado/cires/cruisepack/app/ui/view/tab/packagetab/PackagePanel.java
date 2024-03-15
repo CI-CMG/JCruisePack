@@ -224,8 +224,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
     releaseDateField.addDateChangeListener((evt) -> packageController.setReleaseDate(evt.getNewDate()));
     dirSelectButton.addActionListener((evt) -> handleDirSelect());
     packageDirectoryField.getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleDirValue(packageDirectoryField.getText()));
-    projectsField.addAddItemListener((i) -> packageController.addProject(i));
-    projectsField.addRemoveItemListener((i) -> packageController.removeProject(i));
+    projectsField.addAddItemListener(packageController::addProject);
+    projectsField.addRemoveItemListener(packageController::removeProject);
     existingRecordList.addItemListener((evt) -> packageController.setExistingRecord((DropDownItem) evt.getItem()));
   }
 
