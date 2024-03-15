@@ -1,6 +1,10 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
 import edu.colorado.cires.cruisepack.xml.projects.ProjectData;
@@ -9,6 +13,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,76 +33,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectDatastore {
-
+public class ProjectDatastore extends PropertyChangeModel implements PropertyChangeListener {
   public static final DropDownItem UNSELECTED_PROJECT = new DropDownItem("", "Select Project");
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> projectDropDowns;
+  private final ReactiveViewRegistry reactiveViewRegistry;
+  private  List<Project> projects;
 
   @Autowired
-  public ProjectDatastore(ServiceProperties serviceProperties) {
+  public ProjectDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
     this.serviceProperties = serviceProperties;
+    this.reactiveViewRegistry = reactiveViewRegistry;
   }
 
   @PostConstruct
   public void init() {
-    Path workDir = Paths.get(serviceProperties.getWorkDir());
-    Path dataDir = workDir.resolve("data");
-    Path projectFile = dataDir.resolve("projects.xml");
-    if (!Files.isRegularFile(projectFile)) {
-      throw new IllegalStateException("Unable to read " + projectFile);
-    }
-    ProjectData projectData;
-    try (Reader reader = Files.newBufferedReader(projectFile, StandardCharsets.UTF_8)) {
-      projectData = (ProjectData) JAXBContext.newInstance(ProjectData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
-      throw new IllegalStateException("Unable to parse " + projectFile, e);
-    }
-    projectDropDowns = new ArrayList<>(projectData.getProjects().getProjects().size() + 1);
-    projectDropDowns.add(UNSELECTED_PROJECT);
-    projectData.getProjects().getProjects().stream()
-        .filter(Project::isUse)
-        .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
-        .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))
-        .forEach(projectDropDowns::add);
+    addChangeListener(this);
+    load();
   }
 
-  public List<DropDownItem> getProjectDropDowns() {
-    return projectDropDowns;
-  }
 
-  public List<DropDownItem> getProjectDropDownsMatchingNames(List<String> names) {
-    return projectDropDowns.stream()
-        .filter((dd) -> names.contains(dd.getValue()))
-        .toList();
-  }
-
-  private List<Project> mergeProjects(Optional<ProjectData> defaults, Optional<ProjectData> overrides) {
-    Map<String, Project> merged = new HashMap<>(0);
-    defaults.map(od -> od.getProjects().getProjects()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-    overrides.map(od -> od.getProjects().getProjects()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-
-    return merged.values().stream()
-        .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
+  private void load() {
+    projects = mergeProjects(Optional.empty(), readProjects("local-data"));
+    List<DropDownItem> items = projects.stream()
+        .map(o -> new DropDownItem(o.getUuid(), o.getName()))
         .collect(Collectors.toList());
+    items.add(0, UNSELECTED_PROJECT);
+
+    setProjectDropDowns(items);
   }
 
-  private Optional<ProjectData> readProjects(String dir) {
-    Path workDir = Paths.get(serviceProperties.getWorkDir());
-    Path dataDir = workDir.resolve(dir);
-    Path peopleFile = dataDir.resolve("projects.xml");
-    if (!Files.isRegularFile(peopleFile)) {
-      return Optional.empty();
-    }
-    ProjectData projectData;
-    try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
-      projectData = (ProjectData) JAXBContext.newInstance(ProjectData.class)
-          .createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
-      throw new IllegalStateException("Unable to parse " + peopleFile, e);
-    }
-    return Optional.of(projectData);
+  private void setProjectDropDowns(List<DropDownItem> items) {
+    setIfChanged(Events.UPDATE_PROJECT_DATA_STORE, items, () -> new ArrayList<DropDownItem>(), (i) -> this.projectDropDowns = i);
+  }
+
+  public List<DropDownItem> getAllProjectDropDowns() {
+    return projectDropDowns;
   }
 
   public void save(Project project) {
@@ -114,7 +87,9 @@ public class ProjectDatastore {
     projectData.setDataVersion("1.0");
     ProjectList projectList = new ProjectList();
     List<Project> projects = projectList.getProjects();
-    projects.addAll(mergedProjects);
+    projects.addAll(
+        mergedProjects
+    );
     projectData.setProjects(projectList);
 
     Path workDir = Paths.get(serviceProperties.getWorkDir());
@@ -130,21 +105,56 @@ public class ProjectDatastore {
     load();
   }
 
-  // TODO
-//  public void save(OrganizationModel organizationModel) {
-//    save(organizationFromModel(organizationModel));
-//  }
 
-  private void load() {
-    //TODO
-//    organizations = mergeOrganizations(readOrganizations("data"), readOrganizations("local-data"));
-//    List<DropDownItem> items = organizations.stream()
-//        .map(o -> new DropDownItem(o.getUuid(), o.getName()))
-//        .collect(Collectors.toList());
-//    items.add(0, UNSELECTED_ORGANIZATION);
-//
-//    setOrganizationDropDowns(items);
+  private List<Project> mergeProjects(Optional<ProjectData> defaults, Optional<ProjectData> overrides) {
+    Map<String, Project> merged = new HashMap<>(0);
+    defaults.map(od -> od.getProjects().getProjects()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+    overrides.map(od -> od.getProjects().getProjects()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+
+    return merged.values().stream()
+        .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
+        .collect(Collectors.toList());
   }
 
+  private Optional<ProjectData> readProjects(String dir) {
+    Path workDir = Paths.get(serviceProperties.getWorkDir());
+    Path dataDir = workDir.resolve(dir);
+    Path projectsFile = dataDir.resolve("projects.xml");
+    if (!Files.isRegularFile(projectsFile)) {
+      return Optional.empty();
+    }
+    ProjectData projectData;
+    try (Reader reader = Files.newBufferedReader(projectsFile, StandardCharsets.UTF_8)) {
+      projectData = (ProjectData) JAXBContext.newInstance(ProjectData.class)
+          .createUnmarshaller().unmarshal(reader);
+    } catch (IOException | JAXBException e) {
+      throw new IllegalStateException("Unable to parse " + projectsFile, e);
+    }
+    return Optional.of(projectData);
+  }
 
+  public Optional<Project> getByUUID(String uuid) {
+    return projects.stream()
+        .filter(o -> o.getUuid().equals(uuid))
+        .findFirst();
+  }
+
+  public Optional<Project> findByName(String name) {
+    return projects.stream()
+        .filter(o -> o.getName().equals(name))
+        .findFirst();
+  }
+
+  public List<DropDownItem> getProjectDropDownsMatchingNames(List<String> names) {
+    return projectDropDowns.stream()
+        .filter((dd) -> names.contains(dd.getValue()))
+        .toList();
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    for (ReactiveView view : reactiveViewRegistry.getViews()) {
+      view.onChange(evt);
+    }
+  }
 }

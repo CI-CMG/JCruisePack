@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProjectData xmlns="https://colorado.edu/cires/cruisepack/projects">
+  <DataVersion>1.0</DataVersion>
+  <Projects>
+    <Project>
+      <Uuid>1</Uuid>
+      <Name>Project number one</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>2</Uuid>
+      <Name>Project number two</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>3</Uuid>
+      <Name>My new project</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>4</Uuid>
+      <Name>My new project 2</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>5</Uuid>
+      <Name>Autumn Bottom Trawl-Acoustics Survey</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>6</Uuid>
+      <Name>Spring Bottom Trawl-Acoustics Survey</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>7</Uuid>
+      <Name>AMAPPS</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>8</Uuid>
+      <Name>Northeast Deepwater Coral Habitats</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>9</Uuid>
+      <Name>Mespolagic DEEP -SEA</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>10</Uuid>
+      <Name>Spring Multispecies Bottom Trawl Survey</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>11</Uuid>
+      <Name>ECOMON</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>12</Uuid>
+      <Name>another new project</Name>
+      <Use>true</Use>
+    </Project>
+    <Project>
+      <Uuid>13</Uuid>
+      <Name>fooo</Name>
+      <Use>true</Use>
+    </Project>
+  </Projects>
+</ProjectData>

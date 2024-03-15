@@ -22,10 +22,9 @@ import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
 import java.nio.file.Path;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -33,6 +32,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class SqliteMigrator {
 
+  private final Supplier<String> uuidGenerator;
   private final ObjectMapper objectMapper;
   private final CruiseDataDatastore cruiseDataDatastore;
   private final OrganizationDatastore organizationDatastore;
@@ -40,12 +40,14 @@ public class SqliteMigrator {
   private final ProjectDatastore projectDatastore;
 
   public SqliteMigrator(
+      Supplier<String> uuidGenerator,
       ObjectMapper objectMapper,
       CruiseDataDatastore cruiseDataDatastore,
       OrganizationDatastore organizationDatastore,
       PersonDatastore personDatastore,
       ProjectDatastore projectDatastore
   ) {
+    this.uuidGenerator = uuidGenerator;
     this.objectMapper = objectMapper;
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.organizationDatastore = organizationDatastore;
@@ -63,9 +65,9 @@ public class SqliteMigrator {
         .buildSessionFactory();
   }
 
-  private static Project toProject(ProjectEntity db) {
+  private Project toProject(ProjectEntity db) {
     Project project = new Project();
-    project.setUuid(UUID.randomUUID().toString());
+    project.setUuid(uuidGenerator.get());
     project.setName(normalize(db.getName()));
     project.setUse("Y".equals(db.getUse()));
     return project;
@@ -86,7 +88,7 @@ public class SqliteMigrator {
     return str.trim();
   }
 
-  private static Person toPerson(PersonEntity db) {
+  private Person toPerson(PersonEntity db) {
     Person person = new Person();
     person.setName(normalize(db.getName()));
     person.setOrganization(normalize(db.getOrganization()));
@@ -98,13 +100,13 @@ public class SqliteMigrator {
     person.setCountry(normalize(db.getCountry()));
     person.setEmail(normalize(db.getEmail()));
     person.setPhone(normalize(db.getPhone()));
-    person.setUuid(StringUtils.isBlank(db.getUuid()) ? UUID.randomUUID().toString() : db.getUuid().trim());
+    person.setUuid(StringUtils.isBlank(db.getUuid()) ? uuidGenerator.get() : db.getUuid().trim());
     person.setUse("Y".equals(db.getUse()));
     person.setOrcid(normalize(db.getOrcId()));
     return person;
   }
 
-  private static Organization toOrganization(OrganizationEntity db) {
+  private Organization toOrganization(OrganizationEntity db) {
     Organization organization = new Organization();
     organization.setName(normalize(db.getName()));
     organization.setStreet(normalize(db.getStreet()));
@@ -114,7 +116,7 @@ public class SqliteMigrator {
     organization.setCountry(normalize(db.getCountry()));
     organization.setEmail(normalize(db.getEmail()));
     organization.setPhone(normalize(db.getPhone()));
-    organization.setUuid(StringUtils.isBlank(db.getUuid()) ? UUID.randomUUID().toString() : db.getUuid().trim());
+    organization.setUuid(StringUtils.isBlank(db.getUuid()) ? uuidGenerator.get() : db.getUuid().trim());
     organization.setUse("Y".equals(db.getUse()));
     return organization;
   }
@@ -240,17 +242,17 @@ public class SqliteMigrator {
       sessionFactory.inTransaction(session -> {
         session.createSelectionQuery("from PersonEntity", PersonEntity.class)
             .getResultList().stream()
-            .map(SqliteMigrator::toPerson)
+            .map(this::toPerson)
             .forEach(personDatastore::save);
 
         session.createSelectionQuery("from OrganizationEntity", OrganizationEntity.class)
             .getResultList().stream()
-            .map(SqliteMigrator::toOrganization)
+            .map(this::toOrganization)
             .forEach(organizationDatastore::save);
 
         session.createSelectionQuery("from ProjectEntity", ProjectEntity.class)
             .getResultList().stream()
-            .map(SqliteMigrator::toProject)
+            .map(this::toProject)
             .forEach(projectDatastore::save);
       });
     }

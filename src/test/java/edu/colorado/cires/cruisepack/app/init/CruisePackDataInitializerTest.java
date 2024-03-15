@@ -41,7 +41,6 @@ public class CruisePackDataInitializerTest {
         "organizations.xml",
         "people.xml",
         "ports.xml",
-        "projects.xml",
         "seas.xml",
         "ships.xml",
         "singlebeamVerticalDatums.xml",

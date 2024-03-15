@@ -140,7 +140,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     this.projectsField = new DropDownItemList(
       PROJECTS_LABEL,
       ADDITIONAL_PROJECTS_LABEL,
-      projectDatastore.getProjectDropDowns(),
+      projectDatastore.getAllProjectDropDowns(),
       ProjectDatastore.UNSELECTED_PROJECT
     );
     this.cruiseDataDatastore = cruiseDataDatastore;

@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -175,7 +176,7 @@ public class PackerServiceTest {
     }
 
     assertEquals(expected, actual);
-    
+
     Map<String, String> expectedMetadata = getMetadata(Paths.get(
         "src/test/resources/test-bags/TST200400/bag-info.txt"
     ));
@@ -184,7 +185,7 @@ public class PackerServiceTest {
     ));
     expectedMetadata.remove("Bagging-Date");
     actualMetadata.remove("Bagging-Date"); // Generated automatically, cannot reliably test
-    
+
     expectedMetadata.forEach(
         (key, value) -> assertEquals(
             value,
@@ -200,7 +201,7 @@ public class PackerServiceTest {
     ));
     expectedMetadata.remove("Bagging-Date");
     actualMetadata.remove("Bagging-Date"); // Generated automatically, cannot reliably test
-    
+
     expectedMetadata.forEach(
         (key, value) -> assertEquals(
             value,
@@ -328,7 +329,7 @@ public class PackerServiceTest {
     assertFalse(actualRoot.toFile().exists());
 
   }
-  
+
   private Map<String, String> getMetadata(Path path) throws IOException {
     Map<String, String> metadata = new HashMap<>(0);
     try (
@@ -339,11 +340,11 @@ public class PackerServiceTest {
       while (line != null) {
         String[] lineParts = line.split(": ");
         metadata.put(lineParts[0], lineParts[1]);
-        
+
         line = bufferedReader.readLine();
       }
     }
-    
+
     return metadata;
   }
 

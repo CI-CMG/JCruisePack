@@ -56,7 +56,6 @@ public class CruisePackPreSpringStarterTest {
         testDir.resolve("data/organizations.xml"),
         testDir.resolve("data/people.xml"),
         testDir.resolve("data/ports.xml"),
-        testDir.resolve("data/projects.xml"),
         testDir.resolve("data/seas.xml"),
         testDir.resolve("data/ships.xml"),
         testDir.resolve("data/singlebeamVerticalDatums.xml"),

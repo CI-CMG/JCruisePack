@@ -157,7 +157,10 @@ public final class Events {
   public static final String UPDATE_CRUISE_DATA_STORE = "UPDATE_CRUISE_DATA_STORE";
   public static final String UPDATE_PERSON_DATA_STORE = "UPDATE_PERSON_DATA_STORE";
   public static final String UPDATE_ORGANIZATION_DATA_STORE = "UPDATE_ORGANIZATION_DATA_STORE";
-  
+
+  //Project
+  public static final String UPDATE_PROJECT_DATA_STORE = "UPDATE_PROJECT_DATA_STORE";
+
   // Import form
   public static final String UPDATE_IMPORT_PATH = "UPDATE_IMPORT_PATH";
   public static final String UPDATE_IMPORT_PATH_ERROR = "UPDATE_IMPORT_PATH_ERROR";

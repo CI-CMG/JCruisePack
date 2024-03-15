@@ -6,4 +6,4 @@ External-Description: TST200400_description
 External-Identifier: TST200400
 Cruise Name: TST200400_title
 Payload-Oxum: 164762.19
-Bagging-Date: 2024-03-14
+Bagging-Date: __BAGGING_DATE__
