@@ -112,4 +112,14 @@ public class InstrumentDatastore {
   public String getNameForShortCode(String shortCode) {
     return datasetTypeDropDowns.stream().filter(dd -> shortCode.equals(dd.getId())).map(DropDownItem::getValue).findFirst().orElse(null);
   }
+  
+  public Optional<Instrument> getInstrumentFromShortGroupTypeAndInstrumentName(String shortGroupType, String instrumentName) {
+    return instrumentData.getInstrumentGroups().getInstrumentGroups().stream()
+        .filter(instrumentGroup -> instrumentGroup.getShortType().equals(shortGroupType))
+        .map(InstrumentGroup::getInstruments)
+        .map(InstrumentList::getInstruments)
+        .flatMap(List::stream)
+        .filter(instrument -> instrument.getName().equals(instrumentName))
+        .findFirst();
+  }
 }

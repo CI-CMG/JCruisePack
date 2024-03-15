@@ -55,7 +55,7 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
   private String processingLevelError = null;
   private String comments;
   private String commentsError = null;
-  @NotNull(message = "must not be blank")
+
   @PathExists
   @PathIsDirectory
   private Path ancillaryPath;

@@ -1,5 +1,0 @@
-71421ef2c6dabf369255687338bd1bab  data/localData.sqlite
-a2e391f5adaab39d102e97dd75878f76  data/MB/bio-2
-ed260b8073d9fd336eb230e4c09aa368  data/MB/bio-1
-7c225c8001e3a66605c137ec793ba022  data/CruiseID_ANCILLARY_MB_packager.log
-ef2ebca366f4975710da63dd79f4e55f  data/CruiseID_ANCILLARY_MB-metadata.json

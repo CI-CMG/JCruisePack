@@ -103,6 +103,8 @@ public class PackerServiceTest {
             .setDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122"))
             .setDirName("EM122")
             .setBagName("TST200400_MB-BATHY_EM122")
+            .setAncillaryDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_ANCILLARY_MB/data/MB"))
+            .setAncillaryDataDetails("Ancillary details 1")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PROCESSED)
@@ -208,6 +210,36 @@ public class PackerServiceTest {
             actualBagMetadata.get(key)
         )
     );
+    
+    Path expectedAncillaryRoot = Paths.get("src/test/resources/test-bags/TST200400/data/TST200400_ANCILLARY_MB");
+    expected = new TreeSet<>();
+    try (Stream<Path> fileStream = Files.walk(expectedAncillaryRoot)) {
+      fileStream.filter(Files::isRegularFile).map(expectedAncillaryRoot::relativize).forEach(expected::add);
+    }
+    
+    Path actualAncillaryRoot = mainBagRootDir.resolve("TST200400/data/TST200400_ANCILLARY_MB");
+    actual = new TreeSet<>();
+    try (Stream<Path> fileStream = Files.walk(actualAncillaryRoot)) {
+      fileStream.filter(Files::isRegularFile).map(actualAncillaryRoot::relativize).forEach(actual::add);
+    }
+    
+    assertEquals(expected, actual);
+    
+    expectedMetadata = getMetadata(Paths.get(
+       "src/test/resources/test-bags/TST200400/data/TST200400_ANCILLARY_MB/bag-info.txt" 
+    ));
+    final Map<String, String> actualAncillaryMetadata = getMetadata(Paths.get(
+        "target/test-output/TST200400/data/TST200400_ANCILLARY_MB/bag-info.txt"
+    ));
+    expectedMetadata.remove("Bagging-Date");
+    actualAncillaryMetadata.remove("Bagging-Date"); // Generated automatically, cannot reliably test
+    
+    expectedMetadata.forEach(
+        (key, value) -> assertEquals(
+            value,
+            actualAncillaryMetadata.get(key)
+        )
+    );
   }
 
   @Test
@@ -267,7 +299,9 @@ public class PackerServiceTest {
     Thread.sleep(1000); //TODO be smarter with wait
 
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
+    Path actualAncillaryRoot = mainBagRootDir.resolve("TST200400/data/TST200400_ANCILLARY_MB");
     assertFalse(actualRoot.toFile().exists());
+    assertFalse(actualAncillaryRoot.toFile().exists());
   }
 
   @Test
@@ -326,8 +360,9 @@ public class PackerServiceTest {
     Thread.sleep(1000); //TODO be smarter with wait
 
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
+    Path actualAncillaryRoot = mainBagRootDir.resolve("TST200400/data/TST200400_ANCILLARY_MB");
     assertFalse(actualRoot.toFile().exists());
-
+    assertFalse(actualAncillaryRoot.toFile().exists());
   }
 
   private Map<String, String> getMetadata(Path path) throws IOException {

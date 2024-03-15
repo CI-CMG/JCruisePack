@@ -5,5 +5,5 @@ Contact-Email: TEST_EMAIL
 External-Description: TST200400_description
 External-Identifier: TST200400
 Cruise Name: TST200400_title
-Payload-Oxum: 164762.19
+Payload-Oxum: 167964.28
 Bagging-Date: __BAGGING_DATE__

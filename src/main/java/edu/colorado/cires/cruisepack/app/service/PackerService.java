@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.io.PackerFileController;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
@@ -22,10 +23,13 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,19 +54,21 @@ public class PackerService {
   private final FooterControlController footerControlController;
   private final PackStateModel packStateModel;
   private final PackerFileController packerFileController;
+  private final InstrumentDatastore instrumentDatastore;
 
   @Autowired
   public PackerService(
       ServiceProperties serviceProperties,
       PackagingValidationService validationService,
       FooterControlController footerControlController,
-      PackStateModel packStateModel, PackerFileController packerFileController
+      PackStateModel packStateModel, PackerFileController packerFileController, InstrumentDatastore instrumentDatastore
   ) {
     this.serviceProperties = serviceProperties;
     this.validationService = validationService;
     this.footerControlController = footerControlController;
     this.packStateModel = packStateModel;
     this.packerFileController = packerFileController;
+    this.instrumentDatastore = instrumentDatastore;
   }
 
   public void startPacking() {
@@ -91,13 +97,14 @@ public class PackerService {
     new Thread(() -> {
       try {
 ////    rawCheck(packJob); //TODO add to validation phase
+        PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob);
         packStateModel.setProcessing(true);
-        packStateModel.setProgressIncrement(100f / getTotalFiles(packJob));
-        resetBagDirs(packJob);
-        copyDocs(packJob);
-        copyOmics(packJob);
-        packData(packJob);
-        packMainBag(packJob);
+        packStateModel.setProgressIncrement(100f / getTotalFiles(packJobWithAncillaryInstruments));
+        resetBagDirs(packJobWithAncillaryInstruments);
+        copyDocs(packJobWithAncillaryInstruments);
+        copyOmics(packJobWithAncillaryInstruments);
+        packData(packJobWithAncillaryInstruments);
+        packMainBag(packJobWithAncillaryInstruments);
       } catch (Exception e) {
         LOGGER.error("An error occurred while packing", e);
       } finally {
@@ -427,6 +434,53 @@ public class PackerService {
       }
     }
   }
+  
+  private PackJob addAncillaryDataToPackJob(PackJob packJob) {
+    Map<InstrumentDetailPackageKey, List<InstrumentDetail>> packJobInstruments = new HashMap<>(packJob.getInstruments());
+    for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
+      List<InstrumentDetail> ancillaryDetails = new ArrayList<>(0);
+      String ancillaryGroupShortType = "ANCILLARY";
+      for (InstrumentDetail instrumentDetail : entry.getValue()) {
+        Path ancillaryPath = instrumentDetail.getAncillaryDataPath();
+        if (ancillaryPath != null) {
+          String ancillaryInstrumentName = String.format(
+              "%s Ancillary",
+              instrumentDatastore.getNameForShortCode(entry.getKey().getInstrumentGroupShortType())
+          );
+          instrumentDatastore.getInstrumentFromShortGroupTypeAndInstrumentName(ancillaryGroupShortType, ancillaryInstrumentName).ifPresent(
+              referenceInstrument -> ancillaryDetails.add(
+                  InstrumentDetail.builder()
+                      .setInstrument(ancillaryInstrumentName)
+                      .setStatus(instrumentDetail.getStatus())
+                      .setDataPath(ancillaryPath)
+                      .setDataComment(instrumentDetail.getAncillaryDataDetails())
+                      .setReleaseDate(instrumentDetail.getReleaseDate())
+                      .setShortName(referenceInstrument.getShortName())
+                      .setBagName(String.format(
+                          "%s_ANCILLARY_%s",
+                          packJob.getCruiseId(), referenceInstrument.getShortName()
+                      )).setDirName(referenceInstrument.getShortName())
+                      .build()
+              )
+          );
+        }
+      }
+
+      if (!ancillaryDetails.isEmpty()) {
+        packJobInstruments.put(
+            new InstrumentDetailPackageKey(
+                ancillaryGroupShortType,
+                ancillaryDetails.get(0).getShortName()
+            ),
+            ancillaryDetails
+        );
+      }
+    }
+    
+    return PackJob.builder(packJob)
+        .setInstruments(packJobInstruments)
+        .build();
+  }
 
   /*
    def pack_data(self):
@@ -616,8 +670,7 @@ public class PackerService {
   
   private Metadata createMetadataFromPackJob(PackJob packJob) {
     Person metadataAuthor = packJob.getMetadataAuthor();
-    LocalDate releaseDate = packJob.getReleaseDate();
-    
+
     Metadata metadata = new Metadata();
     metadata.addAll(List.of(
         new SimpleImmutableEntry<>(
@@ -652,10 +705,6 @@ public class PackerService {
         new SimpleImmutableEntry<>(
             "Cruise Name",
             packJob.getCruiseTitle()
-        ),
-        new SimpleImmutableEntry<>(
-            "Bagging-Date",
-            releaseDate == null ? null : releaseDate.toString()
         )
     ));
     return metadata;
@@ -708,10 +757,6 @@ public class PackerService {
                     .map(Instrument::getInstrument)
                     .collect(Collectors.toSet())
             )
-        ),
-        new SimpleImmutableEntry<>(
-            "Bagging-Date",
-            cruiseMetadata.getMasterReleaseDate()
         )
     ));
     return metadata;
