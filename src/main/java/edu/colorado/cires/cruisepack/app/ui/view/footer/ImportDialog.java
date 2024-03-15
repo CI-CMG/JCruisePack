@@ -134,7 +134,12 @@ public class ImportDialog extends JDialog implements ReactiveView {
       }
     });
     
-    importButton.addActionListener((evt) -> importController.importCruises());
+    importButton.addActionListener((evt) -> {
+      boolean success = importController.importCruises();
+      if (success) {
+        setVisible(false);
+      }
+    });
     
     selectFileButton.addActionListener((evt) -> handleFileSelect());
     selectDirectoryButton.addActionListener((evt) -> handleDirectorySelect(importController::setDestinationPath));

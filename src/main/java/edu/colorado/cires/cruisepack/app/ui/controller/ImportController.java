@@ -49,8 +49,8 @@ public class ImportController implements PropertyChangeListener {
     return importModel.getMetadataAuthor();
   }
   
-  public void importCruises() {
-    importService.importCruises(importModel);
+  public boolean importCruises() {
+    return importService.importCruises(importModel);
   }
   
   public void resetState() {

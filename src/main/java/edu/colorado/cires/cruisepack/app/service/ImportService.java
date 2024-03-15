@@ -70,9 +70,13 @@ public class ImportService {
     }
   }
 
-  public void importCruises(ImportModel model) {
-    validateModel(model)
-        .ifPresent(this::importFile);
+  public boolean importCruises(ImportModel model) {
+    return validateModel(model)
+        .map(m -> {
+          importFile(m);
+          return true;
+        })
+        .orElse(false);
   }
   
   private void importFile(ImportModel model) {
