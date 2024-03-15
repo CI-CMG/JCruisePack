@@ -60,7 +60,7 @@
       "data_path": "/Volumes/Fortress/test_data/EK60",
       "status": "Raw",
       "data_comment": "",
-      "uuid": null,
+      "uuid": "b7ae3f00-701c-11e0-a1f0-0800200c9a66",
       "additional_data":
       [
         {
@@ -83,7 +83,7 @@
       "data_path": "/Volumes/Fortress/test_data/EM302",
       "status": "Raw",
       "data_comment": "",
-      "uuid": null,
+      "uuid": "794feae0-679a-11e0-ae3e-0800200c9a66",
       "additional_data": [],
       "calibration_state": "Uncalibrated",
       "calibration_date": "2000-01-01",
@@ -98,7 +98,7 @@
       "data_path": "/Volumes/Fortress/test_data/EM302",
       "status": "Processed",
       "data_comment": "",
-      "uuid": null,
+      "uuid": "794feae0-679a-11e0-ae3e-0800200c9a66",
       "additional_data": [],
       "calibration_state": "Uncalibrated",
       "calibration_date": "2000-01-01",
@@ -113,7 +113,7 @@
       "data_path": "/Volumes/Fortress/test_data/CTD",
       "status": "Raw",
       "data_comment": "",
-      "uuid": null,
+      "uuid": "45080730-69c6-11e0-ae3e-0800200c9a66",
       "additional_data": []
     },
     {
@@ -124,7 +124,7 @@
       "data_path": "/Volumes/Fortress/test_data/POS",
       "status": "Raw",
       "data_comment": "",
-      "uuid": null,
+      "uuid": "41f56f00-69d1-11e0-ae3e-0800200c9a66",
       "additional_data": [],
       "datum": "WGS84"
     }
@@ -143,7 +143,7 @@
     ],
     "tracking_path": "/Volumes/Fortress/test_data/docs/xbtxsv92005.pdf",
     "omics_comment": "Test omics data comment.",
-    "omics_poc": {"name": "Chuck Anderson"},
+    "omics_poc": {"name": "Chuck Anderson", "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"},
     "omics_poc_uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
   }
 }

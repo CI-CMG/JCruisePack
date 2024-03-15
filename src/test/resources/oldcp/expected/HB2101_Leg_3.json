@@ -15,10 +15,10 @@
     "name": "Chuck Anderson",
     "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
   },
-  "scientists": [{"name": "Philip Politis", "uuid": ""}],
-  "funders": [{"name": "NMFS", "uuid": ""}],
-  "sponsors": [{"name": "NMFS", "uuid": ""}],
+  "scientists": [{"name": "Philip Politis", "uuid": "19"}],
+  "funders": [{"name": "NMFS", "uuid": "23456"}],
+  "sponsors": [{"name": "NMFS", "uuid": "23456"}],
   "master_release_date": "2022-01-26",
-  "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Kongsberg EM2040", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "3fc99253-bc2b-438f-8655-ffd5a825c260"}, {"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
+  "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Kongsberg EM2040", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "69bc77a-9244-43fe-b1b8-d0c937017f5c"}, {"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
   "use": true
 }

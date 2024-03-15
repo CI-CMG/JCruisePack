@@ -1,6 +1,5 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,20 +26,20 @@ public class InstrumentDetail {
   private final String instrument;
   private final String shortName;
   private final Set<String> extensions;
-  private final Path dataPath;
+  private final String dataPath;
   private final boolean flatten;
   private final String dirName;
   private final String bagName;
   private final String dataComment;
-  private final Path ancillaryDataPath;
+  private final String ancillaryDataPath;
   private final String ancillaryDataDetails;
   private final List<AdditionalFiles> additionalFiles;
   private final Map<String, Object> additionalFields;
   //  private final Consumer<CustomInstrumentProcessingContext> customHandler;
 
-  private InstrumentDetail(InstrumentStatus status, String uuid, LocalDate releaseDate, String instrument, String shortName, Set<String> extensions, Path dataPath, boolean flatten,
+  private InstrumentDetail(InstrumentStatus status, String uuid, LocalDate releaseDate, String instrument, String shortName, Set<String> extensions, String dataPath, boolean flatten,
       String dirName, String bagName, String dataComment, List<AdditionalFiles> additionalFiles, Map<String, Object> additionalFields,
-      Path ancillaryDataPath, String ancillaryDataDetails
+      String ancillaryDataPath, String ancillaryDataDetails
   ) {
     this.status = status;
     this.uuid = uuid;
@@ -83,7 +82,7 @@ public class InstrumentDetail {
     return extensions;
   }
 
-  public Path getDataPath() {
+  public String getDataPath() {
     return dataPath;
   }
 
@@ -111,7 +110,7 @@ public class InstrumentDetail {
     return additionalFields;
   }
 
-  public Path getAncillaryDataPath() {
+  public String getAncillaryDataPath() {
     return ancillaryDataPath;
   }
 
@@ -127,14 +126,14 @@ public class InstrumentDetail {
     private String instrument;
     private String shortName;
     private Set<String> extensions = Collections.emptySet();
-    private Path dataPath;
+    private String dataPath;
     private boolean flatten;
     private String dirName;
     private String bagName;
     private String dataComment;
     private List<AdditionalFiles> additionalFiles = Collections.emptyList();
     private Map<String, Object> additionalFields = new HashMap<>();
-    private Path ancillaryDataPath;
+    private String ancillaryDataPath;
     private String ancillaryDataDetails;
 
     private Builder() {
@@ -192,7 +191,7 @@ public class InstrumentDetail {
       return this;
     }
 
-    public Builder setDataPath(Path dataPath) {
+    public Builder setDataPath(String dataPath) {
       this.dataPath = dataPath;
       return this;
     }
@@ -227,7 +226,7 @@ public class InstrumentDetail {
       return this;
     }
     
-    public Builder setAncillaryDataPath(Path ancillaryDataPath) {
+    public Builder setAncillaryDataPath(String ancillaryDataPath) {
       this.ancillaryDataPath = ancillaryDataPath;
       return this;
     }

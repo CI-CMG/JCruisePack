@@ -137,5 +137,21 @@
       <Uuid>f30655c4-4ead-4af3-8247-29e3cdb064a8</Uuid>
       <Use>true</Use>
     </Organization>
+    <!-- These are missing and added as part of the migration -->
+    <Organization>
+      <Name>NMFS</Name>
+      <Uuid>14</Uuid>
+      <Use>true</Use>
+    </Organization>
+    <Organization>
+      <Name>OMAO</Name>
+      <Uuid>20</Uuid>
+      <Use>true</Use>
+    </Organization>
+    <Organization>
+      <Name>funded by a Line Office allocation</Name>
+      <Uuid>22</Uuid>
+      <Use>true</Use>
+    </Organization>
   </Organizations>
 </OrganizationData>

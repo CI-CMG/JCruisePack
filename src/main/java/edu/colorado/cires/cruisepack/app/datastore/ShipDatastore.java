@@ -62,4 +62,8 @@ public class ShipDatastore {
   public String getShipNameForUuid(String uuid) {
     return shipDropDowns.stream().filter(dd -> uuid.equals(dd.getId())).findFirst().map(DropDownItem::getValue).orElse(null);
   }
+
+  public String getShipUuidForName(String name) {
+    return shipDropDowns.stream().filter(dd -> name.equals(dd.getValue())).findFirst().map(DropDownItem::getId).orElse(null);
+  }
 }

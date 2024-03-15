@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.migration.jpa.CruiseDataEntity;
 import edu.colorado.cires.cruisepack.app.migration.jpa.OrganizationEntity;
 import edu.colorado.cires.cruisepack.app.migration.jpa.PersonEntity;
@@ -22,6 +24,7 @@ import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
@@ -38,6 +41,8 @@ public class SqliteMigrator {
   private final OrganizationDatastore organizationDatastore;
   private final PersonDatastore personDatastore;
   private final ProjectDatastore projectDatastore;
+  private final ShipDatastore shipDatastore;
+  private final InstrumentDatastore instrumentDatastore;
 
   public SqliteMigrator(
       Supplier<String> uuidGenerator,
@@ -45,14 +50,17 @@ public class SqliteMigrator {
       CruiseDataDatastore cruiseDataDatastore,
       OrganizationDatastore organizationDatastore,
       PersonDatastore personDatastore,
-      ProjectDatastore projectDatastore
-  ) {
+      ProjectDatastore projectDatastore,
+      ShipDatastore shipDatastore,
+      InstrumentDatastore instrumentDatastore) {
     this.uuidGenerator = uuidGenerator;
     this.objectMapper = objectMapper;
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.organizationDatastore = organizationDatastore;
     this.personDatastore = personDatastore;
     this.projectDatastore = projectDatastore;
+    this.shipDatastore = shipDatastore;
+    this.instrumentDatastore = instrumentDatastore;
   }
 
   private static SessionFactory createSessionFactory(Path file, Class<?>... classes) {
@@ -121,11 +129,59 @@ public class SqliteMigrator {
     return organization;
   }
 
-  private List<PeopleOrg> getPeopleOrgs(String json) {
+  private PeopleOrg personUpdateUuidOrCreate(PeopleOrg person) {
+    String uuid = personDatastore.findByName(person.getName()).map(Person::getUuid).orElse(null);
+    if (uuid != null) {
+      return PeopleOrg.builder(person).withUuid(uuid).build();
+    }
+    Person newPerson = new Person();
+    newPerson.setName(person.getName());
+    newPerson.setUuid(uuidGenerator.get());
+    newPerson.setUse(true);
+    personDatastore.save(newPerson);
+    return PeopleOrg.builder().withName(newPerson.getName()).withUuid(newPerson.getUuid()).build();
+  }
+
+  private PeopleOrg organizationUpdateUuidOrCreate(PeopleOrg org) {
+    String uuid = organizationDatastore.findByName(org.getName()).map(Organization::getUuid).orElse(null);
+    if (uuid != null) {
+      return PeopleOrg.builder(org).withUuid(uuid).build();
+    }
+    Organization newOrg = new Organization();
+    newOrg.setName(org.getName());
+    newOrg.setUuid(uuidGenerator.get());
+    newOrg.setUse(true);
+    organizationDatastore.save(newOrg);
+    return PeopleOrg.builder().withName(newOrg.getName()).withUuid(newOrg.getUuid()).build();
+  }
+
+  private List<PeopleOrg> getPeople(String json) {
     if (StringUtils.isNotBlank(json)) {
       try {
-        return objectMapper.readValue(json, new TypeReference<>() {
+        List<PeopleOrg> people = objectMapper.readValue(json, new TypeReference<>() {
         });
+        List<PeopleOrg> checkedPeople = new ArrayList<>();
+        for (PeopleOrg person : people) {
+          checkedPeople.add(personUpdateUuidOrCreate(person));
+        }
+        return checkedPeople;
+      } catch (JsonProcessingException e) {
+        throw new RuntimeException("Unable to parse people", e);
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  private List<PeopleOrg> getOrgs(String json) {
+    if (StringUtils.isNotBlank(json)) {
+      try {
+        List<PeopleOrg> orgs = objectMapper.readValue(json, new TypeReference<>() {
+        });
+        List<PeopleOrg> checkedOrgs = new ArrayList<>();
+        for (PeopleOrg org : orgs) {
+          checkedOrgs.add(organizationUpdateUuidOrCreate(org));
+        }
+        return checkedOrgs;
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse people / orgs", e);
       }
@@ -133,16 +189,30 @@ public class SqliteMigrator {
     return Collections.emptyList();
   }
 
-  private List<String> getStringList(String json) {
+  private List<String> getProjects(String json) {
     if (StringUtils.isNotBlank(json)) {
       try {
-        return objectMapper.readValue(json, new TypeReference<>() {
+        List<String> names = objectMapper.readValue(json, new TypeReference<>() {
         });
+        for (String name : names) {
+          projectCheckOrCreate(name);
+        }
+        return names;
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse projects", e);
       }
     }
     return Collections.emptyList();
+  }
+
+  private void projectCheckOrCreate(String project) {
+    if (projectDatastore.findByName(project).isEmpty()) {
+      Project newProject = new Project();
+      newProject.setName(project);
+      newProject.setUuid(uuidGenerator.get());
+      newProject.setUse(true);
+      projectDatastore.save(newProject);
+    }
   }
 
   private Omics getOmics(String json) {
@@ -155,7 +225,10 @@ public class SqliteMigrator {
         JsonNode poc = obj.get("omics_poc");
         if (poc != null) {
           ObjectNode newPoc = objectMapper.createObjectNode();
-          newPoc.put("name", poc.textValue());
+          String name = poc.textValue().trim();
+          PeopleOrg person = personUpdateUuidOrCreate(PeopleOrg.builder().withName(name).build());
+          newPoc.put("name", person.getName());
+          newPoc.put("uuid", person.getUuid());
           obj.replace("omics_poc", newPoc);
         }
         return objectMapper.readValue(obj.toString(), Omics.class);
@@ -169,8 +242,17 @@ public class SqliteMigrator {
   private List<InstrumentData> getInstruments(String json) {
     if (StringUtils.isNotBlank(json)) {
       try {
-        return objectMapper.readValue(json, new TypeReference<>() {
+        List<InstrumentData> instruments = objectMapper.readValue(json, new TypeReference<>() {
         });
+        List<InstrumentData> checkedInstruments = new ArrayList<>();
+        for (InstrumentData instrument : instruments) {
+          String uuid = instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(instrument.getType(), instrument.getInstrument());
+          if (uuid == null) {
+            throw new IllegalStateException("Unable to find instrument '" + instrument.getType() + ":" + instrument.getInstrument() + "'");
+          }
+          checkedInstruments.add(InstrumentData.builder(instrument).withUuid(uuid).build());
+        }
+        return checkedInstruments;
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse instruments", e);
       }
@@ -181,13 +263,20 @@ public class SqliteMigrator {
   private CruiseData toCruiseMetadata(CruiseDataEntity db) {
 
     String metadataAuthorName = normalize(db.getMetadataAuthor(), "Select Metadata Author");
-    String metadataAuthorUuid = normalize(db.getMetadataAuthorUuid());
     MetadataAuthor metadataAuthor = null;
-    if (metadataAuthorName != null && metadataAuthorUuid != null) {
+    if (metadataAuthorName != null) {
+      PeopleOrg person = personUpdateUuidOrCreate(PeopleOrg.builder().withName(metadataAuthorName).build());
       metadataAuthor = MetadataAuthor.builder()
-          .withName(metadataAuthorName)
-          .withUuid(metadataAuthorUuid)
+          .withName(person.getName())
+          .withUuid(person.getUuid())
           .build();
+    }
+
+    String shipName = normalize(db.getShip(), "Select Ship Name");
+    String shipUuid = shipName == null ? null : shipDatastore.getShipUuidForName(shipName);
+
+    if (shipName != null && shipUuid == null) {
+      throw new IllegalStateException("Unable to find ship with name '" + shipName + "'");
     }
 
     return CruiseData.builder()
@@ -196,8 +285,8 @@ public class SqliteMigrator {
         .withSegmentId(normalize(db.getSegmentId()))
         .withPackageId(normalize(db.getPackageId(), "Select Existing Record"))
         .withMasterReleaseDate(normalize(db.getMasterReleaseDate()))
-        .withShip(normalize(db.getShip(), "Select Ship Name"))
-        .withShipUuid(normalize(db.getShipUuid()))
+        .withShip(shipName)
+        .withShipUuid(shipUuid)
         .withDeparturePort(normalize(db.getDeparturePort(), "Select Departure Port"))
         .withDepartureDate(normalize(db.getDepartureTime()))
         .withArrivalPort(normalize(db.getArrivalPort(), "Select Arrival Port"))
@@ -206,10 +295,10 @@ public class SqliteMigrator {
         .withCruiseTitle(normalize(db.getCruiseTitle()))
         .withCruisePurpose(normalize(db.getPurposeText()))
         .withCruiseDescription(normalize(db.getAbstractText()))
-        .withSponsors(getPeopleOrgs(db.getSponsors()))
-        .withFunders(getPeopleOrgs(db.getFunders()))
-        .withScientists(getPeopleOrgs(db.getScientists()))
-        .withProjects(getStringList(db.getProjects()))
+        .withSponsors(getOrgs(db.getSponsors()))
+        .withFunders(getOrgs(db.getFunders()))
+        .withScientists(getPeople(db.getScientists()))
+        .withProjects(getProjects(db.getProjects()))
         .withOmics(getOmics(db.getOmics()))
         .withMetadataAuthor(metadataAuthor)
         .withInstruments(getInstruments(db.getDatasets()))
@@ -223,15 +312,7 @@ public class SqliteMigrator {
     Path cruiseData = database.resolve("cruiseData.sqlite");
     Path localData = database.resolve("localData.sqlite");
 
-    try (SessionFactory sessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
-      sessionFactory.inTransaction(session -> {
-        session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
-            .getResultList().stream()
-            .map(this::toCruiseMetadata)
-            .filter(cruise -> cruise.getPackageId() != null)
-            .forEach(cruiseDataDatastore::saveCruise);
-      });
-    }
+
 
     try (SessionFactory sessionFactory = createSessionFactory(
         localData,
@@ -243,17 +324,30 @@ public class SqliteMigrator {
         session.createSelectionQuery("from PersonEntity", PersonEntity.class)
             .getResultList().stream()
             .map(this::toPerson)
+            .filter(person -> personDatastore.findByName(person.getName()).isEmpty())
             .forEach(personDatastore::save);
 
         session.createSelectionQuery("from OrganizationEntity", OrganizationEntity.class)
             .getResultList().stream()
             .map(this::toOrganization)
+            .filter(org -> organizationDatastore.findByName(org.getName()).isEmpty())
             .forEach(organizationDatastore::save);
 
         session.createSelectionQuery("from ProjectEntity", ProjectEntity.class)
             .getResultList().stream()
             .map(this::toProject)
+            .filter(project -> projectDatastore.findByName(project.getName()).isEmpty())
             .forEach(projectDatastore::save);
+      });
+    }
+
+    try (SessionFactory sessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
+      sessionFactory.inTransaction(session -> {
+        session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
+            .getResultList().stream()
+            .map(this::toCruiseMetadata)
+            .filter(cruise -> cruise.getPackageId() != null)
+            .forEach(cruiseDataDatastore::saveCruise);
       });
     }
 

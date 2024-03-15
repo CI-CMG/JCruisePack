@@ -73,6 +73,16 @@ public class CruiseData extends Cruise {
     return Objects.hash(super.hashCode(), use, delete, documentsPath, packageDirectory);
   }
 
+  @Override
+  public String toString() {
+    return "CruiseData{" +
+        "use=" + use +
+        ", delete=" + delete +
+        ", documentsPath='" + documentsPath + '\'' +
+        ", packageDirectory='" + packageDirectory + '\'' +
+        "} " + super.toString();
+  }
+
   public static Builder builder(CruiseMetadata data) {
     return new Builder(data);
   }

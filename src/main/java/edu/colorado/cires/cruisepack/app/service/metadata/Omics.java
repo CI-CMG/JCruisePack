@@ -39,9 +39,10 @@ public record Omics (@JsonProperty("NCBI_accession") String ncbiAccession, List<
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Omics omics)) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    Omics omics = (Omics) o;
     return Objects.equals(ncbiAccession, omics.ncbiAccession) && Objects.equals(samplingTypes, omics.samplingTypes)
         && Objects.equals(analysesTypes, omics.analysesTypes) && Objects.equals(omicsComment, omics.omicsComment)
         && Objects.equals(omicsPoc, omics.omicsPoc);

@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -272,8 +273,8 @@ public class MetadataService {
     for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
         instruments.add(InstrumentData.builder(instrumentDetailToJson(entry.getKey(), instrumentDetail))
-                .withDataPath(instrumentDetail.getDataPath())
-                .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath())
+                .withDataPath(instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath()))
+                .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()))
             .build());
       }
     }

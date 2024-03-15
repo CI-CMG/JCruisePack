@@ -128,8 +128,8 @@ public class PackerService {
                 .map(packerFileController::getFileCount)
                 .mapToLong(Long::valueOf)
                 .sum() +
-                packerFileController.getFileCount(instrumentDetail.getDataPath()) +
-                packerFileController.getFileCount(instrumentDetail.getAncillaryDataPath())
+                packerFileController.getFileCount(instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath())) +
+                packerFileController.getFileCount(instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()))
         )
         .mapToLong(Long::valueOf)
         .sum();
@@ -592,7 +592,7 @@ public class PackerService {
   }
 
   private void copyMainDatasetFiles(Path datasetDir, InstrumentDetail dataset) {
-    Path sourceDataDir = dataset.getDataPath().toAbsolutePath().normalize();
+    Path sourceDataDir = Paths.get(dataset.getDataPath()).toAbsolutePath().normalize();
     try {
       Files.walkFileTree(sourceDataDir, new SimpleFileVisitor<>() {
 

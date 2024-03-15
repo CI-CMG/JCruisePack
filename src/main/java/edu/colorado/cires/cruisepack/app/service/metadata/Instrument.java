@@ -89,9 +89,10 @@ public abstract class Instrument {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Instrument that)) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    Instrument that = (Instrument) o;
     return Objects.equals(uuid, that.uuid) && Objects.equals(type, that.type) && Objects.equals(instrument,
         that.instrument) && Objects.equals(shortName, that.shortName) && Objects.equals(releaseDate, that.releaseDate)
         && Objects.equals(status, that.status) && Objects.equals(dataComment, that.dataComment) && Objects.equals(dirName,

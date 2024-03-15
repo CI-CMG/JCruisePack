@@ -95,14 +95,14 @@ public class PackJob {
             .setInstrument(nameHolder.getInstrument())
             .setShortName(nameHolder.getShortName())
             .setExtensions(exts)
-            .setDataPath(nameHolder.getDataPath())
+            .setDataPath(nameHolder.getDataPath() == null ? null : nameHolder.getDataPath().toString())
             .setFlatten(instrument.isFlatten())
             .setDirName(nameHolder.getDirName())
             .setBagName(nameHolder.getBagName())
             .setAdditionalFiles(nameHolder.getAdditionalFiles())
             .setReleaseDate(nameHolder.getReleaseDate())
             .setDataComment(nameHolder.getDataComment())
-            .setAncillaryDataPath(nameHolder.getAncillaryDataPath())
+            .setAncillaryDataPath(nameHolder.getAncillaryDataPath() == null ? null : nameHolder.getAncillaryDataPath().toString())
             .setAncillaryDataDetails(nameHolder.getAncillaryDataDetails());
         
         if (nameHolder.getAdditionalFields() != null) {

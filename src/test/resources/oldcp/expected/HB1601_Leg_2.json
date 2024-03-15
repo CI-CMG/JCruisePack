@@ -15,9 +15,9 @@
     "name": "Chuck Anderson",
     "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
   },
-  "scientists": [{"name": "Heath Cook", "uuid": ""}],
-  "funders": [{"name": "NMFS", "uuid": ""}],
-  "sponsors": [{"name": "NMFS", "uuid": ""}],
+  "scientists": [{"name": "Heath Cook", "uuid": "18"}],
+  "funders": [{"name": "NMFS", "uuid": "23456"}],
+  "sponsors": [{"name": "NMFS", "uuid": "23456"}],
   "master_release_date": "2022-01-26",
   "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
   "use": true

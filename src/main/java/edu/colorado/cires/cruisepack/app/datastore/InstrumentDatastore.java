@@ -65,7 +65,7 @@ public class InstrumentDatastore {
     instrumentDropDowns = new HashMap<>(0);
     instrumentData.getInstrumentGroups().getInstrumentGroups().forEach((ig) -> {
       List<DropDownItem> instruments = new ArrayList<>(ig.getInstruments().getInstruments().stream()
-        .map(i -> new DropDownItem(i.getUuid(), i.getShortName()))
+        .map(i -> new DropDownItem(i.getUuid(), i.getName()))
         .sorted((i1, i2) -> i1.getValue().compareToIgnoreCase(i2.getValue()))
         .toList());
       instruments.add(0, UNSELECTED_INSTRUMENT);
@@ -107,6 +107,14 @@ public class InstrumentDatastore {
 
   public List<DropDownItem> getInstrumentDropDownsForDatasetType(String datasetType) {
     return instrumentDropDowns.get(datasetType);
+  }
+
+  public String getInstrumentUuidForDatasetTypeAndInstrumentName(String datasetType, String instrumentName) {
+    List<DropDownItem> typeDds = getInstrumentDropDownsForDatasetType(datasetType);
+    if (typeDds != null) {
+      return typeDds.stream().filter(dd -> dd.getValue().equals(instrumentName)).findFirst().map(DropDownItem::getId).orElse(null);
+    }
+    return null;
   }
 
   public String getNameForShortCode(String shortCode) {

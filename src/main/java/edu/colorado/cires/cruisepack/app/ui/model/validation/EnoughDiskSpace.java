@@ -53,8 +53,8 @@ public @interface EnoughDiskSpace {
         
         for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : value.getInstruments().entrySet() ) {
           for (InstrumentDetail instrumentDetail : entry.getValue()) {
-              available = subtractIfExists(available, instrumentDetail.getDataPath());
-              available = subtractIfExists(available, instrumentDetail.getAncillaryDataPath());
+              available = subtractIfExists(available, instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath()));
+              available = subtractIfExists(available, instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()));
               if (instrumentDetail.getShortName().equals(InstrumentGroupName.WATER_COLUMN.getShortName())) {
                 available = subtractAdditionalPathFields(
                     available,

@@ -352,5 +352,71 @@
       <Uuid>a9dfd4f2-259e-4149-865a-9f82f7876312</Uuid>
       <Use>true</Use>
     </Person>
+    <!-- These are missing and added as part of the migration -->
+    <Person>
+      <Name>John Galbraith</Name>
+      <Uuid>15</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Pete Chase</Name>
+      <Uuid>16</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Jakub Kircun</Name>
+      <Uuid>17</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Heath Cook</Name>
+      <Uuid>18</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Phil Politis</Name>
+      <Uuid>19</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Debi Palka</Name>
+      <Uuid>21</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Jerome Prezioso</Name>
+      <Uuid>23</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Martha Nizinski</Name>
+      <Uuid>24</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Mike Jech</Name>
+      <Uuid>25</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Christopher Tremblay</Name>
+      <Uuid>26</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>TK</Name>
+      <Uuid>27</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Jakub Kircum</Name>
+      <Uuid>28</Uuid>
+      <Use>true</Use>
+    </Person>
+    <Person>
+      <Name>Philip Politis</Name>
+      <Uuid>29</Uuid>
+      <Use>true</Use>
+    </Person>
   </People>
 </PersonData>
