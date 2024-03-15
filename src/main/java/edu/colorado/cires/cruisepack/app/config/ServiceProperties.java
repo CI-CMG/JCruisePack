@@ -22,6 +22,9 @@ public class ServiceProperties {
   
   @NotNull
   private Integer fontSize;
+  
+  @NotNull
+  private Integer windowPadding;
 
   private boolean ui;
 
@@ -63,5 +66,13 @@ public class ServiceProperties {
 
   public void setFontSize(Integer fontSize) {
     this.fontSize = fontSize;
+  }
+
+  public Integer getWindowPadding() {
+    return windowPadding;
+  }
+
+  public void setWindowPadding(Integer windowPadding) {
+    this.windowPadding = windowPadding;
   }
 }

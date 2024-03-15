@@ -4,6 +4,7 @@ cruise-pack:
   look-and-feel: system
   font: Arial
   font-size: 14
+  window-padding: 5
   ui: true
 
 spring:
