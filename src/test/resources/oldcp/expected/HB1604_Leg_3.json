@@ -1,0 +1,22 @@
+{
+  "cruise_id": "HB1604",
+  "segment_id": "Leg 3",
+  "package_id": "HB1604_Leg 3",
+  "sea_area": "North Atlantic Ocean",
+  "departure_port": "Newport, US RI",
+  "departure_date": "2016-09-27",
+  "arrival_port": "Newport, US RI",
+  "arrival_date": "2021-10-07",
+  "cruise_title": "Multispecies Bottom Trawl Survey",
+  "projects": ["Autumn Bottom Trawl-Acoustics Survey"],
+  "metadata_author": {
+    "name": "Chuck Anderson",
+    "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  },
+  "scientists": [{"name": "Jakub Kircun", "uuid": ""}],
+  "funders": [{"name": "NMFS", "uuid": ""}],
+  "sponsors": [{"name": "NMFS", "uuid": ""}],
+  "master_release_date": "2022-01-26",
+  "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
+  "use": true
+}

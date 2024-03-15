@@ -156,9 +156,10 @@ public abstract class Cruise {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof Cruise cruise)) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
+    Cruise cruise = (Cruise) o;
     return Objects.equals(cruiseId, cruise.cruiseId) && Objects.equals(segmentId, cruise.segmentId) && Objects.equals(
         packageId, cruise.packageId) && Objects.equals(masterReleaseDate, cruise.masterReleaseDate) && Objects.equals(ship,
         cruise.ship) && Objects.equals(shipUuid, cruise.shipUuid) && Objects.equals(departurePort, cruise.departurePort)

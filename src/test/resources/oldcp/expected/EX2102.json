@@ -1,0 +1,28 @@
+{
+  "cruise_id": "EX2102",
+  "package_id": "EX2102",
+  "ship": "Unlisted Ship",
+  "ship_uuid": "9999",
+  "departure_date": "2020-01-16",
+  "arrival_date": "2020-01-16",
+  "scientists": [
+    {
+      "name": "Anne Trehu",
+      "uuid": "fcac5cf3-18fe-4047-8819-b996a6fa90cd"
+    },
+    {
+      "name": "Charles H. Thompson",
+      "uuid": "79318da0-1516-11e1-be50-0800200c9a66"
+    },
+    {
+      "name": "Ari Friedlaender",
+      "uuid": "2c825298-1c6a-4ef9-a54e-a50192619822"
+    }
+  ],
+  "funders": [],
+  "sponsors": [],
+  "master_release_date": "2020-11-06",
+  "package_directory": "/Volumes/Fortress",
+  "instruments": [],
+  "use": true
+}

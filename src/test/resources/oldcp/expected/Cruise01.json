@@ -1,0 +1,30 @@
+{
+  "cruise_id": "Cruise01",
+  "package_id": "Cruise01",
+  "ship": "Falkor (FK)",
+  "ship_uuid": "391b3824-b82f-40c1-9a53-ef1cdfd9f0c6",
+  "sea_area": "Celtic Sea",
+  "departure_port": "Akureyri, IS",
+  "departure_date": "2021-08-10",
+  "arrival_port": "Al Latakia, SY",
+  "arrival_date": "2021-08-31",
+  "cruise_title": "Test title",
+  "cruise_purpose": "Test Purpose",
+  "cruise_description": "Test Description",
+  "projects": [
+    "My new project",
+    "My new project 2"
+  ],
+  "metadata_author": {
+    "name": "Chuck Anderson",
+    "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  },
+  "scientists": [{"name": "Chris Wilson", "uuid": "53285f5b-6211-4eaf-bcc8-d41ea5a60a3f"}],
+  "funders": [{"name": "NEFSC", "uuid": "ebd76260-2bad-4f23-ac30-62726422f231"}],
+  "sponsors": [{"name": "NWFSC", "uuid": "95bb98c1-36ce-462d-b9aa-2caef4fa0a40"}],
+  "master_release_date": "2021-08-26",
+  "package_directory": "/Users/charles.anderson/Desktop",
+  "instruments": [{"type": "CTD", "instrument": "SBE 911plus", "short_name": "SBE-911Plus", "release_date": "2021-08-26", "data_path": "/Volumes/Fortress/test_data/CTD", "status": "Raw", "data_comment": "", "uuid": null, "additional_data": []}, {"type": "Water Column Sonar", "instrument": "Simrad EK80", "short_name": "EK80", "release_date": "2021-08-26", "data_path": "/Volumes/Fortress/test_data/EK80", "status": "Raw", "data_comment": "", "uuid": null, "additional_data": [{"calibration_data": "/Volumes/Fortress/test_data/calibration/cal_files"}, {"calibration_report": "/Volumes/Fortress/test_data/calibration/cal_report.doc"}], "calibration_state": "Calibrated w/ calibration data", "calibration_date": "2000-01-01", "cal_file_path": "/Volumes/Fortress/test_data/calibration/cal_files", "cal_report_path": "/Volumes/Fortress/test_data/calibration/cal_report.doc"}, {"type": "Multibeam Bathymetry", "instrument": "Kongsberg EM304", "short_name": "EM304", "release_date": "2021-08-26", "data_path": "/Volumes/Fortress/test_data/EM304", "status": "Raw", "data_comment": "", "uuid": null, "additional_data": []}, {"type": "Navigation", "instrument": "C-NAV 3050 GPS", "short_name": "NAV", "release_date": "2021-08-26", "data_path": "/Volumes/Fortress/test_data/POS", "status": "Raw", "data_comment": "", "uuid": null, "additional_data": [], "datum": "NAD83"}, {"type": "Magnetics", "instrument": "Kokusai Electronics PMM-100", "short_name": "PMM-100", "release_date": "2021-08-26", "data_path": "/Volumes/Fortress/test_data/magnetics", "status": "Raw", "data_comment": "", "uuid": null, "additional_data": [], "correction_model": "CM4", "tow_distance": "100", "sample rate": "5", "sensor depth": "25"}],
+  "use": true,
+  "documents_path": "/Volumes/Fortress/test_data/docs"
+}

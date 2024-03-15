@@ -1,0 +1,26 @@
+{
+  "cruise_id": "HB1603",
+  "segment_id": "Leg 1",
+  "package_id": "HB1603_Leg 1",
+  "ship": "Henry B. Bigelow (HB)",
+  "ship_uuid": "5db5f560-edf2-11e1-aff1-0800200c9a66",
+  "sea_area": "North Atlantic Ocean",
+  "departure_port": "Newport, US RI",
+  "departure_date": "2016-06-27",
+  "arrival_port": "Newport, US RI",
+  "arrival_date": "2016-07-14",
+  "cruise_title": "AMAPPS marine mammal abundance survey",
+  "cruise_purpose": "The objectives of both legs are to: \n1)        Collect data needed to estimate the distribution and abundance of marine mammals, sea turtles and seabirds; \n2)        Collect vocalizations of cetaceans using passive acoustic hydrophones;\n3)        Collect data needed to estimate the distribution and relative abundance of plankton using nets with CTDs, visual plankton recorder, and the EK-60; \n4)        Collect hydrographic and meteorological data, and \n5)        When possible, collect biopsy samples and photo-identification pictures of cetaceans.",
+  "cruise_description": "The objectives of both legs are to: \n1)        Collect data needed to estimate the distribution and abundance of marine mammals, sea turtles and seabirds; \n2)        Collect vocalizations of cetaceans using passive acoustic hydrophones;\n3)        Collect data needed to estimate the distribution and relative abundance of plankton using nets with CTDs, visual plankton recorder, and the EK-60; \n4)        Collect hydrographic and meteorological data, and \n5)        When possible, collect biopsy samples and photo-identification pictures of cetaceans.",
+  "projects": ["AMAPPS"],
+  "metadata_author": {
+    "name": "Chuck Anderson",
+    "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  },
+  "scientists": [{"name": "Debi Palka", "uuid": ""}],
+  "funders": [{"name": "OMAO", "uuid": ""}],
+  "sponsors": [{"name": "OMAO", "uuid": ""}],
+  "master_release_date": "2022-01-26",
+  "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
+  "use": true
+}

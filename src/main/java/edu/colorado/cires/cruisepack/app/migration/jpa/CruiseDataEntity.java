@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CRUISE_DATA")
@@ -29,11 +29,11 @@ public class CruiseDataEntity {
   @Column(name = "DEPARTURE_PORT")
   private String departurePort;
   @Column(name = "DEPARTURE_TIME")
-  private LocalDate departureTime;
+  private String departureTime;
   @Column(name = "ARRIVAL_PORT")
   private String arrivalPort;
   @Column(name = "ARRIVAL_TIME")
-  private LocalDate arrivalTime;
+  private String arrivalTime;
   @Column(name = "CRUISE_TITLE")
   private String cruiseTitle;
   @Column(name = "PURPOSE_TEXT")
@@ -53,7 +53,7 @@ public class CruiseDataEntity {
   @Column(name = "SPONSORS")
   private String sponsors;
   @Column(name = "MASTER_RELEASE_DATE")
-  private LocalDate masterReleaseDate;
+  private String masterReleaseDate;
   @Column(name = "DESTINATION_PATH")
   private String destinationPath;
   @Column(name = "DATASETS")
@@ -129,11 +129,11 @@ public class CruiseDataEntity {
     this.departurePort = departurePort;
   }
 
-  public LocalDate getDepartureTime() {
+  public String getDepartureTime() {
     return departureTime;
   }
 
-  public void setDepartureTime(LocalDate departureTime) {
+  public void setDepartureTime(String departureTime) {
     this.departureTime = departureTime;
   }
 
@@ -145,11 +145,11 @@ public class CruiseDataEntity {
     this.arrivalPort = arrivalPort;
   }
 
-  public LocalDate getArrivalTime() {
+  public String getArrivalTime() {
     return arrivalTime;
   }
 
-  public void setArrivalTime(LocalDate arrivalTime) {
+  public void setArrivalTime(String arrivalTime) {
     this.arrivalTime = arrivalTime;
   }
 
@@ -225,11 +225,11 @@ public class CruiseDataEntity {
     this.sponsors = sponsors;
   }
 
-  public LocalDate getMasterReleaseDate() {
+  public String getMasterReleaseDate() {
     return masterReleaseDate;
   }
 
-  public void setMasterReleaseDate(LocalDate masterReleaseDate) {
+  public void setMasterReleaseDate(String masterReleaseDate) {
     this.masterReleaseDate = masterReleaseDate;
   }
 

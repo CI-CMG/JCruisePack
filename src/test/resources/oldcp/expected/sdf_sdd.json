@@ -1,0 +1,14 @@
+{
+  "cruise_id": "sdf",
+  "segment_id": "sdd",
+  "package_id": "sdf_sdd",
+  "departure_date": "2021-06-16",
+  "arrival_date": "2021-07-08",
+  "projects": ["fooo"],
+  "scientists": [],
+  "funders": [],
+  "sponsors": [],
+  "master_release_date": "2022-01-26",
+  "instruments": [],
+  "use": true
+}

@@ -1,0 +1,22 @@
+{
+  "cruise_id": "test4",
+  "package_id": "test4",
+  "ship": "Oscar Dyson (DY)",
+  "ship_uuid": "a24caa2a-1c39-41b9-ba7a-eede10ccc4f6",
+  "sea_area": "Davis Strait",
+  "departure_port": "Aden, YE",
+  "departure_date": "2022-01-26",
+  "arrival_port": "Al Latakia, SY",
+  "arrival_date": "2022-01-26",
+  "projects": [],
+  "metadata_author": {
+    "name": "Chuck Anderson",
+    "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  },
+  "scientists": [{"name": "Chuck Anderson", "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"}, {"name": "Chris Wilson", "uuid": "53285f5b-6211-4eaf-bcc8-d41ea5a60a3f"}],
+  "funders": [{"name": "NWFSC", "uuid": "95bb98c1-36ce-462d-b9aa-2caef4fa0a40"}],
+  "sponsors": [{"name": "OER", "uuid": "08D95C427FB128479945893256DADE37"}],
+  "master_release_date": "2022-01-26",
+  "package_directory": "/Volumes/Fortress",
+  "use": true
+}

@@ -1,0 +1,26 @@
+{
+  "cruise_id": "HB1304",
+  "segment_id": "Leg 1",
+  "package_id": "HB1304_Leg 1",
+  "ship": "Henry B. Bigelow (HB)",
+  "ship_uuid": "5db5f560-edf2-11e1-aff1-0800200c9a66",
+  "sea_area": "North Atlantic Ocean",
+  "departure_port": "Newport, US RI",
+  "departure_date": "2013-09-03",
+  "arrival_port": "Newport, US RI",
+  "arrival_date": "2013-09-19",
+  "cruise_title": "Multispecies Bottom Trawl Survey",
+  "cruise_purpose": "The objectives are to: 1) determine the spring distribution and relative abundance of fish and invertebrate species found on the continental shelf and upper slope, including the collection of additional biological information following the pre-established sampling plan at the direction of the Chief Scientist; 2) opportunistically evaluate survey gear efficiency, methods, or survey related equipment that may benefit the trawl survey and fish stock assessments; 3) collect oceanographic data including CTD casts and bongo tows at selected stations; 4) opportunistically collect acoustic data along cruise tracks with the EK-60 and ME-70 acoustic systems.",
+  "cruise_description": "The objectives are to: 1) determine the spring distribution and relative abundance of fish and invertebrate species found on the continental shelf and upper slope, including the collection of additional biological information following the pre-established sampling plan at the direction of the Chief Scientist; 2) opportunistically evaluate survey gear efficiency, methods, or survey related equipment that may benefit the trawl survey and fish stock assessments; 3) collect oceanographic data including CTD casts and bongo tows at selected stations; 4) opportunistically collect acoustic data along cruise tracks with the EK-60 and ME-70 acoustic systems.",
+  "projects": ["Autumn Bottom Trawl-Acoustics Survey"],
+  "metadata_author": {
+    "name": "Chuck Anderson",
+    "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  },
+  "scientists": [{"name": "John Galbraith", "uuid": ""}],
+  "funders": [{"name": "NMFS", "uuid": ""}],
+  "sponsors": [{"name": "NMFS", "uuid": ""}],
+  "master_release_date": "2022-01-26",
+  "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
+  "use": true
+}

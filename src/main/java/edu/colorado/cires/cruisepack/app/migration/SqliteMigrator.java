@@ -2,7 +2,9 @@ package edu.colorado.cires.cruisepack.app.migration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
@@ -12,10 +14,7 @@ import edu.colorado.cires.cruisepack.app.migration.jpa.OrganizationEntity;
 import edu.colorado.cires.cruisepack.app.migration.jpa.PersonEntity;
 import edu.colorado.cires.cruisepack.app.migration.jpa.ProjectEntity;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
@@ -24,7 +23,6 @@ import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -35,17 +33,19 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 public class SqliteMigrator {
 
-  private static final String DATE_FORMAT = "yyyy-MM-dd";
-  private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern(DATE_FORMAT);
-
   private final ObjectMapper objectMapper;
   private final CruiseDataDatastore cruiseDataDatastore;
   private final OrganizationDatastore organizationDatastore;
   private final PersonDatastore personDatastore;
   private final ProjectDatastore projectDatastore;
 
-  public SqliteMigrator(ObjectMapper objectMapper, CruiseDataDatastore cruiseDataDatastore, OrganizationDatastore organizationDatastore,
-      PersonDatastore personDatastore, ProjectDatastore projectDatastore) {
+  public SqliteMigrator(
+      ObjectMapper objectMapper,
+      CruiseDataDatastore cruiseDataDatastore,
+      OrganizationDatastore organizationDatastore,
+      PersonDatastore personDatastore,
+      ProjectDatastore projectDatastore
+  ) {
     this.objectMapper = objectMapper;
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.organizationDatastore = organizationDatastore;
@@ -69,6 +69,14 @@ public class SqliteMigrator {
     project.setName(normalize(db.getName()));
     project.setUse("Y".equals(db.getUse()));
     return project;
+  }
+
+  private static String normalize(String str, String placeHolder) {
+    String normalized = normalize(str);
+    if (normalized == null || normalized.equals(placeHolder)) {
+      return null;
+    }
+    return normalized;
   }
 
   private static String normalize(String str) {
@@ -114,7 +122,8 @@ public class SqliteMigrator {
   private List<PeopleOrg> getPeopleOrgs(String json) {
     if (StringUtils.isNotBlank(json)) {
       try {
-        return objectMapper.readValue(json, new TypeReference<>() {});
+        return objectMapper.readValue(json, new TypeReference<>() {
+        });
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse people / orgs", e);
       }
@@ -125,9 +134,10 @@ public class SqliteMigrator {
   private List<String> getStringList(String json) {
     if (StringUtils.isNotBlank(json)) {
       try {
-        return objectMapper.readValue(json, new TypeReference<>() {});
+        return objectMapper.readValue(json, new TypeReference<>() {
+        });
       } catch (JsonProcessingException e) {
-        throw new RuntimeException("Unable to projects", e);
+        throw new RuntimeException("Unable to parse projects", e);
       }
     }
     return Collections.emptyList();
@@ -135,10 +145,20 @@ public class SqliteMigrator {
 
   private Omics getOmics(String json) {
     if (StringUtils.isNotBlank(json)) {
+      if (json.equals("{}")){
+        return null;
+      }
       try {
-        return objectMapper.readValue(json, Omics.class);
+        ObjectNode obj = (ObjectNode) objectMapper.readTree(json);
+        JsonNode poc = obj.get("omics_poc");
+        if (poc != null) {
+          ObjectNode newPoc = objectMapper.createObjectNode();
+          newPoc.put("name", poc.textValue());
+          obj.replace("omics_poc", newPoc);
+        }
+        return objectMapper.readValue(obj.toString(), Omics.class);
       } catch (JsonProcessingException e) {
-        throw new RuntimeException("Unable to projects", e);
+        throw new RuntimeException("Unable to parse omics", e);
       }
     }
     return null;
@@ -147,7 +167,8 @@ public class SqliteMigrator {
   private List<InstrumentData> getInstruments(String json) {
     if (StringUtils.isNotBlank(json)) {
       try {
-        return objectMapper.readValue(json, new TypeReference<>() {});
+        return objectMapper.readValue(json, new TypeReference<>() {
+        });
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse instruments", e);
       }
@@ -157,7 +178,7 @@ public class SqliteMigrator {
 
   private CruiseData toCruiseMetadata(CruiseDataEntity db) {
 
-    String metadataAuthorName = normalize(db.getMetadataAuthor());
+    String metadataAuthorName = normalize(db.getMetadataAuthor(), "Select Metadata Author");
     String metadataAuthorUuid = normalize(db.getMetadataAuthorUuid());
     MetadataAuthor metadataAuthor = null;
     if (metadataAuthorName != null && metadataAuthorUuid != null) {
@@ -171,15 +192,15 @@ public class SqliteMigrator {
         .withUse("Y".equals(db.getUse()))
         .withCruiseId(normalize(db.getCruiseId()))
         .withSegmentId(normalize(db.getSegmentId()))
-        .withPackageId(normalize(db.getPackageId()))
-        .withMasterReleaseDate(db.getMasterReleaseDate() == null ? null : DTF.format(db.getMasterReleaseDate()))
-        .withShip(normalize(db.getShip()))
+        .withPackageId(normalize(db.getPackageId(), "Select Existing Record"))
+        .withMasterReleaseDate(normalize(db.getMasterReleaseDate()))
+        .withShip(normalize(db.getShip(), "Select Ship Name"))
         .withShipUuid(normalize(db.getShipUuid()))
-        .withDeparturePort(normalize(db.getDeparturePort()))
-        .withDepartureDate(db.getDepartureTime() == null ? null : DTF.format(db.getDepartureTime()))
-        .withArrivalPort(normalize(db.getArrivalPort()))
-        .withArrivalDate(db.getArrivalTime() == null ? null : DTF.format(db.getArrivalTime()))
-        .withSeaArea(normalize(db.getSeaArea()))
+        .withDeparturePort(normalize(db.getDeparturePort(), "Select Departure Port"))
+        .withDepartureDate(normalize(db.getDepartureTime()))
+        .withArrivalPort(normalize(db.getArrivalPort(), "Select Arrival Port"))
+        .withArrivalDate(normalize(db.getArrivalTime()))
+        .withSeaArea(normalize(db.getSeaArea(), "Select Sea Name"))
         .withCruiseTitle(normalize(db.getCruiseTitle()))
         .withCruisePurpose(normalize(db.getPurposeText()))
         .withCruiseDescription(normalize(db.getAbstractText()))
@@ -205,10 +226,10 @@ public class SqliteMigrator {
         session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
             .getResultList().stream()
             .map(this::toCruiseMetadata)
+            .filter(cruise -> cruise.getPackageId() != null)
             .forEach(cruiseDataDatastore::saveCruise);
       });
     }
-
 
     try (SessionFactory sessionFactory = createSessionFactory(
         localData,
@@ -220,12 +241,12 @@ public class SqliteMigrator {
         session.createSelectionQuery("from PersonEntity", PersonEntity.class)
             .getResultList().stream()
             .map(SqliteMigrator::toPerson)
-                .forEach(personDatastore::save);
+            .forEach(personDatastore::save);
 
         session.createSelectionQuery("from OrganizationEntity", OrganizationEntity.class)
             .getResultList().stream()
             .map(SqliteMigrator::toOrganization)
-                .forEach(organizationDatastore::save);
+            .forEach(organizationDatastore::save);
 
         session.createSelectionQuery("from ProjectEntity", ProjectEntity.class)
             .getResultList().stream()

@@ -1,0 +1,149 @@
+{
+  "cruise_id": "EX2120",
+  "package_id": "EX2120",
+  "ship": "Okeanos Explorer (EX)",
+  "ship_uuid": "66132cd0-6a9c-11e0-ae3e-0800200c9a66",
+  "sea_area": "Celtic Sea",
+  "departure_port": "Akureyri, IS",
+  "departure_date": "2020-01-06",
+  "arrival_port": "Al Manamah, BH",
+  "arrival_date": "2020-03-06",
+  "cruise_title": "Test cruise for EK60 processing",
+  "cruise_purpose": "TEsting",
+  "cruise_description": "data to test",
+  "projects": [
+    "Project number one",
+    "Project number two"
+  ],
+  "metadata_author": {
+    "name": "Chuck Anderson",
+    "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  },
+  "scientists": [
+    {
+      "name": "Chuck Anderson",
+      "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+    },
+    {
+      "name": "Craig Lee",
+      "uuid": "f07b552b-65fd-409e-848e-04f0536f3e6b"
+    },
+    {
+      "name": "Craig Lee",
+      "uuid": "f07b552b-65fd-409e-848e-04f0536f3e6b"
+    }
+  ],
+  "funders": [
+    {
+      "name": "NWFSC",
+      "uuid": "95bb98c1-36ce-462d-b9aa-2caef4fa0a40"
+    }
+  ],
+  "sponsors": [
+    {
+      "name": "OER",
+      "uuid": "08D95C427FB128479945893256DADE37"
+    },
+    {
+      "name": "ONMS",
+      "uuid": "1e78f564-ac17-4ebc-9a96-5caaecf7663b"
+    }
+  ],
+  "master_release_date": "2020-11-06",
+  "package_directory": "/Volumes/Fortress/dev/to",
+  "instruments": [
+    {
+      "type": "Water Column Sonar",
+      "instrument": "Simrad EK60",
+      "short_name": "EK60",
+      "release_date": "2020-11-06",
+      "data_path": "/Volumes/Fortress/test_data/EK60",
+      "status": "Raw",
+      "data_comment": "",
+      "uuid": null,
+      "additional_data":
+      [
+        {
+          "calibration_data": "/Volumes/Fortress/test_data/calibration/cal_files"
+        },
+        {
+          "calibration_report": "/Volumes/Fortress/test_data/calibration/cal_report.doc"
+        }
+      ],
+      "calibration_state": "Calibrated w/ calibration data",
+      "calibration_date": "2000-01-01",
+      "cal_file_path": "/Volumes/Fortress/test_data/calibration/cal_files",
+      "cal_report_path": "/Volumes/Fortress/test_data/calibration/cal_report.doc"
+    },
+    {
+      "type": "Water Column Sonar",
+      "instrument": "Kongsberg EM302",
+      "short_name": "EM302",
+      "release_date": "2020-11-06",
+      "data_path": "/Volumes/Fortress/test_data/EM302",
+      "status": "Raw",
+      "data_comment": "",
+      "uuid": null,
+      "additional_data": [],
+      "calibration_state": "Uncalibrated",
+      "calibration_date": "2000-01-01",
+      "cal_file_path": "",
+      "cal_report_path": ""
+    },
+    {
+      "type": "Water Column Sonar",
+      "instrument": "Kongsberg EM302",
+      "short_name": "EM302",
+      "release_date": "2020-11-06",
+      "data_path": "/Volumes/Fortress/test_data/EM302",
+      "status": "Processed",
+      "data_comment": "",
+      "uuid": null,
+      "additional_data": [],
+      "calibration_state": "Uncalibrated",
+      "calibration_date": "2000-01-01",
+      "cal_file_path": "",
+      "cal_report_path": ""
+    },
+    {
+      "type": "CTD",
+      "instrument": "SBE 911plus",
+      "short_name": "SBE-911Plus",
+      "release_date": "2020-11-06",
+      "data_path": "/Volumes/Fortress/test_data/CTD",
+      "status": "Raw",
+      "data_comment": "",
+      "uuid": null,
+      "additional_data": []
+    },
+    {
+      "type": "Navigation",
+      "instrument": "C-NAV 3050 GPS",
+      "short_name": "NAV",
+      "release_date": "2020-11-06",
+      "data_path": "/Volumes/Fortress/test_data/POS",
+      "status": "Raw",
+      "data_comment": "",
+      "uuid": null,
+      "additional_data": [],
+      "datum": "WGS84"
+    }
+  ],
+  "use": true,
+  "documents_path": "/Volumes/Fortress/test_data/docs",
+  "omics": {
+    "NCBI_accession": "1234",
+    "sampling_types": [
+      "Water",
+      "Organic Tissue"
+    ],
+    "analyses_types": [
+      "Genomics",
+      "Other"
+    ],
+    "tracking_path": "/Volumes/Fortress/test_data/docs/xbtxsv92005.pdf",
+    "omics_comment": "Test omics data comment.",
+    "omics_poc": {"name": "Chuck Anderson"},
+    "omics_poc_uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"
+  }
+}
