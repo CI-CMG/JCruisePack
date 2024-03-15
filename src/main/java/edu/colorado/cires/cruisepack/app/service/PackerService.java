@@ -23,7 +23,6 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -672,41 +671,39 @@ public class PackerService {
     Person metadataAuthor = packJob.getMetadataAuthor();
 
     Metadata metadata = new Metadata();
-    metadata.addAll(List.of(
-        new SimpleImmutableEntry<>(
-            "Source-Organization",
-            String.join(
-                ", ",
-                packJob.getSources().stream()
-                    .map(PeopleOrg::getName)
-                    .collect(Collectors.toSet())
-            )
-        ),
-        new SimpleImmutableEntry<>(
-            "Contact-Name",
-            metadataAuthor == null ? null : metadataAuthor.getName()
-        ),
-        new SimpleImmutableEntry<>(
-            "Contact-Phone",
-            metadataAuthor == null ? null : metadataAuthor.getPhone()
-        ),
-        new SimpleImmutableEntry<>(
-            "Contact-Email",
-            metadataAuthor == null ? null : metadataAuthor.getEmail()
-        ),
-        new SimpleImmutableEntry<>(
-            "External-Description",
-            packJob.getCruiseDescription()
-        ),
-        new SimpleImmutableEntry<>(
-            "External-Identifier",
-            packJob.getCruiseId()
-        ),
-        new SimpleImmutableEntry<>(
-            "Cruise Name",
-            packJob.getCruiseTitle()
-        )
-    ));
+    
+    if (packJob.getSources() != null && !packJob.getSources().isEmpty()) {
+      metadata.add("Source-Organization", String.join(
+         ", ",
+         packJob.getSources().stream()
+             .map(PeopleOrg::getName)
+             .collect(Collectors.toSet())
+      ));
+    }
+    
+    if (metadataAuthor != null) {
+      if (metadataAuthor.getName() != null) {
+        metadata.add("Contact-Name", metadataAuthor.getName());
+      }
+      if (metadataAuthor.getPhone() != null) {
+        metadata.add("Contact-Phone", metadataAuthor.getPhone());
+      }
+      if (metadataAuthor.getEmail() != null) {
+        metadata.add("Contact-Email", metadataAuthor.getEmail());
+      }
+    }
+    
+    if (packJob.getCruiseDescription() != null) {
+      metadata.add("External-Description", packJob.getCruiseDescription());
+    }
+    
+    if (packJob.getCruiseId() != null) {
+      metadata.add("External-Identifier", packJob.getCruiseId());
+    }
+    
+    if (packJob.getCruiseTitle() != null) {
+      metadata.add("Cruise Name", packJob.getCruiseTitle());
+    }
     return metadata;
   }
 
@@ -714,51 +711,50 @@ public class PackerService {
     MetadataAuthor metadataAuthor = cruiseMetadata.getMetadataAuthor();
     
     Metadata metadata = new Metadata();
-    metadata.addAll(List.of(
-        new SimpleImmutableEntry<>(
-            "Source-Organization",
-            String.join(
-                ", ",
-                cruiseMetadata.getSponsors().stream()
-                    .map(PeopleOrg::getName)
-                    .collect(Collectors.toSet())
-            )
-        ),
-        new SimpleImmutableEntry<>(
-            "Contact-Name",
-            metadataAuthor == null ? null : metadataAuthor.getName()
-        ),
-        new SimpleImmutableEntry<>(
-            "Contact-Phone",
-            metadataAuthor == null ? null : metadataAuthor.getPhone()
-        ),
-        new SimpleImmutableEntry<>(
-            "Contact-Email",
-            metadataAuthor == null ? null : metadataAuthor.getEmail()
-        ),
-        new SimpleImmutableEntry<>(
-            "External-Description",
-            cruiseMetadata.getCruiseDescription()
-        ),
-        new SimpleImmutableEntry<>(
-            "External-Identifier",
-            cruiseMetadata.getCruiseId()
-        ),
-        new SimpleImmutableEntry<>(
-            "Cruise Name",
-            cruiseMetadata.getCruiseTitle()
-        ),
-        new SimpleImmutableEntry<>(
-            "Instrument",
-            String.join(
-                ", ",
-                cruiseMetadata.getPackageInstruments().values().stream()
-                    .map(PackageInstrument::getInstrument)
-                    .map(Instrument::getInstrument)
-                    .collect(Collectors.toSet())
-            )
-        )
-    ));
+    
+    if (cruiseMetadata.getSponsors() != null && !cruiseMetadata.getSponsors().isEmpty()) {
+      metadata.add("Source-Organization", String.join(
+         ", ",
+         cruiseMetadata.getSponsors().stream()
+             .map(PeopleOrg::getName)
+             .collect(Collectors.toSet())
+      ));
+    }
+    
+    if (metadataAuthor != null) {
+      if (metadataAuthor.getName() != null) {
+        metadata.add("Contact-Name", metadataAuthor.getName());
+      }
+      if (metadataAuthor.getPhone() != null) {
+        metadata.add("Contact-Phone", metadataAuthor.getPhone());
+      }
+      if (metadataAuthor.getEmail() != null) {
+        metadata.add("Contact-Email", metadataAuthor.getEmail());
+      }
+    }
+    
+    if (cruiseMetadata.getCruiseDescription() != null) {
+      metadata.add("External-Description", cruiseMetadata.getCruiseDescription());
+    }
+    
+    if (cruiseMetadata.getCruiseId() != null) {
+      metadata.add("External-Identifier", cruiseMetadata.getCruiseId());
+    }
+    
+    if (cruiseMetadata.getCruiseTitle() != null) {
+      metadata.add("Cruise Name", cruiseMetadata.getCruiseTitle());
+    }
+    
+    if (cruiseMetadata.getInstruments() != null && !cruiseMetadata.getInstruments().isEmpty()) {
+      metadata.add("Instrument", String.join(
+          ", ",
+          cruiseMetadata.getPackageInstruments().values().stream()
+              .map(PackageInstrument::getInstrument)
+              .map(Instrument::getInstrument)
+              .collect(Collectors.toSet())
+      ));
+    }
+    
     return metadata;
   }
 
