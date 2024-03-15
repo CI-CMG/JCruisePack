@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -103,7 +102,7 @@ public class PackerServiceTest {
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122")
             .setDirName("EM122")
             .setBagName("TST200400_MB-BATHY_EM122")
-            .setAncillaryDataPath(Paths.get("src/test/resources/test-src/TST200400/data/TST200400_ANCILLARY_MB/data/MB"))
+            .setAncillaryDataPath("src/test/resources/test-src/TST200400/data/TST200400_ANCILLARY_MB/data/MB")
             .setAncillaryDataDetails("Ancillary details 1")
             .build(),
         InstrumentDetail.builder()

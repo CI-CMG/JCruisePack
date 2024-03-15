@@ -440,7 +440,7 @@ public class PackerService {
       List<InstrumentDetail> ancillaryDetails = new ArrayList<>(0);
       String ancillaryGroupShortType = "ANCILLARY";
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
-        Path ancillaryPath = instrumentDetail.getAncillaryDataPath();
+        String ancillaryPath = instrumentDetail.getAncillaryDataPath();
         if (ancillaryPath != null) {
           String ancillaryInstrumentName = String.format(
               "%s Ancillary",
