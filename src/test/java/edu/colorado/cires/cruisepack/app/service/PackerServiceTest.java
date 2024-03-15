@@ -90,8 +90,6 @@ public class PackerServiceTest {
 
   @Test
   public void testSingleDataset() throws Exception {
-    LocalDate releaseDate = LocalDate.of(2024, 3, 14);
-    
     Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments = new LinkedHashMap<>();
     List<InstrumentDetail> instrumentDetails = Arrays.asList(
         InstrumentDetail.builder()
@@ -147,7 +145,7 @@ public class PackerServiceTest {
                 .withName("SOURCE-ORG-2")
                 .build()
         ))
-        .setReleaseDate(releaseDate)
+        .setReleaseDate(LocalDate.now())
         .setPackageDirectory(mainBagRootDir)
         .setInstruments(instruments)
         .setDocumentsPath(Paths.get("src/test/resources/test-src/TST200400/data/documents"))
