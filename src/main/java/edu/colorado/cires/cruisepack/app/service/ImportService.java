@@ -19,15 +19,19 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImportService {
   
+  private static final Logger LOGGER = LoggerFactory.getLogger(ImportService.class);
   private static final String TEMPLATE_FILE_NAME = "cruise_import.xlsx";
   
   private final Validator validator;
@@ -95,6 +99,12 @@ public class ImportService {
   private void importSheet(Sheet sheet, ImportModel model) {
     try (Stream<Row> stream = sheet.openStream()) {
       stream.map(this::fromRow)
+          .peek(r -> {
+            if (StringUtils.isBlank(r.getCruiseID())) {
+              LOGGER.warn("Detected blank cruise ID. Import row will be skipped");
+            }
+          })
+          .filter(r -> !StringUtils.isBlank(r.getCruiseID()))
           .map(r -> metadataService.createData(r, model))
           .forEach(datastore::saveCruise);
     } catch (IOException e) {
