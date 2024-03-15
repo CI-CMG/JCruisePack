@@ -28,7 +28,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -62,7 +61,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private final EditOrgDialog editOrgDialog;
 
   @Autowired
-  public PeoplePanel(PeopleList peopleList, OrganizationList organizationList, BeanFactory beanFactory, ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore, EditPersonDialog editPersonDialog, EditOrgDialog editOrgButton) {
+  public PeoplePanel(ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore, EditPersonDialog editPersonDialog, EditOrgDialog editOrgButton) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.personDatastore = personDatastore;
     this.organizationDatasore = organizationDatasore;
