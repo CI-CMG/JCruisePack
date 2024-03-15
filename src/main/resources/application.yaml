@@ -2,6 +2,8 @@ cruise-pack:
   work-dir: ''
   # 'system', 'cross-platform', fully qualified class name ex. 'javax.swing.plaf.metal.MetalLookAndFeel', 'javax.swing.plaf.nimbus.NimbusLookAndFeel', 'com.sun.java.swing.plaf.motif.MotifLookAndFeel'
   look-and-feel: system
+  font: Arial
+  font-size: 14
   ui: true
 
 spring:

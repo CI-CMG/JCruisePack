@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.config;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,12 @@ public class ServiceProperties {
 
   @NotBlank
   private String lookAndFeel;
+  
+  @NotBlank
+  private String font;
+  
+  @NotNull
+  private Integer fontSize;
 
   private boolean ui;
 
@@ -40,5 +47,21 @@ public class ServiceProperties {
 
   public void setLookAndFeel(String lookAndFeel) {
     this.lookAndFeel = lookAndFeel;
+  }
+
+  public String getFont() {
+    return font;
+  }
+
+  public void setFont(String font) {
+    this.font = font;
+  }
+
+  public Integer getFontSize() {
+    return fontSize;
+  }
+
+  public void setFontSize(Integer fontSize) {
+    this.fontSize = fontSize;
   }
 }

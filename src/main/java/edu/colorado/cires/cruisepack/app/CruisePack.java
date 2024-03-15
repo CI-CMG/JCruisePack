@@ -3,13 +3,16 @@ package edu.colorado.cires.cruisepack.app;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.ui.view.MainFrame;
+import java.awt.Font;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.FontUIResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
@@ -108,6 +111,14 @@ public class CruisePack implements ApplicationListener<ApplicationStartingEvent>
         break;
     }
     try {
+      java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
+      while (keys.hasMoreElements()) {
+        Object key = keys.nextElement();
+        Object value = UIManager.get(key);
+        if (value instanceof javax.swing.plaf.FontUIResource) {
+          UIManager.put(key, new FontUIResource(serviceProperties.getFont(), Font.PLAIN, serviceProperties.getFontSize()));
+        }
+      }
       UIManager.setLookAndFeel(className);
     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
       throw new IllegalStateException("Unable to set look and feel for '" + serviceProperties.getLookAndFeel() + "'", e);
