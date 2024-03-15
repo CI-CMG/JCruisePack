@@ -9,13 +9,16 @@ import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.xml.person.Person;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,15 +175,37 @@ public class PackerServiceTest {
     }
 
     assertEquals(expected, actual);
-
-    assertEquals(
-        FileUtils.readFileToString(new File("src/test/resources/test-bags/TST200400/bag-info.txt"), StandardCharsets.UTF_8),
-        FileUtils.readFileToString(new File("target/test-output/TST200400/bag-info.txt"), StandardCharsets.UTF_8)
+    
+    Map<String, String> expectedMetadata = getMetadata(Paths.get(
+        "src/test/resources/test-bags/TST200400/bag-info.txt"
+    ));
+    final Map<String, String> actualMetadata = getMetadata(Paths.get(
+        "target/test-output/TST200400/bag-info.txt"
+    ));
+    expectedMetadata.remove("Bagging-Date");
+    actualMetadata.remove("Bagging-Date"); // Generated automatically, cannot reliably test
+    
+    expectedMetadata.forEach(
+        (key, value) -> assertEquals(
+            value,
+            actualMetadata.get(key)
+        )
     );
     
-    assertEquals(
-        FileUtils.readFileToString(new File("src/test/resources/test-bags/TST200400/data/TST200400_MB-BATHY_EM122/bag-info.txt"), StandardCharsets.UTF_8),
-        FileUtils.readFileToString(new File("target/test-output/TST200400/data/TST200400_MB-BATHY_EM122/bag-info.txt"), StandardCharsets.UTF_8)
+    expectedMetadata = getMetadata(Paths.get(
+        "src/test/resources/test-bags/TST200400/data/TST200400_MB-BATHY_EM122/bag-info.txt"
+    ));
+    final Map<String, String> actualBagMetadata = getMetadata(Paths.get(
+        "target/test-output/TST200400/data/TST200400_MB-BATHY_EM122/bag-info.txt"
+    ));
+    expectedMetadata.remove("Bagging-Date");
+    actualMetadata.remove("Bagging-Date"); // Generated automatically, cannot reliably test
+    
+    expectedMetadata.forEach(
+        (key, value) -> assertEquals(
+            value,
+            actualBagMetadata.get(key)
+        )
     );
   }
 
@@ -302,6 +327,24 @@ public class PackerServiceTest {
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
     assertFalse(actualRoot.toFile().exists());
 
+  }
+  
+  private Map<String, String> getMetadata(Path path) throws IOException {
+    Map<String, String> metadata = new HashMap<>(0);
+    try (
+        Reader reader = new FileReader(path.toFile());
+        BufferedReader bufferedReader = new BufferedReader(reader)
+    ) {
+      String line = bufferedReader.readLine();
+      while (line != null) {
+        String[] lineParts = line.split(": ");
+        metadata.put(lineParts[0], lineParts[1]);
+        
+        line = bufferedReader.readLine();
+      }
+    }
+    
+    return metadata;
   }
 
 }
