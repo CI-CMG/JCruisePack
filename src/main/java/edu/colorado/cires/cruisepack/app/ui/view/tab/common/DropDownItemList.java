@@ -48,6 +48,11 @@ public class DropDownItemList extends JComponent {
   }
   
   public void addItem(DropDownItemPanel panel) {
+    panel.addRemoveListener((p) -> {
+      for (ComponentEventListener<DropDownItemPanel> listener : removeItemListeners) {
+        listener.handle(panel);
+      }
+    });
     listingsPanel.remove(fluff);
     listingsPanel.add(panel, configureLayout(0, dropDownItems.size(), c -> c.weighty = 0));
     dropDownItems.add(panel);
@@ -107,11 +112,6 @@ public class DropDownItemList extends JComponent {
   private void setupMvc() {
     addButton.addActionListener((evt) -> {
       DropDownItemPanel panel = new DropDownItemPanel(options, defaultOption);
-      panel.addRemoveListener(component -> {
-        for (ComponentEventListener<DropDownItemPanel> listener : removeItemListeners) {
-          listener.handle(component);
-        }
-      });
       
       for (ComponentEventListener<DropDownItemPanel> listener : addItemListeners) {
         listener.handle(panel);
