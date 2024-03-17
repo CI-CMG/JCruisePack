@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -441,7 +442,7 @@ public class PackerService {
       String ancillaryGroupShortType = "ANCILLARY";
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
         String ancillaryPath = instrumentDetail.getAncillaryDataPath();
-        if (ancillaryPath != null) {
+        if (StringUtils.isNotBlank(ancillaryPath)) {
           String ancillaryInstrumentName = String.format(
               "%s Ancillary",
               instrumentDatastore.getNameForShortCode(entry.getKey().getInstrumentGroupShortType())

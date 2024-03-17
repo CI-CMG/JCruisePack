@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -17,7 +18,7 @@ public class InstrumentData extends Instrument {
     return new Builder();
   }
   
-  public static Builder builder(Instrument instrument) {
+  public static Builder builder(InstrumentData instrument) {
     return new Builder(instrument);
   }
   
@@ -29,6 +30,26 @@ public class InstrumentData extends Instrument {
     super(uuid, type, instrument, shortName, releaseDate, status, dataComment, dirName, bagName, otherFields, ancillaryDataDetails);
     this.dataPath = dataPath;
     this.ancillaryDataPath = ancillaryDataPath;
+  }
+
+  public InstrumentMetadata toInstrumentMetadata() {
+    InstrumentMetadata.Builder builder = InstrumentMetadata.builder()
+        .withUuid(getUuid())
+        .withType(getType())
+        .withInstrument(getInstrument())
+        .withShortName(getShortName())
+        .withReleaseDate(getReleaseDate())
+        .withStatus(getStatus())
+        .withDataComment(getDataComment())
+        .withDirName(getDirName())
+        .withBagName(getBagName())
+        .withAncillaryDataDetails(getAncillaryDataDetails());
+
+    for (Entry<String, Object> otherField : getOtherFields().entrySet()) {
+      builder.withOtherField(otherField.getKey(), otherField.getValue());
+    }
+
+    return builder.build();
   }
 
   public Path getDataPath() {
@@ -77,7 +98,7 @@ public class InstrumentData extends Instrument {
 
     }
 
-    private Builder(Instrument src) {
+    private Builder(InstrumentData src) {
       uuid = src.getUuid();
       type = src.getType();
       instrument = src.getInstrument();
@@ -89,6 +110,8 @@ public class InstrumentData extends Instrument {
       bagName = src.getBagName();
       otherFields = src.getOtherFields();
       ancillaryDataDetails = src.getAncillaryDataDetails();
+      dataPath = src.getDataPath();
+      ancillaryDataPath = src.getAncillaryDataPath();
     }
 
     public Builder withUuid(String uuid) {

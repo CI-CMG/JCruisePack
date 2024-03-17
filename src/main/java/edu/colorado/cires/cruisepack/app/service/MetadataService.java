@@ -262,7 +262,7 @@ public class MetadataService {
     List<InstrumentMetadata> instruments = new ArrayList<>();
     for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
-        instruments.add(instrumentDetailToJson(entry.getKey(), instrumentDetail));
+        instruments.add(instrumentDetailToJson(entry.getKey(), instrumentDetail).toInstrumentMetadata());
       }
     }
     return instruments;
@@ -281,9 +281,9 @@ public class MetadataService {
     return instruments;
   }
 
-  private InstrumentMetadata instrumentDetailToJson(InstrumentDetailPackageKey key, InstrumentDetail instrumentDetail) {
-    
-    InstrumentMetadata.Builder builder = InstrumentMetadata.builder()
+  private InstrumentData instrumentDetailToJson(InstrumentDetailPackageKey key, InstrumentDetail instrumentDetail) {
+
+    InstrumentData.Builder builder = InstrumentData.builder()
         .withUuid(instrumentDetail.getUuid())
         .withType(instrumentDatastore.getNameForShortCode(key.getInstrumentGroupShortType()))
         .withInstrument(instrumentDetail.getInstrument())

@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import edu.colorado.cires.cruisepack.app.config.JacksonFilePathModule;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
@@ -49,7 +50,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-@Disabled
 public class SqliteMigratorTest {
 
   private final ObjectMapper objectMapper = new ObjectMapper()
@@ -58,7 +58,8 @@ public class SqliteMigratorTest {
       .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
       .configure(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS, false)
       .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-      .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+      .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
+      .registerModule(new JacksonFilePathModule());
 
 
   @Test
@@ -201,7 +202,12 @@ public class SqliteMigratorTest {
         throw new RuntimeException(e);
       }
     }).collect(Collectors.toList());
-    assertEquals(expectedCruises, capturedSaves);
+
+    assertEquals(expectedCruises.size(), capturedSaves.size());
+    for (int i = 0; i < expectedCruises.size(); i++) {
+      assertEquals(expectedCruises.get(i), capturedSaves.get(i));
+    }
+
 
   }
 
