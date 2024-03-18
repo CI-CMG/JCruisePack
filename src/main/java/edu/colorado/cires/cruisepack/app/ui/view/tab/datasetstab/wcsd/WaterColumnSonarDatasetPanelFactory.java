@@ -2,8 +2,8 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.wcsd;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.WaterColumnCalibrationStateDatastore;
+import edu.colorado.cires.cruisepack.app.service.WaterColumnTemplateService;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.WaterColumnSonarDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
@@ -19,12 +19,14 @@ import org.springframework.stereotype.Component;
 public class WaterColumnSonarDatasetPanelFactory extends DatasetPanelFactory<WaterColumnAdditionalFieldsModel, WaterColumnSonarDatasetInstrumentController> {
 
   private final WaterColumnCalibrationStateDatastore waterColumnCalibrationStateDatastore;
+  private final WaterColumnTemplateService waterColumnTemplateService;
 
   @Autowired
   protected WaterColumnSonarDatasetPanelFactory(InstrumentDatastore instrumentDatastore,
-      WaterColumnCalibrationStateDatastore waterColumnCalibrationStateDatastore) {
+      WaterColumnCalibrationStateDatastore waterColumnCalibrationStateDatastore, WaterColumnTemplateService waterColumnTemplateService) {
     super(instrumentDatastore);
     this.waterColumnCalibrationStateDatastore = waterColumnCalibrationStateDatastore;
+    this.waterColumnTemplateService = waterColumnTemplateService;
   }
 
 
@@ -50,6 +52,6 @@ public class WaterColumnSonarDatasetPanelFactory extends DatasetPanelFactory<Wat
 
   @Override
   protected WaterColumnSonarDatasetInstrumentController createController(BaseDatasetInstrumentModel<WaterColumnAdditionalFieldsModel> model) {
-    return new WaterColumnSonarDatasetInstrumentController(model);
+    return new WaterColumnSonarDatasetInstrumentController(model, waterColumnTemplateService);
   }
 }

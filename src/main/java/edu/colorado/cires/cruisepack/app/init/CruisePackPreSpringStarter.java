@@ -40,6 +40,7 @@ public class CruisePackPreSpringStarter {
       Path applicationProperties = configDir.resolve("application.properties");
       Path log4jXml = configDir.resolve("log4j2.xml");
       Path importTemplate = configDir.resolve("cruise_import.xlsx");
+      Path waterColumnCalibrationTemplate = configDir.resolve("sonar_calibration_information.xlsx");
 
       if (!Files.isRegularFile(applicationProperties)) {
         System.out.println("Initializing application.properties");
@@ -54,6 +55,11 @@ public class CruisePackPreSpringStarter {
       if (!Files.isRegularFile(importTemplate)) {
         System.out.println("Initializing cruise_import.xlsx");
         copyFromClassPath(importTemplate, "/edu/colorado/cires/cruisepack/app/init/cruise_import.xlsx");
+      }
+      
+      if (!Files.isRegularFile(waterColumnCalibrationTemplate)) {
+        System.out.println("Initializing sonar_calibration_information.xlsx");
+        copyFromClassPath(waterColumnCalibrationTemplate, "/edu/colorado/cires/cruisepack/app/init/sonar_calibration_information.xlsx");
       }
 
       System.setProperty("logging.config", log4jXml.toString());

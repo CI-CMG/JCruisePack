@@ -29,8 +29,10 @@ import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,6 +93,15 @@ public class WaterColumnSonarDatasetPanel extends AdditionalFieldsPanel<WaterCol
     calibrationReportPathPanel.getTextField().getDocument().addDocumentListener((SimpleDocumentListener)(evt) -> handleCalibrationReportPath(calibrationReportPathPanel.getTextField().getText()));
     calibrationDataPathPanel.getTextField().getDocument().addDocumentListener((SimpleDocumentListener) (evt) -> handleCalibrationDataPath(calibrationDataPathPanel.getTextField().getText()));
     calibrationDatePanel.getDatePicker().addDateChangeListener((evt) -> controller.setCalibrationDate(calibrationDatePanel.getDatePicker().getDate()));
+    calibrationTemplateDownloadButton.addActionListener((evt) -> handleDirectorySelect(controller::saveTemplate));
+  }
+
+  private void handleDirectorySelect(Consumer<Path> consumer) {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+      consumer.accept(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+    }
   }
 
   @Override
