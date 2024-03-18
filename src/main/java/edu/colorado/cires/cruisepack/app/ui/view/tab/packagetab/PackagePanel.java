@@ -87,6 +87,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final ProjectDatastore projectDatastore;
   private final CruiseDataDatastore cruiseDataDatastore;
   private final FooterControlController footerControlController;
+  private final EditProjectDialog editProjectDialog;
 
   private final DropDownItemList projectsField;
   private final JTextField cruiseIdField = new JTextField();
@@ -113,7 +114,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
 
-  private final JButton newProjectButton = new JButton(ADDITIONAL_PROJECTS_LABEL);
+  private final JButton newProjectButton = new JButton("Create New Project");
   private final JComboBox<DropDownItem> existingRecordList = new JComboBox<>();
 
   @Autowired
@@ -127,7 +128,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
       SeaDatastore seaDatastore,
       ProjectDatastore projectDatastore,
       CruiseDataDatastore cruiseDataDatastore,
-      FooterControlController footerControlController
+      FooterControlController footerControlController, EditProjectDialog editProjectDialog
   ) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
@@ -145,6 +146,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     );
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.footerControlController = footerControlController;
+    this.editProjectDialog = editProjectDialog;
   }
 
   @PostConstruct
@@ -196,6 +198,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     add(createLabelWithErrorPanel(SEA_LABEL, seaErrorLabel), configureLayout(0, 7)); add(createLabelWithErrorPanel(ARRIVAL_PORT_LABEL, arrivalPortErrorLabel), configureLayout(1, 7)); add(createLabelWithErrorPanel(ARRIVAL_DATE_LABEL, arrivalDateErrorLabel), configureLayout(2, 7, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(seaList, configureLayout(0, 8)); add(arrivalPortList, configureLayout(1, 8)); add(arrivalDateField, configureLayout(2, 8, c -> c.gridwidth = GridBagConstraints.REMAINDER));
     add(projectsField, configureLayout(0, 9, c -> { c.weighty = 100; c.gridwidth = GridBagConstraints.REMAINDER; c.insets = new Insets(0, 0, 0, 1); }));
+    add(newProjectButton, configureLayout(0, 10, c -> { c.weightx = 100; c.weighty = 0; c.gridwidth = GridBagConstraints.REMAINDER; }));
     
     JPanel releaseDatePanel = new JPanel();
     releaseDatePanel.setLayout(new FlowLayout());
@@ -227,6 +230,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
     projectsField.addAddItemListener(packageController::addProject);
     projectsField.addRemoveItemListener(packageController::removeProject);
     existingRecordList.addItemListener((evt) -> packageController.setExistingRecord((DropDownItem) evt.getItem()));
+    newProjectButton.addActionListener((evt) -> {
+      editProjectDialog.pack();
+      editProjectDialog.setVisible(true);
+    });
   }
 
   private void handleDirValue(String value) {
@@ -308,6 +315,10 @@ public class PackagePanel extends JPanel implements ReactiveView {
         break;
       case Events.UPDATE_RELEASE_DATE_ERROR:
         updateLabelText(releaseDateErrorLabel, evt);
+        break;
+      case Events.UPDATE_PROJECT_DATA_STORE:
+        List<DropDownItem> options = projectDatastore.getAllProjectDropDowns();
+        projectsField.updateOptions(options);
         break;
       case Events.ADD_PROJECT:
         projectsField.addItem((DropDownItemPanel) evt.getNewValue());
