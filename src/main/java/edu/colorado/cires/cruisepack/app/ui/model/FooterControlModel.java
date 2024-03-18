@@ -1,7 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +17,8 @@ public class FooterControlModel extends PropertyChangeModel {
   private boolean packageIdCollisionDialogVisible = false;
   private String jobErrors = null;
 
+  private List<String> warningMessages = new ArrayList<>(0);
+  private List<String> ignoredWarningMessages = new ArrayList<>(0);
   public boolean isStopButtonEnabled() {
     return stopButtonEnabled;
   }
@@ -73,9 +75,19 @@ public class FooterControlModel extends PropertyChangeModel {
     setIfChanged(Events.UPDATE_JOB_ERRORS, jobErrors, () -> this.jobErrors, (v) -> this.jobErrors = v);
   }
   
-  public void emitWarningMessages(List<String> warningMessages) {
-    fireChangeEvent(
-        Events.UPDATE_JOB_WARNINGS, Collections.emptyList(), warningMessages
-    );
+  public void setWarningMessages(List<String> warningMessages) {
+    setIfChanged(Events.UPDATE_JOB_WARNINGS, warningMessages, () -> new ArrayList<String>(0), (m) -> this.warningMessages = m);
+  }
+  
+  public void addIgnoreWarningMessage(String warningMessage) {
+    ignoredWarningMessages.add(warningMessage);
+  }
+  
+  public void clearIgnoreWarningMessage() {
+    ignoredWarningMessages.clear();
+  }
+  
+  public List<String> getIgnoredWarningMessages() {
+    return ignoredWarningMessages;
   }
 }

@@ -97,11 +97,13 @@ public class PackagingValidationService {
       if (errorMessages.isEmpty()) {
         
         List<String> warningMessages = checkWarnings(packJob);
+        warningMessages.removeAll(footerControlModel.getIgnoredWarningMessages());
+        footerControlModel.clearIgnoreWarningMessage();
         
         if (warningMessages.isEmpty()) {
           return Optional.of(packJob);
         } else {
-          footerControlModel.emitWarningMessages(warningMessages);
+          footerControlModel.setWarningMessages(warningMessages);
         }
         
       }

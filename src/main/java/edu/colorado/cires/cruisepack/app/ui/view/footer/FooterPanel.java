@@ -280,6 +280,21 @@ public class FooterPanel extends JPanel implements ReactiveView {
       break;
       case Events.UPDATE_PROGRESS:
         updateProgressBarModel(progressBarModel, evt);
+        break;
+      case Events.UPDATE_JOB_WARNINGS:
+        List<?> newValue = (List<?>) evt.getNewValue();
+        for (Object obj : newValue) {
+          String message = (String) obj;
+          OptionDialog optionDialog = new OptionDialog(message, List.of(
+              "OK", "Ignore"
+          ));
+          optionDialog.addListener("Ignore", (event) ->
+              footerControlModel.addIgnoreWarningMessage(message)
+          );
+          
+          optionDialog.pack();
+          optionDialog.setVisible(true);
+        }
       default:
         break;
     }

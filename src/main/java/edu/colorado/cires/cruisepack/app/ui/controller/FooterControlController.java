@@ -152,6 +152,10 @@ public class FooterControlController implements PropertyChangeListener {
     }
   }
   
+  public synchronized void addIgnoredWarningMessage(String message) {
+    footerControlModel.addIgnoreWarningMessage(message);
+  }
+  
   public void create(boolean fromExitPrompt) {
     PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
     boolean success = save(packJob);
