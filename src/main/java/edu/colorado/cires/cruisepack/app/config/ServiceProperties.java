@@ -16,8 +16,7 @@ public class ServiceProperties {
 
   @NotBlank
   private String lookAndFeel;
-  
-  @NotBlank
+
   private String font;
   
   @NotNull
