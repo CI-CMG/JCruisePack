@@ -40,6 +40,7 @@ public final class Events {
   public static final String UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE = "UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE";
   public static final String UPDATE_PACKAGE_ID_COLLISION_DIALOG_VISIBLE = "UPDATE_PACKAGE_ID_COLLISION_DIALOG_VISIBLE";
   public static final String EMIT_PACKAGE_ID = "EMIT_PACKAGE_ID";
+  public static final String UPDATE_JOB_WARNINGS = "UPDATE_JOB_WARNINGS";
 
 
   public static final String ADD_SCIENTIST = "ADD_SCIENTIST";

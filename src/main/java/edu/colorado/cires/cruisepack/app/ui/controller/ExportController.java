@@ -4,6 +4,7 @@ import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
+import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
@@ -44,7 +45,7 @@ public class ExportController {
     if (packageModel.getCruiseId() == null) {
       footerControlModel.setSaveWarningDialogueVisible(true);
     } else {
-      PackJob packJob = PackJob.create(
+      PackJob packJob = PackJobUtils.create(
           packageModel,
           peopleModel,
           omicsModel,

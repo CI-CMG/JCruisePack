@@ -1,6 +1,8 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import java.util.Collections;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -69,5 +71,11 @@ public class FooterControlModel extends PropertyChangeModel {
   
   public void setJobErrors(String jobErrors) {
     setIfChanged(Events.UPDATE_JOB_ERRORS, jobErrors, () -> this.jobErrors, (v) -> this.jobErrors = v);
+  }
+  
+  public void emitWarningMessages(List<String> warningMessages) {
+    fireChangeEvent(
+        Events.UPDATE_JOB_WARNINGS, Collections.emptyList(), warningMessages
+    );
   }
 }

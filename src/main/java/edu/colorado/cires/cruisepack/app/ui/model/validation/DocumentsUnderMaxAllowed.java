@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.model.validation;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -35,20 +36,13 @@ public @interface DocumentsUnderMaxAllowed {
 
     @Override
     public boolean isValid(Path value, ConstraintValidatorContext context) {
+      if (value == null) {
+        return true;
+      }
       try (Stream<Path> paths = Files.walk(value)) {
         return paths
             .filter(p -> !Files.isDirectory(p))
-            .filter(Files::isRegularFile)
-            .filter(p -> {
-              try {
-                return !Files.isHidden(p);
-              } catch (IOException e) {
-                throw new IllegalStateException(String.format(
-                    "Unable to determine if file is hidden: %s",
-                    p
-                ), e);
-              }
-            })
+            .filter(CruisePackFileUtils::filterHidden)
             .count() <= maxAllowedDocuments;
       } catch (IOException e) {
         throw new IllegalStateException(String.format(

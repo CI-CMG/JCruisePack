@@ -9,6 +9,7 @@ import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
+import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
 import edu.colorado.cires.cruisepack.app.service.PackerService;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
@@ -139,7 +140,7 @@ public class FooterControlController implements PropertyChangeListener {
     if (packageModel.getCruiseId() == null) {
       setSaveWarningDialogueVisible(true);
     } else {
-      PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+      PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
       if (packageModel.getExistingRecord() != null && !packageModel.getExistingRecord().equals(CruiseDataDatastore.UNSELECTED_CRUISE) && !packJob.getPackageId().equals(packageModel.getExistingRecord().getValue())) {
         setSaveOrUpdateDialogVisible(true);
       } else {
@@ -152,7 +153,7 @@ public class FooterControlController implements PropertyChangeListener {
   }
   
   public void create(boolean fromExitPrompt) {
-    PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+    PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
     boolean success = save(packJob);
     if (success) {
       postSave(packJob.getPackageId(), fromExitPrompt);
@@ -160,7 +161,7 @@ public class FooterControlController implements PropertyChangeListener {
   }
   
   public void update(boolean fromExitPrompt) {
-    PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+    PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
     boolean success = save(packJob);
     if (success) {
       delete(packageModel.getExistingRecord().getValue());

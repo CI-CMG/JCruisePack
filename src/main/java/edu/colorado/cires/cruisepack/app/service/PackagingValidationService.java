@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service;
 
+import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
@@ -12,10 +13,15 @@ import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path.Node;
 import jakarta.validation.Validator;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +41,7 @@ public class PackagingValidationService {
   private final InstrumentDatastore instrumentDatastore;
   private final PersonDatastore personDatastore;
   private final FooterControlModel footerControlModel;
+  private final ServiceProperties serviceProperties;
 
   @Autowired
   public PackagingValidationService(
@@ -45,7 +52,7 @@ public class PackagingValidationService {
       DatasetsModel datasetsModel,
       InstrumentDatastore instrumentDatastore,
       PeopleModel peopleModel,
-      PersonDatastore personDatastore, FooterControlModel footerControlModel
+      PersonDatastore personDatastore, FooterControlModel footerControlModel, ServiceProperties serviceProperties
   ) {
     this.validator = validator;
     this.packageModel = packageModel;
@@ -56,6 +63,7 @@ public class PackagingValidationService {
     this.peopleModel = peopleModel;
     this.personDatastore = personDatastore;
     this.footerControlModel = footerControlModel;
+    this.serviceProperties = serviceProperties;
   }
 
   public Optional<PackJob> validate() {
@@ -79,7 +87,7 @@ public class PackagingValidationService {
             peopleViolations.isEmpty()) {
       footerControlModel.setJobErrors(null);
       
-      PackJob packJob = PackJob.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+      PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
 
       Set<ConstraintViolation<PackJob>> constraintViolations = validator.validate(packJob);
       
@@ -87,12 +95,45 @@ public class PackagingValidationService {
       footerControlModel.setJobErrors(errorMessages);
       
       if (errorMessages.isEmpty()) {
-        return Optional.of(packJob);
+        
+        List<String> warningMessages = checkWarnings(packJob);
+        
+        if (warningMessages.isEmpty()) {
+          return Optional.of(packJob);
+        } else {
+          footerControlModel.emitWarningMessages(warningMessages);
+        }
+        
       }
       
       return Optional.empty();
     }
     return Optional.empty();
+  }
+  
+  private List<String> checkWarnings(PackJob packJob) {
+    List<String> warningMessages = new ArrayList<>(0);
+    
+    java.nio.file.Path docsPath = packJob.getDocumentsPath();
+    if (docsPath != null) {
+      try (Stream<java.nio.file.Path> paths = Files.walk(docsPath)) {
+        long fileCount = paths
+            .filter(p -> !Files.isDirectory(p))
+            .filter(CruisePackFileUtils::filterHidden)
+            .count();
+        if (fileCount > serviceProperties.getDocumentFilesWarningThreshold()) {
+          String warningMessage = String.format(
+              "More than %s files located in documents directory: %s",
+              serviceProperties.getDocumentFilesWarningThreshold(), docsPath
+          );
+          warningMessages.add(warningMessage);
+        }
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    
+    return warningMessages;
   }
 
   private void updatePeopleErrors(Set<ConstraintViolation<PeopleModel>> peopleViolations) {
