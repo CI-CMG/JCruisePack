@@ -5,6 +5,8 @@ cruise-pack:
   font:
   font-size: 14
   window-padding: 5
+  document-files-warning-threshold: 10
+  document-files-error-threshold: 50
   ui: true
 
 spring:

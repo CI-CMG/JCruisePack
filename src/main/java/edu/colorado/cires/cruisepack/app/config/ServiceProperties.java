@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.config;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,6 +26,14 @@ public class ServiceProperties {
   
   @NotNull
   private Integer windowPadding;
+  
+  @NotNull
+  @Min(1)
+  private Integer documentFilesWarningThreshold;
+  
+  @NotNull
+  @Min(1)
+  private Integer documentFilesErrorThreshold;
 
   private boolean ui;
 
@@ -73,5 +83,21 @@ public class ServiceProperties {
 
   public void setWindowPadding(Integer windowPadding) {
     this.windowPadding = windowPadding;
+  }
+
+  public Integer getDocumentFilesWarningThreshold() {
+    return documentFilesWarningThreshold;
+  }
+
+  public void setDocumentFilesWarningThreshold(Integer documentFilesWarningThreshold) {
+    this.documentFilesWarningThreshold = documentFilesWarningThreshold;
+  }
+
+  public Integer getDocumentFilesErrorThreshold() {
+    return documentFilesErrorThreshold;
+  }
+
+  public void setDocumentFilesErrorThreshold(Integer documentFilesErrorThreshold) {
+    this.documentFilesErrorThreshold = documentFilesErrorThreshold;
   }
 }
