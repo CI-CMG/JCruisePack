@@ -1,17 +1,29 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import static edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils.mkDir;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
+import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed.DocumentsUnderMaxAllowedValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +38,7 @@ public class CruiseInformationModelTest {
     private static final String CRUISE_PURPOSE_ERROR = "test-cruise-purpose-error";
     private static final String CRUISE_DESCRIPTION = "test-cruise-description";
     private static final String CRUISE_DESCRIPTION_ERROR = "test-cruise-description-error";
-    private static final Path DOCUMENTS_PATH = Paths.get("test-documents-path");
+    private static final Path DOCUMENTS_PATH = Paths.get("target").resolve("test-documents-path");
     private static final String DOCUMENTS_PATH_ERROR = "test-documents-path-error";
 
     @BeforeEach
@@ -41,6 +53,13 @@ public class CruiseInformationModelTest {
             }
             
         });
+
+        FileUtils.deleteQuietly(DOCUMENTS_PATH.toFile());
+    }
+    
+    @AfterEach
+    public void afterEach() {
+        FileUtils.deleteQuietly(DOCUMENTS_PATH.toFile());
     }
 
     private void initializeModel() {
@@ -208,6 +227,45 @@ public class CruiseInformationModelTest {
         
         cruiseInformationModel.setDocumentsPathError(newDocumentsPathError);
         assertThrows(IllegalStateException.class, () -> assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY_ERROR, DOCUMENTS_PATH_ERROR, newDocumentsPathError, cruiseInformationModel::getDocumentsPathError));
+    }
+    
+    @Test
+    public void testMaxDocumentsEqualThreshold() {
+        createDocumentsDir(DOCUMENTS_PATH, 10);
+
+        ServiceProperties serviceProperties = new ServiceProperties();
+        serviceProperties.setDocumentFilesErrorThreshold(10);
+
+        assertTrue(new DocumentsUnderMaxAllowedValidator(serviceProperties).isValid(
+            DOCUMENTS_PATH, mock(ConstraintValidatorContext.class)
+        ));
+    }
+    
+    @Test
+    public void testMaxDocumentsViolation() {
+        createDocumentsDir(DOCUMENTS_PATH, 11);
+        
+        ServiceProperties serviceProperties = new ServiceProperties();
+        serviceProperties.setDocumentFilesErrorThreshold(10);
+        assertFalse(new DocumentsUnderMaxAllowedValidator(serviceProperties).isValid(
+            DOCUMENTS_PATH, mock(ConstraintValidatorContext.class)
+        ));
+    }
+    
+    private void createDocumentsDir(Path path, int nFiles) {
+        mkDir(path);
+        
+        for (int i = 0; i < nFiles; i++) {
+            try (FileWriter fileWriter = new FileWriter(path.resolve(String.format(
+                "test-%s.txt", i
+            )).toFile(), StandardCharsets.UTF_8)) {
+                fileWriter.write(String.format(
+                    "test-file-context\t\t%s", i
+                ));
+            } catch (IOException e) {
+              throw new IllegalStateException("Unable to write file", e);
+            }
+        }
     }
     
 }

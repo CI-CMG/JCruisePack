@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,7 @@ public class CruiseInformationModel extends PropertyChangeModel {
 
   @PathExists
   @PathIsDirectory
+  @DocumentsUnderMaxAllowed
   private Path documentsPath;
   private String documentsPathError;
 
