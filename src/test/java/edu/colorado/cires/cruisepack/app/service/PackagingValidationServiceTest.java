@@ -178,13 +178,21 @@ public class PackagingValidationServiceTest {
 
       service.validate();
 
+      String expectedMessage = String.format(
+          "More than %s files located in documents directory: %s",
+          SERVICE_PROPERTIES.getDocumentFilesWarningThreshold(), docsDir
+      );
       PropertyChangeEvent event = eventMap.get(Events.UPDATE_JOB_WARNINGS);
       assertNotNull(event);
       assertEquals(Collections.emptyList(), event.getOldValue());
-      assertEquals(List.of(String.format(
-          "More than %s files located in documents directory: %s",
-          SERVICE_PROPERTIES.getDocumentFilesWarningThreshold(), docsDir
-      )), event.getNewValue());
+      assertEquals(List.of(expectedMessage), event.getNewValue());
+      
+      eventMap.clear();
+      
+      FOOTER_CONTROL_MODEL.addIgnoreWarningMessage(expectedMessage);
+      
+      service.validate();
+      assertNull(eventMap.get(Events.UPDATE_JOB_WARNINGS));
     }
   }
   
