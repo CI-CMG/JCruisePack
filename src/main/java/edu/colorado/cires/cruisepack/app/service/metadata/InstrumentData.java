@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,6 +45,9 @@ public class InstrumentData extends Instrument {
         .withAncillaryDataDetails(getAncillaryDataDetails());
 
     for (Entry<String, Object> otherField : getOtherFields().entrySet()) {
+      if (otherField.getValue() instanceof Path) {
+        continue;
+      }
       builder.withOtherField(otherField.getKey(), otherField.getValue());
     }
 
