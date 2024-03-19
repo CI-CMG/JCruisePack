@@ -32,7 +32,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SqliteMigrator {
 
   private final Supplier<String> uuidGenerator;
@@ -44,6 +47,7 @@ public class SqliteMigrator {
   private final ShipDatastore shipDatastore;
   private final InstrumentDatastore instrumentDatastore;
 
+  @Autowired
   public SqliteMigrator(
       Supplier<String> uuidGenerator,
       ObjectMapper objectMapper,
@@ -342,13 +346,11 @@ public class SqliteMigrator {
     }
 
     try (SessionFactory sessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
-      sessionFactory.inTransaction(session -> {
-        session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
-            .getResultList().stream()
-            .map(this::toCruiseMetadata)
-            .filter(cruise -> cruise.getPackageId() != null)
-            .forEach(cruiseDataDatastore::saveCruise);
-      });
+      sessionFactory.inTransaction(session -> session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
+          .getResultList().stream()
+          .map(this::toCruiseMetadata)
+          .filter(cruise -> cruise.getPackageId() != null)
+          .forEach(cruiseDataDatastore::saveCruise));
     }
 
   }
