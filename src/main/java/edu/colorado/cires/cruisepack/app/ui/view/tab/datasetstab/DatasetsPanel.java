@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class DatasetsPanel extends JPanel implements ReactiveView {
 
-  private static final String ADD_DATASET_LABEL = "Add Additional Dataset";
+  private static final String ADD_DATASET_LABEL = "Add Dataset";
 
   private final JButton addDatasetButton = new JButton(ADD_DATASET_LABEL);
 
