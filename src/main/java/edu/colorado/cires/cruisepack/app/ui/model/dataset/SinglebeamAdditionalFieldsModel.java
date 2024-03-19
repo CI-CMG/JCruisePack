@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.SinglebeamVerticalDatumDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.IsFloatingPointNumber;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSinglebeamVerticalDatumDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
@@ -20,9 +21,11 @@ public class SinglebeamAdditionalFieldsModel extends AdditionalFieldsModel {
   private DropDownItem verticalDatum = SinglebeamVerticalDatumDatastore.UNSELECTED_VERTICAL_DATUM;
   private String verticalDatumError = null;
   @NotBlank
+  @IsFloatingPointNumber
   private String obsRate;
   private String obsRateError = null;
   @NotBlank
+  @IsFloatingPointNumber
   private String soundVelocity;
   private String soundVelocityError = null;
 

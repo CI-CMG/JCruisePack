@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.MagneticsCorrectionModelDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.IsFloatingPointNumber;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidMagneticsCorrectionModelDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
@@ -22,12 +23,15 @@ public class MagneticsAdditionalFieldsModel extends AdditionalFieldsModel {
   private DropDownItem correctionModel = MagneticsCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL;
   private String correctionModelError = null;
   @NotBlank
+  @IsFloatingPointNumber
   private String sampleRate;
   private String sampleRateError = null;
   @NotBlank
+  @IsFloatingPointNumber
   private String towDistance;
   private String towDistanceError = null;
   @NotBlank
+  @IsFloatingPointNumber
   private String sensorDepth;
   private String sensorDepthError = null;
 

@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.model.dataset;
 
 import edu.colorado.cires.cruisepack.app.datastore.GravityCorrectionModelDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.IsFloatingPointNumber;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidGravityCorrectionModelDropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.validation.constraints.NotBlank;
@@ -24,16 +25,20 @@ public class GravityAdditionalFieldsModel extends AdditionalFieldsModel {
   private DropDownItem correctionModel = GravityCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL;
   private String correctionModelError = null;
   @NotBlank
-  private String observationRate; //TODO make this only accept floating point numbers
+  @IsFloatingPointNumber
+  private String observationRate;
   private String observationRateError = null;
   @NotBlank
-  private String departureTie; //TODO make this only accept floating point numbers
+  @IsFloatingPointNumber
+  private String departureTie;
   private String departureTieError = null;
   @NotBlank
-  private String arrivalTie; //TODO make this only accept floating point numbers
+  @IsFloatingPointNumber
+  private String arrivalTie;
   private String arrivalTieError = null;
   @NotBlank
-  private String driftPerDay; //TODO make this only accept floating point numbers
+  @IsFloatingPointNumber
+  private String driftPerDay;
   private String driftPerDayError = null;
 
   @Override
