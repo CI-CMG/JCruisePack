@@ -12,14 +12,21 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
+import java.awt.Desktop;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import javax.imageio.ImageIO;
 import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -38,6 +45,8 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private static final String SAVE_LABEL = "Save For Later";
   private static final String PACKAGE_LABEL = "Package Data";
   private static final String SETTINGS_LABEL = "Settings";
+  private static final String USER_MANUAL_NAME = "CruisePack_manual.pdf";
+  private static final String HELP_ICON_NAME = "help.png";
 
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final FooterControlController footerControlController;
@@ -52,6 +61,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton saveButton = new JButton(SAVE_LABEL);
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
+  private final JButton docsButton;
   private final JProgressBar progressBar = new JProgressBar();
   private final BoundedRangeModel progressBarModel = new DefaultBoundedRangeModel();
   private final OptionDialog saveWarningDialog = new OptionDialog(
@@ -81,17 +91,23 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, ImportExportDialog importExportDialog, UiRefresher uiRefresher) {
+      FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, ImportExportDialog importExportDialog, UiRefresher uiRefresher)
+      throws IOException {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
     this.manageRecordsDialog = manageRecordsDialog;
     this.importExportDialog = importExportDialog;
     this.uiRefresher = uiRefresher;
+    this.docsButton = new JButton(new ImageIcon(ImageIO.read(
+        Objects.requireNonNull(getClass().getResource(String.format(
+            "/%s", HELP_ICON_NAME
+        )))
+    )));
   }
 
   @PostConstruct
-  public void init() {
+  public void init() throws IOException {
     initializeFields();
     setupLayout();
     setupMvc();
@@ -109,12 +125,13 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
     JPanel row1 = new JPanel();
     row1.setLayout(new GridBagLayout());
-    row1.add(manageRecordsButton, configureLayout(0, 0));
-    row1.add(importExportButton, configureLayout(1, 0));
-    row1.add(clearFormButton, configureLayout(2, 0));
-    row1.add(stopButton, configureLayout(3, 0));
-    row1.add(saveButton, configureLayout(4, 0));
-    row1.add(packageButton, configureLayout(5, 0));
+    row1.add(docsButton, configureLayout(0, 0, c -> c.weightx = 0));
+    row1.add(manageRecordsButton, configureLayout(1, 0));
+    row1.add(importExportButton, configureLayout(2, 0));
+    row1.add(clearFormButton, configureLayout(3, 0));
+    row1.add(stopButton, configureLayout(4, 0));
+    row1.add(saveButton, configureLayout(5, 0));
+    row1.add(packageButton, configureLayout(6, 0));
     add(row1, configureLayout(0, 0));
 
 
@@ -188,6 +205,26 @@ public class FooterPanel extends JPanel implements ReactiveView {
     });
     
     stopButton.addActionListener((evt) -> footerControlController.stopPackaging());
+    
+    docsButton.addActionListener((evt) -> handleOpenFile());
+  }
+  
+  private void handleOpenFile() {
+    if (Desktop.isDesktopSupported()) {
+      try {
+        Desktop.getDesktop().open(
+            new File(
+                Objects.requireNonNull(getClass().getResource(String.format(
+                    "/%s", USER_MANUAL_NAME
+                ))).toURI()
+            )
+        );
+      } catch (IOException | URISyntaxException e) {
+        throw new IllegalStateException(String.format(
+            "Failed to open %s", USER_MANUAL_NAME
+        ), e);
+      }
+    }
   }
 
   private void handlePackage() {
