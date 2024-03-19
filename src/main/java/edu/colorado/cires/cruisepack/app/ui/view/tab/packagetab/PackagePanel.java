@@ -80,7 +80,6 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final PackageController packageController;
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final PackageModel packageModel;
-  private final ProjectChooserPanel projectChooserPanel;
   private final ShipDatastore shipDatastore;
   private final PortDatastore portDatastore;
   private final SeaDatastore seaDatastore;
@@ -122,7 +121,6 @@ public class PackagePanel extends JPanel implements ReactiveView {
       PackageController packageController,
       ReactiveViewRegistry reactiveViewRegistry,
       PackageModel packageModel,
-      ProjectChooserPanel projectChooserPanel,
       ShipDatastore shipDatastore,
       PortDatastore portDatastore,
       SeaDatastore seaDatastore,
@@ -133,7 +131,6 @@ public class PackagePanel extends JPanel implements ReactiveView {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.packageModel = packageModel;
-    this.projectChooserPanel = projectChooserPanel;
     this.shipDatastore = shipDatastore;
     this.portDatastore = portDatastore;
     this.seaDatastore = seaDatastore;
