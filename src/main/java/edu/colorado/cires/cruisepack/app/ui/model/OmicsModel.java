@@ -4,6 +4,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
 import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
@@ -120,10 +121,12 @@ public class OmicsModel extends PropertyChangeModel {
             if (poc != null) {
                 setContact(new DropDownItem(poc.getUuid(), poc.getName()));
             }
-            // TODO: setSampleTrackingSheet
+            if (omicsMetadata instanceof OmicsData) {
+                setSampleTrackingSheet(((OmicsData) omicsMetadata).getSampleTrackingSheet());
+                setSamplingConducted(((OmicsData) omicsMetadata).isSamplingConducted());
+            }
             setBioProjectAccession(omicsMetadata.getNcbiAccession());
             setAdditionalSamplingInformation(omicsMetadata.getOmicsComment());
-            // TODO: setSamplingConducted
         }
     }
     

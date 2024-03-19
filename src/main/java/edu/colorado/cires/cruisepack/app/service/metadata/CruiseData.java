@@ -298,7 +298,7 @@ public class CruiseData extends Cruise {
       return this;
     }
 
-    public Builder withOmics(Omics omics) {
+    public Builder withOmics(OmicsData omics) {
       this.omics = omics;
       return this;
     }

@@ -7,12 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import java.util.Objects;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-@JsonDeserialize(builder = Omics.Builder.class)
-public class Omics {
-  public static Builder builder() {
-    return new Builder();
-  }
+public abstract class Omics {
   
   private final String ncbiAccession;
   private final List<String> samplingTypes;
@@ -20,7 +15,7 @@ public class Omics {
   private final String omicsComment;
   private final OmicsPoc omicsPoc;
 
-  private Omics(@JsonProperty("NBI_accession") String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment, OmicsPoc omicsPoc) {
+  protected Omics(@JsonProperty("NBI_accession") String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment, OmicsPoc omicsPoc) {
     this.ncbiAccession = ncbiAccession;
     this.samplingTypes = samplingTypes;
     this.analysesTypes = analysesTypes;
@@ -75,44 +70,5 @@ public class Omics {
         ", omicsComment='" + omicsComment + '\'' +
         ", omicsPoc='" + omicsPoc + '\'' +
         '}';
-  }
-  
-  public static class Builder {
-    private String ncbiAccession;
-    private List<String> samplingTypes;
-    private List<String> analysesTypes;
-    private String omicsComment;
-    private OmicsPoc omicsPoc;
-    
-    private Builder() {}
-    
-    public Builder withNCBIAccession(String ncbiAccession) {
-      this.ncbiAccession = ncbiAccession;
-      return this;
-    }
-    
-    public Builder withSamplingTypes(List<String> samplingTypes) {
-      this.samplingTypes = samplingTypes;
-      return this;
-    }
-    
-    public Builder withAnalysesTypes(List<String> analysesTypes) {
-      this.analysesTypes = analysesTypes;
-      return this;
-    }
-    
-    public Builder withOmicsComment(String omicsComment) {
-      this.omicsComment = omicsComment;
-      return this;
-    }
-    
-    public Builder withOmicsPoc(OmicsPoc omicsPoc) {
-      this.omicsPoc = omicsPoc;
-      return this;
-    }
-    
-    public Omics build() {
-      return new Omics(ncbiAccession, samplingTypes, analysesTypes, omicsComment, omicsPoc);
-    }
   }
 }

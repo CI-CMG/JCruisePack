@@ -18,7 +18,7 @@ import edu.colorado.cires.cruisepack.app.migration.jpa.ProjectEntity;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
-import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.person.Person;
@@ -219,7 +219,7 @@ public class SqliteMigrator {
     }
   }
 
-  private Omics getOmics(String json) {
+  private OmicsData getOmics(String json) {
     if (StringUtils.isNotBlank(json)) {
       if (json.equals("{}")){
         return null;
@@ -235,7 +235,7 @@ public class SqliteMigrator {
           newPoc.put("uuid", person.getUuid());
           obj.replace("omics_poc", newPoc);
         }
-        return objectMapper.readValue(obj.toString(), Omics.class);
+        return objectMapper.readValue(obj.toString(), OmicsData.class);
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse omics", e);
       }

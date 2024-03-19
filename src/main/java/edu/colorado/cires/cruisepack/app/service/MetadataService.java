@@ -13,7 +13,8 @@ import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
-import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
@@ -87,7 +88,7 @@ public class MetadataService {
        .build())
        //        .withProjects()
        .withScientists(packJob.getScientists())
-        .withOmics(Omics.builder()
+        .withOmics(OmicsMetadata.builder()
             .withNCBIAccession(packJob.getOmicsBioProjectAccession())
             .withSamplingTypes(packJob.getOmicsSamplingTypes())
             .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
@@ -134,11 +135,13 @@ public class MetadataService {
             .build())
         //        .withProjects()
         .withScientists(packJob.getScientists())
-        .withOmics(Omics.builder()
+        .withOmics(OmicsData.builder()
             .withNCBIAccession(packJob.getOmicsBioProjectAccession())
             .withSamplingTypes(packJob.getOmicsSamplingTypes())
             .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
             .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
+            .withSampleTrackingSheet(packJob.getOmicsSampleTrackingSheetPath())
+            .withSamplingConducted(packJob.isOmicsSamplingConducted())
             .withOmicsPoc(OmicsPoc.builder()
                 .withUuid(packJob.getOmicsContactUuid())
                 .withName(packJob.getOmicsContactName())
