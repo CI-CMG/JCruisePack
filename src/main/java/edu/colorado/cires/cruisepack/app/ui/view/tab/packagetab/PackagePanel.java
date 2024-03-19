@@ -74,7 +74,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private static final String ARRIVAL_PORT_LABEL = "Arrival Port";
   private static final String ARRIVAL_DATE_LABEL = "Arrival Date (YYYY-MM-DD)";
   private static final String PROJECTS_LABEL = "Projects";
-  private static final String ADDITIONAL_PROJECTS_LABEL = "Add Additional Project Menu";
+  private static final String ADDITIONAL_PROJECTS_LABEL = "Add Project";
   private static final String RELEASE_DATE_LABEL = "Default Public Release Date";
 
   private final PackageController packageController;
@@ -114,7 +114,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
 
   private final JButton dirSelectButton = new JButton(SELECT_DIR_LABEL);
 
-  private final JButton newProjectButton = new JButton("Create New Project");
+  private final JButton newProjectButton = new JButton("Create Project");
   private final JComboBox<DropDownItem> existingRecordList = new JComboBox<>();
 
   @Autowired
