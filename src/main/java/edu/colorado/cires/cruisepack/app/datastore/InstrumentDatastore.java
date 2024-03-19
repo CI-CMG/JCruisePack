@@ -91,7 +91,7 @@ public class InstrumentDatastore {
             List<Instrument> instruments = instrumentList.getInstruments();
             if (instruments != null) {
               return instruments.stream()
-                  .filter(instrument -> instrument.getShortName().equals(key.getInstrumentShortCode()))
+                  .filter(instrument -> instrument.getName().equals(key.getInstrumentShortCode()))
                   .findFirst();
             }
           }

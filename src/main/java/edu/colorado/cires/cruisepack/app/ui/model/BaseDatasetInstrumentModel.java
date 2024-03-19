@@ -170,7 +170,7 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
       return Optional.empty();
     }
     DropDownItem selectedInstrument = maybeInstrument.get();
-    if (selectedInstrument.getId().equals(referenceInstrument.getUuid()) && selectedInstrument.getValue().equals(referenceInstrument.getShortName())) {
+    if (selectedInstrument.getId().equals(referenceInstrument.getUuid()) && selectedInstrument.getValue().equals(referenceInstrument.getName())) {
       return Optional.of(
           new InstrumentNameHolder(
               referenceInstrument.getUuid(),
