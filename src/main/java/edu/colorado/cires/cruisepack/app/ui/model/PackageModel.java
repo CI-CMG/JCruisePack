@@ -17,7 +17,6 @@ import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidShipDropDownIt
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,7 +32,7 @@ public class PackageModel extends PropertyChangeModel {
   @NotBlank //TODO add more validation, length, underscores, etc?
   private String cruiseId = null;
   private String cruiseIdError = null;
-  @NotBlank // TODO: Remove after testing, this can be null
+
   private String segment = null;
   private String segmentError = null;
   @ValidSeaDropDownItem
@@ -59,7 +58,7 @@ public class PackageModel extends PropertyChangeModel {
   private LocalDate releaseDate = null;
   private String releaseDateError = null;
 
-  @NotNull(message = "must not be blank") //TODO add more validation, space?
+  @NotNull(message = "must not be blank")
   @PathExists
   @PathIsDirectory
   private Path packageDirectory = null;
