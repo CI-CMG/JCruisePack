@@ -2,35 +2,49 @@ package edu.colorado.cires.cruisepack.app.service.metadata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.List;
 import java.util.Objects;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record Omics (@JsonProperty("NCBI_accession") String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment, OmicsPoc omicsPoc) {
+@JsonDeserialize(builder = Omics.Builder.class)
+public class Omics {
+  public static Builder builder() {
+    return new Builder();
+  }
+  
+  private final String ncbiAccession;
+  private final List<String> samplingTypes;
+  private final List<String> analysesTypes;
+  private final String omicsComment;
+  private final OmicsPoc omicsPoc;
 
-  @Override
-  public String ncbiAccession() {
+  private Omics(@JsonProperty("NBI_accession") String ncbiAccession, List<String> samplingTypes, List<String> analysesTypes, String omicsComment, OmicsPoc omicsPoc) {
+    this.ncbiAccession = ncbiAccession;
+    this.samplingTypes = samplingTypes;
+    this.analysesTypes = analysesTypes;
+    this.omicsComment = omicsComment;
+    this.omicsPoc = omicsPoc;
+  }
+
+  public String getNcbiAccession() {
     return ncbiAccession;
   }
 
-  @Override
-  public List<String> samplingTypes() {
+  public List<String> getSamplingTypes() {
     return samplingTypes;
   }
 
-  @Override
-  public List<String> analysesTypes() {
+  public List<String> getAnalysesTypes() {
     return analysesTypes;
   }
 
-  @Override
-  public String omicsComment() {
+  public String getOmicsComment() {
     return omicsComment;
   }
 
-  @Override
-  public OmicsPoc omicsPoc() {
+  public OmicsPoc getOmicsPoc() {
     return omicsPoc;
   }
 
@@ -39,10 +53,9 @@ public record Omics (@JsonProperty("NCBI_accession") String ncbiAccession, List<
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof Omics omics)) {
       return false;
     }
-    Omics omics = (Omics) o;
     return Objects.equals(ncbiAccession, omics.ncbiAccession) && Objects.equals(samplingTypes, omics.samplingTypes)
         && Objects.equals(analysesTypes, omics.analysesTypes) && Objects.equals(omicsComment, omics.omicsComment)
         && Objects.equals(omicsPoc, omics.omicsPoc);
@@ -60,7 +73,46 @@ public record Omics (@JsonProperty("NCBI_accession") String ncbiAccession, List<
         ", samplingTypes=" + samplingTypes +
         ", analysesTypes=" + analysesTypes +
         ", omicsComment='" + omicsComment + '\'' +
-        ", omicsPoc=" + omicsPoc +
+        ", omicsPoc='" + omicsPoc + '\'' +
         '}';
+  }
+  
+  public static class Builder {
+    private String ncbiAccession;
+    private List<String> samplingTypes;
+    private List<String> analysesTypes;
+    private String omicsComment;
+    private OmicsPoc omicsPoc;
+    
+    private Builder() {}
+    
+    public Builder withNCBIAccession(String ncbiAccession) {
+      this.ncbiAccession = ncbiAccession;
+      return this;
+    }
+    
+    public Builder withSamplingTypes(List<String> samplingTypes) {
+      this.samplingTypes = samplingTypes;
+      return this;
+    }
+    
+    public Builder withAnalysesTypes(List<String> analysesTypes) {
+      this.analysesTypes = analysesTypes;
+      return this;
+    }
+    
+    public Builder withOmicsComment(String omicsComment) {
+      this.omicsComment = omicsComment;
+      return this;
+    }
+    
+    public Builder withOmicsPoc(OmicsPoc omicsPoc) {
+      this.omicsPoc = omicsPoc;
+      return this;
+    }
+    
+    public Omics build() {
+      return new Omics(ncbiAccession, samplingTypes, analysesTypes, omicsComment, omicsPoc);
+    }
   }
 }

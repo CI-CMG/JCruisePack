@@ -87,19 +87,18 @@ public class MetadataService {
        .build())
        //        .withProjects()
        .withScientists(packJob.getScientists())
-        .withOmics(new Omics(
-            packJob.getOmicsBioProjectAccession(),
-            packJob.getOmicsSamplingTypes(),
-            packJob.getOmicsExpectedAnalyses(),
-            packJob.getOmicsAdditionalSamplingInformation(),
-            OmicsPoc.builder()
+        .withOmics(Omics.builder()
+            .withNCBIAccession(packJob.getOmicsBioProjectAccession())
+            .withSamplingTypes(packJob.getOmicsSamplingTypes())
+            .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
+            .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
+            .withOmicsPoc(OmicsPoc.builder()
                 .withUuid(packJob.getOmicsContactUuid())
                 .withName(packJob.getOmicsContactName())
                 .withEmail(packJob.getOmicsContactEmail())
                 .withPhone(packJob.getOmicsContactPhone())
-                .build()
-            
-        ))
+                .build())
+            .build())
         .withInstruments(getInstrumentsJson(packJob))
         .build();
   }
@@ -135,19 +134,18 @@ public class MetadataService {
             .build())
         //        .withProjects()
         .withScientists(packJob.getScientists())
-        .withOmics(new Omics(
-            packJob.getOmicsBioProjectAccession(),
-            packJob.getOmicsSamplingTypes(),
-            packJob.getOmicsExpectedAnalyses(),
-            packJob.getOmicsAdditionalSamplingInformation(),
-            OmicsPoc.builder()
+        .withOmics(Omics.builder()
+            .withNCBIAccession(packJob.getOmicsBioProjectAccession())
+            .withSamplingTypes(packJob.getOmicsSamplingTypes())
+            .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
+            .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
+            .withOmicsPoc(OmicsPoc.builder()
                 .withUuid(packJob.getOmicsContactUuid())
                 .withName(packJob.getOmicsContactName())
                 .withEmail(packJob.getOmicsContactEmail())
                 .withPhone(packJob.getOmicsContactPhone())
-                .build()
-
-        ))
+                .build())
+            .build())
         .withInstruments(getInstrumentDataJson(packJob))
         .build();
   }

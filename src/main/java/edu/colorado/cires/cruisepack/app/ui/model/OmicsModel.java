@@ -76,7 +76,7 @@ public class OmicsModel extends PropertyChangeModel {
     public void updateFormState(Cruise cruiseMetadata) {
         Omics omicsMetadata = cruiseMetadata.getOmics();
         if (omicsMetadata != null) {
-            for (String samplingType : omicsMetadata.samplingTypes()) {
+            for (String samplingType : omicsMetadata.getSamplingTypes()) {
                 if (samplingType.equals(SamplingTypes.WATER.getName())) {
                     setWaterSamplingType(true);
                 } else if (samplingType.equals(SamplingTypes.SOIL_SEDIMENT.getName())) {
@@ -86,7 +86,7 @@ public class OmicsModel extends PropertyChangeModel {
                 }
             }
 
-            for (String analysis : omicsMetadata.analysesTypes()) {
+            for (String analysis : omicsMetadata.getAnalysesTypes()) {
                 if (analysis.equals(ExpectedAnalyses.BARCODING.getName())) {
                     setBarcodingExpectedAnalysis(true);
                 } else if (analysis.equals(ExpectedAnalyses.GENOMICS.getName())) {
@@ -116,13 +116,13 @@ public class OmicsModel extends PropertyChangeModel {
                 }
             }
 
-            OmicsPoc poc = omicsMetadata.omicsPoc();
+            OmicsPoc poc = omicsMetadata.getOmicsPoc();
             if (poc != null) {
                 setContact(new DropDownItem(poc.getUuid(), poc.getName()));
             }
             // TODO: setSampleTrackingSheet
-            setBioProjectAccession(omicsMetadata.ncbiAccession());
-            setAdditionalSamplingInformation(omicsMetadata.omicsComment());
+            setBioProjectAccession(omicsMetadata.getNcbiAccession());
+            setAdditionalSamplingInformation(omicsMetadata.getOmicsComment());
             // TODO: setSamplingConducted
         }
     }
