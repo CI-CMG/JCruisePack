@@ -60,7 +60,7 @@ public class ImportService {
     }
   }
 
-  public boolean importCruises(ImportModel model) throws IOException {
+  public boolean importCruises(ImportModel model) throws Exception {
     Optional<ImportModel> validatedModel = validateModel(model);
     if (validatedModel.isPresent()) {
       importFile(validatedModel.get());
@@ -69,7 +69,7 @@ public class ImportService {
     return false;
   }
   
-  private void importFile(ImportModel model) throws IOException {
+  private void importFile(ImportModel model) throws Exception {
     try (InputStream inputStream = new FileInputStream(model.getImportPath().toFile()); ReadableWorkbook workbook = new ReadableWorkbook(inputStream)) {
       importSheet(workbook.getFirstSheet(), model);
     }
@@ -85,16 +85,17 @@ public class ImportService {
     return Optional.empty();
   }
   
-  private void importSheet(Sheet sheet, ImportModel model) throws IOException {
+  private void importSheet(Sheet sheet, ImportModel model) throws Exception {
     try (Stream<Row> stream = sheet.openStream()) {
-      stream.map(this::fromRow)
-          .peek(r -> {
-            if (StringUtils.isBlank(r.getCruiseID())) {
-              LOGGER.warn("Detected blank cruise ID. Import row will be skipped");
-            }
-          })
-          .filter(r -> !StringUtils.isBlank(r.getCruiseID()))
-          .forEach(r -> datastore.saveCruise(r, model.getDestinationPath(), model.getMetadataAuthor().getValue()));
+      List<Row> rows = stream.toList();
+      for (int i = 2; i < rows.size(); i++) { // skip template instructions and header
+        ImportRow importRow = fromRow(rows.get(i));
+        if (StringUtils.isBlank(importRow.getCruiseID())) {
+          LOGGER.warn("Detected blank cruise ID. Import row will be skipped");
+        } else {
+          datastore.saveCruise(importRow, model.getDestinationPath(), model.getMetadataAuthor().getValue());
+        }
+      }
     }
   }
   

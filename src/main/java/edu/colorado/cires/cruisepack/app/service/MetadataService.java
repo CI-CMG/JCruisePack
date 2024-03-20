@@ -18,7 +18,6 @@ import edu.colorado.cires.cruisepack.app.service.metadata.OmicsMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
-import edu.colorado.cires.cruisepack.app.ui.model.ImportModel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -170,6 +169,7 @@ public class MetadataService {
         .withShip(row.getShipName())
         .withCruiseId(row.getCruiseID())
         .withSegmentId(row.getLeg())
+        .withPackageId(PackJobUtils.resolvePackageId(row.getCruiseID(), row.getLeg()))
         .withScientists(
             personDatastore.findByName(row.getChiefScientist())
                 .map(p -> Collections.singletonList(

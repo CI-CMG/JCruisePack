@@ -45,14 +45,14 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     this.reactiveViewRegistry = reactiveViewRegistry;
   }
   
-  public void saveCruiseToPath(PackJob packJob, Path path) {
+  public void saveCruiseToPath(PackJob packJob, Path path) throws Exception {
     saveCruise(
         metadataService.createData(packJob),
         path
     );
   }
 
-  public void saveCruise(PackJob packJob) {
+  public void saveCruise(PackJob packJob) throws Exception {
     saveCruiseToPath(packJob, getMetadataPath(packJob.getPackageId()));
   }
   
@@ -60,7 +60,7 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     return getCruiseMetadataDir().resolve(packageId + ".json");
   }
   
-  public void delete(String packageId) {
+  public void delete(String packageId) throws Exception {
     saveCruises(
         cruises.stream()
             .filter(c -> c.getPackageId().equals(packageId))
@@ -68,36 +68,32 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
                 CruiseData.builder(c)
                     .withDelete(true)
                     .build()
-            )
+            ).toList()
     );
   }
   
-  public void saveCruises(Stream<CruiseData> cruiseDataStream) {
-    cruiseDataStream.forEach(this::saveCruise);
+  public void saveCruises(List<CruiseData> cruiseDataList) throws Exception {
+    for (CruiseData data : cruiseDataList) {
+      saveCruise(data);
+    }
     load();
   }
   
-  private void saveCruise(CruiseData cruiseData, Path path) {
+  private void saveCruise(CruiseData cruiseData, Path path) throws Exception {
     if (cruiseData.isDelete()) {
-      try {
-        Files.deleteIfExists(path);
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to delete cruise data: " + path, e);
-      }
+      Files.deleteIfExists(path);
     } else {
       try (OutputStream outputStream = new FileOutputStream(path.toFile())) {
         objectMapper.writeValue(outputStream, cruiseData);
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to write cruise data: " + path, e);
       }
     }
   }
   
-  public void saveCruise(CruiseData cruiseData) {
+  public void saveCruise(CruiseData cruiseData) throws Exception {
     saveCruise(cruiseData, getMetadataPath(cruiseData.getPackageId()));
   }
   
-  public void saveCruise(ImportRow importRow, Path packageDestinationPath, String metadataAuthorName) {
+  public void saveCruise(ImportRow importRow, Path packageDestinationPath, String metadataAuthorName) throws Exception {
     CruiseData cruiseData = metadataService.createData(importRow, packageDestinationPath, metadataAuthorName);
     saveCruise(
         cruiseData,

@@ -25,6 +25,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
 import edu.colorado.cires.cruisepack.xml.person.Person;
@@ -131,7 +132,8 @@ public class SqliteMigratorTest {
         personDatastore,
         projectDatastore,
         shipDatastore,
-        instrumentDatastore);
+        instrumentDatastore,
+        new ErrorModel());
     migrator.migrate(oldCp);
 
     List<String> expectedOrgs = readOrganizations(expected.resolve("organizations.xml")).getOrganizations().getOrganizations().stream().map(SqliteMigratorTest::toXml).toList();

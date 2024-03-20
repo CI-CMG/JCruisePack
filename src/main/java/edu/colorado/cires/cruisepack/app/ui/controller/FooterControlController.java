@@ -14,6 +14,7 @@ import edu.colorado.cires.cruisepack.app.service.PackerService;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
@@ -23,6 +24,8 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -31,6 +34,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FooterControlController implements PropertyChangeListener {
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(FooterControlController.class);
 
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final FooterControlModel footerControlModel;
@@ -50,6 +55,7 @@ public class FooterControlController implements PropertyChangeListener {
   private final PersonDatastore personDatastore;
   private final OrganizationDatastore organizationDatastore;
   private final PackStateModel packStateModel;
+  private final ErrorModel errorModel;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
@@ -57,7 +63,7 @@ public class FooterControlController implements PropertyChangeListener {
       CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, 
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
       PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
-      OrganizationDatastore organizationDatastore, PackStateModel packStateModel) {
+      OrganizationDatastore organizationDatastore, PackStateModel packStateModel, ErrorModel errorModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.beanFactory = beanFactory;
@@ -76,12 +82,14 @@ public class FooterControlController implements PropertyChangeListener {
     this.personDatastore = personDatastore;
     this.organizationDatastore = organizationDatastore;
     this.packStateModel = packStateModel;
+    this.errorModel = errorModel;
   }
 
   @PostConstruct
   public void init() {
     footerControlModel.addChangeListener(this);
     packStateModel.addChangeListener(this);
+    errorModel.addChangeListener(this);
   }
 
   public synchronized void setStopButtonEnabled(boolean stopButtonEnabled) {
@@ -191,12 +199,26 @@ public class FooterControlController implements PropertyChangeListener {
       setPackageIdCollisionDialogVisible(true);
       return false;
     }
-    cruiseDataDatastore.saveCruise(packJob);
+    try {
+      cruiseDataDatastore.saveCruise(packJob);
+    } catch (Exception e) {
+      LOGGER.error("Failed to save cruise: {}", packageId, e);
+      errorModel.emitErrorMessage(String.format(
+          "Failed to save %s: %s", packageId, e.getMessage()
+      ));
+    }
     return true;
   }
   
   private void delete(String packageId) {
-    cruiseDataDatastore.delete(packageId);
+    try {
+      cruiseDataDatastore.delete(packageId);
+    } catch (Exception e) {
+      LOGGER.error("Failed to delete cruise: {}", packageId);
+      errorModel.emitErrorMessage(String.format(
+          "Failed to delete %s: %s", packageId, e.getMessage()
+      ));
+    }
   }
 
   private void emitPackageId(String packageId) {

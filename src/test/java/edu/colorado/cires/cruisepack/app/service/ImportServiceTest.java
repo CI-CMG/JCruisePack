@@ -2,7 +2,6 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -47,9 +46,6 @@ class ImportServiceTest {
   }
   
   private static final CruiseDataDatastore datastore = mock(CruiseDataDatastore.class);
-  static {
-    doNothing().when(datastore).saveCruise(any(ImportRow.class), any(Path.class), any(String.class));
-  }
   
   private final Validator validator = mock(Validator.class);
   
@@ -89,7 +85,7 @@ class ImportServiceTest {
   }
 
   @Test
-  void importCruises() throws IOException {
+  void importCruises() throws Exception {
     Path spreadsheetPath = TEST_DIR.resolve("to_import.xlsx");
     
     List<ImportRow> importRows = IntStream.range(0, 10).boxed()
@@ -133,7 +129,7 @@ class ImportServiceTest {
   }
 
   @Test
-  public void testImportEmptyModel() throws IOException {
+  public void testImportEmptyModel() throws Exception {
     ImportModel importModel = new ImportModel();
     when(validator.validate(importModel)).thenReturn(Set.of(
         new CustomConstrainViolation("invalid author", "metadataAuthor"),

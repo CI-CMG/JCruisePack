@@ -20,6 +20,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
@@ -32,11 +33,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SqliteMigrator {
+  
+  private static final Logger LOGGER = LoggerFactory.getLogger(SqliteMigrator.class);
 
   private final Supplier<String> uuidGenerator;
   private final ObjectMapper objectMapper;
@@ -46,6 +51,7 @@ public class SqliteMigrator {
   private final ProjectDatastore projectDatastore;
   private final ShipDatastore shipDatastore;
   private final InstrumentDatastore instrumentDatastore;
+  private final ErrorModel errorModel;
 
   @Autowired
   public SqliteMigrator(
@@ -56,7 +62,7 @@ public class SqliteMigrator {
       PersonDatastore personDatastore,
       ProjectDatastore projectDatastore,
       ShipDatastore shipDatastore,
-      InstrumentDatastore instrumentDatastore) {
+      InstrumentDatastore instrumentDatastore, ErrorModel errorModel) {
     this.uuidGenerator = uuidGenerator;
     this.objectMapper = objectMapper;
     this.cruiseDataDatastore = cruiseDataDatastore;
@@ -65,6 +71,7 @@ public class SqliteMigrator {
     this.projectDatastore = projectDatastore;
     this.shipDatastore = shipDatastore;
     this.instrumentDatastore = instrumentDatastore;
+    this.errorModel = errorModel;
   }
 
   private static SessionFactory createSessionFactory(Path file, Class<?>... classes) {
@@ -346,11 +353,22 @@ public class SqliteMigrator {
     }
 
     try (SessionFactory sessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
-      sessionFactory.inTransaction(session -> session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
-          .getResultList().stream()
-          .map(this::toCruiseMetadata)
-          .filter(cruise -> cruise.getPackageId() != null)
-          .forEach(cruiseDataDatastore::saveCruise));
+      sessionFactory.inTransaction(session -> {
+        session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
+            .getResultList().stream()
+            .map(this::toCruiseMetadata)
+            .filter(cruise -> cruise.getPackageId() != null)
+            .forEach(d -> {
+              try {
+                cruiseDataDatastore.saveCruise(d);
+              } catch (Exception e) {
+                LOGGER.error("Failed to migrate cruise: {}", d.getPackageId());
+                errorModel.emitErrorMessage(String.format(
+                    "Failed to migrate %s: %s", d.getPackageId(), e.getMessage()
+                ));
+              }
+            });
+      });
     }
 
   }

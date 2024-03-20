@@ -36,12 +36,19 @@ public final class PackJobUtils {
     return ddi.getId();
   }
 
-  private static String resolvePackageId(PackageModel packageModel) {
-    String packageId = packageModel.getCruiseId();
-    if (packageModel.getSegment() != null) {
-      packageId = packageId + "_" + packageModel.getSegment();
+  public static String resolvePackageId(PackageModel packageModel) {
+    return resolvePackageId(packageModel.getCruiseId(), packageModel.getSegment());
+  }
+  
+  public static String resolvePackageId(String cruiseId, String segment) {
+    if (cruiseId != null) {
+      String packageId = cruiseId;
+      if (segment != null) {
+        packageId = packageId + "_" + segment;
+      }
+      return packageId;
     }
-    return packageId;
+    return null;
   }
 
   private static Map<InstrumentDetailPackageKey, List<InstrumentNameHolder>> getDirNames(DatasetsModel datasetsModel, String packageId, InstrumentDatastore instrumentDatastore) {

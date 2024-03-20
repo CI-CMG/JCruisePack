@@ -172,6 +172,9 @@ public final class Events {
   
   // Progress bar
   public static final String UPDATE_PROGRESS = "UPDATE_PROGRESS";
+  
+  // Global Error message
+  public static final String EMIT_ERROR_MESSAGE = "EMIT_ERROR_MESSAGE";
 
   private Events() {
 
