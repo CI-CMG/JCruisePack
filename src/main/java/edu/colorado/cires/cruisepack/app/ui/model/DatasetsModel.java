@@ -1,13 +1,18 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
+import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactoryResolver;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,12 @@ public class DatasetsModel extends PropertyChangeModel {
   private List<@Valid ? extends BaseDatasetInstrumentModel<@Valid ? extends AdditionalFieldsModel>> datasets = new ArrayList<>();
   private String datasetsError = null;
 
+  @PathExists
+  @PathIsDirectory
+  @DocumentsUnderMaxAllowed
+  private Path documentsPath;
+  private String documentsPathError;
+
   @Autowired
   public DatasetsModel(DatasetPanelFactoryResolver factoryResolver) {
     this.factoryResolver = factoryResolver;
@@ -30,6 +41,8 @@ public class DatasetsModel extends PropertyChangeModel {
   public void restoreDefaults() {
     setDatasetsError(null);
     clearDatasets();
+    setDocumentsPath(null);
+    setDocumentsPathError(null);
   }
   
   public void updateFormState(Cruise metadata) {
@@ -39,6 +52,12 @@ public class DatasetsModel extends PropertyChangeModel {
       DatasetPanel<? extends AdditionalFieldsModel, ?> panel = factoryResolver.createDatasetPanel(instrument);
       addDataset(panel);
     }
+
+    if (metadata instanceof CruiseData) {
+      String docPath = ((CruiseData) metadata).getDocumentsPath();
+      setDocumentsPath(docPath == null ? null : Paths.get(docPath));
+    }
+    setDocumentsPathError(null);
   }
 
   public List<? extends BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> getDatasets() {
@@ -75,6 +94,22 @@ public class DatasetsModel extends PropertyChangeModel {
 
   public void setDatasetsError(String datasetsError) {
       setIfChanged(Events.UPDATE_DATASETS_ERROR, datasetsError, () -> this.datasetsError, (e) -> this.datasetsError = e);
+  }
+
+  public Path getDocumentsPath() {
+    return documentsPath;
+  }
+
+  public void setDocumentsPath(Path documentsPath) {
+    setIfChanged(Events.UPDATE_DOCS_DIRECTORY, documentsPath, () -> this.documentsPath, (nv) -> this.documentsPath = nv);
+  }
+
+  public String getDocumentsPathError() {
+    return documentsPathError;
+  }
+
+  public void setDocumentsPathError(String documentsPathError) {
+    setIfChanged(Events.UPDATE_DOCS_DIRECTORY_ERROR, documentsPathError, () -> this.documentsPathError, (nv) -> this.documentsPathError = nv);
   }
 
   

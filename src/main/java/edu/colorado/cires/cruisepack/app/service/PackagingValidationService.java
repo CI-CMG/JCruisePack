@@ -242,7 +242,6 @@ public class PackagingValidationService {
     String cruiseTitleError = null;
     String cruisePurposeError = null;
     String cruiseDescriptionError = null;
-    String documentsPathError = null;
 
     for (ConstraintViolation<CruiseInformationModel> violation : cruiseInformationViolations) {
       String propertyPath = violation.getPropertyPath().toString();
@@ -253,15 +252,12 @@ public class PackagingValidationService {
         cruisePurposeError = message;
       } else if (propertyPath.startsWith("cruiseDescription")) {
         cruiseDescriptionError = message;
-      } else if (propertyPath.startsWith("documentsPath")) {
-        documentsPathError = message;
       }
     }
 
     cruiseInformationModel.setCruiseTitleError(cruiseTitleError);
     cruiseInformationModel.setCruisePurposeError(cruisePurposeError);
     cruiseInformationModel.setCruiseDescriptionError(cruiseDescriptionError);
-    cruiseInformationModel.setDocumentsPathError(documentsPathError);
   }
 
   private void updatePackageErrors(Set<ConstraintViolation<PackageModel>> packageViolations) {
@@ -336,8 +332,8 @@ public class PackagingValidationService {
   private void updateDatasetsErrors(Set<ConstraintViolation<DatasetsModel>> datasetsViolations) {
     LOGGER.warn("datasets {}", datasetsViolations);
     String datasetsError = null;
-    
-    datasetsModel.setDatasetsError(null);
+    String documentsPathError = null;
+
     datasetsModel.getDatasets().forEach(BaseDatasetInstrumentModel::clearErrors);
 
     for (ConstraintViolation<DatasetsModel> violation : datasetsViolations) {
@@ -346,6 +342,8 @@ public class PackagingValidationService {
 
       if (propertyPath.equals("datasets")) {
         datasetsError = message;
+      } else if (propertyPath.equals("documentsPath")) {
+        documentsPathError = message;
       } else {
         for (Node node : violation.getPropertyPath()) {
           Integer index = node.getIndex();
@@ -357,5 +355,6 @@ public class PackagingValidationService {
     }
     
     datasetsModel.setDatasetsError(datasetsError);
+    datasetsModel.setDocumentsPathError(documentsPathError);
   }
 }

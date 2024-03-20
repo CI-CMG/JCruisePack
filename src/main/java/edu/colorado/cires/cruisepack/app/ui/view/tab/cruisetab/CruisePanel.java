@@ -40,15 +40,13 @@ public class CruisePanel extends JPanel implements ReactiveView {
   private final JLabel cruisePurposeErrorLabel = createErrorLabel();
   private final JLabel cruiseDescriptionErrorLabel = createErrorLabel();
   
-  private final CruiseDocumentsPanel cruiseDocumentsPanel;
   private final CruiseInformationModel cruiseInformationModel;
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final CruiseInformationController cruiseInformationController;
 
   @Autowired
-  public CruisePanel(CruiseDocumentsPanel cruiseDocumentsPanel, CruiseInformationModel cruiseInformationModel,
+  public CruisePanel(CruiseInformationModel cruiseInformationModel,
       ReactiveViewRegistry reactiveViewRegistry, CruiseInformationController cruiseInformationController) {
-    this.cruiseDocumentsPanel = cruiseDocumentsPanel;
     this.cruiseInformationModel = cruiseInformationModel;
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.cruiseInformationController = cruiseInformationController;
@@ -63,7 +61,6 @@ public class CruisePanel extends JPanel implements ReactiveView {
     add(cruisePurposeField, configureLayout(0, 3, c -> { c.insets = new Insets(4, 3, 4, 3); c.weighty = 100; }));
     add(createLabelWithErrorPanel(CRUISE_DESCRIPTION_LABEL, cruiseDescriptionErrorLabel), configureLayout(0, 4, c -> c.weighty = 0));
     add(cruiseDescriptionField, configureLayout(0, 5, c -> { c.insets = new Insets(4, 3, 4, 3); c.weighty = 100; }));
-    add(cruiseDocumentsPanel, configureLayout(0, 6, c -> c.weighty = 0));
 
     cruiseTitleField.setText(cruiseInformationModel.getCruiseTitle());
     cruisePurposeField.setText(cruiseInformationModel.getCruisePurpose());

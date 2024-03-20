@@ -5,7 +5,6 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +23,6 @@ public class CruiseInformationController implements PropertyChangeListener {
   @PostConstruct
   public void init() {
     cruiseInformationModel.addChangeListener(this);
-  }
-
-  public void setDocumentsPath(Path documentsPath) {
-    cruiseInformationModel.setDocumentsPath(documentsPath);
-  }
-
-  public void setDocumentsPathError(String documentsPathError) {
-    cruiseInformationModel.setDocumentsPathError(documentsPathError);
   }
 
   public void setCruiseTitle(String cruiseTitle) {

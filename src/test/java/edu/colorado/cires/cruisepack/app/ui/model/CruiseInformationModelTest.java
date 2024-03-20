@@ -13,7 +13,6 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed.DocumentsUnderMaxAllowedValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,20 +38,12 @@ public class CruiseInformationModelTest {
     private static final String CRUISE_DESCRIPTION = "test-cruise-description";
     private static final String CRUISE_DESCRIPTION_ERROR = "test-cruise-description-error";
     private static final Path DOCUMENTS_PATH = Paths.get("target").resolve("test-documents-path");
-    private static final String DOCUMENTS_PATH_ERROR = "test-documents-path-error";
 
-    @BeforeEach
+  @BeforeEach
     public void beforeEach() {
         propertyChangeEvents = new ArrayList<>(0);
         initializeModel();
-        cruiseInformationModel.addChangeListener(new PropertyChangeListener() {
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                propertyChangeEvents.add(evt);
-            }
-            
-        });
+        cruiseInformationModel.addChangeListener(evt -> propertyChangeEvents.add(evt));
 
         FileUtils.deleteQuietly(DOCUMENTS_PATH.toFile());
     }
@@ -70,8 +61,6 @@ public class CruiseInformationModelTest {
         cruiseInformationModel.setCruisePurposeError(CRUISE_PURPOSE_ERROR);
         cruiseInformationModel.setCruiseDescription(CRUISE_DESCRIPTION);
         cruiseInformationModel.setCruiseDescriptionError(CRUISE_DESCRIPTION_ERROR);
-        cruiseInformationModel.setDocumentsPath(DOCUMENTS_PATH);
-        cruiseInformationModel.setDocumentsPathError(DOCUMENTS_PATH_ERROR);
 
         propertyChangeEvents.clear();
     }
@@ -99,8 +88,6 @@ public class CruiseInformationModelTest {
         assertPropertChangeEvent(Events.UPDATE_CRUISE_PURPOSE_ERROR, CRUISE_PURPOSE_ERROR, null, cruiseInformationModel::getCruisePurposeError);
         assertPropertChangeEvent(Events.UPDATE_CRUISE_DESCRIPTION, CRUISE_DESCRIPTION, null, cruiseInformationModel::getCruiseDescription);
         assertPropertChangeEvent(Events.UPDATE_CRUISE_DESCRIPTION_ERROR, CRUISE_DESCRIPTION_ERROR, null, cruiseInformationModel::getCruiseDescriptionError);
-        assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY, DOCUMENTS_PATH, null, cruiseInformationModel::getDocumentsPath);
-        assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY_ERROR, DOCUMENTS_PATH_ERROR, null, cruiseInformationModel::getDocumentsPathError);
     }
 
     @Test
@@ -123,8 +110,6 @@ public class CruiseInformationModelTest {
         assertPropertChangeEvent(Events.UPDATE_CRUISE_PURPOSE_ERROR, CRUISE_PURPOSE_ERROR, null, cruiseInformationModel::getCruisePurposeError);
         assertPropertChangeEvent(Events.UPDATE_CRUISE_DESCRIPTION, CRUISE_DESCRIPTION, newCruiseDescription, cruiseInformationModel::getCruiseDescription);
         assertPropertChangeEvent(Events.UPDATE_CRUISE_DESCRIPTION_ERROR, CRUISE_DESCRIPTION_ERROR, null, cruiseInformationModel::getCruiseDescriptionError);
-        assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY, DOCUMENTS_PATH, newDocumentsPath, cruiseInformationModel::getDocumentsPath);
-        assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY_ERROR, DOCUMENTS_PATH_ERROR, null, cruiseInformationModel::getDocumentsPathError);
     }
 
     @Test
@@ -201,32 +186,6 @@ public class CruiseInformationModelTest {
         
         cruiseInformationModel.setCruiseDescriptionError(newCruiseDescriptionError);
         assertThrows(IllegalStateException.class, () -> assertPropertChangeEvent(Events.UPDATE_CRUISE_DESCRIPTION_ERROR, CRUISE_DESCRIPTION_ERROR, newCruiseDescriptionError, cruiseInformationModel::getCruiseDescriptionError));
-    }
-    
-    @Test
-    public void testSetDocumentsPath() {
-        Path newDocumentsPath = Paths.get("new-documents-path");
-        cruiseInformationModel.setDocumentsPath(newDocumentsPath);
-        
-        assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY, DOCUMENTS_PATH, newDocumentsPath, cruiseInformationModel::getDocumentsPath);
-        
-        propertyChangeEvents.clear();
-        
-        cruiseInformationModel.setDocumentsPath(newDocumentsPath);
-        assertThrows(IllegalStateException.class, () -> assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY, DOCUMENTS_PATH, newDocumentsPath, cruiseInformationModel::getDocumentsPath));
-    }
-    
-    @Test
-    public void testSetDocumentsPathError() {
-        String newDocumentsPathError = "new-documents-path-error";
-        cruiseInformationModel.setDocumentsPathError(newDocumentsPathError);
-        
-        assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY_ERROR, DOCUMENTS_PATH_ERROR, newDocumentsPathError, cruiseInformationModel::getDocumentsPathError);
-        
-        propertyChangeEvents.clear();
-        
-        cruiseInformationModel.setDocumentsPathError(newDocumentsPathError);
-        assertThrows(IllegalStateException.class, () -> assertPropertChangeEvent(Events.UPDATE_DOCS_DIRECTORY_ERROR, DOCUMENTS_PATH_ERROR, newDocumentsPathError, cruiseInformationModel::getDocumentsPathError));
     }
     
     @Test

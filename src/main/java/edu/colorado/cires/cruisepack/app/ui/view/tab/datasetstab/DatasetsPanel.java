@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.cruisetab.CruiseDocumentsPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,16 +30,18 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final DatasetConfigurationPanel datasetConfigurationPanel;
   private final DatasetsController datasetsController;
+  private final CruiseDocumentsPanel cruiseDocumentsPanel;
 
   @Autowired
   public DatasetsPanel(
       ReactiveViewRegistry reactiveViewRegistry,
       DatasetConfigurationPanel datasetConfigurationPanel,
-      DatasetsController datasetsController
+      DatasetsController datasetsController, CruiseDocumentsPanel cruiseDocumentsPanel
   ) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.datasetConfigurationPanel = datasetConfigurationPanel;
     this.datasetsController = datasetsController;
+    this.cruiseDocumentsPanel = cruiseDocumentsPanel;
   }
 
   @PostConstruct
@@ -59,6 +62,7 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
       c.fill = GridBagConstraints.BOTH;
       c.weighty = 1;
     }));
+    add(cruiseDocumentsPanel, configureLayout(0, 2, c -> c.weighty = 0));
   }
 
   private void setupMvc() {

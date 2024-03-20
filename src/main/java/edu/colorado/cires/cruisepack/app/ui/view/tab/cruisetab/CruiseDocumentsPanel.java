@@ -6,12 +6,11 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelTe
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updatePathField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
-import edu.colorado.cires.cruisepack.app.ui.controller.CruiseInformationController;
+import edu.colorado.cires.cruisepack.app.ui.controller.DatasetsController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
-import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
+import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
@@ -40,15 +39,15 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
   private final JButton selectDirectoryButton = new JButton(DIRECTORY_LABEL);
 
   private final ReactiveViewRegistry reactiveViewRegistry;
-  private final CruiseInformationController cruiseInformationController;
-  private final CruiseInformationModel cruiseInformationModel;
+  private final DatasetsController datasetsController;
+  private final DatasetsModel datasetsModel;
 
   @Autowired
-  public CruiseDocumentsPanel(ReactiveViewRegistry reactiveViewRegistry, CruiseInformationController cruiseInformationController,
-      CruiseInformationModel cruiseInformationModel) {
+  public CruiseDocumentsPanel(ReactiveViewRegistry reactiveViewRegistry, DatasetsController datasetsController,
+      DatasetsModel datasetsModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
-    this.cruiseInformationController = cruiseInformationController;
-    this.cruiseInformationModel = cruiseInformationModel;
+    this.datasetsController = datasetsController;
+    this.datasetsModel = datasetsModel;
   }
 
   @PostConstruct
@@ -58,7 +57,7 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
     add(pathTextField, configureLayout(1, 0, c -> { c.weightx = 100; c.weighty = 0; }));
     add(selectDirectoryButton, configureLayout(2, 0, c -> { c.weightx = 0; c.weighty = 0; }));
 
-    pathTextField.setText(cruiseInformationModel.getDocumentsPath() == null ? null : cruiseInformationModel.getDocumentsPath().toString());
+    pathTextField.setText(datasetsModel.getDocumentsPath() == null ? null : datasetsModel.getDocumentsPath().toString());
 
     reactiveViewRegistry.register(this);
 
@@ -77,7 +76,7 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-      cruiseInformationController.setDocumentsPath(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+      datasetsController.setDocumentsPath(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
     }
   }
 
@@ -96,6 +95,6 @@ public class CruiseDocumentsPanel extends JPanel implements ReactiveView {
 
   private void handleDirValue(String value) {
     Path path = Paths.get(value);
-    cruiseInformationController.setDocumentsPath(path.toAbsolutePath().normalize());
+    datasetsController.setDocumentsPath(path.toAbsolutePath().normalize());
   }
 }

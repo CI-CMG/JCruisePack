@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,14 @@ public class DatasetsController implements PropertyChangeListener {
 
   public void removeDataset(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
     datasetsModel.removeDataset(row);
+  }
+
+  public void setDocumentsPath(Path documentsPath) {
+    datasetsModel.setDocumentsPath(documentsPath);
+  }
+
+  public void setDocumentsPathError(String documentsPathError) {
+    datasetsModel.setDocumentsPathError(documentsPathError);
   }
 
   @Override

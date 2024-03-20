@@ -1,14 +1,8 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsDirectory;
 import jakarta.validation.constraints.NotBlank;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,12 +16,6 @@ public class CruiseInformationModel extends PropertyChangeModel {
   private String cruiseDescription;
   private String cruiseDescriptionError = null;
 
-  @PathExists
-  @PathIsDirectory
-  @DocumentsUnderMaxAllowed
-  private Path documentsPath;
-  private String documentsPathError;
-
   public void restoreDefaults() {
     setCruiseTitle(null);
     setCruiseTitleError(null);
@@ -37,9 +25,6 @@ public class CruiseInformationModel extends PropertyChangeModel {
 
     setCruiseDescription(null);
     setCruiseDescriptionError(null);
-
-    setDocumentsPath(null);
-    setDocumentsPathError(null);
   }
 
   public void updateFormState(Cruise cruiseMetadata) {
@@ -49,28 +34,6 @@ public class CruiseInformationModel extends PropertyChangeModel {
     setCruisePurposeError(null);
     setCruiseDescription(cruiseMetadata.getCruiseDescription());
     setCruiseDescriptionError(null);
-    
-    if (cruiseMetadata instanceof CruiseData) {
-      String docPath = ((CruiseData) cruiseMetadata).getDocumentsPath();
-      setDocumentsPath(docPath == null ? null : Paths.get(docPath));
-    }
-    setDocumentsPathError(null);
-  }
-
-  public Path getDocumentsPath() {
-    return documentsPath;
-  }
-
-  public void setDocumentsPath(Path documentsPath) {
-    setIfChanged(Events.UPDATE_DOCS_DIRECTORY, documentsPath, () -> this.documentsPath, (nv) -> this.documentsPath = nv);
-  }
-
-  public String getDocumentsPathError() {
-    return documentsPathError;
-  }
-
-  public void setDocumentsPathError(String documentsPathError) {
-    setIfChanged(Events.UPDATE_DOCS_DIRECTORY_ERROR, documentsPathError, () -> this.documentsPathError, (nv) -> this.documentsPathError = nv);
   }
 
   public String getCruiseTitle() {

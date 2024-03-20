@@ -206,7 +206,7 @@ public final class PackJobUtils {
         .setCruiseTitle(cruiseInformationModel.getCruiseTitle())
         .setCruisePurpose(cruiseInformationModel.getCruisePurpose())
         .setCruiseDescription(cruiseInformationModel.getCruiseDescription())
-        .setDocumentsPath(cruiseInformationModel.getDocumentsPath())
+        .setDocumentsPath(datasetsModel.getDocumentsPath())
         .setOmicsSamplingConducted(omicsModel.isSamplingConducted())
         .setOmicsContactUuid(omicsContact != null ? omicsContact.getUuid() : null)
         .setOmicsContactName(omicsContact != null ? omicsContact.getName() : null)
