@@ -54,17 +54,29 @@ public class PersonModel extends PropertyChangeModel {
 
     public void restoreDefaults() {
         setName(null);
+        setNameError(null);
         setPosition(null);
+        setPositionError(null);
         setOrganization(null);
+        setOrganizationError(null);
         setStreet(null);
+        setStreetError(null);
         setCity(null);
+        setCityError(null);
         setState(null);
+        setStateError(null);
         setZip(null);
+        setZipError(null);
         setCountry("USA");
+        setCountryError(null);
         setPhone(null);
+        setPhoneError(null);
         setEmail(null);
+        setEmailError(null);
         setOrcidID(null);
+        setOrcidIDError(null);
         setUuid(null);
+        setUuidError(null);
         setUse(false);
     }
 
