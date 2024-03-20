@@ -12,7 +12,8 @@ public enum InstrumentGroupName {
   MAGNETICS("MAG", "Magnetics"),
   GRAVITY("GRAV", "Gravity"),
   CTD("CTD", "CTD"),
-  ADCP("ADCP", "ADCP");
+  ADCP("ADCP", "ADCP"),
+  DOCUMENTS("DOCUMENTS", "Documents Data");
 
   private final String shortName;
   private final String longName;
@@ -47,6 +48,8 @@ public enum InstrumentGroupName {
       return CTD;
     } else if (shortName.equals(ADCP.shortName)) {
       return ADCP;
+    } else if (shortName.equals(DOCUMENTS.shortName)) {
+      return DOCUMENTS;
     } else {
       throw new IllegalArgumentException("Instrument group not found for short name: " + shortName);
     }
@@ -77,6 +80,8 @@ public enum InstrumentGroupName {
       return CTD;
     } else if (longName.equals(ADCP.longName)) {
       return ADCP;
+    } else if (longName.equals(DOCUMENTS.longName)) {
+      return DOCUMENTS;
     } else {
       throw new IllegalArgumentException(
           String.format(

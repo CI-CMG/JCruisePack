@@ -11,6 +11,8 @@ import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.cruisetab.CruiseDocumentsPanel;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.documents.DocumentsPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -40,8 +42,9 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final List<DatasetListener> datasetCreatedListeners = new ArrayList<>(0);
   private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
+  private final CruiseDocumentsPanel cruiseDocumentsPanel;
 
-  private List<DatasetPanel<? extends AdditionalFieldsModel, ?>> rows = new ArrayList<>();
+  private List<JPanel> rows = new ArrayList<>();
   private JLabel datasetsErrorLabel = createErrorLabel();
   private JPanel fluff = new JPanel();
   private DropDownItem[] dataTypes;
@@ -49,11 +52,13 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   @Autowired
   public DatasetConfigurationPanel(
       UiRefresher uiRefresher,
-      InstrumentDatastore instrumentDatastore, DatasetPanelFactoryResolver datasetPanelFactoryResolver, ReactiveViewRegistry reactiveViewRegistry) {
+      InstrumentDatastore instrumentDatastore, DatasetPanelFactoryResolver datasetPanelFactoryResolver, ReactiveViewRegistry reactiveViewRegistry,
+      CruiseDocumentsPanel cruiseDocumentsPanel) {
     this.uiRefresher = uiRefresher;
     this.instrumentDatastore = instrumentDatastore;
     this.datasetPanelFactoryResolver = datasetPanelFactoryResolver;
     this.reactiveViewRegistry = reactiveViewRegistry;
+    this.cruiseDocumentsPanel = cruiseDocumentsPanel;
   }
 
   public void addDatasetCreatedListener(DatasetListener listener) {
@@ -61,7 +66,7 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   }
 
   public void removeDatasetCreatedListener(DatasetListener listener) {
-    datasetCreatedListeners.add(listener);
+    datasetCreatedListeners.remove(listener);
   }
 
   public void addDatasetRemovedListener(DatasetListener listener) {
@@ -133,11 +138,35 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
         InstrumentDatastore.UNSELECTED_DATASET_TYPE);
 
     if (dataType != null && !dataType.equals(InstrumentDatastore.UNSELECTED_DATASET_TYPE)) {
-      DatasetPanel<? extends AdditionalFieldsModel, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
-      for (DatasetListener listener : datasetCreatedListeners) {
-        listener.handle(row);
+      if (dataType.getId().equals(InstrumentGroupName.DOCUMENTS.getShortName())) {
+        if (rows.stream().noneMatch(p -> p instanceof DocumentsPanel)) {
+          createDocumentsPanel();
+        }
+      } else {
+        DatasetPanel<? extends AdditionalFieldsModel, ?> row = datasetPanelFactoryResolver.createDatasetPanel(dataType);
+        for (DatasetListener listener : datasetCreatedListeners) {
+          listener.handle(row);
+        }
       }
     }
+  }
+  
+  private void createDocumentsPanel() {
+    DocumentsPanel documentsPanel = new DocumentsPanel(cruiseDocumentsPanel);
+    documentsPanel.addRemovedListener((p) -> {
+      removeRow(p);
+      p.restoreDefaultState();
+      
+    });
+    remove(fluff);
+    add(documentsPanel, configureLayout(0, rows.size(), c -> {
+      c.fill = GridBagConstraints.HORIZONTAL;
+      c.weighty = 0;
+      c.gridwidth = GridBagConstraints.REMAINDER;
+    }));
+    rows.add(documentsPanel);
+    addFluff();
+    uiRefresher.refresh();
   }
   
   public void createRow(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
@@ -153,15 +182,15 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
     uiRefresher.refresh();
   }
 
-  public void removeRow(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
+  public void removeRow(JPanel row) {
     remove(row);
     rows.remove(row);
     uiRefresher.refresh();
   }
   
   public void removeAllRows() {
-    List<DatasetPanel<? extends AdditionalFieldsModel, ?>> panels = new ArrayList<>(rows);
-    for (DatasetPanel<? extends AdditionalFieldsModel, ?> panel : panels) {
+    List<JPanel> panels = new ArrayList<>(rows);
+    for (JPanel panel : panels) {
       removeRow(panel);
     }
   }
