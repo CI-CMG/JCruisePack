@@ -194,14 +194,23 @@ public class OrganizationModel extends PropertyChangeModel {
 
     public void restoreDefaults() {
         setName(null);
+        setNameError(null);
         setStreet(null);
+        setStreetError(null);
         setCity(null);
+        setCityError(null);
         setState(null);
+        setStateError(null);
         setZip(null);
+        setZipError(null);
         setCountry("USA");
+        setCountryError(null);
         setPhone(null);
+        setPhoneError(null);
         setEmail(null);
+        setEmailError(null);
         setUuid(null);
+        setUuidError(null);
         setUse(false);
     }
     
