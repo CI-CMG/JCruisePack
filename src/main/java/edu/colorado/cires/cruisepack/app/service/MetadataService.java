@@ -153,13 +153,13 @@ public class MetadataService {
         .build();
   }
   
-  public CruiseData createData(ImportRow row, ImportModel importModel) {
-    Path destPath = importModel.getDestinationPath();
+  public CruiseData createData(ImportRow row, Path packageDestinationPath, String metadataAuthorName) {
+    Path destPath = packageDestinationPath;
     return CruiseData.builder()
         .withUse(true)
         .withDelete(false)
         .withPackageDirectory(destPath == null ? null : destPath.toString())
-        .withMetadataAuthor(personDatastore.findByName(importModel.getMetadataAuthor().getValue()).map(
+        .withMetadataAuthor(personDatastore.findByName(metadataAuthorName).map(
             person -> MetadataAuthor.builder()
                 .withUuid(person.getUuid())
                 .withName(person.getName())

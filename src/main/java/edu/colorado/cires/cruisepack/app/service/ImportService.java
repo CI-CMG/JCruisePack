@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -36,14 +35,12 @@ public class ImportService {
   
   private final Validator validator;
   private final CruiseDataDatastore datastore;
-  private final MetadataService metadataService;
   private final Path templatePath;
 
   @Autowired
-  public ImportService(Validator validator, CruiseDataDatastore datastore, MetadataService metadataService, ServiceProperties serviceProperties) {
+  public ImportService(Validator validator, CruiseDataDatastore datastore, ServiceProperties serviceProperties) {
     this.validator = validator;
     this.datastore = datastore;
-    this.metadataService = metadataService;
     this.templatePath = getTemplatePath(serviceProperties);
   }
   
@@ -53,40 +50,28 @@ public class ImportService {
     return configDir.resolve(TEMPLATE_FILE_NAME);
   }
   
-  public void saveTemplate(Path path) {
-    if (!Objects.requireNonNull(path, "path must not be null").toFile().isDirectory()) {
-      throw new IllegalArgumentException("Path must be directory: " + path);
-    }
-    try (
-        InputStream inputStream = new FileInputStream(templatePath.toFile());
-        OutputStream outputStream = new FileOutputStream(path.resolve(TEMPLATE_FILE_NAME).toFile())
+  public void saveTemplate(Path path) throws IOException {
+    try (InputStream inputStream = new FileInputStream(templatePath.toFile()); OutputStream outputStream = new FileOutputStream(path.resolve(TEMPLATE_FILE_NAME).toFile())
     ) {
       IOUtils.copy(
-          Objects.requireNonNull(inputStream, "Failed to open template: " + TEMPLATE_FILE_NAME),
+          inputStream,
           outputStream
       );
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not read import template", e);
     }
   }
 
-  public boolean importCruises(ImportModel model) {
-    return validateModel(model)
-        .map(m -> {
-          importFile(m);
-          return true;
-        })
-        .orElse(false);
+  public boolean importCruises(ImportModel model) throws IOException {
+    Optional<ImportModel> validatedModel = validateModel(model);
+    if (validatedModel.isPresent()) {
+      importFile(validatedModel.get());
+      return true;
+    }
+    return false;
   }
   
-  private void importFile(ImportModel model) {
-    try (
-        InputStream inputStream = new FileInputStream(model.getImportPath().toFile());
-        ReadableWorkbook workbook = new ReadableWorkbook(inputStream)
-    ) {
+  private void importFile(ImportModel model) throws IOException {
+    try (InputStream inputStream = new FileInputStream(model.getImportPath().toFile()); ReadableWorkbook workbook = new ReadableWorkbook(inputStream)) {
       importSheet(workbook.getFirstSheet(), model);
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not read spreadsheet", e);
     }
   }
   
@@ -100,7 +85,7 @@ public class ImportService {
     return Optional.empty();
   }
   
-  private void importSheet(Sheet sheet, ImportModel model) {
+  private void importSheet(Sheet sheet, ImportModel model) throws IOException {
     try (Stream<Row> stream = sheet.openStream()) {
       stream.map(this::fromRow)
           .peek(r -> {
@@ -109,10 +94,7 @@ public class ImportService {
             }
           })
           .filter(r -> !StringUtils.isBlank(r.getCruiseID()))
-          .map(r -> metadataService.createData(r, model))
-          .forEach(datastore::saveCruise);
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not read sheet", e);
+          .forEach(r -> datastore.saveCruise(r, model.getDestinationPath(), model.getMetadataAuthor().getValue()));
     }
   }
   

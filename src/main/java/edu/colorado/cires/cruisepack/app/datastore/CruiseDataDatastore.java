@@ -2,12 +2,10 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
+import edu.colorado.cires.cruisepack.app.service.ImportRow;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
@@ -97,6 +95,14 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
   
   public void saveCruise(CruiseData cruiseData) {
     saveCruise(cruiseData, getMetadataPath(cruiseData.getPackageId()));
+  }
+  
+  public void saveCruise(ImportRow importRow, Path packageDestinationPath, String metadataAuthorName) {
+    CruiseData cruiseData = metadataService.createData(importRow, packageDestinationPath, metadataAuthorName);
+    saveCruise(
+        cruiseData,
+        getMetadataPath(cruiseData.getPackageId())
+    );
   }
 
   @PostConstruct

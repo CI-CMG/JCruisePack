@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,7 +51,11 @@ public class ImportController implements PropertyChangeListener {
   }
   
   public boolean importCruises() {
-    return importService.importCruises(importModel);
+    try {
+      return importService.importCruises(importModel);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
   
   public void resetState() {
@@ -70,6 +75,10 @@ public class ImportController implements PropertyChangeListener {
   }
   
   public void saveTemplate(Path path) {
-    importService.saveTemplate(path);
+    try {
+      importService.saveTemplate(path);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
