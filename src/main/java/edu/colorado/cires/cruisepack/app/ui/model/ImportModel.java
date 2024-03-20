@@ -102,4 +102,16 @@ public class ImportModel extends PropertyChangeModel {
   public void setMetadataAuthorError(String metadataAuthorError) {
     setIfChanged(Events.UPDATE_IMPORT_METADATA_AUTHOR_ERROR, metadataAuthorError, () -> this.metadataAuthorError, (s) -> this.metadataAuthorError = s);
   }
+
+  public String getImportPathError() {
+    return importPathError;
+  }
+
+  public String getDestinationPathError() {
+    return destinationPathError;
+  }
+
+  public String getMetadataAuthorError() {
+    return metadataAuthorError;
+  }
 }
