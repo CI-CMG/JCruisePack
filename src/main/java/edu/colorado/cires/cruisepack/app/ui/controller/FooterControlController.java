@@ -1,6 +1,5 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
-import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
@@ -9,12 +8,12 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
-import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
-import edu.colorado.cires.cruisepack.app.service.PackerExecutor;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
+import edu.colorado.cires.cruisepack.app.service.pack.ClearJobsPublisher;
+import edu.colorado.cires.cruisepack.app.service.pack.PackFormsPublisher;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
@@ -26,7 +25,6 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +55,8 @@ public class FooterControlController implements PropertyChangeListener {
   private final OrganizationDatastore organizationDatastore;
   private final ErrorModel errorModel;
   private final PackagingValidationService validationService;
-  private final ServiceProperties serviceProperties;
-  private final MetadataService metadataService;
+  private final PackFormsPublisher packFormsPublisher;
+  private final ClearJobsPublisher clearJobsPublisher;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
@@ -67,7 +65,7 @@ public class FooterControlController implements PropertyChangeListener {
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
       PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
       OrganizationDatastore organizationDatastore, ErrorModel errorModel, PackagingValidationService validationService,
-      ServiceProperties serviceProperties, MetadataService metadataService) {
+      PackFormsPublisher packFormsPublisher, ClearJobsPublisher clearJobsPublisher) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.peopleModel = peopleModel;
@@ -86,8 +84,8 @@ public class FooterControlController implements PropertyChangeListener {
     this.organizationDatastore = organizationDatastore;
     this.errorModel = errorModel;
     this.validationService = validationService;
-    this.serviceProperties = serviceProperties;
-    this.metadataService = metadataService;
+    this.packFormsPublisher = packFormsPublisher;
+    this.clearJobsPublisher = clearJobsPublisher;
   }
 
   @PostConstruct
@@ -126,32 +124,24 @@ public class FooterControlController implements PropertyChangeListener {
 
   public synchronized void startPackaging() {
     validationService.validate().ifPresent(
-        packJob -> {
-          PackerExecutor packerExecutor = new PackerExecutor(
-              metadataService,
-              instrumentDatastore,
-              Paths.get(serviceProperties.getWorkDir()),
-              () -> {
-                setPackageButtonEnabled(false);
-                setSaveButtonEnabled(false);
-                setStopButtonEnabled(true);
-              },
-              () -> {
-                setPackageButtonEnabled(true);
-                setSaveButtonEnabled(true);
-                setStopButtonEnabled(false);
-              }
-          );
-          
-          packerExecutor.addChangeListener(this);
-          
-          packerExecutor.startPacking(packJob);
-        }
+        packJob -> packFormsPublisher.publish(
+            this,
+            () -> {
+              setPackageButtonEnabled(false);
+              setSaveButtonEnabled(false);
+              setStopButtonEnabled(true);
+            },
+            () -> {
+              setPackageButtonEnabled(true);
+              setSaveButtonEnabled(true);
+              setStopButtonEnabled(false);
+            }
+        )
     );
   }
   
   public synchronized void stopPackaging() {
-    // TODO: Stop packing async
+    clearJobsPublisher.publish(this);
   }
 
   public void updateFormState(Cruise cruiseMetadata) {
