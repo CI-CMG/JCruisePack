@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.doReturn;
 
+import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
@@ -45,14 +46,12 @@ import org.springframework.test.annotation.DirtiesContext;
     useMainMethod = UseMainMethod.ALWAYS
 )
 @DirtiesContext
-public class PackerServiceTest {
+public class PackerExecutorTest {
 
   private final Path mainBagRootDir = Paths.get("target/test-output").toAbsolutePath().normalize();
 
   private static final Path workDir = Paths.get("target/PackerServiceTest");
-
-  @Autowired
-  private PackerService packerService;
+  
 
   @MockBean
   private FooterControlController footerControlController;
@@ -60,8 +59,13 @@ public class PackerServiceTest {
   @MockBean
   private PackagingValidationService validationService;
   
+  private PackerExecutor packerExecutor;
+  
   @Autowired
-  private PackStateModel packStateModel;
+  private MetadataService metadataService;
+  
+  @Autowired
+  private InstrumentDatastore instrumentDatastore;
 
   @BeforeAll
   public static void beforeAll() {
@@ -84,6 +88,14 @@ public class PackerServiceTest {
     FileUtils.deleteQuietly(mainBagRootDir.toFile());
     Files.createDirectories(mainBagRootDir);
     CruisePackPreSpringStarter.start();
+    
+    packerExecutor = new PackerExecutor(
+        metadataService,
+        instrumentDatastore,
+        workDir,
+        () -> {},
+        () -> {}
+    );
   }
 
   @AfterEach
@@ -160,7 +172,7 @@ public class PackerServiceTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    packerService.startPacking();
+    packerExecutor.startPacking(packJob);
 
     Thread.sleep(1000); //TODO be smarter with wait
 
@@ -292,9 +304,9 @@ public class PackerServiceTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    packerService.startPacking();
+    packerExecutor.startPacking(packJob);
     Thread.sleep(5);
-    packStateModel.setProcessing(false);
+    packerExecutor.stopPacking();
     Thread.sleep(1000); //TODO be smarter with wait
 
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
@@ -354,7 +366,7 @@ public class PackerServiceTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    packerService.startPacking();
+    packerExecutor.startPacking(packJob);
 
     Thread.sleep(1000); //TODO be smarter with wait
 

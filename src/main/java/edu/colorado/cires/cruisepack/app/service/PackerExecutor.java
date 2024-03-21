@@ -1,6 +1,5 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.io.PackerFileController;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
@@ -8,11 +7,11 @@ import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
-import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
+import java.beans.PropertyChangeListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
@@ -37,67 +35,48 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
-public class PackerService {
+public class PackerExecutor {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PackerService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PackerExecutor.class);
 
   private static final String LOCAL_DATA = "local-data";
   private static final String PEOPLE_XML = "people.xml";
   private static final String ORGANIZATIONS_XML = "organizations.xml";
 
-  private final ServiceProperties serviceProperties;
-  private final PackagingValidationService validationService;
-  private final FooterControlController footerControlController;
   private final PackStateModel packStateModel;
   private final PackerFileController packerFileController;
   private final InstrumentDatastore instrumentDatastore;
+  private final Path workDirectory;
+  private final Runnable executeBefore;
+  private final Runnable executeAfter;
 
-  @Autowired
-  public PackerService(
-      ServiceProperties serviceProperties,
-      PackagingValidationService validationService,
-      FooterControlController footerControlController,
-      PackStateModel packStateModel, PackerFileController packerFileController, InstrumentDatastore instrumentDatastore
+  public PackerExecutor(
+      MetadataService metadataService, InstrumentDatastore instrumentDatastore, Path workDirectory,
+      Runnable executeBefore, Runnable executeAfter
   ) {
-    this.serviceProperties = serviceProperties;
-    this.validationService = validationService;
-    this.footerControlController = footerControlController;
-    this.packStateModel = packStateModel;
-    this.packerFileController = packerFileController;
+    this.packStateModel = new PackStateModel();
+    this.packerFileController = new PackerFileController(packStateModel, metadataService);
     this.instrumentDatastore = instrumentDatastore;
+    this.workDirectory = workDirectory;
+    this.executeBefore = executeBefore;
+    this.executeAfter = executeAfter;
+  }
+  
+  public void addChangeListener(PropertyChangeListener listener) {
+    packStateModel.addChangeListener(listener);
+  }
+  
+  public void stopPacking() {
+    packStateModel.setProcessing(false);
   }
 
-  public void startPacking() {
-    footerControlController.setPackageButtonEnabled(false);
-    footerControlController.setSaveButtonEnabled(false);
-    footerControlController.setStopButtonEnabled(true);
-    try {
-      Optional<PackJob> maybePackJob = validationService.validate();
-      if (maybePackJob.isPresent()) {
-        startPackingThread(maybePackJob.get());
-      } else {
-        footerControlController.setPackageButtonEnabled(true);
-        footerControlController.setSaveButtonEnabled(true);
-        footerControlController.setStopButtonEnabled(false);
-      }
-    } catch (Exception e) {
-      footerControlController.setPackageButtonEnabled(true);
-      footerControlController.setSaveButtonEnabled(true);
-      footerControlController.setStopButtonEnabled(false);
-      LOGGER.error("An error occurred while initiating pack job", e);
-    }
-  }
-
-  private void startPackingThread(PackJob packJob) {
-    // TODO put in queue?
+  public void startPacking(PackJob packJob) {
     new Thread(() -> {
+      executeBefore.run();
       try {
 ////    rawCheck(packJob); //TODO add to validation phase
-        PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob);
+        PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob); // TODO this should already be specified in pack job
         packStateModel.setProcessing(true);
         packStateModel.setProgressIncrement(100f / getTotalFiles(packJobWithAncillaryInstruments));
         resetBagDirs(packJobWithAncillaryInstruments);
@@ -108,10 +87,8 @@ public class PackerService {
       } catch (Exception e) {
         LOGGER.error("An error occurred while packing", e);
       } finally {
-        footerControlController.setPackageButtonEnabled(true);
-        footerControlController.setSaveButtonEnabled(true);
-        footerControlController.setStopButtonEnabled(false);
-        packStateModel.setProcessing(false);
+        executeAfter.run();
+        stopPacking();
       }
     }).start();
   }
@@ -409,7 +386,7 @@ public class PackerService {
       }
 
       if (bagContainsData) {
-        copyLocalData(serviceProperties, instrumentBagRootDir);
+        copyLocalData(instrumentBagRootDir);
         CruiseMetadata datasetMetadata = packerFileController.createAndWriteDatasetMetadata(
             cruiseMetadata,
             instruments,
@@ -557,8 +534,8 @@ public class PackerService {
                                                              full_path))
    */
 
-  private void copyLocalData(ServiceProperties serviceProperties, Path instrumentBagDataDir) {
-    Path systemLocalData = Paths.get(serviceProperties.getWorkDir()).resolve(LOCAL_DATA);
+  private void copyLocalData(Path instrumentBagDataDir) {
+    Path systemLocalData = workDirectory.resolve(LOCAL_DATA);
     Path people = systemLocalData.resolve(PEOPLE_XML);
     Path organizations = systemLocalData.resolve(ORGANIZATIONS_XML);
     Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);

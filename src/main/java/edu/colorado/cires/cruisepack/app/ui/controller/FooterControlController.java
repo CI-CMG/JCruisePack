@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
+import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
@@ -8,25 +9,26 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
-import edu.colorado.cires.cruisepack.app.service.PackerService;
+import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
+import edu.colorado.cires.cruisepack.app.service.PackerExecutor;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
-import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -39,7 +41,6 @@ public class FooterControlController implements PropertyChangeListener {
 
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final FooterControlModel footerControlModel;
-  private final BeanFactory beanFactory;
   private final PeopleModel peopleModel;
   private final PackageModel packageModel;
   private final DatasetsModel datasetsModel;
@@ -54,19 +55,21 @@ public class FooterControlController implements PropertyChangeListener {
   private final SeaDatastore seaDatastore;
   private final PersonDatastore personDatastore;
   private final OrganizationDatastore organizationDatastore;
-  private final PackStateModel packStateModel;
   private final ErrorModel errorModel;
+  private final PackagingValidationService validationService;
+  private final ServiceProperties serviceProperties;
+  private final MetadataService metadataService;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
-      BeanFactory beanFactory, PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
+      PeopleModel peopleModel, PackageModel packageModel, DatasetsModel datasetsModel,
       CruiseInformationModel cruiseInformationModel, OmicsModel omicsModel, InstrumentDatastore instrumentDatastore, 
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
       PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
-      OrganizationDatastore organizationDatastore, PackStateModel packStateModel, ErrorModel errorModel) {
+      OrganizationDatastore organizationDatastore, ErrorModel errorModel, PackagingValidationService validationService,
+      ServiceProperties serviceProperties, MetadataService metadataService) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
-    this.beanFactory = beanFactory;
     this.peopleModel = peopleModel;
     this.packageModel = packageModel;
     this.datasetsModel = datasetsModel;
@@ -81,14 +84,15 @@ public class FooterControlController implements PropertyChangeListener {
     this.seaDatastore = seaDatastore;
     this.personDatastore = personDatastore;
     this.organizationDatastore = organizationDatastore;
-    this.packStateModel = packStateModel;
     this.errorModel = errorModel;
+    this.validationService = validationService;
+    this.serviceProperties = serviceProperties;
+    this.metadataService = metadataService;
   }
 
   @PostConstruct
   public void init() {
     footerControlModel.addChangeListener(this);
-    packStateModel.addChangeListener(this);
     errorModel.addChangeListener(this);
   }
 
@@ -121,11 +125,33 @@ public class FooterControlController implements PropertyChangeListener {
   }
 
   public synchronized void startPackaging() {
-    beanFactory.getBean(PackerService.class).startPacking();
+    validationService.validate().ifPresent(
+        packJob -> {
+          PackerExecutor packerExecutor = new PackerExecutor(
+              metadataService,
+              instrumentDatastore,
+              Paths.get(serviceProperties.getWorkDir()),
+              () -> {
+                setPackageButtonEnabled(false);
+                setSaveButtonEnabled(false);
+                setStopButtonEnabled(true);
+              },
+              () -> {
+                setPackageButtonEnabled(true);
+                setSaveButtonEnabled(true);
+                setStopButtonEnabled(false);
+              }
+          );
+          
+          packerExecutor.addChangeListener(this);
+          
+          packerExecutor.startPacking(packJob);
+        }
+    );
   }
   
   public synchronized void stopPackaging() {
-    packStateModel.setProcessing(false);
+    // TODO: Stop packing async
   }
 
   public void updateFormState(Cruise cruiseMetadata) {

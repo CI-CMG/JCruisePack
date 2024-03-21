@@ -12,6 +12,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
@@ -54,6 +55,7 @@ public class PackagingValidationServiceTest {
   private final PeopleModel PEOPLE_MODEL = new PeopleModel();
   private final PersonDatastore PERSON_DATASTORE = new PersonDatastore(SERVICE_PROPERTIES, mock(ReactiveViewRegistry.class));
   private final FooterControlModel FOOTER_CONTROL_MODEL = new FooterControlModel();
+  private final ErrorModel ERROR_MODEL = new ErrorModel();
   private final Map<String, PropertyChangeEvent> eventMap = new HashMap<>(0);
   
   private final PropertyChangeListener mapListener = evt -> eventMap.put(evt.getPropertyName(), evt);
@@ -116,7 +118,8 @@ public class PackagingValidationServiceTest {
           PEOPLE_MODEL,
           PERSON_DATASTORE,
           FOOTER_CONTROL_MODEL,
-          SERVICE_PROPERTIES
+          SERVICE_PROPERTIES,
+          ERROR_MODEL
       );
       
       utils.when(() -> PackJobUtils.create(
@@ -159,7 +162,8 @@ public class PackagingValidationServiceTest {
           PEOPLE_MODEL,
           PERSON_DATASTORE,
           FOOTER_CONTROL_MODEL,
-          SERVICE_PROPERTIES
+          SERVICE_PROPERTIES,
+          ERROR_MODEL
       );
 
       utils.when(() -> PackJobUtils.create(

@@ -1,9 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import org.springframework.stereotype.Component;
 
-@Component
 public class PackStateModel extends PropertyChangeModel {
   
   private float progress;
