@@ -8,15 +8,8 @@ import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsFile;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidOmicsModel;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.nio.file.Path;
 import org.springframework.stereotype.Component;
 
@@ -30,10 +23,10 @@ public class OmicsModel extends PropertyChangeModel {
     private Path sampleTrackingSheet = null;
     private String sampleTrackingSheetError = null;
     private String bioProjectAccession = null;
-    private String bioProjectAcessionError = null;
-    private SamplingTypesModel samplingTypes = new SamplingTypesModel();
+    private String bioProjectAccessionError = null;
+    private final SamplingTypesModel samplingTypes = new SamplingTypesModel();
     private String samplingTypesError = null;
-    private ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
+    private final ExpectedAnalysesModel expectedAnalyses = new ExpectedAnalysesModel();
     private String expectedAnalysesError = null;
     private String additionalSamplingInformation = null;
     private String additionalSamplingInformationError = null;
@@ -48,7 +41,7 @@ public class OmicsModel extends PropertyChangeModel {
         setSampleTrackingSheetError(null);
 
         setBioProjectAccession(null);
-        setBioProjectAcessionError(null);
+        setBioProjectAccessionError(null);
 
         setWaterSamplingType(false);
         setSoilSedimentSamplingType(false);
@@ -64,9 +57,9 @@ public class OmicsModel extends PropertyChangeModel {
         setOtherExpectedAnalysis(false);
         setMetaBarcodingExpectedAnalysis(false);
         setMetaGenomicsExpectedAnalysis(false);
-        setMetatranscriptomicsExpectedAnalysis(false);
-        setMetaproteomicsExpectedAnalysis(false);
-        setMetametabolomicsExpectedAnalysis(false);
+        setMetaTranscriptomicsExpectedAnalysis(false);
+        setMetaProteomicsExpectedAnalysis(false);
+        setMetaMetabolomicsExpectedAnalysis(false);
         setMicrobiomeExpectedAnalysis(false);
         setExpectedAnalysesError(null);
 
@@ -107,11 +100,11 @@ public class OmicsModel extends PropertyChangeModel {
                 } else if (analysis.equals(ExpectedAnalyses.METAGENOMICS.getName())) {
                     setMetaGenomicsExpectedAnalysis(true);
                 } else if (analysis.equals(ExpectedAnalyses.METATRANSCRIPTOMICS.getName())) {
-                    setMetatranscriptomicsExpectedAnalysis(true);
+                    setMetaTranscriptomicsExpectedAnalysis(true);
                 } else if (analysis.equals(ExpectedAnalyses.METAPROTEOMICS.getName())) {
-                    setMetaproteomicsExpectedAnalysis(true);
+                    setMetaProteomicsExpectedAnalysis(true);
                 } else if (analysis.equals(ExpectedAnalyses.METAMETABOLOMICS.getName())) {
-                    setMetametabolomicsExpectedAnalysis(true);
+                    setMetaMetabolomicsExpectedAnalysis(true);
                 } else if (analysis.equals(ExpectedAnalyses.MICROBIOME.getName())) {
                     setMicrobiomeExpectedAnalysis(true);
                 }
@@ -245,10 +238,10 @@ public class OmicsModel extends PropertyChangeModel {
     }
 
     public void setMetaBarcodingExpectedAnalysis(boolean metabarcodingExpectedAnalysis) {
-        boolean oldMetaborcodingExpectedAnalysis = this.expectedAnalyses.isMetabarcoding();
-        if (oldMetaborcodingExpectedAnalysis != metabarcodingExpectedAnalysis) {
+        boolean oldMetabarcodingExpectedAnalysis = this.expectedAnalyses.isMetabarcoding();
+        if (oldMetabarcodingExpectedAnalysis != metabarcodingExpectedAnalysis) {
             this.expectedAnalyses.setMetabarcoding(metabarcodingExpectedAnalysis);
-            fireChangeEvent(Events.UPDATE_OMICS_METABARCODING_EXPECTED_ANALYSIS, oldMetaborcodingExpectedAnalysis, metabarcodingExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METABARCODING_EXPECTED_ANALYSIS, oldMetabarcodingExpectedAnalysis, metabarcodingExpectedAnalysis);
         }
     }
 
@@ -260,27 +253,27 @@ public class OmicsModel extends PropertyChangeModel {
         }
     }
 
-    public void setMetatranscriptomicsExpectedAnalysis(boolean metatranscriptomicsExpectedAnalysis) {
-        boolean oldMetatranscriptomicsExpectedAnalysis = this.expectedAnalyses.isMetatranscriptomics();
-        if (oldMetatranscriptomicsExpectedAnalysis != metatranscriptomicsExpectedAnalysis) {
-            this.expectedAnalyses.setMetatranscriptomics(metatranscriptomicsExpectedAnalysis);
-            fireChangeEvent(Events.UPDATE_OMICS_METATRANSCRIPTOMICS_EXPECTED_ANALYSIS, oldMetatranscriptomicsExpectedAnalysis, metatranscriptomicsExpectedAnalysis);
+    public void setMetaTranscriptomicsExpectedAnalysis(boolean metaTranscriptomicsExpectedAnalysis) {
+        boolean oldMetaTranscriptomicsExpectedAnalysis = this.expectedAnalyses.isMetatranscriptomics();
+        if (oldMetaTranscriptomicsExpectedAnalysis != metaTranscriptomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetatranscriptomics(metaTranscriptomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METATRANSCRIPTOMICS_EXPECTED_ANALYSIS, oldMetaTranscriptomicsExpectedAnalysis, metaTranscriptomicsExpectedAnalysis);
         }
     }
 
-    public void setMetaproteomicsExpectedAnalysis(boolean metaproteomicsExpectedAnalysis) {
-        boolean oldMetaproteomicsExpectedAnalysis = this.expectedAnalyses.isMetaproteomics();
-        if (oldMetaproteomicsExpectedAnalysis != metaproteomicsExpectedAnalysis) {
-            this.expectedAnalyses.setMetaproteomics(metaproteomicsExpectedAnalysis);
-            fireChangeEvent(Events.UPDATE_OMICS_METAPROTEOMICS_EXPECTED_ANALYSIS, oldMetaproteomicsExpectedAnalysis, metaproteomicsExpectedAnalysis);
+    public void setMetaProteomicsExpectedAnalysis(boolean metaProteomicsExpectedAnalysis) {
+        boolean oldMetaProteomicsExpectedAnalysis = this.expectedAnalyses.isMetaproteomics();
+        if (oldMetaProteomicsExpectedAnalysis != metaProteomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetaproteomics(metaProteomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METAPROTEOMICS_EXPECTED_ANALYSIS, oldMetaProteomicsExpectedAnalysis, metaProteomicsExpectedAnalysis);
         }
     }
 
-    public void setMetametabolomicsExpectedAnalysis(boolean metametabolomicsExpectedAnalysis) {
-        boolean oldMetametabolomicsExpectedAnalysis = this.expectedAnalyses.isMetametabolomics();
-        if (oldMetametabolomicsExpectedAnalysis != metametabolomicsExpectedAnalysis) {
-            this.expectedAnalyses.setMetametabolomics(metametabolomicsExpectedAnalysis);
-            fireChangeEvent(Events.UPDATE_OMICS_METAMETABOLOMICS_EXPECTED_ANALYSIS, oldMetametabolomicsExpectedAnalysis, metametabolomicsExpectedAnalysis);
+    public void setMetaMetabolomicsExpectedAnalysis(boolean metaMetabolomicsExpectedAnalysis) {
+        boolean oldMetaMetabolomicsExpectedAnalysis = this.expectedAnalyses.isMetametabolomics();
+        if (oldMetaMetabolomicsExpectedAnalysis != metaMetabolomicsExpectedAnalysis) {
+            this.expectedAnalyses.setMetametabolomics(metaMetabolomicsExpectedAnalysis);
+            fireChangeEvent(Events.UPDATE_OMICS_METAMETABOLOMICS_EXPECTED_ANALYSIS, oldMetaMetabolomicsExpectedAnalysis, metaMetabolomicsExpectedAnalysis);
         }
     }
 
@@ -323,12 +316,12 @@ public class OmicsModel extends PropertyChangeModel {
         setIfChanged(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET_ERROR, sampleTrackingSheetError, () -> this.sampleTrackingSheetError, (e) -> this.sampleTrackingSheetError = e);
     }
     
-    public String getBioProjectAcessionError() {
-        return bioProjectAcessionError;
+    public String getBioProjectAccessionError() {
+        return bioProjectAccessionError;
     }
     
-    public void setBioProjectAcessionError(String bioProjectAcessionError) {
-        setIfChanged(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION_ERROR, bioProjectAcessionError, () -> this.bioProjectAcessionError, (e) -> this.bioProjectAcessionError = e);
+    public void setBioProjectAccessionError(String bioProjectAccessionError) {
+        setIfChanged(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION_ERROR, bioProjectAccessionError, () -> this.bioProjectAccessionError, (e) -> this.bioProjectAccessionError = e);
     }
     
     public String getSamplingTypesError() {

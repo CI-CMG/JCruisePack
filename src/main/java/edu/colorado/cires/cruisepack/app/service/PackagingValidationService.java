@@ -232,7 +232,7 @@ public class PackagingValidationService {
     omicsModel.setAdditionalSamplingInformationError(additionalSamplingInformationError);
     omicsModel.setContactError(contactError);
     omicsModel.setSampleTrackingSheetError(sampleTrackingSheetError);
-    omicsModel.setBioProjectAcessionError(bioProjectAccessionError);
+    omicsModel.setBioProjectAccessionError(bioProjectAccessionError);
     omicsModel.setExpectedAnalysesError(expectedAnalysesError);
     omicsModel.setSamplingTypesError(samplingTypesError);
   }

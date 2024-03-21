@@ -93,15 +93,15 @@ public class OmicsController implements PropertyChangeListener {
     }
 
     public void setMetatranscriptomicsExpectedAnalysis(Boolean metatranscriptomicsExpectedAnalysis) {
-        omicsModel.setMetatranscriptomicsExpectedAnalysis(metatranscriptomicsExpectedAnalysis);
+        omicsModel.setMetaTranscriptomicsExpectedAnalysis(metatranscriptomicsExpectedAnalysis);
     }
 
     public void setMetaproteomicsExpectedAnalysis(Boolean metaproteomicsExpectedAnalysis) {
-        omicsModel.setMetaproteomicsExpectedAnalysis(metaproteomicsExpectedAnalysis);
+        omicsModel.setMetaProteomicsExpectedAnalysis(metaproteomicsExpectedAnalysis);
     }
 
     public void setMetametabolomicsExpectedAnalysis(Boolean metametabolomicsExpectedAnalysis) {
-        omicsModel.setMetametabolomicsExpectedAnalysis(metametabolomicsExpectedAnalysis);
+        omicsModel.setMetaMetabolomicsExpectedAnalysis(metametabolomicsExpectedAnalysis);
     }
 
     public void setMicrobiomeExpectedAnalysis(Boolean microbiomeExpectedAnalysis) {
