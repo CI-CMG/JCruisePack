@@ -293,6 +293,8 @@ public class OrganizationModelTest extends PropertyChangeModelTest<OrganizationM
     model.setUuid(uuid);
     model.setUuidError(uuidError);
     model.setUse(use);
+    
+    clearMap();
 
     model.restoreDefaults();
 

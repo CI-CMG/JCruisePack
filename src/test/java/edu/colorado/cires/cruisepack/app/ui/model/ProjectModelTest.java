@@ -95,6 +95,8 @@ public class ProjectModelTest extends PropertyChangeModelTest<ProjectModel> {
     model.setNameError(nameError);
     model.setUuidError(uuidError);
     
+    clearMap();
+    
     model.clearErrors();
     
     assertChangeEvent(ProjectModel.UPDATE_NAME_ERROR, nameError, null);

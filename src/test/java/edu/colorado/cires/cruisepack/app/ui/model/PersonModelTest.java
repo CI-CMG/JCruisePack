@@ -378,6 +378,8 @@ public class PersonModelTest extends PropertyChangeModelTest<PersonModel> {
     model.setUuidError(uuidError);
     model.setUse(use);
     
+    clearMap();
+    
     model.restoreDefaults();
     
     assertChangeEvent(Events.UPDATE_PERSON_NAME, name, null);
