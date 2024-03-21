@@ -6,6 +6,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
@@ -42,6 +43,7 @@ public class PackagingValidationService {
   private final PersonDatastore personDatastore;
   private final FooterControlModel footerControlModel;
   private final ServiceProperties serviceProperties;
+  private final ErrorModel errorModel;
 
   @Autowired
   public PackagingValidationService(
@@ -52,7 +54,7 @@ public class PackagingValidationService {
       DatasetsModel datasetsModel,
       InstrumentDatastore instrumentDatastore,
       PeopleModel peopleModel,
-      PersonDatastore personDatastore, FooterControlModel footerControlModel, ServiceProperties serviceProperties
+      PersonDatastore personDatastore, FooterControlModel footerControlModel, ServiceProperties serviceProperties, ErrorModel errorModel
   ) {
     this.validator = validator;
     this.packageModel = packageModel;
@@ -64,6 +66,7 @@ public class PackagingValidationService {
     this.personDatastore = personDatastore;
     this.footerControlModel = footerControlModel;
     this.serviceProperties = serviceProperties;
+    this.errorModel = errorModel;
   }
 
   public Optional<PackJob> validate() {
@@ -110,6 +113,9 @@ public class PackagingValidationService {
       
       return Optional.empty();
     }
+    errorModel.emitErrorMessage(
+        "Failed to submit form. Please fix indicated errors and re-submit form"
+    );
     return Optional.empty();
   }
   
