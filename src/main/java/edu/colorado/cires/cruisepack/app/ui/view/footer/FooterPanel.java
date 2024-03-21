@@ -11,6 +11,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
+import edu.colorado.cires.cruisepack.app.ui.view.queue.ManageQueueDialog;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.Desktop;
@@ -57,8 +58,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final ManageRecordsDialog manageRecordsDialog;
   private final ImportExportDialog importExportDialog;
   private final SqliteMigrator sqliteMigrator;
+  private final ManageQueueDialog manageQueueDialog;
 
   private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
+  private final JButton manageQueueButton = new JButton("Manage Queue");
   private final JButton importExportButton = new JButton(IMPORT_EXPORT_LABEL);
   private final JButton clearFormButton = new JButton(CLEAR_FORM_LABEL);
   private final JButton stopButton = new JButton(STOP_LABEL);
@@ -96,7 +99,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
       FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, ImportExportDialog importExportDialog,
-      SqliteMigrator sqliteMigrator, UiRefresher uiRefresher)
+      SqliteMigrator sqliteMigrator, ManageQueueDialog manageQueueDialog, UiRefresher uiRefresher)
       throws IOException {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
@@ -104,6 +107,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
     this.manageRecordsDialog = manageRecordsDialog;
     this.importExportDialog = importExportDialog;
     this.sqliteMigrator = sqliteMigrator;
+    this.manageQueueDialog = manageQueueDialog;
     this.uiRefresher = uiRefresher;
     this.docsButton = new JButton(new ImageIcon(ImageIO.read(
         Objects.requireNonNull(getClass().getResource(String.format(
@@ -133,11 +137,12 @@ public class FooterPanel extends JPanel implements ReactiveView {
     row1.setLayout(new GridBagLayout());
     row1.add(docsButton, configureLayout(0, 0, c -> c.weightx = 0));
     row1.add(manageRecordsButton, configureLayout(1, 0));
-    row1.add(importExportButton, configureLayout(2, 0));
-    row1.add(clearFormButton, configureLayout(3, 0));
-    row1.add(stopButton, configureLayout(4, 0));
-    row1.add(saveButton, configureLayout(5, 0));
-    row1.add(packageButton, configureLayout(6, 0));
+    row1.add(manageQueueButton, configureLayout(2, 0));
+    row1.add(importExportButton, configureLayout(3, 0));
+    row1.add(clearFormButton, configureLayout(4, 0));
+    row1.add(stopButton, configureLayout(5, 0));
+    row1.add(saveButton, configureLayout(6, 0));
+    row1.add(packageButton, configureLayout(7, 0));
     add(row1, configureLayout(0, 0));
 
 
@@ -203,6 +208,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
     manageRecordsButton.addActionListener((evt) -> {
       manageRecordsDialog.pack();
       manageRecordsDialog.setVisible(true);
+    });
+    
+    manageQueueButton.addActionListener((evt) -> {
+      manageQueueDialog.pack();
+      manageQueueDialog.setVisible(true);
     });
     
     importExportButton.addActionListener((evt) -> {

@@ -61,4 +61,8 @@ public class SeaDatastore {
   public String getSeaNameForUuid(String uuid) {
     return seaDropDowns.stream().filter(dd -> uuid.equals(dd.getId())).findFirst().map(DropDownItem::getValue).orElse(null);
   }
+  
+  public String getSeaUuidForName(String name) {
+    return seaDropDowns.stream().filter(dd -> dd.getValue().equals(name)).findFirst().map(DropDownItem::getId).orElse(null);
+  }
 }
