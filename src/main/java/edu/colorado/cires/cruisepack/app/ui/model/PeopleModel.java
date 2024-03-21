@@ -2,7 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
+import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel;
@@ -30,39 +30,49 @@ public class PeopleModel extends PropertyChangeModel {
 
     public void restoreDefaults() {
         clearScientists();
-        setScientistError(null);
+        setScientistsError(null);
         
         clearSourceOrganizations();
-        setSourceOrganizationError(null);
+        setSourceOrganizationsError(null);
 
         clearFundingOrganizations();
-        setFundingOrganizationError(null);
+        setFundingOrganizationsError(null);
 
         setMetadataAuthor(PersonDatastore.UNSELECTED_PERSON);
         setMetadataAuthorError(null);
     }
 
-    public void updateFormState(Cruise cruiseMetadata, PersonDatastore personDatastore, OrganizationDatastore organizationDatastore) {
-        for (PeopleOrg peopleOrg : cruiseMetadata.getScientists()) {
-            clearScientists();
-            DropDownItemPanel panel = new DropDownItemPanel(personDatastore.getEnabledPersonDropDowns(), PersonDatastore.UNSELECTED_PERSON);
+    public void updateFormState(
+        List<PeopleOrg> scientists,
+        List<DropDownItem> peopleOptions,
+        List<PeopleOrg> funders,
+        List<PeopleOrg> sources,
+        List<DropDownItem> organizationOptions,
+        MetadataAuthor metadataAuthor
+    ) {
+        
+        clearScientists();
+        for (PeopleOrg peopleOrg : scientists) {
+            DropDownItemPanel panel = new DropDownItemPanel(peopleOptions, PersonDatastore.UNSELECTED_PERSON);
             panel.getModel().setItem(new DropDownItem(peopleOrg.getUuid(), peopleOrg.getName()));
             addScientist(panel);
         }
-        for (PeopleOrg peopleOrg : cruiseMetadata.getFunders()) {
-            clearFundingOrganizations();
-            DropDownItemPanel panel = new DropDownItemPanel(organizationDatastore.getEnabledOrganizationDropDowns(), OrganizationDatastore.UNSELECTED_ORGANIZATION);
+        
+        clearFundingOrganizations();
+        for (PeopleOrg peopleOrg : funders) {
+            DropDownItemPanel panel = new DropDownItemPanel(organizationOptions, OrganizationDatastore.UNSELECTED_ORGANIZATION);
             panel.getModel().setItem(new DropDownItem(peopleOrg.getUuid(), peopleOrg.getName()));
             addFundingOrganization(panel);
         }
-        for (PeopleOrg peopleOrg : cruiseMetadata.getSponsors()) {
-            clearSourceOrganizations();
-            DropDownItemPanel panel = new DropDownItemPanel(organizationDatastore.getEnabledOrganizationDropDowns(), OrganizationDatastore.UNSELECTED_ORGANIZATION);
+        
+        clearSourceOrganizations();
+        for (PeopleOrg peopleOrg : sources) {
+            DropDownItemPanel panel = new DropDownItemPanel(organizationOptions, OrganizationDatastore.UNSELECTED_ORGANIZATION);
             panel.getModel().setItem(new DropDownItem(peopleOrg.getUuid(), peopleOrg.getName()));
             addSourceOrganization(panel);
         }
-        if (cruiseMetadata.getMetadataAuthor() != null) {
-            setMetadataAuthor(new DropDownItem(cruiseMetadata.getMetadataAuthor().getUuid(), cruiseMetadata.getMetadataAuthor().getName()));
+        if (metadataAuthor != null) {
+            setMetadataAuthor(new DropDownItem(metadataAuthor.getUuid(), metadataAuthor.getName()));
         }
     }
     
@@ -70,15 +80,15 @@ public class PeopleModel extends PropertyChangeModel {
         return scientists;
     }
 
-    public void setScientistError(String scientistErrors) {
+    public void setScientistsError(String scientistErrors) {
         setIfChanged(Events.UPDATE_SCIENTIST_ERROR, scientistErrors, () -> this.scientistsError, (e) -> this.scientistsError = e);
     }
 
-    public void setSourceOrganizationError(String sourceOrganizationErrors) {
+    public void setSourceOrganizationsError(String sourceOrganizationErrors) {
         setIfChanged(Events.UPDATE_SOURCE_ORGANIZATION_ERROR, sourceOrganizationErrors, () -> this.sourceOrganizationsError, (e) -> this.sourceOrganizationsError = e);
     }
 
-    public void setFundingOrganizationError(String fundingOrganizationErrors) {
+    public void setFundingOrganizationsError(String fundingOrganizationErrors) {
         setIfChanged(Events.UPDATE_FUNDING_ORGANIZATION_ERROR, fundingOrganizationErrors, () -> this.fundingOrganizationsError, (e) -> this.fundingOrganizationsError = e);
     }
 
@@ -149,7 +159,9 @@ public class PeopleModel extends PropertyChangeModel {
     }
     
     public void clearScientists() {
-        fireChangeEvent(Events.CLEAR_SCIENTISTS, null, Collections.emptyList());
+        List<DropDownItemModel> oldScientists = new ArrayList<>(scientists);
+        scientists = new ArrayList<>(0);
+        fireChangeEvent(Events.CLEAR_SCIENTISTS, oldScientists, Collections.emptyList());
     }
     
     public void addSourceOrganization(DropDownItemPanel panel) {
@@ -175,7 +187,9 @@ public class PeopleModel extends PropertyChangeModel {
     }
     
     public void clearSourceOrganizations() {
-        fireChangeEvent(Events.CLEAR_SOURCE_ORGANIZATIONS, null, Collections.emptyList());
+        List<DropDownItemModel> oldSourceOrganizations = new ArrayList<>(sourceOrganizations);
+        sourceOrganizations = new ArrayList<>(0);
+        fireChangeEvent(Events.CLEAR_SOURCE_ORGANIZATIONS, oldSourceOrganizations, Collections.emptyList());
     }
     
     public void addFundingOrganization(DropDownItemPanel panel) {
@@ -201,7 +215,24 @@ public class PeopleModel extends PropertyChangeModel {
     }
     
     public void clearFundingOrganizations() {
-        fireChangeEvent(Events.CLEAR_FUNDING_ORGANIZATIONS, null, Collections.emptyList());
+        List<DropDownItemModel> oldFundingOrganizations = new ArrayList<>(fundingOrganizations);
+        fundingOrganizations = new ArrayList<>(0);
+        fireChangeEvent(Events.CLEAR_FUNDING_ORGANIZATIONS, oldFundingOrganizations, Collections.emptyList());
     }
-    
+
+    public String getScientistsError() {
+        return scientistsError;
+    }
+
+    public String getSourceOrganizationsError() {
+        return sourceOrganizationsError;
+    }
+
+    public String getFundingOrganizationsError() {
+        return fundingOrganizationsError;
+    }
+
+    public String getMetadataAuthorError() {
+        return metadataAuthorError;
+    }
 }

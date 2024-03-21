@@ -192,11 +192,11 @@ public class PackagingValidationService {
       }
     }
 
-    peopleModel.setScientistError(scientistError);
+    peopleModel.setScientistsError(scientistError);
     peopleModel.setScientistErrors(Arrays.stream(scientistErrors).collect(Collectors.toList()));
-    peopleModel.setSourceOrganizationError(sourceOrganizationError);
+    peopleModel.setSourceOrganizationsError(sourceOrganizationError);
     peopleModel.setSourceOrganizationErrors(Arrays.stream(sourceOrganizationErrors).collect(Collectors.toList()));
-    peopleModel.setFundingOrganizationError(fundingOrganizationError);
+    peopleModel.setFundingOrganizationsError(fundingOrganizationError);
     peopleModel.setFundingOrganizationErrors(Arrays.stream(fundingOrganizationErrors).collect(Collectors.toList()));
     peopleModel.setMetadataAuthorError(metadataAuthorError);
   }
