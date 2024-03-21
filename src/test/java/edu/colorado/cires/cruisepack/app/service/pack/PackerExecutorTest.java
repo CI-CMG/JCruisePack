@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.app.service;
+package edu.colorado.cires.cruisepack.app.service.pack;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,9 +6,14 @@ import static org.mockito.Mockito.doReturn;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
+import edu.colorado.cires.cruisepack.app.service.MetadataService;
+import edu.colorado.cires.cruisepack.app.service.PackJob;
+import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -304,7 +309,7 @@ public class PackerExecutorTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    packerExecutor.startPacking(packJob);
+    new Thread(() -> packerExecutor.startPacking(packJob)).start();
     Thread.sleep(5);
     packerExecutor.stopPacking();
     Thread.sleep(1000); //TODO be smarter with wait

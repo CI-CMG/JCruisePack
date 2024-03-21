@@ -1,6 +1,12 @@
-package edu.colorado.cires.cruisepack.app.service;
+package edu.colorado.cires.cruisepack.app.service.pack;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
+import edu.colorado.cires.cruisepack.app.service.AdditionalFiles;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
+import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
+import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
+import edu.colorado.cires.cruisepack.app.service.MetadataService;
+import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.io.PackerFileController;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
@@ -36,7 +42,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PackerExecutor {
+class PackerExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerExecutor.class);
 
@@ -72,25 +78,22 @@ public class PackerExecutor {
   }
 
   public void startPacking(PackJob packJob) {
-    new Thread(() -> {
-      executeBefore.run();
-      try {
+    executeBefore.run();
+    try {
 ////    rawCheck(packJob); //TODO add to validation phase
-        PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob); // TODO this should already be specified in pack job
-        packStateModel.setProcessing(true);
-        packStateModel.setProgressIncrement(100f / getTotalFiles(packJobWithAncillaryInstruments));
-        resetBagDirs(packJobWithAncillaryInstruments);
-        copyDocs(packJobWithAncillaryInstruments);
-        copyOmics(packJobWithAncillaryInstruments);
-        packData(packJobWithAncillaryInstruments);
-        packMainBag(packJobWithAncillaryInstruments);
-      } catch (Exception e) {
-        LOGGER.error("An error occurred while packing", e);
-      } finally {
-        executeAfter.run();
-        stopPacking();
-      }
-    }).start();
+      PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob); // TODO this should already be specified in pack job
+      packStateModel.setProcessing(true);
+      packStateModel.setProgressIncrement(100f / getTotalFiles(packJobWithAncillaryInstruments));
+      resetBagDirs(packJobWithAncillaryInstruments);
+      copyDocs(packJobWithAncillaryInstruments);
+      copyOmics(packJobWithAncillaryInstruments);
+      packData(packJobWithAncillaryInstruments);
+      packMainBag(packJobWithAncillaryInstruments);
+    } catch (Exception e) {
+      LOGGER.error("An error occurred while packing", e);
+    } finally {
+      executeAfter.run();
+    }
   }
   
   public long getTotalFiles(PackJob packJob) {
