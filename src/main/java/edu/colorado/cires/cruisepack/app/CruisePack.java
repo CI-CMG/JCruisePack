@@ -1,5 +1,8 @@
 package edu.colorado.cires.cruisepack.app;
 
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.DarculaTheme;
+import com.github.weisj.darklaf.theme.IntelliJTheme;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.ui.view.MainFrame;
@@ -32,6 +35,8 @@ public class CruisePack implements ApplicationListener<ApplicationStartingEvent>
   private static final Logger LOGGER = LoggerFactory.getLogger(CruisePack.class);
   private static final String SYSTEM_LAF = "system";
   private static final String CROSS_PLATFORM_LAF = "cross-platform";
+  private static final String INTELLIJ = "intellij";
+  private static final String DARCULA = "darcula";
 
 
   private static ConfigurableApplicationContext createCtx(String[] args) {
@@ -96,20 +101,6 @@ public class CruisePack implements ApplicationListener<ApplicationStartingEvent>
         Arrays.asList(UIManager.getInstalledLookAndFeels()).stream()
             .map(LookAndFeelInfo::getClassName)
             .collect(Collectors.toList()));
-    String className;
-    switch (serviceProperties.getLookAndFeel()) {
-      case SYSTEM_LAF:
-        LOGGER.info("Using system LAF");
-        className = UIManager.getSystemLookAndFeelClassName();
-        break;
-      case CROSS_PLATFORM_LAF:
-        LOGGER.info("Using cross-platform LAF");
-        className = UIManager.getCrossPlatformLookAndFeelClassName();
-        break;
-      default:
-        className = serviceProperties.getLookAndFeel();
-        break;
-    }
     try {
       java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
       while (keys.hasMoreElements()) {
@@ -119,11 +110,37 @@ public class CruisePack implements ApplicationListener<ApplicationStartingEvent>
           UIManager.put(key, new FontUIResource(serviceProperties.getFont(), Font.PLAIN, serviceProperties.getFontSize()));
         }
       }
-      UIManager.setLookAndFeel(className);
+
+      switch (serviceProperties.getLookAndFeel()) {
+        case SYSTEM_LAF:
+          LOGGER.info("Using system LAF");
+          UIManager.setLookAndFeel(
+              UIManager.getSystemLookAndFeelClassName()
+          );
+          break;
+        case CROSS_PLATFORM_LAF:
+          LOGGER.info("Using cross-platform LAF");
+          UIManager.setLookAndFeel(
+              UIManager.getCrossPlatformLookAndFeelClassName()
+          );
+          break;
+        case INTELLIJ:
+          LOGGER.info("Using intellij theme");
+          LafManager.install(new IntelliJTheme());
+          break;
+        case DARCULA:
+          LOGGER.info("Using darcula theme");
+          LafManager.install(new DarculaTheme());
+          break;
+        default:
+          UIManager.setLookAndFeel(
+              serviceProperties.getLookAndFeel()
+          );
+          break;
+      }
     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
       throw new IllegalStateException("Unable to set look and feel for '" + serviceProperties.getLookAndFeel() + "'", e);
     }
-    LOGGER.info("Using LAF: {}", className);
   }
 
   @Override
