@@ -36,7 +36,6 @@ public class ImportController implements PropertyChangeListener {
   @PostConstruct
   public void init() {
     importModel.addChangeListener(this);
-    errorModel.addChangeListener(this);
   }
 
   @Override
