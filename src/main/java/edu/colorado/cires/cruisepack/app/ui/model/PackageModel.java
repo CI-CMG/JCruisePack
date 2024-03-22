@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -299,7 +298,9 @@ public class PackageModel extends PropertyChangeModel {
   }
 
   public void clearProjects() {
-    fireChangeEvent(Events.CLEAR_PROJECTS, null, Collections.emptyList());
+    List<DropDownItemModel> oldProjects = new ArrayList<>(projects);
+    this.projects = new ArrayList<>(0);
+    fireChangeEvent(Events.CLEAR_PROJECTS, oldProjects, projects);
   }
   
   public void addProject(DropDownItemPanel panel) {
