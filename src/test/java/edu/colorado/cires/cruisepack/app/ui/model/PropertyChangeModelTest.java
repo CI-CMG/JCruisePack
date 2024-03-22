@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Path;
+import jakarta.validation.metadata.ConstraintDescriptor;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +15,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -111,4 +115,69 @@ public abstract class PropertyChangeModelTest<T extends PropertyChangeModel> {
     eventMap.clear();
   }
 
+  protected class CustomConstraintViolation implements ConstraintViolation<T> {
+    
+    private final String message;
+    private final Path propertyPath;
+
+    protected CustomConstraintViolation(String message, String propertyPath) {
+      this.message = message;
+      this.propertyPath = PathImpl.createPathFromString(propertyPath);
+    }
+
+    @Override
+    public String getMessage() {
+      return message;
+    }
+
+    @Override
+    public String getMessageTemplate() {
+      return null;
+    }
+
+    @Override
+    public T getRootBean() {
+      return null;
+    }
+
+    @Override
+    public Class<T> getRootBeanClass() {
+      return null;
+    }
+
+    @Override
+    public Object getLeafBean() {
+      return null;
+    }
+
+    @Override
+    public Object[] getExecutableParameters() {
+      return new Object[0];
+    }
+
+    @Override
+    public Object getExecutableReturnValue() {
+      return null;
+    }
+
+    @Override
+    public Path getPropertyPath() {
+      return propertyPath;
+    }
+
+    @Override
+    public Object getInvalidValue() {
+      return null;
+    }
+
+    @Override
+    public ConstraintDescriptor<?> getConstraintDescriptor() {
+      return null;
+    }
+
+    @Override
+    public <U> U unwrap(Class<U> type) {
+      return null;
+    }
+  } 
 }
