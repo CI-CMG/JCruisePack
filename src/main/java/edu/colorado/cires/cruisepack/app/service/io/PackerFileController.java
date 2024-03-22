@@ -11,12 +11,10 @@ import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.SupportedAlgorithm;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class PackerFileController {
   
@@ -80,30 +78,6 @@ public class PackerFileController {
   public void bagInPlace(Path mainBagPath, Metadata metadata, Collection<SupportedAlgorithm> algorithms) throws NoSuchAlgorithmException, IOException {
     checkPackState();
     BagCreator.bagInPlace(mainBagPath, algorithms, false, metadata);
-  }
-
-  public long getFileCount(Path path) {
-    checkPackState();
-
-    if (path == null) {
-      return 0L;
-    }
-
-    if (path.toFile().isFile()) {
-      return 1L;
-    }
-
-    try (Stream<Path> paths = Files.walk(path)) {
-      return paths
-          .filter(p -> p.toFile().isFile())
-          .filter(CruisePackFileUtils::filterHidden)
-          .count();
-    } catch (IOException e) {
-      throw new IllegalStateException(String.format(
-          "Failed to determine number of files from : %s",
-          path
-      ), e);
-    }
   }
   
   private void checkPackState() {

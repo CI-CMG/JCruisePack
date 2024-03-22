@@ -83,12 +83,15 @@ class PackerExecutor {
 ////    rawCheck(packJob); //TODO add to validation phase
       PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob); // TODO this should already be specified in pack job
       packStateModel.setProcessing(true);
-      packStateModel.setProgressIncrement(100f / getTotalFiles(packJobWithAncillaryInstruments));
+      packStateModel.setProgressIncrement(100f / getTotalSteps(packJobWithAncillaryInstruments));
       resetBagDirs(packJobWithAncillaryInstruments);
       copyDocs(packJobWithAncillaryInstruments);
+      packStateModel.incrementProgress();
       copyOmics(packJobWithAncillaryInstruments);
-      packData(packJobWithAncillaryInstruments);
+      packStateModel.incrementProgress();
+      packData(packJobWithAncillaryInstruments); // progress incremented internally after each instrument is processed
       packMainBag(packJobWithAncillaryInstruments);
+      packStateModel.incrementProgress();
     } catch (Exception e) {
       LOGGER.error("An error occurred while packing", e);
     } finally {
@@ -96,27 +99,23 @@ class PackerExecutor {
     }
   }
   
-  public long getTotalFiles(PackJob packJob) {
-    long totalFiles = 0;
-
-    totalFiles += packerFileController.getFileCount(packJob.getOmicsSampleTrackingSheetPath());
-    totalFiles += packerFileController.getFileCount(packJob.getDocumentsPath());
-    totalFiles += packJob.getInstruments().values().stream()
-        .flatMap(List::stream)
-        .map(instrumentDetail ->
-            instrumentDetail.getAdditionalFiles().stream()
-                .map(AdditionalFiles::getSourceFileOrDirectory)
-                .map(packerFileController::getFileCount)
-                .mapToLong(Long::valueOf)
-                .sum() +
-                packerFileController.getFileCount(instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath())) +
-                packerFileController.getFileCount(instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()))
-        )
-        .mapToLong(Long::valueOf)
-        .sum();
+  private int getTotalSteps(PackJob packJob) {
+    int steps = 0;
     
-    return totalFiles;
-  }
+    if (packJob.getDocumentsPath() != null && packJob.getDocumentsPath().toFile().exists()) {
+      steps += 1;
+    }
+    
+    if (packJob.isOmicsSamplingConducted()) {
+      steps += 1;
+    }
+    
+    steps += packJob.getInstruments().size(); // step for every dataset
+    
+    steps += 1; // main bag
+    
+    return steps;
+  } 
 
   private void packMainBag(PackJob packJob) {
     Path mainBagPath = packJob.getPackageDirectory().resolve(packJob.getPackageId());
@@ -299,7 +298,6 @@ class PackerExecutor {
                 packerFileController.mkDir(targetFile.getParent());
                 packerFileController.copy(sourceFile, targetFile);
               }
-              packStateModel.incrementProgress();
             }
             return super.visitFile(file, attr);
           }
@@ -338,7 +336,6 @@ class PackerExecutor {
       if (packerFileController.filterHidden(omicsFile)) {
         packerFileController.mkDir(omicsDir);
         packerFileController.copy(omicsFile, targetFile);
-        packStateModel.incrementProgress();
       }
     }
   }
@@ -412,6 +409,8 @@ class PackerExecutor {
           throw new IllegalStateException("Unable to delete empty bag: " + instrumentBagRootDir, e);
         }
       }
+      
+      packStateModel.incrementProgress();
     }
   }
   
@@ -594,7 +593,6 @@ class PackerExecutor {
               packerFileController.mkDir(targetFile.getParent());
               packerFileController.copy(sourceFile, targetFile);
             }
-            packStateModel.incrementProgress();
           }
           return super.visitFile(file, attr);
         }
@@ -628,7 +626,6 @@ class PackerExecutor {
                 packerFileController.mkDir(targetFile.getParent());
                 packerFileController.copy(sourceFile, targetFile);
               }
-              packStateModel.incrementProgress();
             }
             return super.visitFile(file, attr);
           }
@@ -639,7 +636,6 @@ class PackerExecutor {
           packerFileController.mkDir(targetFile.getParent());
           packerFileController.copy(sourceDataPath, targetFile);
         }
-        packStateModel.incrementProgress();
       } else {
         throw new IllegalStateException("Unable to read " + sourceDataPath);
       }
