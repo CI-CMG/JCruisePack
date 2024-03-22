@@ -59,6 +59,14 @@ public class FooterControlModel extends PropertyChangeModel {
       setIfChanged(Events.UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE, saveExitAppDialogueVisible, () -> this.saveExitAppDialogueVisible, (v) -> this.saveExitAppDialogueVisible = v);
   }
 
+  public boolean isSaveOrUpdateDialogVisible() {
+    return saveOrUpdateDialogVisible;
+  }
+
+  public boolean isPackageIdCollisionDialogVisible() {
+    return packageIdCollisionDialogVisible;
+  }
+
   public void emitPackageId(String packageId) {
     fireChangeEvent(Events.EMIT_PACKAGE_ID, null, packageId);
   }
@@ -76,7 +84,7 @@ public class FooterControlModel extends PropertyChangeModel {
   }
   
   public void setWarningMessages(List<String> warningMessages) {
-    setIfChanged(Events.UPDATE_JOB_WARNINGS, warningMessages, () -> new ArrayList<String>(0), (m) -> this.warningMessages = m);
+    setIfChanged(Events.UPDATE_JOB_WARNINGS, warningMessages, () -> this.warningMessages, (m) -> this.warningMessages = m);
   }
   
   public void addIgnoreWarningMessage(String warningMessage) {
@@ -89,5 +97,13 @@ public class FooterControlModel extends PropertyChangeModel {
   
   public List<String> getIgnoredWarningMessages() {
     return ignoredWarningMessages;
+  }
+
+  public String getJobErrors() {
+    return jobErrors;
+  }
+
+  public List<String> getWarningMessages() {
+    return warningMessages;
   }
 }
