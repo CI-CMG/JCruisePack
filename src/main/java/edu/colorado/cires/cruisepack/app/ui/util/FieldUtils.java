@@ -70,7 +70,7 @@ public final class FieldUtils {
     }
   }
   
-  public static void updateButtonEnabled(ButtonModel button, PropertyChangeEvent evt) {
+  public static void updateButtonEnabled(JButton button, PropertyChangeEvent evt) {
     boolean enable = (boolean) evt.getNewValue();
     boolean currentEnabled = button.isEnabled();
     if (enable != currentEnabled) {

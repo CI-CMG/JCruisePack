@@ -86,6 +86,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
 
     panel.addRemoveListener(queueController::removeFromQueue);
     panel.addPackageListener(queueController::submit);
+    panel.addStopListener(queueController::stop);
     panel.init();
     
     revalidate();
@@ -122,8 +123,8 @@ public class QueuePanel extends JPanel implements ReactiveView {
            .filter(packJobPanel -> !datastorePackageIds.contains(packJobPanel.getPackJob().getPackageId()))
            .forEach(queueController::removeFromQueue);
       }
-      case QueueModel.UPDATE_CLEAR_QUEUE_BUTTON -> updateButtonEnabled(clearButton.getModel(), evt);
-      case QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON -> updateButtonEnabled(processAllButton.getModel(), evt);
+      case QueueModel.UPDATE_CLEAR_QUEUE_BUTTON -> updateButtonEnabled(clearButton, evt);
+      case QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON -> updateButtonEnabled(processAllButton, evt);
       default -> rows.stream()
           .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
           .findFirst()
@@ -131,9 +132,11 @@ public class QueuePanel extends JPanel implements ReactiveView {
             if (evt.getPropertyName().startsWith("UPDATE_PROGRESS")) {
               updateProgressBarModel(packJobPanel.getProgressBarModel(), evt);
             } else if (evt.getPropertyName().startsWith("UPDATE_PACKAGE_BUTTON")) {
-              updateButtonEnabled(packJobPanel.getPackageButtonModel(), evt);
+              updateButtonEnabled(packJobPanel.getPackageButton(), evt);
             } else if (evt.getPropertyName().startsWith("UPDATE_REMOVE_BUTTON")) {
-              updateButtonEnabled(packJobPanel.getRemoveButtonModel(), evt);
+              updateButtonEnabled(packJobPanel.getRemoveButton(), evt);
+            } else if (evt.getPropertyName().startsWith("UPDATE_STOP_BUTTON")) {
+              updateButtonEnabled(packJobPanel.getStopButton(), evt);
             }
           });
     }

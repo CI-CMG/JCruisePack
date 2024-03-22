@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.swing.BoundedRangeModel;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,9 +22,11 @@ public class PackJobPanel extends JPanel {
   
   private final List<ComponentEventListener<PackJobPanel>> removeListeners = new ArrayList<>(0);
   private final List<ComponentEventListener<PackJobPanel>> packageListeners = new ArrayList<>(0);
+  private final List<ComponentEventListener<PackJobPanel>> stopListeners = new ArrayList<>(0);
   
   private final JButton removeButton = new JButton("Remove");
   private final JButton packageButton = new JButton("Package Data");
+  private final JButton stopButton = new JButton("Stop Packaging");
   private final JProgressBar progressBar = new JProgressBar();
 
   public PackJobPanel(PackJob packJob) {
@@ -41,12 +42,16 @@ public class PackJobPanel extends JPanel {
     return progressBar.getModel();
   }
 
-  public ButtonModel getRemoveButtonModel() {
-    return removeButton.getModel();
+  public JButton getRemoveButton() {
+    return removeButton;
   }
 
-  public ButtonModel getPackageButtonModel() {
-    return packageButton.getModel();
+  public JButton getPackageButton() {
+    return packageButton;
+  }
+
+  public JButton getStopButton() {
+    return stopButton;
   }
 
   public PackJob getPackJob() {
@@ -61,9 +66,18 @@ public class PackJobPanel extends JPanel {
     packageListeners.add(listener);
   }
   
+  public void addStopListener(ComponentEventListener<PackJobPanel> listener) {
+    stopListeners.add(listener);
+  }
+  
   public void init() {
+    initializeFields();
     setupLayout();
     setupMvc();
+  }
+  
+  private void initializeFields() {
+    stopButton.setEnabled(false);
   }
   
   private void setupLayout() {
@@ -72,7 +86,12 @@ public class PackJobPanel extends JPanel {
     JPanel row1 = new JPanel();
     row1.setLayout(new BorderLayout());
     row1.add(removeButton, BorderLayout.WEST);
-    row1.add(packageButton, BorderLayout.EAST);
+    
+    JPanel packAndStopButtons = new JPanel();
+    packAndStopButtons.setLayout(new BorderLayout());
+    packAndStopButtons.add(packageButton, BorderLayout.WEST);
+    packAndStopButtons.add(stopButton, BorderLayout.EAST);
+    row1.add(packAndStopButtons, BorderLayout.EAST);
     
     add(new JLabel(packJob.getPackageId()), configureLayout(0, 0));
     add(row1, configureLayout(0, 1));
@@ -84,6 +103,9 @@ public class PackJobPanel extends JPanel {
         listener -> listener.handle(this)
     ));
     packageButton.addActionListener((evt) -> packageListeners.forEach(
+        listener -> listener.handle(this)
+    ));
+    stopButton.addActionListener((evt) -> stopListeners.forEach(
         listener -> listener.handle(this)
     ));
   }

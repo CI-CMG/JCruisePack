@@ -79,6 +79,12 @@ public class QueueModel extends PropertyChangeModel {
     ), !enabled, enabled);
   }
   
+  public void updateStopButton(boolean enabled, String processId) {
+    fireChangeEvent(String.format(
+        "UPDATE_STOP_BUTTON_%s", processId
+    ), !enabled, enabled);
+  }
+  
   public void setErrors(Set<ConstraintViolation<QueueModel>> constraintViolations) {
     
   }
