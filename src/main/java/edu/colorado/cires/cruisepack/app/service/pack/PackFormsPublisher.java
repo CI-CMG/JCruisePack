@@ -18,13 +18,14 @@ public class PackFormsPublisher {
     this.publisher = publisher;
   }
   
-  public void publish(PropertyChangeListener source, Runnable executeBefore, Runnable executeAfter) {
+  public void publish(PropertyChangeListener source, String processId, Runnable executeBefore, Runnable executeAfter) {
     validationService.validate()
         .ifPresent(packJob ->
             publisher.publishEvent(new PackingJobEvent(
                 source,
                 new PackingJob(
                     packJob,
+                    processId,
                     executeBefore,
                     executeAfter
                 )

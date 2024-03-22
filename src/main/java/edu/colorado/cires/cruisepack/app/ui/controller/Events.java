@@ -170,8 +170,6 @@ public final class Events {
   public static final String UPDATE_IMPORT_METADATA_AUTHOR = "UPDATE_IMPORT_METADATA_AUTHOR";
   public static final String UPDATE_IMPORT_METADATA_AUTHOR_ERROR = "UPDATE_IMPORT_METADATA_AUTHOR_ERROR";
   
-  // Progress bar
-  public static final String UPDATE_PROGRESS = "UPDATE_PROGRESS";
   
   // Global Error message
   public static final String EMIT_ERROR_MESSAGE = "EMIT_ERROR_MESSAGE";

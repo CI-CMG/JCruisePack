@@ -77,7 +77,8 @@ class PackingScheduler {
         () -> {
           packingJob.executeAfter().run();
           stopJob(packingJob.packJob().getPackageId());
-        }
+        },
+        packingJob.processId()
     );
   }
 }

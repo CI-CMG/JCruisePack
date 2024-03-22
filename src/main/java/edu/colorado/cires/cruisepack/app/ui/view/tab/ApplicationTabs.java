@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab;
 
+import edu.colorado.cires.cruisepack.app.ui.view.queue.QueuePanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.cruisetab.CruisePanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetsPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.omicstab.OmicsPanel;
@@ -20,12 +21,14 @@ public class ApplicationTabs extends JTabbedPane {
   private static final String CRUISE_TAB_NAME = "Cruise Information";
   private static final String OMICS_TAB_NAME = "Omics";
   private static final String DATASETS_TAB_NAME = "Datasets";
+  private static final String QUEUE_TAB = "Queue";
 
   private final PackagePanel packagePanel;
   private final PeoplePanel peoplePanel;
   private final CruisePanel cruisePanel;
   private final OmicsPanel omicsPanel;
   private final DatasetsPanel datasetsPanel;
+  private final QueuePanel queuePanel;
 
   @Autowired
   public ApplicationTabs(
@@ -33,12 +36,13 @@ public class ApplicationTabs extends JTabbedPane {
       PeoplePanel peoplePanel,
       CruisePanel cruisePanel,
       OmicsPanel omicsPanel,
-      DatasetsPanel datasetsPanel) {
+      DatasetsPanel datasetsPanel, QueuePanel queuePanel) {
     this.packagePanel = packagePanel;
     this.peoplePanel = peoplePanel;
     this.cruisePanel = cruisePanel;
     this.omicsPanel = omicsPanel;
     this.datasetsPanel = datasetsPanel;
+    this.queuePanel = queuePanel;
   }
 
   @PostConstruct
@@ -48,5 +52,6 @@ public class ApplicationTabs extends JTabbedPane {
     addTab(CRUISE_TAB_NAME, cruisePanel);
     addTab(OMICS_TAB_NAME, omicsPanel);
     addTab(DATASETS_TAB_NAME, datasetsPanel);
+    addTab(QUEUE_TAB, queuePanel);
   }
 }

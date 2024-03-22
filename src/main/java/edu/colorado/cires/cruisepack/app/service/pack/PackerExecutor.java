@@ -59,9 +59,9 @@ class PackerExecutor {
 
   public PackerExecutor(
       MetadataService metadataService, InstrumentDatastore instrumentDatastore, Path workDirectory,
-      Runnable executeBefore, Runnable executeAfter
+      Runnable executeBefore, Runnable executeAfter, String processId
   ) {
-    this.packStateModel = new PackStateModel();
+    this.packStateModel = new PackStateModel(processId);
     this.packerFileController = new PackerFileController(packStateModel, metadataService);
     this.instrumentDatastore = instrumentDatastore;
     this.workDirectory = workDirectory;

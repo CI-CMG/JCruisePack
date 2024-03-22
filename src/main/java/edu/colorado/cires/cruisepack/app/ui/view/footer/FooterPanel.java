@@ -11,7 +11,6 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
-import edu.colorado.cires.cruisepack.app.ui.view.queue.ManageQueueDialog;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.Desktop;
@@ -26,6 +25,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
@@ -47,6 +47,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private static final String CLEAR_FORM_LABEL = "Clear Form";
   private static final String STOP_LABEL = "Stop Packaging";
   private static final String SAVE_LABEL = "Save For Later";
+  private static final String ADD_TO_QUEUE_LABEL = "Add To Queue";
   private static final String PACKAGE_LABEL = "Package Data";
   private static final String SETTINGS_LABEL = "Settings";
   private static final String USER_MANUAL_NAME = "CruisePack_manual.pdf";
@@ -58,14 +59,14 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final ManageRecordsDialog manageRecordsDialog;
   private final ImportExportDialog importExportDialog;
   private final SqliteMigrator sqliteMigrator;
-  private final ManageQueueDialog manageQueueDialog;
+  private final String processId;
 
   private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
-  private final JButton manageQueueButton = new JButton("Manage Queue");
   private final JButton importExportButton = new JButton(IMPORT_EXPORT_LABEL);
   private final JButton clearFormButton = new JButton(CLEAR_FORM_LABEL);
   private final JButton stopButton = new JButton(STOP_LABEL);
   private final JButton saveButton = new JButton(SAVE_LABEL);
+  private final JButton addToQueueButton = new JButton(ADD_TO_QUEUE_LABEL);
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
   private final JButton docsButton;
@@ -99,7 +100,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
       FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, ImportExportDialog importExportDialog,
-      SqliteMigrator sqliteMigrator, ManageQueueDialog manageQueueDialog, UiRefresher uiRefresher)
+      SqliteMigrator sqliteMigrator, UiRefresher uiRefresher)
       throws IOException {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
@@ -107,13 +108,13 @@ public class FooterPanel extends JPanel implements ReactiveView {
     this.manageRecordsDialog = manageRecordsDialog;
     this.importExportDialog = importExportDialog;
     this.sqliteMigrator = sqliteMigrator;
-    this.manageQueueDialog = manageQueueDialog;
     this.uiRefresher = uiRefresher;
     this.docsButton = new JButton(new ImageIcon(ImageIO.read(
         Objects.requireNonNull(getClass().getResource(String.format(
             "/%s", HELP_ICON_NAME
         )))
     )));
+    this.processId = UUID.randomUUID().toString();
   }
 
   @PostConstruct
@@ -137,11 +138,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
     row1.setLayout(new GridBagLayout());
     row1.add(docsButton, configureLayout(0, 0, c -> c.weightx = 0));
     row1.add(manageRecordsButton, configureLayout(1, 0));
-    row1.add(manageQueueButton, configureLayout(2, 0));
-    row1.add(importExportButton, configureLayout(3, 0));
-    row1.add(clearFormButton, configureLayout(4, 0));
-    row1.add(stopButton, configureLayout(5, 0));
-    row1.add(saveButton, configureLayout(6, 0));
+    row1.add(importExportButton, configureLayout(2, 0));
+    row1.add(clearFormButton, configureLayout(3, 0));
+    row1.add(stopButton, configureLayout(4, 0));
+    row1.add(saveButton, configureLayout(5, 0));
+    row1.add(addToQueueButton, configureLayout(6, 0));
     row1.add(packageButton, configureLayout(7, 0));
     add(row1, configureLayout(0, 0));
 
@@ -161,6 +162,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
       footerControlController.saveForms(false);
       uiRefresher.refresh();
     });
+    addToQueueButton.addActionListener((evt) -> footerControlController.addToQueue());
     saveWarningDialog.addListener("OK", (evt) -> footerControlController.setSaveWarningDialogueVisible(false));
     saveWarningDialog.addWindowListener(new WindowAdapter() {
       @Override
@@ -210,11 +212,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
       manageRecordsDialog.setVisible(true);
     });
     
-    manageQueueButton.addActionListener((evt) -> {
-      manageQueueDialog.pack();
-      manageQueueDialog.setVisible(true);
-    });
-    
     importExportButton.addActionListener((evt) -> {
       importExportDialog.pack();
       importExportDialog.setVisible(true);
@@ -257,7 +254,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
   }
 
   private void handlePackage() {
-    footerControlController.startPackaging();
+    footerControlController.startPackaging(processId);
   }
 
   @Override
@@ -344,9 +341,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
         }
       }
       break;
-      case Events.UPDATE_PROGRESS:
-        updateProgressBarModel(progressBarModel, evt);
-        break;
       case Events.UPDATE_JOB_WARNINGS:
         List<?> newValue = (List<?>) evt.getNewValue();
         for (Object obj : newValue) {
@@ -362,6 +356,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
           optionDialog.setVisible(true);
         }
       default:
+        if (evt.getPropertyName().startsWith("UPDATE_PROGRESS")) {
+          if (evt.getPropertyName().endsWith(processId)) {
+            updateProgressBarModel(progressBarModel, evt);
+          }
+        }
         break;
     }
   }

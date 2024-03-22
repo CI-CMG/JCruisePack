@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
@@ -99,7 +100,8 @@ public class PackerExecutorTest {
         instrumentDatastore,
         workDir,
         () -> {},
-        () -> {}
+        () -> {},
+        UUID.randomUUID().toString()
     );
   }
 

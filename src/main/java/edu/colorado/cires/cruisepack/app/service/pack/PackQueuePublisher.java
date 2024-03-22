@@ -20,19 +20,32 @@ public class PackQueuePublisher {
     this.publisher = publisher;
   }
 
-  public void publish(PropertyChangeListener source, Runnable executeBefore, Runnable executeAfter) {
+  public void publish(PropertyChangeListener source, String processId, Runnable executeBefore, Runnable executeAfter) {
     validationService.validate().ifPresent(
         packJobs -> packJobs.peek(
             packJob -> publisher.publishEvent(new PackingJobEvent(
                 source,
                 new PackingJob(
                     packJob,
+                    processId,
                     executeBefore,
                     executeAfter
                 )
             ))
         ).forEach(this::logQueuedJob)
     );
+  }
+  
+  public void publishOne(PropertyChangeListener source, String processId, PackJob packJob, Runnable executeBefore, Runnable executeAfter) {
+    publisher.publishEvent(new PackingJobEvent(
+        source,
+        new PackingJob(
+            packJob,
+            processId,
+            executeBefore,
+            executeAfter
+        )
+    ));
   }
 
   private void logQueuedJob(PackJob packJob) {

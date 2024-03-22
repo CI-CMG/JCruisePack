@@ -4,7 +4,7 @@ import edu.colorado.cires.cruisepack.app.service.pack.PackQueuePublisher;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.queue.QueueModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
+import edu.colorado.cires.cruisepack.app.ui.view.queue.PackJobPanel;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,11 +30,11 @@ public class QueueController implements PropertyChangeListener {
     queueModel.addChangeListener(this);
   }
   
-  public void addToQueue(DropDownItemPanel panel) {
+  public void addToQueue(PackJobPanel panel) {
     queueModel.addToQueue(panel);
   }
   
-  public void removeFromQueue(DropDownItemPanel panel) {
+  public void removeFromQueue(PackJobPanel panel) {
     queueModel.removeFromQueue(panel);
   }
   
@@ -42,9 +42,10 @@ public class QueueController implements PropertyChangeListener {
     queueModel.clearQueue();
   }
   
-  public void packageQueue() {
+  public void packageQueue(String processId) {
     packQueuePublisher.publish(
         this,
+        processId,
         () -> {
           queueModel.updateClearQueueButton(false);
           queueModel.updatePackageQueueButton(false);
@@ -53,6 +54,16 @@ public class QueueController implements PropertyChangeListener {
           queueModel.updateClearQueueButton(true);
           queueModel.updatePackageQueueButton(true);
         }
+    );
+  }
+  
+  public void submitOne(PackJobPanel packJobPanel) {
+    packQueuePublisher.publishOne(
+        this,
+        packJobPanel.getProcessId(),
+        packJobPanel.getPackJob(),
+        () -> {},
+        () -> {}
     );
   }
 

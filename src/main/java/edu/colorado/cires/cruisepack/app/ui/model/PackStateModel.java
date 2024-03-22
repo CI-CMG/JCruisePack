@@ -1,12 +1,16 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
-import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-
 public class PackStateModel extends PropertyChangeModel {
+  
+  private final String processId;
   
   private float progress;
   private float progressIncrement;
   private boolean processing;
+
+  public PackStateModel(String processId) {
+    this.processId = processId;
+  }
 
   private void setProgress(float progress) {
     float oldValue = this.progress;
@@ -16,7 +20,9 @@ public class PackStateModel extends PropertyChangeModel {
     int roundedNewValue = (int) Math.floor(progress);
     
     if (roundedOldValue != roundedNewValue) {
-      fireChangeEvent(Events.UPDATE_PROGRESS, roundedOldValue, roundedNewValue);
+      fireChangeEvent(String.format(
+          "UPDATE_PROGRESS_%s", processId
+      ), roundedOldValue, roundedNewValue);
     }
   }
 
