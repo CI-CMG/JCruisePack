@@ -15,7 +15,9 @@ import java.util.function.Function;
 import javax.swing.AbstractButton;
 import javax.swing.BoundedRangeModel;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -65,6 +67,14 @@ public final class FieldUtils {
     String newValue = (String) evt.getNewValue();
     if (!Objects.equals(oldValue, newValue)) {
       setSelectedButton(buttonGroup, newValue);
+    }
+  }
+  
+  public static void updateButtonEnabled(ButtonModel button, PropertyChangeEvent evt) {
+    boolean enable = (boolean) evt.getNewValue();
+    boolean currentEnabled = button.isEnabled();
+    if (enable != currentEnabled) {
+      button.setEnabled(enable);
     }
   }
 

@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.view.queue;
 
+import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateButtonEnabled;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgressBarModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -121,30 +122,20 @@ public class QueuePanel extends JPanel implements ReactiveView {
            .filter(packJobPanel -> !datastorePackageIds.contains(packJobPanel.getPackJob().getPackageId()))
            .forEach(queueController::removeFromQueue);
       }
-      case QueueModel.UPDATE_CLEAR_QUEUE_BUTTON -> {
-        boolean enable = (boolean) evt.getNewValue();
-        boolean currentEnabled = clearButton.isEnabled();
-        if (enable != currentEnabled) {
-          clearButton.setEnabled(enable);
-        }
-      }
-      case QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON -> {
-        boolean enable = (boolean) evt.getNewValue();
-        boolean currentEnabled = processAllButton.isEnabled();
-        if (enable != currentEnabled) {
-          processAllButton.setEnabled(enable);
-        }
-      }
-      default -> {
-        if (evt.getPropertyName().startsWith("UPDATE_PROGRESS")) {
-          rows.stream()
-              .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
-              .findFirst()
-              .map(PackJobPanel::getProgressBarModel)
-              .ifPresent(progressBarModel -> updateProgressBarModel(progressBarModel, evt));
-
-        }
-      }
+      case QueueModel.UPDATE_CLEAR_QUEUE_BUTTON -> updateButtonEnabled(clearButton.getModel(), evt);
+      case QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON -> updateButtonEnabled(processAllButton.getModel(), evt);
+      default -> rows.stream()
+          .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
+          .findFirst()
+          .ifPresent(packJobPanel -> {
+            if (evt.getPropertyName().startsWith("UPDATE_PROGRESS")) {
+              updateProgressBarModel(packJobPanel.getProgressBarModel(), evt);
+            } else if (evt.getPropertyName().startsWith("UPDATE_PACKAGE_BUTTON")) {
+              updateButtonEnabled(packJobPanel.getPackageButtonModel(), evt);
+            } else if (evt.getPropertyName().startsWith("UPDATE_REMOVE_BUTTON")) {
+              updateButtonEnabled(packJobPanel.getRemoveButtonModel(), evt);
+            }
+          });
     }
   }
 }

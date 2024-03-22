@@ -5,13 +5,12 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ComponentEventListener;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.swing.BorderFactory;
 import javax.swing.BoundedRangeModel;
+import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,6 +39,14 @@ public class PackJobPanel extends JPanel {
 
   public BoundedRangeModel getProgressBarModel() {
     return progressBar.getModel();
+  }
+
+  public ButtonModel getRemoveButtonModel() {
+    return removeButton.getModel();
+  }
+
+  public ButtonModel getPackageButtonModel() {
+    return packageButton.getModel();
   }
 
   public PackJob getPackJob() {

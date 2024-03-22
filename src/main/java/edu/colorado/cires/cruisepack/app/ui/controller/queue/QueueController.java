@@ -39,12 +39,23 @@ public class QueueController implements PropertyChangeListener {
   }
 
   public void submit(PackJobPanel packJobPanel) {
+    String processId = packJobPanel.getProcessId();
     packQueuePublisher.publish(
         this,
-        packJobPanel.getProcessId(),
+        processId,
         packJobPanel.getPackJob(),
-        () -> {},
-        () -> {}
+        () -> {
+          queueModel.updatePackageButton(false, processId);
+          queueModel.updateRemoveButton(false, processId);
+          queueModel.updateClearQueueButton(false);
+          queueModel.updatePackageQueueButton(false);
+        },
+        () -> {
+          queueModel.updatePackageButton(true, processId);
+          queueModel.updateRemoveButton(true, processId);
+          queueModel.updateClearQueueButton(true);
+          queueModel.updatePackageQueueButton(true);
+        }
     );
   }
 

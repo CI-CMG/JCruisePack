@@ -67,6 +67,18 @@ public class QueueModel extends PropertyChangeModel {
     fireChangeEvent(UPDATE_CLEAR_QUEUE_BUTTON, !enabled, enabled);
   }
   
+  public void updatePackageButton(boolean enabled, String processId) {
+    fireChangeEvent(String.format(
+        "UPDATE_PACKAGE_BUTTON_%s", processId
+    ), !enabled, enabled);
+  }
+  
+  public void updateRemoveButton(boolean enabled, String processId) {
+    fireChangeEvent(String.format(
+        "UPDATE_REMOVE_BUTTON_%s", processId
+    ), !enabled, enabled);
+  }
+  
   public void setErrors(Set<ConstraintViolation<QueueModel>> constraintViolations) {
     
   }
