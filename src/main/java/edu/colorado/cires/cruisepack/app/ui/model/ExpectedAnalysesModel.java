@@ -95,44 +95,4 @@ public class ExpectedAnalysesModel {
         this.microbiome = microbiome;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ExpectedAnalysesModel other = (ExpectedAnalysesModel) obj;
-        if (barcoding != other.barcoding)
-            return false;
-        if (genomics != other.genomics)
-            return false;
-        if (transcriptomics != other.transcriptomics)
-            return false;
-        if (proteomics != other.proteomics)
-            return false;
-        if (metabolomics != other.metabolomics)
-            return false;
-        if (epigenetics != other.epigenetics)
-            return false;
-        if (this.other != other.other)
-            return false;
-        if (metabarcoding != other.metabarcoding)
-            return false;
-        if (metagenomics != other.metagenomics)
-            return false;
-        if (metatranscriptomics != other.metatranscriptomics)
-            return false;
-        if (metaproteomics != other.metaproteomics)
-            return false;
-        if (metametabolomics != other.metametabolomics)
-            return false;
-        if (microbiome != other.microbiome)
-            return false;
-        return true;
-    }
-
-    
-    
 }
