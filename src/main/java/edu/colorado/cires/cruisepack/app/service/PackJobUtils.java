@@ -2,14 +2,7 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
-import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
-import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
@@ -22,23 +15,16 @@ import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.model.SamplingTypesModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
 import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
 import edu.colorado.cires.cruisepack.xml.person.Person;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 
 public final class PackJobUtils {
@@ -127,117 +113,6 @@ public final class PackJobUtils {
       map.put(pkg, Collections.unmodifiableList(instrumentDetails));
     }
     return map;
-  }
-  
-  public static PackJob create(CruiseData cruiseData, SeaDatastore seaDatastore, PortDatastore portDatastore, PersonDatastore personDatastore, InstrumentDatastore instrumentDatastore) {
-    PackJob.Builder builder = PackJob.builder()
-        .setCruiseId(cruiseData.getCruiseId())
-        .setSegment(cruiseData.getSegmentId())
-        .setSeaUuid(seaDatastore.getSeaUuidForName(cruiseData.getSeaArea()))
-        .setArrivalPortUuid(portDatastore.getPortUuidForName(cruiseData.getArrivalPort()))
-        .setDeparturePortUuid(portDatastore.getPortUuidForName(cruiseData.getDeparturePort()))
-        .setShipUuid(cruiseData.getShipUuid())
-        .setDepartureDate(cruiseData.getDepartureDate() == null ? null : LocalDate.parse(cruiseData.getDepartureDate()))
-        .setArrivalDate(cruiseData.getArrivalDate() == null ? null : LocalDate.parse(cruiseData.getArrivalDate()))
-        .setProjects(cruiseData.getProjects())
-        .setReleaseDate(cruiseData.getMasterReleaseDate() == null ? null : LocalDate.parse(cruiseData.getMasterReleaseDate()))
-        .setPackageDirectory(cruiseData.getPackageDirectory() == null ? null : Paths.get(cruiseData.getPackageDirectory()))
-        .setScientists(cruiseData.getScientists())
-        .setFunders(cruiseData.getFunders())
-        .setSources(cruiseData.getSponsors())
-        .setMetadataAuthor(cruiseData.getMetadataAuthor() == null ? null : personDatastore.findByName(cruiseData.getMetadataAuthor().getName()).orElse(null))
-        .setCruiseTitle(cruiseData.getCruiseTitle())
-        .setCruisePurpose(cruiseData.getCruisePurpose())
-        .setCruiseDescription(cruiseData.getCruiseDescription())
-        .setDocumentsPath(cruiseData.getDocumentsPath() == null ? null : Paths.get(cruiseData.getDocumentsPath()))
-        .setPackageId(cruiseData.getPackageId())
-        .setInstruments(resolveInstruments(cruiseData.getInstruments(), instrumentDatastore));
-    
-    builder = setOmicsFields(cruiseData, builder);
-        
-    return builder.build();
-  }
-  
-  private static Map<InstrumentDetailPackageKey, List<InstrumentDetail>> resolveInstruments(List<edu.colorado.cires.cruisepack.app.service.metadata.Instrument> instruments, InstrumentDatastore instrumentDatastore) {
-    Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new HashMap<>(0);
-    instruments.forEach(instrument -> {
-      InstrumentDetailPackageKey key = new InstrumentDetailPackageKey(
-          InstrumentGroupName.fromLongName(instrument.getType()).getShortName(),
-          instrument.getInstrument()
-      );
-      
-      List<InstrumentDetail> instrumentDetails = map.get(key);
-      if (instrumentDetails == null) {
-        instrumentDetails = new ArrayList<>(0);
-      }
-      
-      Optional<Instrument> xmlInstrument = instrumentDatastore.getInstrument(key);
-      if (xmlInstrument.isPresent()) {
-        instrumentDetails.add(instrumentDetailFromInstrument(
-            instrument, 
-            xmlInstrument.get()
-        ));
-        map.put(key, instrumentDetails);
-      }
-      
-    });
-    
-    return map;
-  }
-  
-  private static InstrumentDetail instrumentDetailFromInstrument(edu.colorado.cires.cruisepack.app.service.metadata.Instrument instrument, Instrument xmlInstrument) {
-    InstrumentDetail.Builder builder = InstrumentDetail.builder()
-        .setStatus(InstrumentStatus.forValue(instrument.getStatus()))
-        .setUuid(instrument.getUuid())
-        .setReleaseDate(instrument.getReleaseDate() == null ? null : LocalDate.parse(instrument.getReleaseDate()))
-        .setInstrument(instrument.getInstrument())
-        .setShortName(instrument.getShortName())
-        .setExtensions(
-            xmlInstrument.getFileExtensions() == null ? null : new HashSet<>(xmlInstrument.getFileExtensions().getFileExtensions())
-        )
-        .setFlatten(xmlInstrument.isFlatten())
-        .setDirName(instrument.getDirName())
-        .setBagName(instrument.getBagName())
-        .setDataComment(instrument.getDataComment())
-        .setAncillaryDataDetails(instrument.getAncillaryDataDetails())
-        .setAdditionalFiles(Collections.emptyList());
-    
-    for (Entry<String, Object> entry : instrument.getOtherFields().entrySet()) {
-      builder = builder.setAdditionalField(entry);
-    }
-    
-    if (instrument instanceof InstrumentData) {
-      Path dataPath = ((InstrumentData) instrument).getDataPath();
-      Path ancillaryPath = ((InstrumentData) instrument).getAncillaryDataPath();
-      builder = builder.setDataPath(dataPath == null ? null : dataPath.toString())
-          .setAncillaryDataPath(ancillaryPath == null ? null : ancillaryPath.toString());
-    }
-    
-    return builder.build();
-  }
-  
-  private static PackJob.Builder setOmicsFields(CruiseData cruiseData, PackJob.Builder builder) {
-    Omics omics = cruiseData.getOmics();
-    if (omics != null) {
-      if (omics instanceof OmicsData) {
-        builder = builder.setOmicsSamplingConducted(((OmicsData) omics).isSamplingConducted())
-            .setOmicsSampleTrackingSheetPath(((OmicsData) omics).getSampleTrackingSheet());
-      }
-      
-      OmicsPoc omicsPoc = omics.getOmicsPoc();
-      if (omicsPoc != null) {
-        builder = builder.setOmicsContactUuid(omicsPoc.getUuid())
-            .setOmicsContactName(omicsPoc.getName())
-            .setOmicsContactEmail(omicsPoc.getEmail())
-            .setOmicsContactPhone(omicsPoc.getPhone());
-      }
-      
-      builder = builder.setOmicsBioProjectAccession(omics.getNcbiAccession())
-          .setOmicsSamplingTypes(omics.getSamplingTypes())
-          .setOmicsExpectedAnalyses(omics.getAnalysesTypes())
-          .setOmicsAdditionalSamplingInformation(omics.getOmicsComment());
-    }
-    return builder;
   }
 
   public static PackJob create(PackageModel packageModel, PeopleModel peopleModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore, PersonDatastore personDatastore) {

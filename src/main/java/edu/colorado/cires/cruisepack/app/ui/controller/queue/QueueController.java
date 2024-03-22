@@ -29,11 +29,7 @@ public class QueueController implements PropertyChangeListener {
   public void init() {
     queueModel.addChangeListener(this);
   }
-  
-  public void addToQueue(PackJobPanel panel) {
-    queueModel.addToQueue(panel);
-  }
-  
+
   public void removeFromQueue(PackJobPanel panel) {
     queueModel.removeFromQueue(panel);
   }
@@ -41,24 +37,9 @@ public class QueueController implements PropertyChangeListener {
   public void clearQueue() {
     queueModel.clearQueue();
   }
-  
-  public void packageQueue(String processId) {
+
+  public void submit(PackJobPanel packJobPanel) {
     packQueuePublisher.publish(
-        this,
-        processId,
-        () -> {
-          queueModel.updateClearQueueButton(false);
-          queueModel.updatePackageQueueButton(false);
-        },
-        () -> {
-          queueModel.updateClearQueueButton(true);
-          queueModel.updatePackageQueueButton(true);
-        }
-    );
-  }
-  
-  public void submitOne(PackJobPanel packJobPanel) {
-    packQueuePublisher.publishOne(
         this,
         packJobPanel.getProcessId(),
         packJobPanel.getPackJob(),

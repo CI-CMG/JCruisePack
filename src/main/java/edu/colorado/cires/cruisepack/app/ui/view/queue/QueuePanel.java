@@ -17,7 +17,6 @@ import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,8 +31,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final QueueController queueController;
   private final CruiseDataDatastore cruiseDataDatastore;
-  private final String processId;
-  
+
   private final List<PackJobPanel> rows = new ArrayList<>(0);
   private final JPanel listingPanel = new JPanel();
   
@@ -46,7 +44,6 @@ public class QueuePanel extends JPanel implements ReactiveView {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.queueController = queueController;
     this.cruiseDataDatastore = cruiseDataDatastore;
-    this.processId = UUID.randomUUID().toString();
   }
 
   @PostConstruct
@@ -77,7 +74,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   
   private void setupMvc() {
     clearButton.addActionListener((evt) -> queueController.clearQueue());
-    processAllButton.addActionListener((evt) -> queueController.packageQueue(processId));
+    processAllButton.addActionListener((evt) -> rows.forEach(queueController::submit));
   }
   
   private void addPackJob(PackJobPanel panel) {
@@ -87,7 +84,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
     listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
 
     panel.addRemoveListener(queueController::removeFromQueue);
-    panel.addPackageListener(queueController::submitOne);
+    panel.addPackageListener(queueController::submit);
     panel.init();
     
     revalidate();
