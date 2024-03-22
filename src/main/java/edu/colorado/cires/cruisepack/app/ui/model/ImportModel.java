@@ -40,7 +40,7 @@ public class ImportModel extends PropertyChangeModel {
     setImportPathError(null);
     setDestinationPath(null);
     setDestinationPathError(null);
-    setMetadataAuthor(null);
+    setMetadataAuthor(PersonDatastore.UNSELECTED_PERSON);
     setMetadataAuthorError(null);
   }
   
