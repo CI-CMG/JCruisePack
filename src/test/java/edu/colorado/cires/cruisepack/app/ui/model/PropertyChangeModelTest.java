@@ -63,6 +63,27 @@ public abstract class PropertyChangeModelTest<T extends PropertyChangeModel> {
     );
   }
   
+  protected void addChangeListener(PropertyChangeModel model) {
+    model.addChangeListener(
+        (evt) -> {
+          String propertyName = evt.getPropertyName();
+          List<PropertyChangeEvent> value = eventMap.get(propertyName);
+          if (value == null) {
+            List<PropertyChangeEvent> events = new ArrayList<>(0);
+            events.add(evt);
+            eventMap.put(
+                propertyName, events
+            );
+          } else {
+            value.add(evt);
+            eventMap.put(
+                propertyName, value
+            );
+          }
+        }
+    );
+  }
+  
   protected <V> void assertPropertyChange(String eventName, Supplier<V> getter, Consumer<V> setter, V value1, V value2, V defaultValue) {
     setter.accept(value1);
     assertEquals(getter.get(), value1);

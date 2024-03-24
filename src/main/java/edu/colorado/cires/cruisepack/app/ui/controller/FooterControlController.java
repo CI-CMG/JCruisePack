@@ -158,7 +158,13 @@ public class FooterControlController implements PropertyChangeListener {
   }
 
   public void updateFormState(Cruise cruiseMetadata) {
-    packageModel.updateFormState(cruiseMetadata, projectDatastore, portDatastore, shipDatastore, seaDatastore, cruiseDataDatastore);
+    packageModel.updateFormState(
+        cruiseMetadata,
+        projectDatastore.getAllProjectDropDowns(),
+        portDatastore.getPortDropDowns(),
+        shipDatastore.getShipDropDowns(),
+        seaDatastore.getSeaDropDowns()
+    );
     peopleModel.updateFormState(
         cruiseMetadata.getScientists(),
         personDatastore.getEnabledPersonDropDowns(),

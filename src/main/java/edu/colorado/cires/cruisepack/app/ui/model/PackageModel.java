@@ -105,7 +105,7 @@ public class PackageModel extends PropertyChangeModel {
     setExistingRecord(CruiseDataDatastore.UNSELECTED_CRUISE);
   }
 
-  public void updateFormState(Cruise cruiseMetadata, ProjectDatastore projectDatastore, PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, CruiseDataDatastore cruiseDataDatastore) {
+  public void updateFormState(Cruise cruiseMetadata, List<DropDownItem> projects, List<DropDownItem> ports, List<DropDownItem> ships, List<DropDownItem> seas) {
     setCruiseId(cruiseMetadata.getCruiseId());
     setSegment(cruiseMetadata.getSegmentId());
     if (cruiseMetadata instanceof CruiseData) {
@@ -113,12 +113,12 @@ public class PackageModel extends PropertyChangeModel {
       setPackageDirectory(packDir == null ? null : Paths.get(packDir));
     }
     if (cruiseMetadata.getShipUuid() != null && cruiseMetadata.getShip() != null) {
-      DropDownItem dropDownItem = shipDatastore.getShipDropDowns().stream()
+      DropDownItem dropDownItem = ships.stream()
         .filter(i -> i.getId().equals(cruiseMetadata.getShipUuid())).findFirst().orElse(null);
       setShip(dropDownItem);
     }
     if (cruiseMetadata.getDeparturePort() != null) {
-      DropDownItem dropDownItem = portDatastore.getPortDropDowns().stream()
+      DropDownItem dropDownItem = ports.stream()
         .filter(i -> i.getValue().equals(cruiseMetadata.getDeparturePort())).findFirst().orElse(null);
       setDeparturePort(dropDownItem);
     }
@@ -126,12 +126,12 @@ public class PackageModel extends PropertyChangeModel {
       setDepartureDate(LocalDate.parse(cruiseMetadata.getDepartureDate()));
     }
     if (cruiseMetadata.getSeaArea() != null) {
-      DropDownItem dropDownItem = seaDatastore.getSeaDropDowns().stream()
+      DropDownItem dropDownItem = seas.stream()
         .filter(i -> i.getValue().equals(cruiseMetadata.getSeaArea())).findFirst().orElse(null);
         setSea(dropDownItem);
     }
     if (cruiseMetadata.getArrivalPort() != null) {
-      DropDownItem dropDownItem = portDatastore.getPortDropDowns().stream()
+      DropDownItem dropDownItem = ports.stream()
         .filter(i -> i.getValue().equals(cruiseMetadata.getArrivalPort())).findFirst().orElse(null);
       setArrivalPort(dropDownItem);
     }
@@ -140,8 +140,8 @@ public class PackageModel extends PropertyChangeModel {
     }
     if (!cruiseMetadata.getProjects().isEmpty()) {
       clearProjects();
-      for (DropDownItem item : projectDatastore.getProjectDropDownsMatchingNames(cruiseMetadata.getProjects())) {
-        DropDownItemPanel panel = new DropDownItemPanel(projectDatastore.getAllProjectDropDowns(), ProjectDatastore.UNSELECTED_PROJECT);
+      for (DropDownItem item : projects.stream().filter(dd -> cruiseMetadata.getProjects().contains(dd.getValue())).toList()) {
+        DropDownItemPanel panel = new DropDownItemPanel(projects, ProjectDatastore.UNSELECTED_PROJECT);
         panel.getModel().setItem(item);
         addProject(panel);
       }
@@ -150,12 +150,7 @@ public class PackageModel extends PropertyChangeModel {
       setReleaseDate(LocalDate.parse(cruiseMetadata.getMasterReleaseDate()));
     }
     
-    setExistingRecord(
-        cruiseDataDatastore.getByPackageId(
-            cruiseMetadata.getPackageId()
-        ).map(cd -> new DropDownItem(cd.getPackageId(), cd.getPackageId()))
-        .orElse(CruiseDataDatastore.UNSELECTED_CRUISE)
-    );
+    setExistingRecord(new DropDownItem(cruiseMetadata.getPackageId(), cruiseMetadata.getPackageId()));
   }
 
   public String getCruiseId() {
@@ -331,5 +326,49 @@ public class PackageModel extends PropertyChangeModel {
 
   public void setExistingRecord(DropDownItem existingRecord) {
     setIfChanged(Events.UPDATE_EXISTING_RECORD, existingRecord, () -> this.existingRecord, (dd) -> this.existingRecord = dd);
+  }
+
+  public String getCruiseIdError() {
+    return cruiseIdError;
+  }
+
+  public String getSegmentError() {
+    return segmentError;
+  }
+
+  public String getSeaError() {
+    return seaError;
+  }
+
+  public String getArrivalPortError() {
+    return arrivalPortError;
+  }
+
+  public String getDeparturePortError() {
+    return departurePortError;
+  }
+
+  public String getShipError() {
+    return shipError;
+  }
+
+  public String getDepartureDateError() {
+    return departureDateError;
+  }
+
+  public String getArrivalDateError() {
+    return arrivalDateError;
+  }
+
+  public String getReleaseDateError() {
+    return releaseDateError;
+  }
+
+  public String getPackageDirectoryError() {
+    return packageDirectoryError;
+  }
+
+  public String getProjectsError() {
+    return projectsError;
   }
 }
