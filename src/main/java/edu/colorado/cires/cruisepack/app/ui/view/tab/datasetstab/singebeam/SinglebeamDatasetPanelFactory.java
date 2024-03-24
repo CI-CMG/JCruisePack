@@ -36,8 +36,7 @@ public class SinglebeamDatasetPanelFactory extends DatasetPanelFactory<Singlebea
   protected SinglebeamAdditionalFieldsModel createAdditionalFieldsModel(Instrument instrument) {
     return AdditionalFieldsModelFactory.singlebeam(
         instrument.getOtherFields(),
-        singlebeamVerticalDatumDatastore.getVerticalDatumDropDowns(),
-        SinglebeamVerticalDatumDatastore.UNSELECTED_VERTICAL_DATUM
+        singlebeamVerticalDatumDatastore.getVerticalDatumDropDowns()
     );
   }
 

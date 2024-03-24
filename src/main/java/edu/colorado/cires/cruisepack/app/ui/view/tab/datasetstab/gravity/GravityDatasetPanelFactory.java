@@ -36,8 +36,7 @@ public class GravityDatasetPanelFactory extends DatasetPanelFactory<GravityAddit
   protected GravityAdditionalFieldsModel createAdditionalFieldsModel(Instrument instrument) {
     return AdditionalFieldsModelFactory.gravity(
         instrument.getOtherFields(),
-        gravityCorrectionModelDatastore.getCorrectionModelDropDowns(),
-        GravityCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL
+        gravityCorrectionModelDatastore.getCorrectionModelDropDowns()
     );
   }
 

@@ -39,8 +39,7 @@ public class WaterColumnSonarDatasetPanelFactory extends DatasetPanelFactory<Wat
   protected WaterColumnAdditionalFieldsModel createAdditionalFieldsModel(Instrument instrument) {
     return AdditionalFieldsModelFactory.waterColumn(
         instrument.getOtherFields(),
-        waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns(),
-        WaterColumnCalibrationStateDatastore.UNSELECTED_CALIBRATION_STATE
+        waterColumnCalibrationStateDatastore.getCalibrationStateDropDowns()
     );
   }
 

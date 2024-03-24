@@ -36,8 +36,7 @@ public class MagneticsDatasetPanelFactory extends DatasetPanelFactory<MagneticsA
   protected MagneticsAdditionalFieldsModel createAdditionalFieldsModel(Instrument instrument) {
     return AdditionalFieldsModelFactory.magnetics(
         instrument.getOtherFields(),
-        magneticsCorrectionModelDatastore.getCorrectionModelDropDowns(),
-        MagneticsCorrectionModelDatastore.UNSELECTED_CORRECTION_MODEL
+        magneticsCorrectionModelDatastore.getCorrectionModelDropDowns()
     );
   }
 

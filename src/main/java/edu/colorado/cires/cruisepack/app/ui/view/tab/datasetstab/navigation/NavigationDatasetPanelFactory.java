@@ -33,8 +33,7 @@ public class NavigationDatasetPanelFactory extends DatasetPanelFactory<Navigatio
   protected NavigationAdditionalFieldsModel createAdditionalFieldsModel(Instrument instrument) {
     return AdditionalFieldsModelFactory.navigation(
         instrument.getOtherFields(),
-        navigationDatumDatastore.getNavigationDatumDropDowns(),
-        NavigationDatumDatastore.UNSELECTED_NAVIGATION_DATUM
+        navigationDatumDatastore.getNavigationDatumDropDowns()
     );
   }
 
