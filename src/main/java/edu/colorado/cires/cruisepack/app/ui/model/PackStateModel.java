@@ -45,4 +45,12 @@ public class PackStateModel extends PropertyChangeModel {
       setProgress(0f);
     }
   }
+
+  public float getProgress() {
+    return progress;
+  }
+
+  public float getProgressIncrement() {
+    return progressIncrement;
+  }
 }
