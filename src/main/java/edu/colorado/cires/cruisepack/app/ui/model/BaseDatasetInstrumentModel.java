@@ -260,4 +260,24 @@ public abstract class BaseDatasetInstrumentModel<T extends AdditionalFieldsModel
   public void setAdditionalFieldsModel(T additionalFieldsModel) {
     this.additionalFieldsModel = additionalFieldsModel;
   }
+
+  public String getPublicReleaseDateError() {
+    return publicReleaseDateError;
+  }
+
+  public String getDataPathError() {
+    return dataPathError;
+  }
+
+  public String getInstrumentError() {
+    return instrumentError;
+  }
+
+  public String getProcessingLevelError() {
+    return processingLevelError;
+  }
+
+  public String getCommentsError() {
+    return commentsError;
+  }
 }

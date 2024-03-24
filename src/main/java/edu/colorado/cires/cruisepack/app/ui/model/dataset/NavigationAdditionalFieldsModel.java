@@ -31,7 +31,7 @@ public class NavigationAdditionalFieldsModel extends AdditionalFieldsModel {
   }
 
   @Override
-  protected void setError(String propertyPath, String message) {
+  public void setError(String propertyPath, String message) {
     if (propertyPath.endsWith("navDatum")) {
       setNavDatumError(message);
     }
@@ -42,5 +42,9 @@ public class NavigationAdditionalFieldsModel extends AdditionalFieldsModel {
     HashMap<String, Object> map = new HashMap<>(0);
     map.put("nav_datum", navDatum.getValue());
     return map;
+  }
+
+  public String getNavDatumError() {
+    return navDatumError;
   }
 }
