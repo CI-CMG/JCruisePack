@@ -26,10 +26,6 @@ public abstract class PropertyChangeModel {
     propertyChangeSupport.firePropertyChange(eventId, oldValue, newValue);
   }
 
-  protected void fireIndexedChangeEvent(String eventId, int index, Object oldValue, Object newValue) {
-    propertyChangeSupport.fireIndexedPropertyChange(eventId, index, oldValue, newValue);
-  }
-
   protected <T> void setIfChanged(String event, T newValue, Supplier<T> getOldValue, Consumer<T> setNewValue) {
     T oldValue = getOldValue.get();
     if (!Objects.equals(newValue, oldValue)) {
