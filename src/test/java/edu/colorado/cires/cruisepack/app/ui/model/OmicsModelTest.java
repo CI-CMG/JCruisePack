@@ -215,6 +215,12 @@ class OmicsModelTest extends PropertyChangeModelTest<OmicsModel> {
   @Test
   void setBioProjectAccession() {
     assertPropertyChange(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, model::getBioProjectAccession, model::setBioProjectAccession, "value1", "value2", null);
+    
+    clearMap();
+    
+    model.setBioProjectAccession("");
+    assertChangeEvent(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, "value2", null);
+    assertNull(model.getBioProjectAccession());
   }
 
   @Test
