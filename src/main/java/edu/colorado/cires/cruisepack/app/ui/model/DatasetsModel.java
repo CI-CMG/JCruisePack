@@ -112,6 +112,7 @@ public class DatasetsModel extends PropertyChangeModel {
     setIfChanged(Events.UPDATE_DOCS_DIRECTORY_ERROR, documentsPathError, () -> this.documentsPathError, (nv) -> this.documentsPathError = nv);
   }
 
-  
-
+  public String getDatasetsError() {
+    return datasetsError;
+  }
 }

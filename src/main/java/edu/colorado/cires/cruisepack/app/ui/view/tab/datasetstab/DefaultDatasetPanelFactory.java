@@ -2,7 +2,6 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentMetadata;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class DefaultDatasetPanelFactory extends DatasetPanelFactory<AdditionalFieldsModel, BaseDatasetInstrumentController<AdditionalFieldsModel>> {
 
-  protected DefaultDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
+  public DefaultDatasetPanelFactory(InstrumentDatastore instrumentDatastore) {
     super(instrumentDatastore);
   }
 
