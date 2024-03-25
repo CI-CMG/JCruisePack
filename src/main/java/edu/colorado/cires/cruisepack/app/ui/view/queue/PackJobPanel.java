@@ -6,6 +6,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ComponentEventListener;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -93,7 +94,7 @@ public class PackJobPanel extends JPanel {
     packAndStopButtons.add(stopButton, BorderLayout.EAST);
     row1.add(packAndStopButtons, BorderLayout.EAST);
     
-    add(new JLabel(packJob.getPackageId()), configureLayout(0, 0));
+    add(new JLabel(packJob.getPackageId()), configureLayout(0, 0, c -> c.insets = new Insets(0, 0, 10, 0)));
     add(row1, configureLayout(0, 1));
     add(progressBar, configureLayout(0, 2));
   }
