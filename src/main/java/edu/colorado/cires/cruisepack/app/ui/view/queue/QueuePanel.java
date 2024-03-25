@@ -55,8 +55,13 @@ public class QueuePanel extends JPanel implements ReactiveView {
     setupLayout();
     setupMvc();
   }
-  
+
+  public List<PackJobPanel> getRows() {
+    return rows;
+  }
+
   private void initializeFields() {
+    
   }
   
   private void setupLayout() {
@@ -71,6 +76,10 @@ public class QueuePanel extends JPanel implements ReactiveView {
     footerButtonPanel.add(processAllButton, BorderLayout.EAST);
     footerButtonPanel.add(clearButton, BorderLayout.WEST);
     add(footerButtonPanel, configureLayout(0, 1, c -> c.weighty = 0));
+
+    queueController.getQueue().stream()
+        .map(PackJobPanel::new)
+        .forEach(this::addPackJob);
   }
   
   private void setupMvc() {

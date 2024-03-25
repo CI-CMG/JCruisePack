@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.controller.queue;
 
+import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.pack.PackQueuePublisher;
 import edu.colorado.cires.cruisepack.app.service.pack.StopJobPublisher;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -9,6 +10,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.queue.PackJobPanel;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +42,10 @@ public class QueueController implements PropertyChangeListener {
   
   public void clearQueue() {
     queueModel.clearQueue();
+  }
+  
+  public List<PackJob> getQueue() {
+    return queueModel.getQueue();
   }
 
   public void submit(PackJobPanel packJobPanel) {
