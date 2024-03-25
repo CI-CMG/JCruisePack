@@ -1,12 +1,15 @@
 package edu.colorado.cires.cruisepack.app.ui.model.validation;
 
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists.PathExistsValidator;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.PathIsFile.PathIsFileValidator;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidExpectedAnalyses.ValidExpectedAnalysesValidator;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem.ValidPersonDropDownItemValidator;
+import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidSamplingTypes.ValidSamplingTypesValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
-import java.nio.file.Path;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,6 +29,26 @@ public @interface ValidOmicsModel {
   Class<? extends Payload>[] payload() default {};
   
   class ValidOmicsModelValidator implements ConstraintValidator<ValidOmicsModel, OmicsModel> {
+    
+    private final ValidPersonDropDownItemValidator validPersonDropDownItemValidator;
+    private final NotNullValidator notNullValidator;
+    private final PathExistsValidator pathExistsValidator;
+    private final PathIsFileValidator pathIsFileValidator;
+    private final NotBlankValidator notBlankValidator;
+    private final ValidSamplingTypesValidator validSamplingTypesValidator;
+    private final ValidExpectedAnalysesValidator validExpectedAnalysesValidator;
+
+    public ValidOmicsModelValidator(ValidPersonDropDownItemValidator validPersonDropDownItemValidator, NotNullValidator notNullValidator,
+        PathExistsValidator pathExistsValidator, PathIsFileValidator pathIsFileValidator, NotBlankValidator notBlankValidator,
+        ValidSamplingTypesValidator validSamplingTypesValidator, ValidExpectedAnalysesValidator validExpectedAnalysesValidator) {
+      this.validPersonDropDownItemValidator = validPersonDropDownItemValidator;
+      this.notNullValidator = notNullValidator;
+      this.pathExistsValidator = pathExistsValidator;
+      this.pathIsFileValidator = pathIsFileValidator;
+      this.notBlankValidator = notBlankValidator;
+      this.validSamplingTypesValidator = validSamplingTypesValidator;
+      this.validExpectedAnalysesValidator = validExpectedAnalysesValidator;
+    }
 
     @Override
     public boolean isValid(OmicsModel value, ConstraintValidatorContext context) {
@@ -35,26 +58,26 @@ public @interface ValidOmicsModel {
       
       context.disableDefaultConstraintViolation();
 
-      boolean validPerson = new ValidPersonDropDownItemValidator().isValid(value.getContact(), context);
+      boolean validPerson = validPersonDropDownItemValidator.isValid(value.getContact(), context);
       if (!validPerson) {
         context.buildConstraintViolationWithTemplate("invalid value")
             .addPropertyNode("contact")
             .addConstraintViolation();
       }
       
-      boolean validTrackingSheet = new NotNullValidator().isValid(value.getSampleTrackingSheet(), context);
+      boolean validTrackingSheet = notNullValidator.isValid(value.getSampleTrackingSheet(), context);
       if (!validTrackingSheet) {
         context.buildConstraintViolationWithTemplate("must not be blank")
             .addPropertyNode("sampleTrackingSheet")
             .addConstraintViolation();
       } else {
-        validTrackingSheet = new PathExists.PathExistsValidator().isValid(value.getSampleTrackingSheet(), context);
+        validTrackingSheet = pathExistsValidator.isValid(value.getSampleTrackingSheet(), context);
         if (!validTrackingSheet) {
           context.buildConstraintViolationWithTemplate("path does not exist")
               .addPropertyNode("sampleTrackingSheet")
               .addConstraintViolation();
         } else {
-          validTrackingSheet = new PathIsFile.PathIsFileValidator().isValid(value.getSampleTrackingSheet(), context);
+          validTrackingSheet = pathIsFileValidator.isValid(value.getSampleTrackingSheet(), context);
           if (!validTrackingSheet) {
             context.buildConstraintViolationWithTemplate("path is not file")
                 .addPropertyNode("sampleTrackingSheet")
@@ -63,21 +86,21 @@ public @interface ValidOmicsModel {
         }
       }
       
-      boolean validProjectAccession = new NotBlankValidator().isValid(value.getBioProjectAccession(), context);
+      boolean validProjectAccession = notBlankValidator.isValid(value.getBioProjectAccession(), context);
       if (!validProjectAccession) {
         context.buildConstraintViolationWithTemplate("must not be blank")
             .addPropertyNode("bioProjectAccession")
             .addConstraintViolation();
       }
       
-      boolean validSamplingTypes = new ValidSamplingTypes.ValidSamplingTypesValidator().isValid(value.getSamplingTypes(), context);
+      boolean validSamplingTypes = validSamplingTypesValidator.isValid(value.getSamplingTypes(), context);
       if (!validSamplingTypes) {
         context.buildConstraintViolationWithTemplate("no value selected")
             .addPropertyNode("samplingTypes")
             .addConstraintViolation();
       }
       
-      boolean validExpectedAnalyses = new ValidExpectedAnalyses.ValidExpectedAnalysesValidator().isValid(value.getExpectedAnalyses(), context);
+      boolean validExpectedAnalyses = validExpectedAnalysesValidator.isValid(value.getExpectedAnalyses(), context);
       if (!validExpectedAnalyses) {
         context.buildConstraintViolationWithTemplate("no value selected")
             .addPropertyNode("expectedAnalyses")
@@ -85,7 +108,7 @@ public @interface ValidOmicsModel {
       }
       
       
-      boolean validAdditionalSamplingInformation = new NotBlankValidator().isValid(value.getAdditionalSamplingInformation(), context); 
+      boolean validAdditionalSamplingInformation = notBlankValidator.isValid(value.getAdditionalSamplingInformation(), context); 
       if (!validAdditionalSamplingInformation) {
         context.buildConstraintViolationWithTemplate("must not be blank")
             .addPropertyNode("additionalSamplingInformation")

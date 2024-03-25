@@ -1,9 +1,8 @@
 package edu.colorado.cires.cruisepack.app.ui.model.queue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.cruisepack.app.service.PackJob;
-import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModelTest;
 import edu.colorado.cires.cruisepack.app.ui.view.queue.PackJobPanel;
 import java.util.Collections;
