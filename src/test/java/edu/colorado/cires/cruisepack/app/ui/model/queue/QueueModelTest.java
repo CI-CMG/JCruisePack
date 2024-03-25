@@ -96,60 +96,6 @@ class QueueModelTest extends PropertyChangeModelTest<QueueModel> {
   }
 
   @Test
-  void updatePackageQueueButton() {
-    model.updatePackageQueueButton(true);
-    model.updatePackageQueueButton(false);
-    
-    assertChangeEvents(
-        QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON,
-        List.of(
-            false, true
-        ),
-        List.of(
-            true, false
-        ),
-        (v) -> v
-    );
-  }
-
-  @Test
-  void updateClearQueueButton() {
-    model.updateClearQueueButton(true);
-    model.updateClearQueueButton(false);
-    
-    assertChangeEvents(
-        QueueModel.UPDATE_CLEAR_QUEUE_BUTTON,
-        List.of(
-            false, true
-        ),
-        List.of(
-            true, false
-        ),
-        (v) -> v
-    );
-  }
-
-  @Test
-  void updatePackageButton() {
-    String processId = UUID.randomUUID().toString();
-    model.updatePackageButton(true, processId);
-    model.updatePackageButton(false, processId);
-    
-    assertChangeEvents(
-        String.format(
-            "UPDATE_PACKAGE_BUTTON_%s", processId
-        ),
-        List.of(
-            false, true
-        ),
-        List.of(
-            true, false
-        ),
-        (v) -> v
-    );
-  }
-
-  @Test
   void updateRemoveButton() {
     String processId = UUID.randomUUID().toString();
     model.updateRemoveButton(true, processId);

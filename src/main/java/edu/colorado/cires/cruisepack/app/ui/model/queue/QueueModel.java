@@ -14,7 +14,6 @@ public class QueueModel extends PropertyChangeModel {
   public static final String CLEAR_QUEUE = "CLEAR_QUEUE";
   public static final String UPDATE_PACKAGE_QUEUE_BUTTON = "UPDATE_PACKAGE_QUEUE_BUTTON";
   public static final String UPDATE_STOP_ALL_BUTTON = "UPDATE_STOP_ALL_BUTTON";
-  public static final String UPDATE_CLEAR_QUEUE_BUTTON = "UPDATE_CLEAR_QUEUE_BUTTON";
   public static final String EMIT_QUEUE_SIZE = "EMIT_QUEUE_SIZE";
   
   private List<PackJob> queue = new ArrayList<>(0);
@@ -56,20 +55,6 @@ public class QueueModel extends PropertyChangeModel {
     queue = new ArrayList<>();
     fireChangeEvent(CLEAR_QUEUE, oldJobs, queue);
     emitQueueSize(oldJobs, queue);
-  }
-  
-  public void updatePackageQueueButton(boolean enabled) {
-    fireChangeEvent(UPDATE_PACKAGE_QUEUE_BUTTON, !enabled, enabled);
-  }
-  
-  public void updateClearQueueButton(boolean enabled) {
-    fireChangeEvent(UPDATE_CLEAR_QUEUE_BUTTON, !enabled, enabled);
-  }
-  
-  public void updatePackageButton(boolean enabled, String processId) {
-    fireChangeEvent(String.format(
-        "UPDATE_PACKAGE_BUTTON_%s", processId
-    ), !enabled, enabled);
   }
   
   public void updateRemoveButton(boolean enabled, String processId) {

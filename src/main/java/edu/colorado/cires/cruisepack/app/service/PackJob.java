@@ -223,17 +223,6 @@ public class PackJob {
     return metadataAuthor;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof PackJob packJob)) {
-      return false;
-    }
-    return Objects.equals(packageId, packJob.packageId);
-  }
-
   public static class Builder {
 
     private String cruiseId;

@@ -65,8 +65,6 @@ public class PackerExecutorTest {
   @MockBean
   private PackagingValidationService validationService;
   
-  private PackerExecutor packerExecutor;
-  
   @Autowired
   private MetadataService metadataService;
   
@@ -94,15 +92,6 @@ public class PackerExecutorTest {
     FileUtils.deleteQuietly(mainBagRootDir.toFile());
     Files.createDirectories(mainBagRootDir);
     CruisePackPreSpringStarter.start();
-    
-    packerExecutor = new PackerExecutor(
-        metadataService,
-        instrumentDatastore,
-        workDir,
-        () -> {},
-        () -> {},
-        UUID.randomUUID().toString()
-    );
   }
 
   @AfterEach
@@ -179,7 +168,15 @@ public class PackerExecutorTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    packerExecutor.startPacking(packJob);
+    new PackerExecutor(
+        metadataService,
+        instrumentDatastore,
+        workDir,
+        () -> {},
+        () -> {},
+        UUID.randomUUID().toString(),
+        packJob
+    ).startPacking();
 
     Thread.sleep(1000); //TODO be smarter with wait
 
@@ -311,7 +308,16 @@ public class PackerExecutorTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    new Thread(() -> packerExecutor.startPacking(packJob)).start();
+    PackerExecutor packerExecutor = new PackerExecutor(
+        metadataService,
+        instrumentDatastore,
+        workDir,
+        () -> {},
+        () -> {},
+        UUID.randomUUID().toString(),
+        packJob
+    );
+    new Thread(packerExecutor::startPacking).start();
     Thread.sleep(5);
     packerExecutor.stopPacking();
     Thread.sleep(1000); //TODO be smarter with wait
@@ -373,7 +379,15 @@ public class PackerExecutorTest {
 
     doReturn(Optional.of(packJob)).when(validationService).validate();
 
-    packerExecutor.startPacking(packJob);
+    new PackerExecutor(
+        metadataService,
+        instrumentDatastore,
+        workDir,
+        () -> {},
+        () -> {},
+        UUID.randomUUID().toString(),
+        packJob
+    ).startPacking();
 
     Thread.sleep(1000); //TODO be smarter with wait
 

@@ -38,12 +38,9 @@ public class QueueController implements PropertyChangeListener {
 
   public void removeFromQueue(PackJobPanel panel) {
     queueModel.removeFromQueue(panel);
+    stopJobPublisher.publish(this, panel.getPackJob().getPackageId());
   }
-  
-  public void clearQueue() {
-    queueModel.clearQueue();
-  }
-  
+
   public List<PackJob> getQueue() {
     return queueModel.getQueue();
   }
@@ -56,19 +53,15 @@ public class QueueController implements PropertyChangeListener {
         packJobPanel.getPackJob(),
         () -> {
           queueModel.updateStopButton(true, processId);
-          queueModel.updatePackageButton(false, processId);
           queueModel.updateRemoveButton(false, processId);
-          queueModel.updateClearQueueButton(false);
-          queueModel.updatePackageQueueButton(false);
           queueModel.updateStopAllButton(true);
         },
         (jobsInProgress) -> {
           queueModel.updateStopButton(false, processId);
-          queueModel.updatePackageButton(true, processId);
           queueModel.updateRemoveButton(true, processId);
-          queueModel.updateClearQueueButton(!jobsInProgress);
-          queueModel.updatePackageQueueButton(!jobsInProgress);
           queueModel.updateStopAllButton(jobsInProgress);
+          
+          queueModel.removeFromQueue(packJobPanel);
         }
     );
   }

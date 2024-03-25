@@ -7,8 +7,8 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ class PackingScheduler {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(PackingScheduler.class);
   
-  private final Map<String, PackerExecutor> packExecutions = new ConcurrentHashMap<>(0);
+  private final Queue<PackerExecutor> packExecutions = new ArrayBlockingQueue<>(100);
   
   private final ErrorModel errorModel;
   private final MetadataService metadataService;
@@ -36,49 +36,56 @@ class PackingScheduler {
   }
   
   public void scheduleJob(PackingJobEvent packingJobEvent) {
-    PackingJob packingJob = packingJobEvent.getPackingJob();
-    PackJob packJob = packingJob.packJob();
-    String packageId = packJob.getPackageId();
-    
-    PackerExecutor executor = packExecutions.get(packageId);
-    if (executor != null) {
-      LOGGER.error("Pack job already submitted: {}", packageId);
-      errorModel.emitErrorMessage(String.format(
-          "Failed to submit job. Pack job already submitted: %s", packageId
-      ));
-    }
-    executor = createExecutor(packingJob);
+    PackerExecutor executor = createExecutor(
+        packingJobEvent.getPackingJob()
+    );
     executor.addChangeListener((PropertyChangeListener) packingJobEvent.getSource());
     
-    packExecutions.put(packageId, executor);
+    packExecutions.add(executor);
     
-    executor.startPacking(packJob);
+    if (packExecutions.size() == 1) {
+      startPacking(packExecutions.peek());
+    }
+  }
+  
+  private void startPacking(PackerExecutor packerExecutor) {
+    new Thread(packerExecutor::startPacking).start();
   }
   
   public void stopJob(String packageId) {
-    PackerExecutor packerExecutor = packExecutions.get(packageId);
-    if (packerExecutor != null) {
-      packerExecutor.stopPacking();
-      packExecutions.remove(packageId);
+    PackerExecutor executor = packExecutions.stream()
+        .filter(packerExecutor -> packerExecutor.getPackJob().getPackageId().equals(packageId))
+        .findFirst().orElse(null);
+    if (executor != null) {
+      executor.stopPacking();
+      packExecutions.remove(executor);
+      executor = packExecutions.peek();
+      if (executor != null) {
+        startPacking(executor);
+      }
     }
   }
   
   public void clearJobs() {
-    packExecutions.keySet()
+    packExecutions.stream()
+        .map(PackerExecutor::getPackJob)
+        .map(PackJob::getPackageId)
         .forEach(this::stopJob);
   }
   
   private PackerExecutor createExecutor(PackingJob packingJob) {
+    PackJob packJob = packingJob.packJob();
     return new PackerExecutor(
         metadataService,
         instrumentDatastore,
         Paths.get(serviceProperties.getWorkDir()),
         packingJob.executeBefore(),
         () -> {
-          stopJob(packingJob.packJob().getPackageId());
+          stopJob(packJob.getPackageId());
           packingJob.executeAfter().accept(!packExecutions.isEmpty());
         },
-        packingJob.processId()
+        packingJob.processId(),
+        packJob
     );
   }
 }

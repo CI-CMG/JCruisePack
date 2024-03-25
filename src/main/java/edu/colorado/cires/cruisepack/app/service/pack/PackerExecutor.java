@@ -59,14 +59,18 @@ class PackerExecutor {
 
   public PackerExecutor(
       MetadataService metadataService, InstrumentDatastore instrumentDatastore, Path workDirectory,
-      Runnable executeBefore, Runnable executeAfter, String processId
+      Runnable executeBefore, Runnable executeAfter, String processId, PackJob packJob
   ) {
-    this.packStateModel = new PackStateModel(processId);
+    this.packStateModel = new PackStateModel(processId, packJob);
     this.packerFileController = new PackerFileController(packStateModel, metadataService);
     this.instrumentDatastore = instrumentDatastore;
     this.workDirectory = workDirectory;
     this.executeBefore = executeBefore;
     this.executeAfter = executeAfter;
+  }
+  
+  public PackJob getPackJob() {
+    return packStateModel.getPackJob();
   }
   
   public void addChangeListener(PropertyChangeListener listener) {
@@ -77,11 +81,11 @@ class PackerExecutor {
     packStateModel.setProcessing(false);
   }
 
-  public void startPacking(PackJob packJob) {
+  public void startPacking() {
     executeBefore.run();
     try {
 ////    rawCheck(packJob); //TODO add to validation phase
-      PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packJob); // TODO this should already be specified in pack job
+      PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packStateModel.getPackJob()); // TODO this should already be specified in pack job
       packStateModel.setProcessing(true);
       packStateModel.setProgressIncrement(100f / getTotalSteps(packJobWithAncillaryInstruments));
       resetBagDirs(packJobWithAncillaryInstruments);
@@ -95,6 +99,7 @@ class PackerExecutor {
     } catch (Exception e) {
       LOGGER.error("An error occurred while packing", e);
     } finally {
+      stopPacking();
       executeAfter.run();
     }
   }

@@ -4,16 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.colorado.cires.cruisepack.app.service.PackJob;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 
 class PackStateModelTest extends PropertyChangeModelTest<PackStateModel> {
   
   private static final String PROCESS_ID = "TEST-PROCESS-ID";
+  private static final PackJob PACK_JOB = PackJob.builder()
+      .setCruiseId("CRUISE-ID")
+      .build();
 
   @Override
   protected PackStateModel createModel() {
-    return new PackStateModel(PROCESS_ID);
+    return new PackStateModel(PROCESS_ID, PACK_JOB);
   }
   
   @Test

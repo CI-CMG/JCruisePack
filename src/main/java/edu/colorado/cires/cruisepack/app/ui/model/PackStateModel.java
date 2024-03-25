@@ -1,15 +1,23 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
+import edu.colorado.cires.cruisepack.app.service.PackJob;
+
 public class PackStateModel extends PropertyChangeModel {
   
   private final String processId;
+  private final PackJob packJob;
   
   private float progress;
   private float progressIncrement;
   private boolean processing;
 
-  public PackStateModel(String processId) {
+  public PackStateModel(String processId, PackJob packJob) {
     this.processId = processId;
+    this.packJob = packJob;
+  }
+
+  public PackJob getPackJob() {
+    return packJob;
   }
 
   private void setProgress(float progress) {

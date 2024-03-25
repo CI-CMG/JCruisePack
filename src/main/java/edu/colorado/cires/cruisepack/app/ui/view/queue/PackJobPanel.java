@@ -22,11 +22,9 @@ public class PackJobPanel extends JPanel {
   private final String processId;
   
   private final List<ComponentEventListener<PackJobPanel>> removeListeners = new ArrayList<>(0);
-  private final List<ComponentEventListener<PackJobPanel>> packageListeners = new ArrayList<>(0);
   private final List<ComponentEventListener<PackJobPanel>> stopListeners = new ArrayList<>(0);
   
   private final JButton removeButton = new JButton("Remove");
-  private final JButton packageButton = new JButton("Package Data");
   private final JButton stopButton = new JButton("Stop Packaging");
   private final JProgressBar progressBar = new JProgressBar();
 
@@ -47,10 +45,6 @@ public class PackJobPanel extends JPanel {
     return removeButton;
   }
 
-  public JButton getPackageButton() {
-    return packageButton;
-  }
-
   public JButton getStopButton() {
     return stopButton;
   }
@@ -61,10 +55,6 @@ public class PackJobPanel extends JPanel {
   
   public void addRemoveListener(ComponentEventListener<PackJobPanel> listener) {
     removeListeners.add(listener);
-  }
-  
-  public void addPackageListener(ComponentEventListener<PackJobPanel> listener) {
-    packageListeners.add(listener);
   }
   
   public void addStopListener(ComponentEventListener<PackJobPanel> listener) {
@@ -90,7 +80,6 @@ public class PackJobPanel extends JPanel {
     
     JPanel packAndStopButtons = new JPanel();
     packAndStopButtons.setLayout(new BorderLayout());
-    packAndStopButtons.add(packageButton, BorderLayout.WEST);
     packAndStopButtons.add(stopButton, BorderLayout.EAST);
     row1.add(packAndStopButtons, BorderLayout.EAST);
     
@@ -101,9 +90,6 @@ public class PackJobPanel extends JPanel {
   
   private void setupMvc() {
     removeButton.addActionListener((evt) -> removeListeners.forEach(
-        listener -> listener.handle(this)
-    ));
-    packageButton.addActionListener((evt) -> packageListeners.forEach(
         listener -> listener.handle(this)
     ));
     stopButton.addActionListener((evt) -> stopListeners.forEach(

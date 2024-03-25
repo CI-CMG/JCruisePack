@@ -37,9 +37,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   private final JPanel listingPanel = new JPanel();
   
   private final JPanel fluff = new JPanel();
-  private final JButton processAllButton = new JButton("Package Queue");
-  private final JButton stopPackingButton = new JButton("Stop Packaging Queue");
-  private final JButton clearButton = new JButton("Clear Queue");
+  private final JButton stopPackingButton = new JButton("Clear Queue");
 
   @Autowired
   public QueuePanel(ReactiveViewRegistry reactiveViewRegistry, QueueController queueController, CruiseDataDatastore cruiseDataDatastore) {
@@ -77,40 +75,33 @@ public class QueuePanel extends JPanel implements ReactiveView {
     
     JPanel batchButtonsPanel = new JPanel();
     batchButtonsPanel.setLayout(new BorderLayout());
-    batchButtonsPanel.add(processAllButton, BorderLayout.WEST);
     batchButtonsPanel.add(stopPackingButton, BorderLayout.EAST);
     
     footerButtonPanel.add(batchButtonsPanel, BorderLayout.EAST);
-    footerButtonPanel.add(clearButton, BorderLayout.WEST);
     add(footerButtonPanel, configureLayout(0, 1, c -> c.weighty = 0));
 
     queueController.getQueue().stream()
         .map(PackJobPanel::new)
-        .forEach((p) -> addPackJob(p, false));
+        .forEach(this::addPackJob);
   }
   
   private void setupMvc() {
-    clearButton.addActionListener((evt) -> queueController.clearQueue());
-    processAllButton.addActionListener((evt) -> rows.forEach(queueController::submit));
     stopPackingButton.addActionListener((evt) -> rows.forEach(queueController::stop));
   }
   
-  private void addPackJob(PackJobPanel panel, boolean startOnCreate) {
+  private void addPackJob(PackJobPanel panel) {
     listingPanel.remove(fluff);
     listingPanel.add(panel, configureLayout(0, rows.size(), c -> { c.weighty = 0; c.insets = new Insets(5, 5, 5, 5); }));
     rows.add(panel);
     listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
 
     panel.addRemoveListener(queueController::removeFromQueue);
-    panel.addPackageListener(queueController::submit);
     panel.addStopListener(queueController::stop);
     panel.init();
     
     revalidate();
 
-    if (startOnCreate) {
-      queueController.submit(panel); 
-    }
+    queueController.submit(panel);
   }
   
   private void removePackJob(PackJobPanel panel) {
@@ -131,7 +122,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   @Override
   public void onChange(PropertyChangeEvent evt) {
     switch (evt.getPropertyName()) {
-      case QueueModel.ADD_TO_QUEUE -> addPackJob((PackJobPanel) evt.getNewValue(), true);
+      case QueueModel.ADD_TO_QUEUE -> addPackJob((PackJobPanel) evt.getNewValue());
       case QueueModel.REMOVE_FROM_QUEUE -> removePackJob((PackJobPanel) evt.getOldValue());
       case QueueModel.CLEAR_QUEUE -> clearPackJobs();
       case Events.UPDATE_CRUISE_DATA_STORE -> {
@@ -144,8 +135,6 @@ public class QueuePanel extends JPanel implements ReactiveView {
            .filter(packJobPanel -> !datastorePackageIds.contains(packJobPanel.getPackJob().getPackageId()))
            .forEach(queueController::removeFromQueue);
       }
-      case QueueModel.UPDATE_CLEAR_QUEUE_BUTTON -> updateButtonEnabled(clearButton, evt);
-      case QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON -> updateButtonEnabled(processAllButton, evt);
       case QueueModel.UPDATE_STOP_ALL_BUTTON -> updateButtonEnabled(stopPackingButton, evt);
       default -> rows.stream()
           .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
@@ -153,8 +142,6 @@ public class QueuePanel extends JPanel implements ReactiveView {
           .ifPresent(packJobPanel -> {
             if (evt.getPropertyName().startsWith("UPDATE_PROGRESS")) {
               updateProgressBarModel(packJobPanel.getProgressBarModel(), evt);
-            } else if (evt.getPropertyName().startsWith("UPDATE_PACKAGE_BUTTON")) {
-              updateButtonEnabled(packJobPanel.getPackageButton(), evt);
             } else if (evt.getPropertyName().startsWith("UPDATE_REMOVE_BUTTON")) {
               updateButtonEnabled(packJobPanel.getRemoveButton(), evt);
             } else if (evt.getPropertyName().startsWith("UPDATE_STOP_BUTTON")) {
