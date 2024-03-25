@@ -44,11 +44,8 @@ public @interface DocumentsUnderMaxAllowed {
             .filter(p -> !Files.isDirectory(p))
             .filter(CruisePackFileUtils::filterHidden)
             .count() <= maxAllowedDocuments;
-      } catch (IOException e) {
-        throw new IllegalStateException(String.format(
-            "Unable to determine amount of files within documents path: %s",
-            value
-        ), e);
+      } catch (IOException ignored) {
+        return false;
       }
     }
   }
