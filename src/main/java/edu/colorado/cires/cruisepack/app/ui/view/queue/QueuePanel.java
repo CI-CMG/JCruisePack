@@ -86,7 +86,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
 
     queueController.getQueue().stream()
         .map(PackJobPanel::new)
-        .forEach(this::addPackJob);
+        .forEach((p) -> addPackJob(p, false));
   }
   
   private void setupMvc() {
@@ -95,7 +95,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
     stopPackingButton.addActionListener((evt) -> rows.forEach(queueController::stop));
   }
   
-  private void addPackJob(PackJobPanel panel) {
+  private void addPackJob(PackJobPanel panel, boolean startOnCreate) {
     listingPanel.remove(fluff);
     listingPanel.add(panel, configureLayout(0, rows.size(), c -> { c.weighty = 0; c.insets = new Insets(5, 5, 5, 5); }));
     rows.add(panel);
@@ -107,6 +107,10 @@ public class QueuePanel extends JPanel implements ReactiveView {
     panel.init();
     
     revalidate();
+
+    if (startOnCreate) {
+      queueController.submit(panel); 
+    }
   }
   
   private void removePackJob(PackJobPanel panel) {
@@ -127,7 +131,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   @Override
   public void onChange(PropertyChangeEvent evt) {
     switch (evt.getPropertyName()) {
-      case QueueModel.ADD_TO_QUEUE -> addPackJob((PackJobPanel) evt.getNewValue());
+      case QueueModel.ADD_TO_QUEUE -> addPackJob((PackJobPanel) evt.getNewValue(), true);
       case QueueModel.REMOVE_FROM_QUEUE -> removePackJob((PackJobPanel) evt.getOldValue());
       case QueueModel.CLEAR_QUEUE -> clearPackJobs();
       case Events.UPDATE_CRUISE_DATA_STORE -> {
