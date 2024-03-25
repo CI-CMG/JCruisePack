@@ -46,7 +46,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private static final String CLEAR_FORM_LABEL = "Clear Form";
   private static final String STOP_LABEL = "Stop Packaging";
   private static final String SAVE_LABEL = "Save For Later";
-  private static final String ADD_TO_QUEUE_LABEL = "Add To Queue";
   private static final String PACKAGE_LABEL = "Package Data";
   private static final String SETTINGS_LABEL = "Settings";
   private static final String USER_MANUAL_NAME = "CruisePack_manual.pdf";
@@ -65,7 +64,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton clearFormButton = new JButton(CLEAR_FORM_LABEL);
   private final JButton stopButton = new JButton(STOP_LABEL);
   private final JButton saveButton = new JButton(SAVE_LABEL);
-  private final JButton addToQueueButton = new JButton(ADD_TO_QUEUE_LABEL);
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
   private final JButton docsButton;
@@ -141,8 +139,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
     row1.add(clearFormButton, configureLayout(3, 0));
     row1.add(stopButton, configureLayout(4, 0));
     row1.add(saveButton, configureLayout(5, 0));
-    row1.add(addToQueueButton, configureLayout(6, 0));
-    row1.add(packageButton, configureLayout(7, 0));
+    row1.add(packageButton, configureLayout(6, 0));
     add(row1, configureLayout(0, 0));
 
 
@@ -155,13 +152,12 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
   private void setupMvc() {
     reactiveViewRegistry.register(this);
-    packageButton.addActionListener((evt) -> handlePackage());
     clearFormButton.addActionListener((evt) -> footerControlController.restoreDefaultsGlobal());
     saveButton.addActionListener((evt) -> {
       footerControlController.saveForms(false);
       uiRefresher.refresh();
     });
-    addToQueueButton.addActionListener((evt) -> footerControlController.addToQueue());
+    packageButton.addActionListener((evt) -> footerControlController.addToQueue());
     saveWarningDialog.addListener("OK", (evt) -> footerControlController.setSaveWarningDialogueVisible(false));
     saveWarningDialog.addWindowListener(new WindowAdapter() {
       @Override
@@ -262,10 +258,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
           "Failed to open %s", USER_MANUAL_NAME
       ), e);
     }
-  }
-
-  private void handlePackage() {
-    footerControlController.startPackaging(processId);
   }
 
   @Override
