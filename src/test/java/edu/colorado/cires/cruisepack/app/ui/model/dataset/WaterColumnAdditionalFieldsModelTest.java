@@ -78,7 +78,7 @@ class WaterColumnAdditionalFieldsModelTest extends PropertyChangeModelTest<Water
     model.setCalibrationDataPathError(calibrationDataPathError);
     model.setCalibrationDateError(calibrationDateError);
     
-    clearMap();
+    clearEvents();
     
     model.clearErrors();
     

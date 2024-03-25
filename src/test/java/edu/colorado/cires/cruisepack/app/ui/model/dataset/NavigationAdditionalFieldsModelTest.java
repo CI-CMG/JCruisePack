@@ -19,7 +19,7 @@ class NavigationAdditionalFieldsModelTest extends PropertyChangeModelTest<Naviga
   void clearErrors() {
     model.setNavDatumError("error message");
     
-    clearMap();
+    clearEvents();
     
     model.clearErrors();
     

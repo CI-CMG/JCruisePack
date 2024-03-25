@@ -33,7 +33,7 @@ class ImportModelTest extends PropertyChangeModelTest<ImportModel> {
     model.setMetadataAuthor(metadataAuthor);
     model.setMetadataAuthorError(metadataAuthorError);
     
-    clearMap();
+    clearEvents();
     
     model.resetState();
     
@@ -61,7 +61,7 @@ class ImportModelTest extends PropertyChangeModelTest<ImportModel> {
     model.setDestinationPathError(destinationPathError);
     model.setMetadataAuthorError(metadataAuthorError);
     
-    clearMap();
+    clearEvents();
     model.clearErrors();
     
     assertChangeEvent(Events.UPDATE_IMPORT_PATH_ERROR, importPathError, null);

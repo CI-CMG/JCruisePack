@@ -94,7 +94,7 @@ class BaseDatasetInstrumentModelTest extends PropertyChangeModelTest<BaseDataset
     model.setAncillaryDetailsError(ancillaryDetailsError);
     additionalFieldsModel.setError("navDatum", navDatumError);
     
-    clearMap();
+    clearEvents();
     model.clearErrors();
     
     assertChangeEvent(BaseDatasetInstrumentModel.UPDATE_DATASET_PUBLIC_RELEASE_DATE_ERROR, publicReleaseDateError, null);

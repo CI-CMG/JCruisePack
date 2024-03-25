@@ -59,7 +59,7 @@ class OmicsModelTest extends PropertyChangeModelTest<OmicsModel> {
     model.setMetaMetabolomicsExpectedAnalysis(true);
     model.setMicrobiomeExpectedAnalysis(true);
     
-    clearMap();
+    clearEvents();
     model.restoreDefaults();
     
     assertChangeEvent(Events.UPDATE_OMICS_SAMPLING_CONDUCTED, true, false);
@@ -216,7 +216,7 @@ class OmicsModelTest extends PropertyChangeModelTest<OmicsModel> {
   void setBioProjectAccession() {
     assertPropertyChange(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, model::getBioProjectAccession, model::setBioProjectAccession, "value1", "value2", null);
     
-    clearMap();
+    clearEvents();
     
     model.setBioProjectAccession("");
     assertChangeEvent(Events.UPDATE_OMICS_BIO_PROJECT_ACCESSION, "value2", null);

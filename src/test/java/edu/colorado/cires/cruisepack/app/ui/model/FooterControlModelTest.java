@@ -44,7 +44,7 @@ class FooterControlModelTest extends PropertyChangeModelTest<FooterControlModel>
     model.emitPackageId("packageId-1");
     assertChangeEvent(Events.EMIT_PACKAGE_ID, null, "packageId-1");
 
-    clearMap();
+    clearEvents();
     
     model.emitPackageId("packageId-2");
     assertChangeEvent(Events.EMIT_PACKAGE_ID, null, "packageId-2");

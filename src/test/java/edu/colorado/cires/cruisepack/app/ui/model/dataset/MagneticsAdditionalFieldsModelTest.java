@@ -27,7 +27,7 @@ class MagneticsAdditionalFieldsModelTest extends PropertyChangeModelTest<Magneti
     model.setTowDistanceError(towDistanceError);
     model.setSensorDepthError(sensorDepthError);
     
-    clearMap();
+    clearEvents();
     
     model.clearErrors();
     

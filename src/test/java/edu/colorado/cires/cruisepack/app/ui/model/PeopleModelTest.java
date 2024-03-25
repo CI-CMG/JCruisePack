@@ -68,7 +68,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
     model.setMetadataAuthorError("metadata-author-error");
     
-    clearMap();
+    clearEvents();
     
     List<DropDownItemModel> scientists = model.getScientists();
     String scientistsError = model.getScientistsError();
@@ -437,7 +437,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
 
     panels.forEach(model::addScientist);
-    clearMap();
+    clearEvents();
     panels.forEach(model::removeScientist);
 
     assertChangeEvents(
@@ -463,7 +463,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
 
     panels.forEach(model::addScientist);
-    clearMap();
+    clearEvents();
     
     model.clearScientists();
     
@@ -519,7 +519,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
 
     panels.forEach(model::addSourceOrganization);
-    clearMap();
+    clearEvents();
     panels.forEach(model::removeSourceOrganization);
 
     assertChangeEvents(
@@ -545,7 +545,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
 
     panels.forEach(model::addSourceOrganization);
-    clearMap();
+    clearEvents();
 
     model.clearSourceOrganizations();
 
@@ -601,7 +601,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
 
     panels.forEach(model::addFundingOrganization);
-    clearMap();
+    clearEvents();
     panels.forEach(model::removeFundingOrganization);
 
     assertChangeEvents(
@@ -627,7 +627,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
     );
 
     panels.forEach(model::addFundingOrganization);
-    clearMap();
+    clearEvents();
 
     model.clearFundingOrganizations();
 

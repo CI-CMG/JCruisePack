@@ -25,7 +25,7 @@ class SinglebeamAdditionalFieldsModelTest extends PropertyChangeModelTest<Single
     model.setObsRateError(obsRateError);
     model.setSoundVelocityError(soundVelocityError);
     
-    clearMap();
+    clearEvents();
     
     model.clearErrors();
     

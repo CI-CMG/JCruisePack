@@ -246,7 +246,7 @@ public class OrganizationModelTest extends PropertyChangeModelTest<OrganizationM
     model.emitOrgName();
     assertChangeEvent(Events.EMIT_ORG_NAME, null, name);
 
-    clearMap();
+    clearEvents();
 
     model.emitOrgName();
     assertChangeEvent(Events.EMIT_ORG_NAME, null, name);
@@ -294,7 +294,7 @@ public class OrganizationModelTest extends PropertyChangeModelTest<OrganizationM
     model.setUuidError(uuidError);
     model.setUse(use);
     
-    clearMap();
+    clearEvents();
 
     model.restoreDefaults();
 

@@ -23,7 +23,7 @@ class GravityAdditionalFieldsModelTest extends PropertyChangeModelTest<GravityAd
     model.setArrivalTieError("arrival tie error");
     model.setDriftPerDayError("drift per day error");
     
-    clearMap();
+    clearEvents();
     model.clearErrors();
     
     assertChangeEvent(GravityAdditionalFieldsModel.UPDATE_CORRECTION_MODEL_ERROR, "correction model error", null);

@@ -28,14 +28,14 @@ public abstract class PropertyChangeModelTest<T extends PropertyChangeModel> {
 
   @BeforeEach
   void beforeEach() {
-    clearMap();
+    clearEvents();
     model = createModel();
     addChangeListener();
   }
   
   @AfterEach
   void afterEach() {
-    clearMap();
+    clearEvents();
   }
 
   public Map<String, List<PropertyChangeEvent>> getEventMap() {
@@ -132,7 +132,7 @@ public abstract class PropertyChangeModelTest<T extends PropertyChangeModel> {
     }
   }
   
-  protected void clearMap() {
+  protected void clearEvents() {
     eventMap.clear();
   }
 

@@ -81,7 +81,7 @@ public class ProjectModelTest extends PropertyChangeModelTest<ProjectModel> {
     model.emitSaveFailure(message);
     assertChangeEvent(ProjectModel.EMIT_SAVE_FAILURE, null, message);
     
-    clearMap();
+    clearEvents();
 
     model.emitSaveFailure(message);
     assertChangeEvent(ProjectModel.EMIT_SAVE_FAILURE, null, message);
@@ -95,7 +95,7 @@ public class ProjectModelTest extends PropertyChangeModelTest<ProjectModel> {
     model.setNameError(nameError);
     model.setUuidError(uuidError);
     
-    clearMap();
+    clearEvents();
     
     model.clearErrors();
     
@@ -117,7 +117,7 @@ public class ProjectModelTest extends PropertyChangeModelTest<ProjectModel> {
     model.setUuidError(uuidError);
     model.setUse(use);
     
-    clearMap();
+    clearEvents();
     
     model.restoreDefaults();
     

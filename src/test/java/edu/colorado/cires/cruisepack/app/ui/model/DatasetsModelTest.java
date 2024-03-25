@@ -43,7 +43,7 @@ class DatasetsModelTest extends PropertyChangeModelTest<DatasetsModel> {
     
     List<? extends BaseDatasetInstrumentModel<? extends AdditionalFieldsModel>> datasets = model.getDatasets();
     
-    clearMap();
+    clearEvents();
     model.restoreDefaults();
     
     assertChangeEvent(Events.UPDATE_DATASETS_ERROR, "datasets error", null);
@@ -89,7 +89,7 @@ class DatasetsModelTest extends PropertyChangeModelTest<DatasetsModel> {
     model.addDataset(datasetPanel1);
     assertChangeEvent(Events.ADD_DATASET, null, datasetPanel1);
     
-    clearMap();
+    clearEvents();
     
     model.addDataset(datasetPanel2);
     assertChangeEvent(Events.ADD_DATASET, null, datasetPanel2);
@@ -103,7 +103,7 @@ class DatasetsModelTest extends PropertyChangeModelTest<DatasetsModel> {
     model.removeDataset(datasetPanel1);
     assertChangeEvent(Events.REMOVE_DATASET, datasetPanel1, null);
     
-    clearMap();
+    clearEvents();
     
     model.removeDataset(datasetPanel2);
     assertChangeEvent(Events.REMOVE_DATASET, datasetPanel2, null);
