@@ -13,14 +13,13 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
-import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
-import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
@@ -236,20 +235,32 @@ public class FooterPanel extends JPanel implements ReactiveView {
   }
   
   private void handleOpenFile() {
-    if (Desktop.isDesktopSupported()) {
-      try {
-        Desktop.getDesktop().open(
-            new File(
-                Objects.requireNonNull(getClass().getResource(String.format(
-                    "/%s", USER_MANUAL_NAME
-                ))).toURI()
-            )
+    try {
+      String os = System.getProperty("os.name");
+      URI manualURI = Objects.requireNonNull(getClass().getResource(String.format(
+          "/%s", USER_MANUAL_NAME
+      ))).toURI();
+      String command = null;
+      if (os.contains("Mac")) {
+        command = String.format(
+            "open %s", manualURI
         );
-      } catch (IOException | URISyntaxException e) {
-        throw new IllegalStateException(String.format(
-            "Failed to open %s", USER_MANUAL_NAME
-        ), e);
+      } else if (os.contains("Windows")) {
+        command = String.format(
+            "start %s", manualURI
+        );
+      } else if (os.contains("Linux")) {
+        command = String.format(
+            "xdg-open %s", manualURI
+        );
       }
+      if (command != null) {
+        Runtime.getRuntime().exec(command);
+      }
+    } catch (IOException | URISyntaxException e) {
+      throw new IllegalStateException(String.format(
+          "Failed to open %s", USER_MANUAL_NAME
+      ), e);
     }
   }
 
