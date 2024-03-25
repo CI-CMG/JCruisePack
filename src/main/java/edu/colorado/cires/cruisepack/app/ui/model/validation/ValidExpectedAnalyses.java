@@ -12,6 +12,7 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
+import org.springframework.stereotype.Component;
 
 @Target(FIELD)
 @Retention(RUNTIME)
@@ -25,6 +26,7 @@ public @interface ValidExpectedAnalyses {
 
     Class<? extends Payload>[] payload() default {};
 
+    @Component
     class ValidExpectedAnalysesValidator implements ConstraintValidator<ValidExpectedAnalyses, ExpectedAnalysesModel> {
         @Override
         public boolean isValid(ExpectedAnalysesModel expectedAnalysesModel, ConstraintValidatorContext constraintValidatorContext) {

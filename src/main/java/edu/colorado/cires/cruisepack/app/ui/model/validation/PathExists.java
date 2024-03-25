@@ -12,6 +12,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Path;
+import org.springframework.stereotype.Component;
 
 @Target({ ElementType.FIELD, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -32,7 +33,7 @@ public @interface PathExists {
   @interface List {
     PathExists[] value();
   }
-  
+  @Component
   class PathExistsValidator implements ConstraintValidator<PathExists, Path> {
 
     @Override

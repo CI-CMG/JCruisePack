@@ -4,18 +4,18 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Payload;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Objects;
-
-import jakarta.validation.Constraint;
-import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import jakarta.validation.Payload;
+import org.springframework.stereotype.Component;
 
 @Target({ FIELD, TYPE_USE })
 @Retention(RUNTIME)
@@ -38,6 +38,7 @@ public @interface ValidPersonDropDownItem {
 		ValidPersonDropDownItem[] value();
 	}
 
+    @Component
     class ValidPersonDropDownItemValidator implements ConstraintValidator<ValidPersonDropDownItem, DropDownItem> {
 
         @Override

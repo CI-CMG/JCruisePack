@@ -12,6 +12,7 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
+import org.springframework.stereotype.Component;
 
 @Target(FIELD)
 @Retention(RUNTIME)
@@ -25,6 +26,7 @@ public @interface ValidSamplingTypes {
 
     Class<? extends Payload>[] payload() default {};
 
+    @Component
     class ValidSamplingTypesValidator implements ConstraintValidator<ValidSamplingTypes, SamplingTypesModel> {
         @Override
         public boolean isValid(SamplingTypesModel samplingTypesModel, ConstraintValidatorContext context) {
