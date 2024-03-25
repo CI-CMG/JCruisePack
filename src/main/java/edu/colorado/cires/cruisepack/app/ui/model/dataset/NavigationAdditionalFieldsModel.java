@@ -26,7 +26,7 @@ public class NavigationAdditionalFieldsModel extends AdditionalFieldsModel {
     setIfChanged(UPDATE_NAV_DATUM, navDatum, () -> this.navDatum, (nv) -> this.navDatum = nv);
   }
 
-  private void setNavDatumError(String message) {
+  public void setNavDatumError(String message) {
     setIfChanged(UPDATE_NAV_DATUM_ERROR, message, () -> this.navDatumError, (e) -> this.navDatumError = e);
   }
 
