@@ -44,7 +44,7 @@ public class MagneticsAdditionalFieldsModel extends AdditionalFieldsModel {
   }
 
   @Override
-  protected void setError(String propertyPath, String message) {
+  public void setError(String propertyPath, String message) {
     if (propertyPath.endsWith("correctionModel")) {
       setCorrectionModelError(message);
     } else if (propertyPath.endsWith("sampleRate")) {
@@ -98,19 +98,35 @@ public class MagneticsAdditionalFieldsModel extends AdditionalFieldsModel {
     setIfChanged(UPDATE_SENSOR_DEPTH, sensorDepth, () -> this.sensorDepth, (nv) -> this.sensorDepth = nv);
   }
 
-  private void setCorrectionModelError(String message) {
+  public void setCorrectionModelError(String message) {
     setIfChanged(UPDATE_CORRECTION_MODEL_ERROR, message, () -> this.correctionModelError, (e) -> this.correctionModelError = e);
   }
 
-  private void setSampleRateError(String message) {
+  public void setSampleRateError(String message) {
     setIfChanged(UPDATE_SAMPLE_RATE_ERROR, message, () -> this.sampleRateError, (e) -> this.sampleRateError = e);
   }
 
-  private void setTowDistanceError(String message) {
+  public void setTowDistanceError(String message) {
     setIfChanged(UPDATE_TOW_DISTANCE_ERROR, message, () -> this.towDistanceError, (e) -> this.towDistanceError = e);
   }
 
-  private void setSensorDepthError(String message) {
+  public void setSensorDepthError(String message) {
     setIfChanged(UPDATE_SENSOR_DEPTH_ERROR, message, () -> this.sensorDepthError, (e) -> this.sensorDepthError = e);
+  }
+
+  public String getCorrectionModelError() {
+    return correctionModelError;
+  }
+
+  public String getSampleRateError() {
+    return sampleRateError;
+  }
+
+  public String getTowDistanceError() {
+    return towDistanceError;
+  }
+
+  public String getSensorDepthError() {
+    return sensorDepthError;
   }
 }
