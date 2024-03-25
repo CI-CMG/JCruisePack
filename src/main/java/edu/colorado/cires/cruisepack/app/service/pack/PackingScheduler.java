@@ -75,8 +75,8 @@ class PackingScheduler {
         Paths.get(serviceProperties.getWorkDir()),
         packingJob.executeBefore(),
         () -> {
-          packingJob.executeAfter().run();
           stopJob(packingJob.packJob().getPackageId());
+          packingJob.executeAfter().accept(!packExecutions.isEmpty());
         },
         packingJob.processId()
     );

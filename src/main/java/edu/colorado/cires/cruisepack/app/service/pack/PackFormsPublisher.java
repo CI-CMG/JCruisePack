@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.service.pack;
 
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import java.beans.PropertyChangeListener;
+import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class PackFormsPublisher {
     this.publisher = publisher;
   }
   
-  public void publish(PropertyChangeListener source, String processId, Runnable executeBefore, Runnable executeAfter) {
+  public void publish(PropertyChangeListener source, String processId, Runnable executeBefore, Consumer<Boolean> executeAfter) {
     validationService.validate()
         .ifPresent(packJob ->
             publisher.publishEvent(new PackingJobEvent(

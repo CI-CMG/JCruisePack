@@ -38,6 +38,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   
   private final JPanel fluff = new JPanel();
   private final JButton processAllButton = new JButton("Package Queue");
+  private final JButton stopPackingButton = new JButton("Stop Packaging Queue");
   private final JButton clearButton = new JButton("Clear Queue");
 
   @Autowired
@@ -61,7 +62,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   }
 
   private void initializeFields() {
-    
+    stopPackingButton.setEnabled(false);
   }
   
   private void setupLayout() {
@@ -73,7 +74,13 @@ public class QueuePanel extends JPanel implements ReactiveView {
     
     JPanel footerButtonPanel = new JPanel();
     footerButtonPanel.setLayout(new BorderLayout());
-    footerButtonPanel.add(processAllButton, BorderLayout.EAST);
+    
+    JPanel batchButtonsPanel = new JPanel();
+    batchButtonsPanel.setLayout(new BorderLayout());
+    batchButtonsPanel.add(processAllButton, BorderLayout.WEST);
+    batchButtonsPanel.add(stopPackingButton, BorderLayout.EAST);
+    
+    footerButtonPanel.add(batchButtonsPanel, BorderLayout.EAST);
     footerButtonPanel.add(clearButton, BorderLayout.WEST);
     add(footerButtonPanel, configureLayout(0, 1, c -> c.weighty = 0));
 
@@ -85,6 +92,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   private void setupMvc() {
     clearButton.addActionListener((evt) -> queueController.clearQueue());
     processAllButton.addActionListener((evt) -> rows.forEach(queueController::submit));
+    stopPackingButton.addActionListener((evt) -> rows.forEach(queueController::stop));
   }
   
   private void addPackJob(PackJobPanel panel) {
@@ -134,6 +142,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
       }
       case QueueModel.UPDATE_CLEAR_QUEUE_BUTTON -> updateButtonEnabled(clearButton, evt);
       case QueueModel.UPDATE_PACKAGE_QUEUE_BUTTON -> updateButtonEnabled(processAllButton, evt);
+      case QueueModel.UPDATE_STOP_ALL_BUTTON -> updateButtonEnabled(stopPackingButton, evt);
       default -> rows.stream()
           .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
           .findFirst()

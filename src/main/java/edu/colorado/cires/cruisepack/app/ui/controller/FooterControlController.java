@@ -136,7 +136,7 @@ public class FooterControlController implements PropertyChangeListener {
               setSaveButtonEnabled(false);
               setStopButtonEnabled(true);
             },
-            () -> {
+            (jobsRunning) -> {
               setPackageButtonEnabled(true);
               setSaveButtonEnabled(true);
               setStopButtonEnabled(false);

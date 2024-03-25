@@ -2,6 +2,7 @@ package edu.colorado.cires.cruisepack.app.service.pack;
 
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import java.beans.PropertyChangeListener;
+import java.util.function.Consumer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ public class PackQueuePublisher {
     this.publisher = publisher;
   }
 
-  public void publish(PropertyChangeListener source, String processId, PackJob packJob, Runnable executeBefore, Runnable executeAfter) {
+  public void publish(PropertyChangeListener source, String processId, PackJob packJob, Runnable executeBefore, Consumer<Boolean> executeAfter) {
     publisher.publishEvent(new PackingJobEvent(
         source,
         new PackingJob(

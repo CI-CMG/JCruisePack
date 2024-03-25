@@ -60,13 +60,15 @@ public class QueueController implements PropertyChangeListener {
           queueModel.updateRemoveButton(false, processId);
           queueModel.updateClearQueueButton(false);
           queueModel.updatePackageQueueButton(false);
+          queueModel.updateStopAllButton(true);
         },
-        () -> {
+        (jobsInProgress) -> {
           queueModel.updateStopButton(false, processId);
           queueModel.updatePackageButton(true, processId);
           queueModel.updateRemoveButton(true, processId);
-          queueModel.updateClearQueueButton(true);
-          queueModel.updatePackageQueueButton(true);
+          queueModel.updateClearQueueButton(!jobsInProgress);
+          queueModel.updatePackageQueueButton(!jobsInProgress);
+          queueModel.updateStopAllButton(jobsInProgress);
         }
     );
   }

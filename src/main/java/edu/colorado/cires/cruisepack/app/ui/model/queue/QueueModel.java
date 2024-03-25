@@ -13,6 +13,7 @@ public class QueueModel extends PropertyChangeModel {
   public static final String REMOVE_FROM_QUEUE = "REMOVE_FROM_QUEUE";
   public static final String CLEAR_QUEUE = "CLEAR_QUEUE";
   public static final String UPDATE_PACKAGE_QUEUE_BUTTON = "UPDATE_PACKAGE_QUEUE_BUTTON";
+  public static final String UPDATE_STOP_ALL_BUTTON = "UPDATE_STOP_ALL_BUTTON";
   public static final String UPDATE_CLEAR_QUEUE_BUTTON = "UPDATE_CLEAR_QUEUE_BUTTON";
   public static final String EMIT_QUEUE_SIZE = "EMIT_QUEUE_SIZE";
   
@@ -81,6 +82,10 @@ public class QueueModel extends PropertyChangeModel {
     fireChangeEvent(String.format(
         "UPDATE_STOP_BUTTON_%s", processId
     ), !enabled, enabled);
+  }
+  
+  public void updateStopAllButton(boolean enabled) {
+    fireChangeEvent(UPDATE_STOP_ALL_BUTTON, !enabled, enabled);
   }
 
 }
