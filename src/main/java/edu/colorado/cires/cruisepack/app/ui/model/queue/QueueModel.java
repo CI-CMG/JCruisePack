@@ -3,10 +3,8 @@ package edu.colorado.cires.cruisepack.app.ui.model.queue;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.queue.PackJobPanel;
-import jakarta.validation.ConstraintViolation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -84,8 +82,5 @@ public class QueueModel extends PropertyChangeModel {
         "UPDATE_STOP_BUTTON_%s", processId
     ), !enabled, enabled);
   }
-  
-  public void setErrors(Set<ConstraintViolation<QueueModel>> constraintViolations) {
-    
-  }
+
 }
