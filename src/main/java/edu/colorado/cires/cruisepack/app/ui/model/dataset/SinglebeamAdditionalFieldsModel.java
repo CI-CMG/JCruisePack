@@ -80,15 +80,27 @@ public class SinglebeamAdditionalFieldsModel extends AdditionalFieldsModel {
     setIfChanged(UPDATE_SOUND_VELOCITY, soundVelocity, () -> this.soundVelocity, (nv) -> this.soundVelocity = nv);
   }
 
-  private void setVerticalDatumError(String message) {
+  public void setVerticalDatumError(String message) {
     setIfChanged(UPDATE_VERTICAL_DATUM_ERROR, message, () -> this.verticalDatumError, (e) -> this.verticalDatumError = e);
   }
 
-  private void setObsRateError(String message) {
+  public void setObsRateError(String message) {
     setIfChanged(UPDATE_OBS_RATE_ERROR, message, () -> this.obsRateError, (e) -> this.obsRateError = e);
   }
 
-  private void setSoundVelocityError(String message) {
+  public void setSoundVelocityError(String message) {
     setIfChanged(UPDATE_SOUND_VELOCITY_ERROR, message, () -> this.soundVelocityError, (e) -> this.soundVelocityError = e);
+  }
+
+  public String getVerticalDatumError() {
+    return verticalDatumError;
+  }
+
+  public String getObsRateError() {
+    return obsRateError;
+  }
+
+  public String getSoundVelocityError() {
+    return soundVelocityError;
   }
 }
