@@ -116,23 +116,43 @@ public class GravityAdditionalFieldsModel extends AdditionalFieldsModel {
     setIfChanged(UPDATE_DRIFT_PER_DAY, driftPerDay, () -> this.driftPerDay, (nv) -> this.driftPerDay = nv);
   }
 
-  private void setCorrectionModelError(String message) {
+  public void setCorrectionModelError(String message) {
     setIfChanged(UPDATE_CORRECTION_MODEL_ERROR, message, () -> this.correctionModelError, (e) -> this.correctionModelError = e);
   }
 
-  private void setObservationRateError(String message) {
+  public void setObservationRateError(String message) {
     setIfChanged(UPDATE_OBSERVATION_RATE_ERROR, message, () -> this.observationRateError, (e) -> this.observationRateError = e);
   }
 
-  private void setDepartureTieError(String message) {
+  public void setDepartureTieError(String message) {
     setIfChanged(UPDATE_DEPARTURE_TIE_ERROR, message, () -> this.departureTieError, (e) -> this.departureTieError = e);
   }
 
-  private void setArrivalTieError(String message) {
+  public void setArrivalTieError(String message) {
     setIfChanged(UPDATE_ARRIVAL_TIE_ERROR, message, () -> this.arrivalTieError, (e) -> this.arrivalTieError = e);
   }
 
-  private void setDriftPerDayError(String message) {
+  public void setDriftPerDayError(String message) {
     setIfChanged(UPDATE_DRIFT_PER_DAY_ERROR, message, () -> this.driftPerDayError, (e) -> this.driftPerDayError = e);
+  }
+
+  public String getCorrectionModelError() {
+    return correctionModelError;
+  }
+
+  public String getObservationRateError() {
+    return observationRateError;
+  }
+
+  public String getDepartureTieError() {
+    return departureTieError;
+  }
+
+  public String getArrivalTieError() {
+    return arrivalTieError;
+  }
+
+  public String getDriftPerDayError() {
+    return driftPerDayError;
   }
 }
