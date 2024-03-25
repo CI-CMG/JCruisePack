@@ -101,19 +101,35 @@ public class WaterColumnAdditionalFieldsModel extends AdditionalFieldsModel {
     return map;
   }
 
-  private void setCalibrationStateError(String message) {
+  public void setCalibrationStateError(String message) {
     setIfChanged(UPDATE_CALIBRATION_STATE_ERROR, message, () -> this.calibrationStateError, (e) -> this.calibrationStateError = e);
   }
 
-  private void setCalibrationReportPathError(String message) {
+  public void setCalibrationReportPathError(String message) {
     setIfChanged(UPDATE_CALIBRATION_REPORT_PATH_ERROR, message, () -> this.calibrationReportPathError, (e) -> this.calibrationReportPathError = e);
   }
 
-  private void setCalibrationDataPathError(String message) {
+  public void setCalibrationDataPathError(String message) {
     setIfChanged(UPDATE_CALIBRATION_DATA_PATH_ERROR, message, () -> this.calibrationDataPathError, (e) -> this.calibrationDataPathError = e);
   }
 
-  private void setCalibrationDateError(String message) {
+  public void setCalibrationDateError(String message) {
     setIfChanged(UPDATE_CALIBRATION_DATE_ERROR, message, () -> this.calibrationDateError, (e) -> this.calibrationDateError = e);
+  }
+
+  public String getCalibrationStateError() {
+    return calibrationStateError;
+  }
+
+  public String getCalibrationReportPathError() {
+    return calibrationReportPathError;
+  }
+
+  public String getCalibrationDataPathError() {
+    return calibrationDataPathError;
+  }
+
+  public String getCalibrationDateError() {
+    return calibrationDateError;
   }
 }
