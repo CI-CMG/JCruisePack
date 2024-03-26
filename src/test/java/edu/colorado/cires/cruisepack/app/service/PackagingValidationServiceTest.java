@@ -17,7 +17,6 @@ import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.validation.Validator;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -53,7 +52,7 @@ public class PackagingValidationServiceTest {
   private final DatasetsModel DATASETS_MODEL = new DatasetsModel(null);
   private final InstrumentDatastore INSTRUMENT_DATASTORE = new InstrumentDatastore(SERVICE_PROPERTIES);
   private final PeopleModel PEOPLE_MODEL = new PeopleModel();
-  private final PersonDatastore PERSON_DATASTORE = new PersonDatastore(SERVICE_PROPERTIES, mock(ReactiveViewRegistry.class));
+  private final PersonDatastore PERSON_DATASTORE = new PersonDatastore(SERVICE_PROPERTIES);
   private final FooterControlModel FOOTER_CONTROL_MODEL = new FooterControlModel();
   private final ErrorModel ERROR_MODEL = new ErrorModel();
   private final Map<String, PropertyChangeEvent> eventMap = new HashMap<>(0);

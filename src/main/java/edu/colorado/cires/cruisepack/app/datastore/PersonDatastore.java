@@ -2,10 +2,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.person.PersonData;
@@ -14,8 +12,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,24 +30,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PersonDatastore extends PropertyChangeModel implements PropertyChangeListener {
+public class PersonDatastore extends PropertyChangeModel {
 
     public static final DropDownItem UNSELECTED_PERSON = new DropDownItem("", "Select Person");
 
     private final ServiceProperties serviceProperties;
     private List<DropDownItem> personDropDowns;
-    private final ReactiveViewRegistry reactiveViewRegistry;
-    private List<Person> people;
+  private List<Person> people;
 
     @Autowired
-    public PersonDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
+    public PersonDatastore(ServiceProperties serviceProperties) {
         this.serviceProperties = serviceProperties;
-        this.reactiveViewRegistry = reactiveViewRegistry;
     }
 
     @PostConstruct
     public void init() {
-        addChangeListener(this);
         load();
     }
     
@@ -164,13 +157,6 @@ public class PersonDatastore extends PropertyChangeModel implements PropertyChan
         person.setUse(personModel.isUse());
         person.setUuid(personModel.getUuid());
         return person;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        for (ReactiveView view : reactiveViewRegistry.getViews()) {
-            view.onChange(evt);
-        }
     }
     
     public Optional<Person> getByUUID(String uuid) {
