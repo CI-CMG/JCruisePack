@@ -47,8 +47,7 @@ class CruiseDataDatastoreTest {
   private final CruiseDataDatastore datastore = new CruiseDataDatastore(
       METADATA_SERVICE, 
       SERVICE_PROPERTIES,
-      OBJECT_MAPPER,
-      REACTIVE_VIEW_REGISTRY
+      OBJECT_MAPPER
   );
   
   @BeforeEach

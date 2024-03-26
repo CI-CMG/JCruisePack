@@ -7,13 +7,9 @@ import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import jakarta.annotation.PostConstruct;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,21 +24,19 @@ import java.util.stream.Stream;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CruiseDataDatastore extends PropertyChangeModel implements PropertyChangeListener {
+public class CruiseDataDatastore extends PropertyChangeModel {
 
   public static final DropDownItem UNSELECTED_CRUISE = new DropDownItem("", "Select Cruise");
 
   private final MetadataService metadataService;
   private final ServiceProperties serviceProperties;
   private final ObjectMapper objectMapper;
-  private final ReactiveViewRegistry reactiveViewRegistry;
   private List<CruiseData> cruises;
 
-  public CruiseDataDatastore(MetadataService metadataService, ServiceProperties serviceProperties, ObjectMapper objectMapper, ReactiveViewRegistry reactiveViewRegistry) {
+  public CruiseDataDatastore(MetadataService metadataService, ServiceProperties serviceProperties, ObjectMapper objectMapper) {
     this.metadataService = metadataService;
     this.serviceProperties = serviceProperties;
     this.objectMapper = objectMapper;
-    this.reactiveViewRegistry = reactiveViewRegistry;
   }
   
   public void saveCruiseToPath(PackJob packJob, Path path) throws Exception {
@@ -103,7 +97,6 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
 
   @PostConstruct
   public void init() {
-    addChangeListener(this);
     load();
   }
 
@@ -144,13 +137,6 @@ public class CruiseDataDatastore extends PropertyChangeModel implements Property
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("local-data");
     return dataDir.resolve("cruise-metadata");
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    for (ReactiveView view : reactiveViewRegistry.getViews()) {
-      view.onChange(evt);
-    }
   }
   
   public Optional<CruiseData> getByPackageId(String packageId) {
