@@ -21,6 +21,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;
+import edu.colorado.cires.cruisepack.app.ui.controller.ProjectController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
@@ -31,6 +32,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -49,6 +51,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -86,7 +89,8 @@ public class PackagePanel extends JPanel implements ReactiveView {
   private final ProjectDatastore projectDatastore;
   private final CruiseDataDatastore cruiseDataDatastore;
   private final FooterControlController footerControlController;
-  private final EditProjectDialog editProjectDialog;
+  private EditProjectDialog editProjectDialog;
+  private final ProjectController projectController;
 
   private final DropDownItemList projectsField;
   private final JTextField cruiseIdField = new JTextField();
@@ -126,7 +130,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
       SeaDatastore seaDatastore,
       ProjectDatastore projectDatastore,
       CruiseDataDatastore cruiseDataDatastore,
-      FooterControlController footerControlController, EditProjectDialog editProjectDialog
+      FooterControlController footerControlController, ProjectController projectController
   ) {
     this.packageController = packageController;
     this.reactiveViewRegistry = reactiveViewRegistry;
@@ -143,7 +147,7 @@ public class PackagePanel extends JPanel implements ReactiveView {
     );
     this.cruiseDataDatastore = cruiseDataDatastore;
     this.footerControlController = footerControlController;
-    this.editProjectDialog = editProjectDialog;
+    this.projectController = projectController;
   }
 
   @PostConstruct
@@ -228,6 +232,15 @@ public class PackagePanel extends JPanel implements ReactiveView {
     projectsField.addRemoveItemListener(packageController::removeProject);
     existingRecordList.addItemListener((evt) -> packageController.setExistingRecord((DropDownItem) evt.getItem()));
     newProjectButton.addActionListener((evt) -> {
+      if (editProjectDialog == null) {
+        editProjectDialog = new EditProjectDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this),
+            reactiveViewRegistry,
+            projectController
+        );
+        editProjectDialog.init();
+      }
+      
       editProjectDialog.pack();
       editProjectDialog.setVisible(true);
     });

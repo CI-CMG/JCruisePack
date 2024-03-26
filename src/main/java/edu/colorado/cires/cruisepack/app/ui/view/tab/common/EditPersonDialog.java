@@ -26,6 +26,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -34,6 +35,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 public class EditPersonDialog extends JDialog implements ReactiveView {
@@ -68,25 +70,12 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
     private final StatefulRadioButton useField = new StatefulRadioButton("Display in pull-down lists:");
     private final JButton clearButton = new JButton("Clear");
     private final JButton saveButton = new JButton("Save");
-    private final OptionDialog optionDialog = new OptionDialog(
-        "<html><B>Save changes before closing?</B></html>",
-        List.of("Cancel", "No", "Yes")
-    );
-    
-    private final OptionDialog closeAfterSaveDialog = new OptionDialog(
-        "<html><B>Person has been updated. Do you want to exit editor?</B></html>",
-        List.of("No", "Yes")
-    );
-    
-    private final OptionDialog collisionDialog = new OptionDialog(
-        "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new person, please modify the name to make it unique.</B></html>",
-        List.of("OK")
-    );
-
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final PersonDatastore personDatastore;
     private final PersonController personController;
     private final PersonModel personModel;
+    private String collisionDialogText;
+    private String closeAfterSaveDialogText;
 
     public EditPersonDialog(Frame owner, PersonDatastore personDatastore, ReactiveViewRegistry reactiveViewRegistry, PersonController personController, PersonModel personModel) {
         super(owner, PEOPLE_EDITOR_HEADER, true);
@@ -330,35 +319,60 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
             personController.restoreDefaults();
         });
         
-        closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
         
+        Frame ancestor = (Frame) SwingUtilities.getWindowAncestor(this);
         saveButton.addActionListener((e) -> {
             ResponseStatus status = personController.submit();
             if (status.equals(ResponseStatus.SUCCESS)) {
+                OptionDialog closeAfterSaveDialog = new OptionDialog(
+                    ancestor,
+                    closeAfterSaveDialogText,
+                    List.of("No", "Yes")
+                );
+                
+                closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
+                
                 closeAfterSaveDialog.pack();
                 closeAfterSaveDialog.setVisible(true);
             } else if (status.equals(ResponseStatus.CONFLICT)) {
+                OptionDialog collisionDialog = new OptionDialog(
+                    ancestor,
+                    collisionDialogText,
+                    List.of("OK")
+                );
                 collisionDialog.pack();
                 collisionDialog.setVisible(true);
             }
         });
 
-        optionDialog.addListener("No", (evt) -> {
-            setVisible(false);
-        });
-        optionDialog.addListener("Yes", (evt) -> {
-            ResponseStatus status = personController.submit();
-            if (status.equals(ResponseStatus.SUCCESS)) {
-                setVisible(false);
-            } else if (status.equals(ResponseStatus.CONFLICT)) {
-                collisionDialog.pack();
-                collisionDialog.setVisible(true);
-            }
-        });
-
+        
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event) {
+                OptionDialog optionDialog = new OptionDialog(
+                    ancestor,
+                    "<html><B>Save changes before closing?</B></html>",
+                    List.of("Cancel", "No", "Yes")
+                );
+
+                optionDialog.addListener("No", (evt) -> {
+                    setVisible(false);
+                });
+                optionDialog.addListener("Yes", (evt) -> {
+                    ResponseStatus status = personController.submit();
+                    if (status.equals(ResponseStatus.SUCCESS)) {
+                        setVisible(false);
+                    } else if (status.equals(ResponseStatus.CONFLICT)) {
+                        OptionDialog collisionDialog = new OptionDialog(
+                            ancestor,
+                            "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new person, please modify the name to make it unique.</B></html>",
+                            List.of("OK")
+                        );
+                        collisionDialog.pack();
+                        collisionDialog.setVisible(true);
+                    }
+                });
+                
                 optionDialog.pack();
                 optionDialog.setVisible(true);
             }
@@ -451,18 +465,8 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
                 updateComboBoxModel(peopleList, personDatastore.getAllPersonDropDowns());
                 break;
             case Events.EMIT_PERSON_NAME:
-                updateLabelText(closeAfterSaveDialog.getLabel(), new PropertyChangeEvent(
-                    evt,
-                    "UPDATE_CLOSE_AFTER_SAVE_LABEL",
-                    closeAfterSaveDialog.getLabel().getText(),
-                    String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
-                ));
-                updateLabelText(collisionDialog.getLabel(), new PropertyChangeEvent(
-                    evt,
-                    "UPDATE_COLLISION_DIALOG_LABEL",
-                    collisionDialog.getLabel().getText(),
-                    String.format("<html><B>The name \"%s\" already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new person, please modify the name to make it unique.</B></html>", evt.getNewValue())
-                ));
+                closeAfterSaveDialogText = String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue());
+                collisionDialogText = String.format("<html><B>The name \"%s\" already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new person, please modify the name to make it unique.</B></html>", evt.getNewValue());
                 break;
             default:
                 break;

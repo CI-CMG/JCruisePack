@@ -3,10 +3,12 @@ package edu.colorado.cires.cruisepack.app.ui.view;
 import jakarta.annotation.PostConstruct;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -25,10 +27,6 @@ public class MainFrame extends JFrame {
   private final UiRefresher uiRefresher;
   private final RootPanel rootPanel;
   private final FooterControlController footerControlController;
-  private final OptionDialog optionDialog = new OptionDialog(
-      "<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>",
-      List.of("Cancel", "No", "Yes")
-  );
 
   @Autowired
   public MainFrame(UiRefresher uiRefresher, RootPanel rootPanel, FooterControlController footerControlController) {
@@ -52,18 +50,25 @@ public class MainFrame extends JFrame {
   }
 
   private void setupMvc() {
+    Frame ancestor = (Frame) SwingUtilities.getWindowAncestor(this);
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent event) {
+        OptionDialog optionDialog = new OptionDialog(
+            ancestor,
+            "<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>",
+            List.of("Cancel", "No", "Yes")
+        );
+
+        optionDialog.addListener("No", (evt) -> footerControlController.exitApplication());
+        optionDialog.addListener("Yes", (evt) -> {
+          footerControlController.saveForms(true);
+          footerControlController.exitApplication();
+        });
+        
         optionDialog.pack();
         optionDialog.setVisible(true);
       }
-    });
-
-    optionDialog.addListener("No", (evt) -> footerControlController.exitApplication());
-    optionDialog.addListener("Yes", (evt) -> {
-      footerControlController.saveForms(true);
-      footerControlController.exitApplication();
     });
 
 

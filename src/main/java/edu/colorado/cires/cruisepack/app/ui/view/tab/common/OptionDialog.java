@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.common;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -15,22 +16,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 public class OptionDialog extends JDialog {
 
-    private final String dialogMessage;
-    private final Map<String, JButton> buttons;
+  private final Map<String, JButton> buttons;
     private final List<String> buttonLabels;
     private final JLabel label;
 
-    public OptionDialog(String dialogMessage, List<String> buttonLabels) {
-        super((JFrame) null, null, true);
-        this.dialogMessage = dialogMessage;
-        this.label = new JLabel(dialogMessage);
+    public OptionDialog(Frame owner, String dialogMessage, List<String> buttonLabels) {
+        super(owner, null, true);
+      this.label = new JLabel(dialogMessage);
         this.buttonLabels = buttonLabels;
         this.buttons = buttonLabels.stream()
             .collect(Collectors.toMap(

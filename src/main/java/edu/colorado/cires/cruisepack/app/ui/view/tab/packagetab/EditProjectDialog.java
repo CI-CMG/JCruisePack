@@ -13,8 +13,8 @@ import edu.colorado.cires.cruisepack.app.ui.model.ProjectModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
-import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -25,12 +25,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import javax.swing.SwingUtilities;
 
-@Component
-@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class EditProjectDialog extends JDialog implements ReactiveView {
   
   private final ReactiveViewRegistry reactiveViewRegistry;
@@ -42,18 +38,13 @@ public class EditProjectDialog extends JDialog implements ReactiveView {
   private final StatefulRadioButton useField = new StatefulRadioButton("Display in pull-down lists:");
   private final JButton clearButton = new JButton("Clear");
   private final JButton saveButton = new JButton("Save");
-  private final OptionDialog collisionDialog = new OptionDialog(
-      "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new project, please modify the name to make it unique.</B></html>",
-      List.of("OK")
-  );
 
-  @Autowired
-  public EditProjectDialog(ReactiveViewRegistry reactiveViewRegistry, ProjectController projectController) {
+  public EditProjectDialog(Frame owner, ReactiveViewRegistry reactiveViewRegistry, ProjectController projectController) {
+    super(owner, "Create Project", true);
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.projectController = projectController;
   }
-  
-  @PostConstruct
+
   public void init() {
     initializeFields();
     setupLayout();
@@ -121,6 +112,12 @@ public class EditProjectDialog extends JDialog implements ReactiveView {
       case ProjectModel.UPDATE_UUID -> updateTextField(uuidField, evt);
       case ProjectModel.UPDATE_USE -> updateStatefulRadioButton(useField, evt);
       case ProjectModel.EMIT_SAVE_FAILURE -> {
+        OptionDialog collisionDialog = new OptionDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this),
+            "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new project, please modify the name to make it unique.</B></html>",
+            List.of("OK")
+        );
+        
         collisionDialog.pack();
         collisionDialog.setVisible(true);
       }

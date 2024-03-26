@@ -8,7 +8,16 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefu
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.OrganizationController;
+import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
+import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
@@ -18,31 +27,15 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.function.Consumer;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
-import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
-import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.controller.OrganizationController;
-import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
-import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
-import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import jakarta.annotation.PostConstruct;
 
 public class EditOrgDialog extends JDialog implements ReactiveView {
 
@@ -70,23 +63,13 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     private final StatefulRadioButton useField = new StatefulRadioButton("Display in pull-down lists:");
     private final JButton clearButton = new JButton("Clear");
     private final JButton saveButton = new JButton("Save");
-    private final OptionDialog optionDialog = new OptionDialog(
-        "<html><B>Save changes before closing?</B></html>",
-        List.of("Cancel", "No", "Yes")
-    );
-    private final OptionDialog closeAfterSaveDialog = new OptionDialog(
-        "<html><B>Organization has been updated. Do you want to exit editor?</B></html>",
-        List.of("No", "Yes")
-    );
-    private final OptionDialog collisionDialog = new OptionDialog(
-        "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new organization, please modify the name to make it unique.</B></html>",
-        List.of("OK")
-    );
 
     private final ReactiveViewRegistry reactiveViewRegistry;
     private final OrganizationDatastore organizationDatastore;
     private final OrganizationController organizationController;
     private final OrganizationModel organizationModel;
+    private String collisionDialogText;
+    private String closeAfterSaveDialogText; 
 
     public EditOrgDialog(Frame owner, ReactiveViewRegistry reactiveViewRegistry, OrganizationDatastore organizationDatastore, OrganizationController organizationController, OrganizationModel organizationModel) {
         super(owner, ORG_EDITOR_HEADER, true);
@@ -288,40 +271,69 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         addTextListener(organizationController::setPhone, phoneField);
         addTextListener(organizationController::setEmail, emailField);
         addTextListener(organizationController::setUuid, uuidField);
-        useField.addValueChangeListener((v) -> organizationController.setUse(v));
+        useField.addValueChangeListener(organizationController::setUse);
 
         clearButton.addActionListener((e) -> {
             orgList.setSelectedItem(OrganizationDatastore.UNSELECTED_ORGANIZATION);
             organizationController.restoreDefaults();
         });
-        
-        closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
+        Frame ancestor = (Frame) SwingUtilities.getWindowAncestor(this); 
         
         saveButton.addActionListener((e) -> {
             ResponseStatus status = organizationController.submit();
             if (status.equals(ResponseStatus.SUCCESS)) {
+                OptionDialog closeAfterSaveDialog = new OptionDialog(
+                    ancestor,
+                    closeAfterSaveDialogText,
+                    List.of("No", "Yes")
+                );
+
+                closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
+                
                 closeAfterSaveDialog.pack();
                 closeAfterSaveDialog.setVisible(true);
             } else if (status.equals(ResponseStatus.CONFLICT)) {
+                 OptionDialog collisionDialog = new OptionDialog(
+                    ancestor,
+                    collisionDialogText,
+                    List.of("OK")
+                );
+                
                 collisionDialog.pack();
                 collisionDialog.setVisible(true);
             }
         });
-
-        optionDialog.addListener("No", (evt) -> setVisible(false));
-        optionDialog.addListener("Yes", (evt) -> {
-            ResponseStatus status = organizationController.submit();
-            if (status.equals(ResponseStatus.SUCCESS)) {
-                setVisible(false);
-            } else if (status.equals(ResponseStatus.CONFLICT)) {
-                collisionDialog.pack();
-                collisionDialog.setVisible(true);
-            }
-        });
+        
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event) {
+                OptionDialog optionDialog = new OptionDialog(
+                    ancestor,
+                    "<html><B>Save changes before closing?</B></html>",
+                    List.of("Cancel", "No", "Yes")
+                );
+
+                optionDialog.addListener("No", (evt) -> setVisible(false));
+                optionDialog.addListener("Yes", (evt) -> {
+                    ResponseStatus status = organizationController.submit();
+                    if (status.equals(ResponseStatus.SUCCESS)) {
+                        setVisible(false);
+                    } else if (status.equals(ResponseStatus.CONFLICT)) {
+                        OptionDialog collisionDialog = new OptionDialog(
+                            ancestor,
+                            "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new organization, please modify the name to make it unique.</B></html>",
+                            List.of("OK")
+                        );
+
+                        collisionDialog.pack();
+                        collisionDialog.setVisible(true);
+                        
+                        collisionDialog.pack();
+                        collisionDialog.setVisible(true);
+                    }
+                });
+                
                 optionDialog.pack();
                 optionDialog.setVisible(true);
             }
@@ -396,18 +408,8 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
                 updateComboBoxModel(orgList, organizationDatastore.getAllOrganizationDropDowns());
                 break;
             case Events.EMIT_ORG_NAME:
-                updateLabelText(closeAfterSaveDialog.getLabel(), new PropertyChangeEvent(
-                    evt,
-                    "UPDATE_CLOSE_AFTER_SAVE_LABEL",
-                    closeAfterSaveDialog.getLabel().getText(),
-                    String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
-                ));
-                updateLabelText(collisionDialog.getLabel(), new PropertyChangeEvent(
-                    evt,
-                    "UPDATE_COLLISION_DIALOG_LABEL",
-                    collisionDialog.getLabel().getText(),
-                    String.format("<html><B>The name \"%s\" already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new organization, please modify the name to make it unique.</B></html>", evt.getNewValue())
-                ));
+                closeAfterSaveDialogText = String.format("<html><B>%s has been updated. Do you want to exit editor?</B></html>", evt.getNewValue());
+                collisionDialogText = String.format("<html><B>The name \"%s\" already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new organization, please modify the name to make it unique.</B></html>", evt.getNewValue());
                 break;
             default:
                 break;

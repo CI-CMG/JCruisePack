@@ -8,24 +8,19 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
-import jakarta.annotation.PostConstruct;
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
-@Component
-@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class ManageRecordsDialog extends JDialog implements ReactiveView {
   private final CruiseDataController cruiseDataController;
   private final ReactiveViewRegistry reactiveViewRegistry;
@@ -33,19 +28,13 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
   private final JTable table = new JTable();
   private final DefaultTableModel tableModel = new CheckboxTableModel();
   private final JButton saveButton = new JButton("Save");
-  private final OptionDialog exitAfterSaveDialog = new OptionDialog(
-      "<html><B>Package display status was updated. Do you want to exit editor?</B></html>",
-      List.of("No", "Yes")
-  );
 
-  @Autowired
-  public ManageRecordsDialog(CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
-    super((JFrame) null, "Manage Package Records", true);
+  public ManageRecordsDialog(Frame owner, CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
+    super(owner, "Manage Package Records", true);
     this.cruiseDataController = cruiseDataDatastore;
     this.reactiveViewRegistry = reactiveViewRegistry;
   }
   
-  @PostConstruct
   public void init() {
     initializeFields();
     setupLayout();
@@ -91,7 +80,6 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
   private void setupMvc() {
     reactiveViewRegistry.register(this);
     
-    exitAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
     saveButton.addActionListener((evt) -> save());
   }
   
@@ -109,6 +97,13 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
     }
     cruiseDataController.updateCruises(newData);
 
+     OptionDialog exitAfterSaveDialog = new OptionDialog(
+        (Frame) SwingUtilities.getWindowAncestor(this),
+        "<html><B>Package display status was updated. Do you want to exit editor?</B></html>",
+        List.of("No", "Yes")
+    );
+
+    exitAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
     exitAfterSaveDialog.pack();
     exitAfterSaveDialog.setVisible(true);
   }

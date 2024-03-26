@@ -5,6 +5,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgres
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.migration.SqliteMigrator;
+import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -54,9 +55,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final FooterControlController footerControlController;
   private final FooterControlModel footerControlModel;
-  private final ManageRecordsDialog manageRecordsDialog;
+  private ManageRecordsDialog manageRecordsDialog;
   private final ImportExportDialog importExportDialog;
   private final SqliteMigrator sqliteMigrator;
+  private final CruiseDataController cruiseDataController;
   private final String processId;
 
   private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
@@ -69,42 +71,23 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton docsButton;
   private final JProgressBar progressBar = new JProgressBar();
   private final BoundedRangeModel progressBarModel = new DefaultBoundedRangeModel();
-  private final OptionDialog saveWarningDialog = new OptionDialog(
-      "<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>",
-      Collections.singletonList("OK")
-  );
-  private final OptionDialog saveExitAppDialog = new OptionDialog(
-      "<html><B>Record data has been updated. Do you want to exit editor?</B></html>",
-      List.of("No", "Yes")
-  );
-  private final OptionDialog saveOrUpdateDialog = new OptionDialog(
-      "<html><B>The current package ID is different than the saved value. Click \"Update\" to update current record. Click \"Create New\" to create a new record for this new package ID.</B></html>",
-      List.of("Cancel", "Update", "Create New")
-  );
-  private final OptionDialog packageIdCollisionDialog = new OptionDialog(
-      "<html><B>This package name already exists. Please modify the Cruise ID or Segment or Leg value to create a unique package ID.</B></html>",
-      List.of("OK")
-  );
-  
-  private final OptionDialog jobErrorsDialog = new OptionDialog(
-      "<html><B>Packaging failed</B></html>",
-      List.of("OK")
-  );
   private final JButton closeExitAppButton = new JButton("No");
   private final JButton confirmExitAppButton = new JButton("Yes");
   private final UiRefresher uiRefresher;
+  private String packageIdCollisionDialogText;
+  private String saveExitAppDialogText;
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel, ManageRecordsDialog manageRecordsDialog, ImportExportDialog importExportDialog,
-      SqliteMigrator sqliteMigrator, UiRefresher uiRefresher)
+      FooterControlModel footerControlModel, ImportExportDialog importExportDialog,
+      SqliteMigrator sqliteMigrator, CruiseDataController cruiseDataController, UiRefresher uiRefresher)
       throws IOException {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
-    this.manageRecordsDialog = manageRecordsDialog;
     this.importExportDialog = importExportDialog;
     this.sqliteMigrator = sqliteMigrator;
+    this.cruiseDataController = cruiseDataController;
     this.uiRefresher = uiRefresher;
     this.docsButton = new JButton(new ImageIcon(ImageIO.read(
         Objects.requireNonNull(getClass().getResource(String.format(
@@ -158,51 +141,20 @@ public class FooterPanel extends JPanel implements ReactiveView {
       uiRefresher.refresh();
     });
     packageButton.addActionListener((evt) -> footerControlController.addToQueue());
-    saveWarningDialog.addListener("OK", (evt) -> footerControlController.setSaveWarningDialogueVisible(false));
-    saveWarningDialog.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        footerControlController.setSaveWarningDialogueVisible(false);
-      }
-    });
 
     closeExitAppButton.addActionListener((evt) -> footerControlController.setSaveExitAppDialogueVisible(false));
     confirmExitAppButton.addActionListener((evt) -> footerControlController.exitApplication());
     
-    saveExitAppDialog.addListener("Yes", (evt) -> footerControlController.exitApplication());
-    saveExitAppDialog.addListener("No", (evt) -> footerControlController.setSaveExitAppDialogueVisible(false));
-    saveExitAppDialog.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent event) {
-        footerControlController.setSaveExitAppDialogueVisible(false);
-      }
-    });
-    
-    packageIdCollisionDialog.addListener("OK", (evt) -> footerControlController.setPackageIdCollisionDialogVisible(false));
-    packageIdCollisionDialog.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        footerControlController.setPackageIdCollisionDialogVisible(false);
-      }
-    });
-    
-    saveOrUpdateDialog.addListener("Cancel", (evt) -> footerControlController.setSaveOrUpdateDialogVisible(false));
-    saveOrUpdateDialog.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        footerControlController.setSaveOrUpdateDialogVisible(false);
-      }
-    });
-    saveOrUpdateDialog.addListener("Update", (evt) -> {
-      footerControlController.setSaveOrUpdateDialogVisible(false);
-      footerControlController.update(false);
-    });
-    saveOrUpdateDialog.addListener("Create New", (evt) -> {
-      footerControlController.setSaveOrUpdateDialogVisible(false);
-      footerControlController.create(false);
-    });
-    
     manageRecordsButton.addActionListener((evt) -> {
+      if (manageRecordsDialog == null) {
+        manageRecordsDialog = new ManageRecordsDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this),
+            cruiseDataController,
+            reactiveViewRegistry
+        );
+        manageRecordsDialog.init();
+      }
+      
       manageRecordsDialog.pack();
       manageRecordsDialog.setVisible(true);
     });
@@ -286,53 +238,108 @@ public class FooterPanel extends JPanel implements ReactiveView {
       break;
       case Events.UPDATE_SAVE_WARNING_DIALOGUE_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
-        if (saveWarningDialog.isVisible() != newValue) {
+        
+        if (newValue) {
+          OptionDialog saveWarningDialog =  new OptionDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              "<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>",
+              Collections.singletonList("OK")
+          );
+
+          saveWarningDialog.addListener("OK", (event) -> footerControlController.setSaveWarningDialogueVisible(false));
+          saveWarningDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+              footerControlController.setSaveWarningDialogueVisible(false);
+            }
+          });
+          
           saveWarningDialog.pack();
-          saveWarningDialog.setVisible(newValue);
+          saveWarningDialog.setVisible(true);
         }
       }
       break;
       case Events.UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
-        if (saveExitAppDialog.isVisible() != newValue) {
+        if (newValue) {
+          OptionDialog saveExitAppDialog = new OptionDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              saveExitAppDialogText,
+              List.of("No", "Yes")
+          );
+
+          saveExitAppDialog.addListener("Yes", (event) -> footerControlController.exitApplication());
+          saveExitAppDialog.addListener("No", (event) -> footerControlController.setSaveExitAppDialogueVisible(false));
+          saveExitAppDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent event) {
+              footerControlController.setSaveExitAppDialogueVisible(false);
+            }
+          });
           saveExitAppDialog.pack();
-          saveExitAppDialog.setVisible(newValue);
+          saveExitAppDialog.setVisible(true);
         }
       }
       break;
-      case Events.EMIT_PACKAGE_ID:
-        updateLabelText(saveExitAppDialog.getLabel(), new PropertyChangeEvent(
-          evt,
-          "UPDATE_APP_EXIT_LABEL",
-          saveExitAppDialog.getLabel().getText(),
-          String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", evt.getNewValue())
-        ));
-        updateLabelText(packageIdCollisionDialog.getLabel(), new PropertyChangeEvent(
-            evt,
-            "UPDATE_PACKAGE_ID_COLLISION_LABEL",
-            packageIdCollisionDialog.getLabel().getText(),
-            String.format("<html><B>The package name \"%s\" already exists. Please modify the Cruise ID or Segment or Leg value to create a unique package ID.</B></html>", evt.getNewValue())
-        ));
-        break;
       case Events.UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
-        if (saveOrUpdateDialog.isVisible() != newValue) {
+        if (newValue) {
+          OptionDialog saveOrUpdateDialog = new OptionDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              "<html><B>The current package ID is different than the saved value. Click \"Update\" to update current record. Click \"Create New\" to create a new record for this new package ID.</B></html>",
+              List.of("Cancel", "Update", "Create New")
+          );
+
+          saveOrUpdateDialog.addListener("Cancel", (event) -> footerControlController.setSaveOrUpdateDialogVisible(false));
+          saveOrUpdateDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+              footerControlController.setSaveOrUpdateDialogVisible(false);
+            }
+          });
+          saveOrUpdateDialog.addListener("Update", (event) -> {
+            footerControlController.setSaveOrUpdateDialogVisible(false);
+            footerControlController.update(false);
+          });
+          saveOrUpdateDialog.addListener("Create New", (event) -> {
+            footerControlController.setSaveOrUpdateDialogVisible(false);
+            footerControlController.create(false);
+          });
           saveOrUpdateDialog.pack();
-          saveOrUpdateDialog.setVisible(newValue);
+          saveOrUpdateDialog.setVisible(true);
         }
       }
       break;
       case Events.UPDATE_PACKAGE_ID_COLLISION_DIALOG_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
-        if (packageIdCollisionDialog.isVisible() != newValue) {
+        if (newValue) {
+          OptionDialog packageIdCollisionDialog = new OptionDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              packageIdCollisionDialogText,
+              List.of("OK")
+          );
+
+          packageIdCollisionDialog.addListener("OK", (event) -> footerControlController.setPackageIdCollisionDialogVisible(false));
+          packageIdCollisionDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+              footerControlController.setPackageIdCollisionDialogVisible(false);
+            }
+          });
+          
           packageIdCollisionDialog.pack();
-          packageIdCollisionDialog.setVisible(newValue);
+          packageIdCollisionDialog.setVisible(true);
         }
       }
       break;
       case Events.UPDATE_JOB_ERRORS: {
         String newValue = (String) evt.getNewValue();
         if (newValue != null && !newValue.isBlank()) {
+          OptionDialog jobErrorsDialog = new OptionDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              "<html><B>Packaging failed</B></html>",
+              List.of("OK")
+          );
           updateLabelText(jobErrorsDialog.getLabel(), new PropertyChangeEvent(
               evt,
               "UPDATE_JOB_ERRORS",
@@ -348,9 +355,11 @@ public class FooterPanel extends JPanel implements ReactiveView {
         List<?> newValue = (List<?>) evt.getNewValue();
         for (Object obj : newValue) {
           String message = (String) obj;
-          OptionDialog optionDialog = new OptionDialog(message, List.of(
-              "OK", "Ignore"
-          ));
+          OptionDialog optionDialog = new OptionDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this), 
+              message, 
+              List.of("OK", "Ignore")
+          );
           optionDialog.addListener("Ignore", (event) ->
               footerControlModel.addIgnoreWarningMessage(message)
           );
@@ -358,6 +367,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
           optionDialog.pack();
           optionDialog.setVisible(true);
         }
+      case Events.EMIT_PACKAGE_ID:
+        saveExitAppDialogText = String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", evt.getNewValue());
+        packageIdCollisionDialogText = String.format("<html><B>The package name \"%s\" already exists. Please modify the Cruise ID or Segment or Leg value to create a unique package ID.</B></html>", evt.getNewValue());
+        break;
       default:
         if (evt.getPropertyName().startsWith("UPDATE_PROGRESS")) {
           if (evt.getPropertyName().endsWith(processId)) {
