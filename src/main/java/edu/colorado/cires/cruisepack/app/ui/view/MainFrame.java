@@ -41,6 +41,7 @@ public class MainFrame extends JFrame {
     setDefaultLookAndFeelDecorated(true);
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
     setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+    setLocationRelativeTo(null);
 
     setTitle(TITLE);
     add(rootPanel);
