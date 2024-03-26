@@ -343,13 +343,15 @@ class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastor
     model.load();
     
     List<CruiseData> cruises = model.getCruises().stream()
-        .sorted((c1, c2) -> c1.getPackageId().compareToIgnoreCase(c2.getPackageId()))
         .toList();
     assertEquals(2, cruises.size());
-    assertEquals("PACKAGE-ID-1", cruises.get(0).getPackageId());
-    assertEquals("CRUISE-ID", cruises.get(0).getCruiseId());
-    assertEquals("PACKAGE-ID-2", cruises.get(1).getPackageId());
-    assertEquals("CRUISE-ID", cruises.get(1).getCruiseId());
+    List<CruiseData> actual = cruises.stream()
+            .sorted((c1, c2) -> c1.getPackageId().compareToIgnoreCase(c2.getPackageId()))
+            .toList();
+    assertEquals("PACKAGE-ID-1", actual.get(0).getPackageId());
+    assertEquals("CRUISE-ID", actual.get(0).getCruiseId());
+    assertEquals("PACKAGE-ID-2", actual.get(1).getPackageId());
+    assertEquals("CRUISE-ID", actual.get(1).getCruiseId());
     
     assertChangeEvent(
         Events.UPDATE_CRUISE_DATA_STORE,
