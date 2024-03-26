@@ -8,30 +8,8 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateStatefu
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateTextField;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
-import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.util.List;
-import java.util.function.Consumer;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.WindowConstants;
-
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
+import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.PersonController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -40,10 +18,24 @@ import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import jakarta.annotation.PostConstruct;
+import java.awt.BorderLayout;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.List;
+import java.util.function.Consumer;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
-@Component
-@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class EditPersonDialog extends JDialog implements ReactiveView {
 
     private static final String PEOPLE_EDITOR_HEADER = "People Editor";
@@ -96,16 +88,15 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
     private final PersonController personController;
     private final PersonModel personModel;
 
-    public EditPersonDialog(PersonDatastore personDatastore, ReactiveViewRegistry reactiveViewRegistry, PersonController personController, PersonModel personModel) {
-        super((JFrame) null, PEOPLE_EDITOR_HEADER, true);
+    public EditPersonDialog(Frame owner, PersonDatastore personDatastore, ReactiveViewRegistry reactiveViewRegistry, PersonController personController, PersonModel personModel) {
+        super(owner, PEOPLE_EDITOR_HEADER, true);
         this.personDatastore = personDatastore;
         this.reactiveViewRegistry = reactiveViewRegistry;
         this.personController = personController;
         this.personModel = personModel;
     }
 
-    @PostConstruct
-    private void init() {
+    public void init() {
         initializeFields();
         setupLayout();
         setupMvc();

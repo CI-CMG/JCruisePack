@@ -9,9 +9,11 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.OrganizationController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PeopleController;
+import edu.colorado.cires.cruisepack.app.ui.controller.PersonController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemList;
@@ -61,22 +63,25 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private DropDownItemList scientistsField;
   private DropDownItemList sourceOrganizationsField;
   private DropDownItemList fundingOrganizationsField;
-  private final EditPersonDialog editPersonDialog;
+  private EditPersonDialog editPersonDialog;
   private EditOrgDialog editOrgDialog;
   private final OrganizationController organizationController;
   private final OrganizationModel organizationModel;
+  private final PersonController personController;
+  private final PersonModel personModel;
 
   @Autowired
-  public PeoplePanel(ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore, EditPersonDialog editPersonDialog,
-      OrganizationController organizationController, OrganizationModel organizationModel) {
+  public PeoplePanel(ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore,
+      OrganizationController organizationController, OrganizationModel organizationModel, PersonController personController, PersonModel personModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.personDatastore = personDatastore;
     this.organizationDatasore = organizationDatasore;
     this.peopleController = peopleController;
     this.peopleModel = peopleModel;
-    this.editPersonDialog = editPersonDialog;
     this.organizationController = organizationController;
     this.organizationModel = organizationModel;
+    this.personController = personController;
+    this.personModel = personModel;
   }
 
 
@@ -115,6 +120,17 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editPeopleButton = new JButton(CREATE_PEOPLE_LABEL);
     editPeopleButton.addActionListener(e -> {
+      if (editPersonDialog == null) {
+        editPersonDialog = new EditPersonDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this),
+            personDatastore,
+            reactiveViewRegistry,
+            personController,
+            personModel
+        );
+        editPersonDialog.init();
+      }
+      
       editPersonDialog.pack();
       editPersonDialog.setVisible(true);
     });

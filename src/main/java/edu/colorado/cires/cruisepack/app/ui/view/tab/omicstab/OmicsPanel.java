@@ -15,8 +15,10 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.OmicsController;
+import edu.colorado.cires.cruisepack.app.ui.controller.PersonController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
@@ -24,6 +26,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -45,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -58,6 +62,8 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final PersonDatastore personDatastore;
   private final OmicsController omicsController;
   private final ReactiveViewRegistry reactiveViewRegistry;
+  private final PersonController personController;
+  private final PersonModel personModel;
 
   private final StatefulRadioButton samplingConductedField = new StatefulRadioButton("Omics sampling conducted?");
   private final JComboBox<DropDownItem> contactField = new JComboBox<>();
@@ -89,18 +95,20 @@ public class OmicsPanel extends JPanel implements ReactiveView {
   private final JCheckBox microbiomeField = new JCheckBox("Microbiome");
   private final JLabel expectedAnalysesErrorLabel = createErrorLabel();
   private final JButton editPeopleButton = new JButton("Create/Edit People");
-  private final EditPersonDialog editPersonDialog;
+  private EditPersonDialog editPersonDialog;
 
   private final JTextArea additionalSamplingInformationField = new JTextArea();
   private final JLabel additionalSamplingInformationErrorLabel = new JLabel();
 
   @Autowired
-  public OmicsPanel(OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry, EditPersonDialog editPersonDialog) {
+  public OmicsPanel(OmicsModel omicsModel, PersonDatastore personDatastore, OmicsController omicsController, ReactiveViewRegistry reactiveViewRegistry,
+      PersonController personController, PersonModel personModel) {
     this.omicsModel = omicsModel;
     this.personDatastore = personDatastore;
     this.omicsController = omicsController;
     this.reactiveViewRegistry = reactiveViewRegistry;
-    this.editPersonDialog = editPersonDialog;
+    this.personController = personController;
+    this.personModel = personModel;
   }
 
   @PostConstruct
@@ -297,6 +305,17 @@ public class OmicsPanel extends JPanel implements ReactiveView {
       }
     });
     editPeopleButton.addActionListener(e -> {
+      if (editPersonDialog == null) {
+        editPersonDialog = new EditPersonDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this),
+            personDatastore,
+            reactiveViewRegistry,
+            personController,
+            personModel
+        );
+        editPersonDialog.init();
+      }
+      
       editPersonDialog.pack();
       editPersonDialog.setVisible(true);
     });
