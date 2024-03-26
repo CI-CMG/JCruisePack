@@ -1,11 +1,13 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -114,6 +116,27 @@ public final class CruisePackFileUtils {
           "Failed to compute checksum for %s",
           path
       ), e);
+    }
+  }
+  
+  public static BigInteger getUsableSpace(Path path) {
+    try {
+      return BigInteger.valueOf(
+          Files.getFileStore(path).getUsableSpace()
+      );
+    } catch (IOException e) {
+      throw new IllegalStateException(String.format(
+          "Failed to compute usable space for path: %s", path
+      ), e);
+    }
+  }
+  
+  public static BigInteger getSize(Path path) {
+    File file = path.toFile();
+    if (file.isFile()) {
+      return FileUtils.sizeOfAsBigInteger(path.toFile());
+    } else {
+      return FileUtils.sizeOfDirectoryAsBigInteger(path.toFile());
     }
   }
 

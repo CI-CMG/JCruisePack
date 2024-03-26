@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.model.validation;
 
+import edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
@@ -9,21 +10,17 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
-import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.io.FileUtils;
 
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -41,34 +38,28 @@ public @interface EnoughDiskSpace {
 
     @Override
     public boolean isValid(PackJob value, ConstraintValidatorContext context) {
-      try {
-        BigInteger available = BigInteger.valueOf(
-            Files.getFileStore(
-                value.getPackageDirectory()
-            ).getUsableSpace()
-        );
-        
-        available = subtractIfExists(available, value.getDocumentsPath());
-        available = subtractIfExists(available, value.getOmicsSampleTrackingSheetPath());
-        
-        for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : value.getInstruments().entrySet() ) {
-          for (InstrumentDetail instrumentDetail : entry.getValue()) {
-              available = subtractIfExists(available, instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath()));
-              available = subtractIfExists(available, instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()));
-              if (instrumentDetail.getShortName().equals(InstrumentGroupName.WATER_COLUMN.getShortName())) {
-                available = subtractAdditionalPathFields(
-                    available,
-                    List.of("calibration_report_path", "calibration_data_path"),
-                    instrumentDetail.getAdditionalFields()
-                );
-              }
+      BigInteger available = CruisePackFileUtils.getUsableSpace(
+          value.getPackageDirectory()
+      );
+
+      available = subtractIfExists(available, value.getDocumentsPath());
+      available = subtractIfExists(available, value.getOmicsSampleTrackingSheetPath());
+
+      for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : value.getInstruments().entrySet() ) {
+        for (InstrumentDetail instrumentDetail : entry.getValue()) {
+          available = subtractIfExists(available, instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath()));
+          available = subtractIfExists(available, instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()));
+          if (instrumentDetail.getShortName().equals(InstrumentGroupName.WATER_COLUMN.getShortName())) {
+            available = subtractAdditionalPathFields(
+                available,
+                List.of("calibration_report_path", "calibration_data_path"),
+                instrumentDetail.getAdditionalFields()
+            );
           }
         }
-        
-        return available.signum() == 1;
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to execute disk space check: " + e);
       }
+
+      return available.signum() == 1;
     }
     
     private static BigInteger subtractIfExists(BigInteger bigInteger, Path path) {
@@ -88,6 +79,8 @@ public @interface EnoughDiskSpace {
           try {
             bigInteger = subtractIfExists(bigInteger, Paths.get((String) value)); 
           } catch (Exception ignored) {}
+        } else if (value instanceof Path) {
+          bigInteger = subtractIfExists(bigInteger, (Path) value);
         }
       }
       
@@ -96,29 +89,7 @@ public @interface EnoughDiskSpace {
     
     private static BigInteger getSize(Path path) {
       if (path != null) {
-        File file = path.toFile();
-        if (file.isFile()) {
-          return getFileSize(path);
-        } else if (file.isDirectory()) {
-          return getDirectorySize(path);
-        }
-      }
-      
-      return null;
-    }
-
-    private static BigInteger getDirectorySize(Path path) {
-      if (path != null) {
-        File file = path.toFile();
-        return FileUtils.sizeOfDirectoryAsBigInteger(file);
-      }
-
-      return null;
-    }
-    
-    private static BigInteger getFileSize(Path path) {
-      if (path != null) {
-        return FileUtils.sizeOfAsBigInteger(path.toFile());
+        return CruisePackFileUtils.getSize(path);
       }
       
       return null;
