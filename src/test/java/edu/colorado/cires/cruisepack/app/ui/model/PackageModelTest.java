@@ -72,7 +72,7 @@ class PackageModelTest extends PropertyChangeModelTest<PackageModel> {
     model.setProjectErrors(projectErrors);
     
     clearEvents();
-    model.restoreDefaults();
+    model.restoreDefaults(false);
     
     assertChangeEvent(Events.UPDATE_CRUISE_ID, "cruise id", null);
     assertNull(model.getCruiseId());

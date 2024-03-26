@@ -161,6 +161,12 @@ public class FooterControlController implements PropertyChangeListener {
   }
 
   public void updateFormState(Cruise cruiseMetadata) {
+    packageModel.restoreDefaults(true);
+    peopleModel.restoreDefaults();
+    cruiseInformationModel.restoreDefaults();
+    omicsModel.restoreDefaults();
+    datasetsModel.restoreDefaults();
+    
     packageModel.updateFormState(
         cruiseMetadata,
         projectDatastore.getAllProjectDropDowns(),
@@ -183,7 +189,7 @@ public class FooterControlController implements PropertyChangeListener {
 
   public void restoreDefaultsGlobal() {
     peopleModel.restoreDefaults();
-    packageModel.restoreDefaults();
+    packageModel.restoreDefaults(false);
     datasetsModel.restoreDefaults();
     cruiseInformationModel.restoreDefaults();
     omicsModel.restoreDefaults();

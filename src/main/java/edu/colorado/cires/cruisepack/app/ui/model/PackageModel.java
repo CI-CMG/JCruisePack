@@ -68,7 +68,7 @@ public class PackageModel extends PropertyChangeModel {
   
   private DropDownItem existingRecord = CruiseDataDatastore.UNSELECTED_CRUISE;
 
-  public void restoreDefaults() {
+  public void restoreDefaults(boolean keepSelectedCruise) {
     setCruiseId(null);
     setCruiseIdError(null);
 
@@ -102,7 +102,9 @@ public class PackageModel extends PropertyChangeModel {
     clearProjects();
     setProjectsError(null);
     
-    setExistingRecord(CruiseDataDatastore.UNSELECTED_CRUISE);
+    if (!keepSelectedCruise) {
+      setExistingRecord(CruiseDataDatastore.UNSELECTED_CRUISE);
+    }
   }
 
   public void updateFormState(Cruise cruiseMetadata, List<DropDownItem> projects, List<DropDownItem> ports, List<DropDownItem> ships, List<DropDownItem> seas) {
