@@ -87,18 +87,20 @@ public class MetadataService {
        .build())
        //        .withProjects()
        .withScientists(packJob.getScientists())
-        .withOmics(OmicsMetadata.builder()
-            .withNCBIAccession(packJob.getOmicsBioProjectAccession())
-            .withSamplingTypes(packJob.getOmicsSamplingTypes())
-            .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
-            .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
-            .withOmicsPoc(OmicsPoc.builder()
-                .withUuid(packJob.getOmicsContactUuid())
-                .withName(packJob.getOmicsContactName())
-                .withEmail(packJob.getOmicsContactEmail())
-                .withPhone(packJob.getOmicsContactPhone())
-                .build())
-            .build())
+        .withOmics(
+            new OmicsMetadata(
+                packJob.getOmicsBioProjectAccession(),
+                packJob.getOmicsSamplingTypes(),
+                packJob.getOmicsExpectedAnalyses(),
+                packJob.getOmicsAdditionalSamplingInformation(),
+                OmicsPoc.builder()
+                    .withUuid(packJob.getOmicsContactUuid())
+                    .withName(packJob.getOmicsContactName())
+                    .withEmail(packJob.getOmicsContactEmail())
+                    .withPhone(packJob.getOmicsContactPhone())
+                    .build()
+            )
+        )
         .withInstruments(getInstrumentsJson(packJob))
         .build();
   }
@@ -134,20 +136,21 @@ public class MetadataService {
             .build())
         //        .withProjects()
         .withScientists(packJob.getScientists())
-        .withOmics(OmicsData.builder()
-            .withNCBIAccession(packJob.getOmicsBioProjectAccession())
-            .withSamplingTypes(packJob.getOmicsSamplingTypes())
-            .withAnalysesTypes(packJob.getOmicsExpectedAnalyses())
-            .withOmicsComment(packJob.getOmicsAdditionalSamplingInformation())
-            .withSampleTrackingSheet(packJob.getOmicsSampleTrackingSheetPath())
-            .withSamplingConducted(packJob.isOmicsSamplingConducted())
-            .withOmicsPoc(OmicsPoc.builder()
-                .withUuid(packJob.getOmicsContactUuid())
-                .withName(packJob.getOmicsContactName())
-                .withEmail(packJob.getOmicsContactEmail())
-                .withPhone(packJob.getOmicsContactPhone())
-                .build())
-            .build())
+        .withOmics(
+            new OmicsData(
+                packJob.getOmicsBioProjectAccession(),
+                packJob.getOmicsSamplingTypes(),
+                packJob.getOmicsExpectedAnalyses(),
+                packJob.getOmicsAdditionalSamplingInformation(),
+                OmicsPoc.builder()
+                    .withUuid(packJob.getOmicsContactUuid())
+                    .withName(packJob.getOmicsContactName())
+                    .withEmail(packJob.getOmicsContactEmail())
+                    .withPhone(packJob.getOmicsContactPhone())
+                    .build(),
+                packJob.getOmicsSampleTrackingSheetPath()
+            )
+        )
         .withInstruments(getInstrumentDataJson(packJob))
         .build();
   }

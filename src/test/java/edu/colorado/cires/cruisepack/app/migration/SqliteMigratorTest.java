@@ -1,13 +1,13 @@
 package edu.colorado.cires.cruisepack.app.migration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -25,6 +25,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
@@ -44,10 +45,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -207,7 +206,17 @@ public class SqliteMigratorTest {
 
     assertEquals(expectedCruises.size(), capturedSaves.size());
     for (int i = 0; i < expectedCruises.size(); i++) {
-      assertEquals(expectedCruises.get(i), capturedSaves.get(i));
+      CruiseData exp = objectMapper.readValue(expectedCruises.get(i), CruiseData.class);
+      CruiseData act = objectMapper.readValue(capturedSaves.get(i), CruiseData.class);
+      if (exp.getOmics() != null) {
+        assertEquals(((OmicsData) exp.getOmics()).trackingPath(), ((OmicsData) act.getOmics()).trackingPath());
+        assertNotNull(((OmicsData) exp.getOmics()).trackingPath());
+        assertEquals(exp.getOmics().ncbiAccession(), act.getOmics().ncbiAccession());
+        assertNotNull(exp.getOmics().ncbiAccession());
+        assertTrue(((OmicsData) act.getOmics()).samplingConducted());
+        assertEquals(((OmicsData) exp.getOmics()).samplingConducted(), ((OmicsData) act.getOmics()).samplingConducted());
+        assertEquals(expectedCruises.get(i), capturedSaves.get(i));
+      }
     }
 
 

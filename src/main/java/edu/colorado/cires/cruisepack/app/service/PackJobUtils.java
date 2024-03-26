@@ -218,11 +218,11 @@ public final class PackJobUtils {
     Omics omics = cruiseData.getOmics();
     if (omics != null) {
       if (omics instanceof OmicsData) {
-        builder = builder.setOmicsSamplingConducted(((OmicsData) omics).isSamplingConducted())
-            .setOmicsSampleTrackingSheetPath(((OmicsData) omics).getSampleTrackingSheet());
+        builder = builder.setOmicsSamplingConducted(((OmicsData) omics).samplingConducted())
+            .setOmicsSampleTrackingSheetPath(((OmicsData) omics).trackingPath());
       }
 
-      OmicsPoc omicsPoc = omics.getOmicsPoc();
+      OmicsPoc omicsPoc = omics.omicsPoc();
       if (omicsPoc != null) {
         builder = builder.setOmicsContactUuid(omicsPoc.getUuid())
             .setOmicsContactName(omicsPoc.getName())
@@ -230,10 +230,10 @@ public final class PackJobUtils {
             .setOmicsContactPhone(omicsPoc.getPhone());
       }
 
-      builder = builder.setOmicsBioProjectAccession(omics.getNcbiAccession())
-          .setOmicsSamplingTypes(omics.getSamplingTypes())
-          .setOmicsExpectedAnalyses(omics.getAnalysesTypes())
-          .setOmicsAdditionalSamplingInformation(omics.getOmicsComment());
+      builder = builder.setOmicsBioProjectAccession(omics.ncbiAccession())
+          .setOmicsSamplingTypes(omics.samplingTypes())
+          .setOmicsExpectedAnalyses(omics.analysesTypes())
+          .setOmicsAdditionalSamplingInformation(omics.omicsComment());
     }
     return builder;
   }

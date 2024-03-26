@@ -124,24 +124,25 @@ class OmicsModelTest extends PropertyChangeModelTest<OmicsModel> {
   void updateFormState() {
     Path expectedTrackingSheetPath = Paths.get("omics-sample-tracking-sheet");
     CruiseData cruiseData = CruiseData.builder()
-        .withOmics(OmicsData.builder()
-            .withSamplingTypes(Arrays.stream(SamplingTypes.values())
-                .map(SamplingTypes::getName)
-                .toList())
-            .withAnalysesTypes(Arrays.stream(ExpectedAnalyses.values())
-                .map(ExpectedAnalyses::getName)
-                .toList())
-            .withOmicsPoc(OmicsPoc.builder()
-                .withUuid(UUID.randomUUID().toString())
-                .withName("omics-poc-name")
-                .withEmail("omics-poc-email")
-                .withPhone("omics-poc-phone")
-                .build())
-            .withSampleTrackingSheet(expectedTrackingSheetPath)
-            .withSamplingConducted(true)
-            .withNCBIAccession("omics-ncbi-accession")
-            .withOmicsComment("omics-comment")
-            .build())
+        .withOmics(
+            new OmicsData(
+                "omics-ncbi-accession",
+                Arrays.stream(SamplingTypes.values())
+                    .map(SamplingTypes::getName)
+                    .toList(),
+                Arrays.stream(ExpectedAnalyses.values())
+                    .map(ExpectedAnalyses::getName)
+                    .toList(),
+                "omics-comment",
+                OmicsPoc.builder()
+                    .withUuid(UUID.randomUUID().toString())
+                    .withName("omics-poc-name")
+                    .withEmail("omics-poc-email")
+                    .withPhone("omics-poc-phone")
+                    .build(),
+                expectedTrackingSheetPath
+            )
+        )
         .build();
     
     model.updateFormState(cruiseData);
@@ -149,10 +150,10 @@ class OmicsModelTest extends PropertyChangeModelTest<OmicsModel> {
     assertChangeEvent(Events.UPDATE_OMICS_SAMPLING_CONDUCTED, false, true);
     assertTrue(model.isSamplingConducted());
     assertChangeEvent(Events.UPDATE_OMICS_CONTACT, PersonDatastore.UNSELECTED_PERSON, new DropDownItem(
-        cruiseData.getOmics().getOmicsPoc().getUuid(), cruiseData.getOmics().getOmicsPoc().getName()
+        cruiseData.getOmics().omicsPoc().getUuid(), cruiseData.getOmics().omicsPoc().getName()
     ));
     assertEquals(new DropDownItem(
-        cruiseData.getOmics().getOmicsPoc().getUuid(), cruiseData.getOmics().getOmicsPoc().getName()
+        cruiseData.getOmics().omicsPoc().getUuid(), cruiseData.getOmics().omicsPoc().getName()
     ), model.getContact());
     assertChangeEvent(Events.UPDATE_OMICS_SAMPLE_TRACKING_SHEET, null, expectedTrackingSheetPath);
     assertEquals(expectedTrackingSheetPath, model.getSampleTrackingSheet());

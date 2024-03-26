@@ -70,7 +70,7 @@ public class OmicsModel extends PropertyChangeModel {
     public void updateFormState(Cruise cruiseMetadata) {
         Omics omicsMetadata = cruiseMetadata.getOmics();
         if (omicsMetadata != null) {
-            for (String samplingType : omicsMetadata.getSamplingTypes()) {
+            for (String samplingType : omicsMetadata.samplingTypes()) {
                 if (samplingType.equals(SamplingTypes.WATER.getName())) {
                     setWaterSamplingType(true);
                 } else if (samplingType.equals(SamplingTypes.SOIL_SEDIMENT.getName())) {
@@ -80,7 +80,7 @@ public class OmicsModel extends PropertyChangeModel {
                 }
             }
 
-            for (String analysis : omicsMetadata.getAnalysesTypes()) {
+            for (String analysis : omicsMetadata.analysesTypes()) {
                 if (analysis.equals(ExpectedAnalyses.BARCODING.getName())) {
                     setBarcodingExpectedAnalysis(true);
                 } else if (analysis.equals(ExpectedAnalyses.GENOMICS.getName())) {
@@ -110,16 +110,16 @@ public class OmicsModel extends PropertyChangeModel {
                 }
             }
 
-            OmicsPoc poc = omicsMetadata.getOmicsPoc();
+            OmicsPoc poc = omicsMetadata.omicsPoc();
             if (poc != null) {
                 setContact(new DropDownItem(poc.getUuid(), poc.getName()));
             }
             if (omicsMetadata instanceof OmicsData) {
-                setSampleTrackingSheet(((OmicsData) omicsMetadata).getSampleTrackingSheet());
-                setSamplingConducted(((OmicsData) omicsMetadata).isSamplingConducted());
+                setSampleTrackingSheet(((OmicsData) omicsMetadata).trackingPath());
+                setSamplingConducted(((OmicsData) omicsMetadata).samplingConducted());
             }
-            setBioProjectAccession(omicsMetadata.getNcbiAccession());
-            setAdditionalSamplingInformation(omicsMetadata.getOmicsComment());
+            setBioProjectAccession(omicsMetadata.ncbiAccession());
+            setAdditionalSamplingInformation(omicsMetadata.omicsComment());
         }
     }
     

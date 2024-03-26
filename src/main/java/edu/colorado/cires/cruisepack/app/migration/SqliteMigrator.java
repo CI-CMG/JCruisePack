@@ -242,7 +242,9 @@ public class SqliteMigrator {
           newPoc.put("uuid", person.getUuid());
           obj.replace("omics_poc", newPoc);
         }
-        return objectMapper.readValue(obj.toString(), OmicsData.class);
+        return OmicsData.create(
+            objectMapper.readValue(obj.toString(), OmicsData.class)
+        );
       } catch (JsonProcessingException e) {
         throw new RuntimeException("Unable to parse omics", e);
       }
