@@ -1,4 +1,4 @@
-package edu.colorado.cires.cruisepack.app.ui.model.validation;
+package edu.colorado.cires.cruisepack.app.config;
 
 import org.hibernate.validator.internal.constraintvalidators.bv.NotBlankValidator;
 import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
