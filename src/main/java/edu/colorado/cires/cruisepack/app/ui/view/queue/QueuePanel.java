@@ -86,7 +86,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
   }
   
   private void setupMvc() {
-    stopPackingButton.addActionListener((evt) -> rows.forEach(queueController::stop));
+    stopPackingButton.addActionListener((evt) -> rows.forEach(packJobPanel -> queueController.stop()));
   }
   
   private void addPackJob(PackJobPanel panel) {
@@ -96,7 +96,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
     listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
 
     panel.addRemoveListener(queueController::removeFromQueue);
-    panel.addStopListener(queueController::stop);
+    panel.addStopListener(packJobPanel -> queueController.stop());
     panel.init();
     
     revalidate();

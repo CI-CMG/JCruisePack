@@ -49,27 +49,22 @@ class PackingScheduler {
   }
   
   private void startPacking(PackerExecutor packerExecutor) {
-    new Thread(packerExecutor::startPacking).start();
+    packerExecutor.startPacking();
   }
   
-  public void stopJob(String packageId) {
+  public void stopJob(String processId) {
     PackerExecutor executor = packExecutions.stream()
-        .filter(packerExecutor -> packerExecutor.getPackJob().getPackageId().equals(packageId))
+        .filter(packerExecutor -> packerExecutor.getProcessId().equals(processId))
         .findFirst().orElse(null);
     if (executor != null) {
       executor.stopPacking();
       packExecutions.remove(executor);
-      executor = packExecutions.peek();
-      if (executor != null) {
-        startPacking(executor);
-      }
     }
   }
   
   public void clearJobs() {
     packExecutions.stream()
-        .map(PackerExecutor::getPackJob)
-        .map(PackJob::getPackageId)
+        .map(PackerExecutor::getProcessId)
         .forEach(this::stopJob);
   }
   
@@ -81,8 +76,13 @@ class PackingScheduler {
         Paths.get(serviceProperties.getWorkDir()),
         packingJob.executeBefore(),
         () -> {
-          stopJob(packJob.getPackageId());
+          stopJob(packingJob.processId());
           packingJob.executeAfter().accept(!packExecutions.isEmpty());
+
+          PackerExecutor executor = packExecutions.peek();
+          if (executor != null) {
+            startPacking(executor);
+          }
         },
         packingJob.processId(),
         packJob

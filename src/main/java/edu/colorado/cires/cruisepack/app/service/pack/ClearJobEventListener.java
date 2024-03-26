@@ -16,5 +16,6 @@ class ClearJobEventListener implements ApplicationListener<ClearJobsEvent> {
   @Override
   public void onApplicationEvent(@NonNull ClearJobsEvent event) {
     packingScheduler.clearJobs();
+    event.getExecuteAfter().run();
   }
 }

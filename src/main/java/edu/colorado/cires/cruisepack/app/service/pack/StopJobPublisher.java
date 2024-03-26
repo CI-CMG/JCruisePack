@@ -13,7 +13,7 @@ public class StopJobPublisher {
     this.publisher = publisher;
   }
   
-  public void publish(PropertyChangeListener source, String packageId) {
-    publisher.publishEvent(new StopJobEvent(source, packageId));
+  public void publish(PropertyChangeListener source, String processId) {
+    publisher.publishEvent(new StopJobEvent(source, processId));
   }
 }

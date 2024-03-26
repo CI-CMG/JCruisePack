@@ -69,8 +69,8 @@ class PackerExecutor {
     this.executeAfter = executeAfter;
   }
   
-  public PackJob getPackJob() {
-    return packStateModel.getPackJob();
+  public String getProcessId() {
+    return packStateModel.getProcessId();
   }
   
   public void addChangeListener(PropertyChangeListener listener) {

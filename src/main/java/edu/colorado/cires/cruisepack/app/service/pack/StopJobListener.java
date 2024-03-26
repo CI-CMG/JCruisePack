@@ -17,6 +17,6 @@ class StopJobListener implements ApplicationListener<StopJobEvent> {
 
   @Override
   public void onApplicationEvent(@NonNull StopJobEvent event) {
-    packingScheduler.stopJob(event.getPackageId());
+    packingScheduler.stopJob(event.getProcessId());
   }
 }

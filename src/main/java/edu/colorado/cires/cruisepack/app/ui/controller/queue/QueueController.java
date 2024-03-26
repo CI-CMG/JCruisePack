@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.controller.queue;
 
 import edu.colorado.cires.cruisepack.app.service.PackJob;
+import edu.colorado.cires.cruisepack.app.service.pack.ClearJobsPublisher;
 import edu.colorado.cires.cruisepack.app.service.pack.PackQueuePublisher;
 import edu.colorado.cires.cruisepack.app.service.pack.StopJobPublisher;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
@@ -21,14 +22,16 @@ public class QueueController implements PropertyChangeListener {
   private final QueueModel queueModel;
   private final PackQueuePublisher packQueuePublisher;
   private final StopJobPublisher stopJobPublisher;
+  private final ClearJobsPublisher clearJobsPublisher;
 
   @Autowired
   public QueueController(ReactiveViewRegistry reactiveViewRegistry, QueueModel queueModel, PackQueuePublisher packQueuePublisher,
-      StopJobPublisher stopJobPublisher) {
+      StopJobPublisher stopJobPublisher, ClearJobsPublisher clearJobsPublisher) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.queueModel = queueModel;
     this.packQueuePublisher = packQueuePublisher;
     this.stopJobPublisher = stopJobPublisher;
+    this.clearJobsPublisher = clearJobsPublisher;
   }
   
   @PostConstruct
@@ -38,7 +41,7 @@ public class QueueController implements PropertyChangeListener {
 
   public void removeFromQueue(PackJobPanel panel) {
     queueModel.removeFromQueue(panel);
-    stopJobPublisher.publish(this, panel.getPackJob().getPackageId());
+    stopJobPublisher.publish(this, panel.getProcessId());
   }
 
   public List<PackJob> getQueue() {
@@ -66,11 +69,8 @@ public class QueueController implements PropertyChangeListener {
     );
   }
   
-  public void stop(PackJobPanel packJobPanel) {
-    stopJobPublisher.publish(
-        this,
-        packJobPanel.getPackJob().getPackageId()
-    );
+  public void stop() {
+    clearJobsPublisher.publish(this, queueModel::clearQueue);
   }
 
   @Override

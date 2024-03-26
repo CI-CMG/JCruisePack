@@ -20,6 +20,10 @@ public class PackStateModel extends PropertyChangeModel {
     return packJob;
   }
 
+  public String getProcessId() {
+    return processId;
+  }
+
   private void setProgress(float progress) {
     float oldValue = this.progress;
     this.progress = progress;

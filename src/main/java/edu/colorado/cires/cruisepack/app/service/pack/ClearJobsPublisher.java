@@ -13,7 +13,7 @@ public class ClearJobsPublisher {
     this.publisher = publisher;
   }
   
-  public void publish(PropertyChangeListener source) {
-    publisher.publishEvent(new ClearJobsEvent(source));
+  public void publish(PropertyChangeListener source, Runnable executeAfter) {
+    publisher.publishEvent(new ClearJobsEvent(source, executeAfter));
   }
 }

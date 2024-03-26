@@ -4,14 +4,14 @@ import org.springframework.context.ApplicationEvent;
 
 class StopJobEvent extends ApplicationEvent {
   
-  private final String packageId;
+  private final String processId;
 
-  public StopJobEvent(Object source, String packageId) {
+  public StopJobEvent(Object source, String processId) {
     super(source);
-    this.packageId = packageId;
+    this.processId = processId;
   }
 
-  public String getPackageId() {
-    return packageId;
+  public String getProcessId() {
+    return processId;
   }
 }

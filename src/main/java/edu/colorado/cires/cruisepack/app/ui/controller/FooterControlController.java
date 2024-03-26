@@ -157,7 +157,7 @@ public class FooterControlController implements PropertyChangeListener {
   }
   
   public synchronized void stopPackaging() {
-    clearJobsPublisher.publish(this);
+    clearJobsPublisher.publish(this, queueModel::clearQueue);
   }
 
   public void updateFormState(Cruise cruiseMetadata) {

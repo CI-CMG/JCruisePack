@@ -4,7 +4,15 @@ import java.beans.PropertyChangeListener;
 import org.springframework.context.ApplicationEvent;
 
 class ClearJobsEvent extends ApplicationEvent {
-  public ClearJobsEvent(PropertyChangeListener source) {
+  
+  private final Runnable executeAfter;
+  
+  public ClearJobsEvent(PropertyChangeListener source, Runnable executeAfter) {
     super(source);
+    this.executeAfter = executeAfter;
+  }
+
+  public Runnable getExecuteAfter() {
+    return executeAfter;
   }
 }
