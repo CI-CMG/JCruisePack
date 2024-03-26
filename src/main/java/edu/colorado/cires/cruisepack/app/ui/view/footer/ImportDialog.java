@@ -13,6 +13,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ImportController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -31,11 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
-@Component
-@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class ImportDialog extends JDialog implements ReactiveView {
   
   private final PersonDatastore personDatastore;
@@ -53,8 +50,8 @@ public class ImportDialog extends JDialog implements ReactiveView {
   private final JButton selectDirectoryButton = new JButton("Select Directory");
   private final JButton saveButton = new JButton("Download Template");
 
-  public ImportDialog(PersonDatastore personDatastore, ImportController importController, ReactiveViewRegistry reactiveViewRegistry) {
-    super((JFrame) null, "Import Excel Spreadsheet", true);
+  public ImportDialog(Frame owner, PersonDatastore personDatastore, ImportController importController, ReactiveViewRegistry reactiveViewRegistry) {
+    super(owner, "Import Excel Spreadsheet", true);
     this.personDatastore = personDatastore;
     this.importController = importController;
     this.reactiveViewRegistry = reactiveViewRegistry;

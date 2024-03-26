@@ -2,31 +2,37 @@ package edu.colorado.cires.cruisepack.app.ui.view.footer;
 
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.ExportController;
+import edu.colorado.cires.cruisepack.app.ui.controller.ImportController;
+import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
+import javax.swing.SwingUtilities;
 
-@Component
-@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class ImportExportDialog extends JDialog {
   
-  private final ImportDialog importDialog;
+  private ImportDialog importDialog;
   private final ExportController exportController;
+  private final ImportController importController;
+  private final PersonDatastore personDatastore;
+  private final ReactiveViewRegistry reactiveViewRegistry;
   
   private final JButton importButton = new JButton("Import Excel Sheet");
   private final JButton exportButton = new JButton("Export JSON");
   
-  public ImportExportDialog(ImportDialog importDialog, ExportController exportController) {
-    super((JFrame) null, "Import/Export", true);
-    this.importDialog = importDialog;
+  public ImportExportDialog(Frame owner, ExportController exportController, ImportController importController, PersonDatastore personDatastore,
+      ReactiveViewRegistry reactiveViewRegistry) {
+    super(owner, "Import/Export", true);
     this.exportController = exportController;
+    this.importController = importController;
+    this.personDatastore = personDatastore;
+    this.reactiveViewRegistry = reactiveViewRegistry;
     init();
   }
   
@@ -54,6 +60,15 @@ public class ImportExportDialog extends JDialog {
   
   private void setupMvc() {
     importButton.addActionListener((evt) -> {
+      if (importDialog == null) {
+        importDialog = new ImportDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this), 
+            personDatastore,
+            importController,
+            reactiveViewRegistry
+        );
+      }
+      
       importDialog.pack();
       importDialog.setVisible(true);
     });

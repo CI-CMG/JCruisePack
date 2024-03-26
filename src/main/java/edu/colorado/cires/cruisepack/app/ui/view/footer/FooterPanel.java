@@ -4,10 +4,13 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelTe
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgressBarModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.migration.SqliteMigrator;
 import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.ExportController;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
+import edu.colorado.cires.cruisepack.app.ui.controller.ImportController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
@@ -56,9 +59,12 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final FooterControlController footerControlController;
   private final FooterControlModel footerControlModel;
   private ManageRecordsDialog manageRecordsDialog;
-  private final ImportExportDialog importExportDialog;
+  private ImportExportDialog importExportDialog;
   private final SqliteMigrator sqliteMigrator;
   private final CruiseDataController cruiseDataController;
+  private final ExportController exportController;
+  private final ImportController importController;
+  private final PersonDatastore personDatastore;
   private final String processId;
 
   private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
@@ -79,15 +85,18 @@ public class FooterPanel extends JPanel implements ReactiveView {
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
-      FooterControlModel footerControlModel, ImportExportDialog importExportDialog,
-      SqliteMigrator sqliteMigrator, CruiseDataController cruiseDataController, UiRefresher uiRefresher)
+      FooterControlModel footerControlModel,
+      SqliteMigrator sqliteMigrator, CruiseDataController cruiseDataController, ExportController exportController, ImportController importController,
+      PersonDatastore personDatastore, UiRefresher uiRefresher)
       throws IOException {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
     this.footerControlModel = footerControlModel;
-    this.importExportDialog = importExportDialog;
     this.sqliteMigrator = sqliteMigrator;
     this.cruiseDataController = cruiseDataController;
+    this.exportController = exportController;
+    this.importController = importController;
+    this.personDatastore = personDatastore;
     this.uiRefresher = uiRefresher;
     this.docsButton = new JButton(new ImageIcon(ImageIO.read(
         Objects.requireNonNull(getClass().getResource(String.format(
@@ -159,7 +168,19 @@ public class FooterPanel extends JPanel implements ReactiveView {
       manageRecordsDialog.setVisible(true);
     });
     
+    Frame ancestor = (Frame) SwingUtilities.getWindowAncestor(this);
+    
     importExportButton.addActionListener((evt) -> {
+      if (importExportDialog == null) {
+        importExportDialog = new ImportExportDialog(
+            ancestor,
+            exportController,
+            importController,
+            personDatastore,
+            reactiveViewRegistry
+        );
+      }
+      
       importExportDialog.pack();
       importExportDialog.setVisible(true);
     });
