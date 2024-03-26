@@ -134,4 +134,20 @@ class QueueModelTest extends PropertyChangeModelTest<QueueModel> {
         (v) -> v
     );
   }
+  
+  @Test
+  void updateStopAllButton() {
+    model.updateStopAllButton(true);
+    model.updateStopAllButton(false);
+    assertChangeEvents(
+        QueueModel.UPDATE_STOP_ALL_BUTTON,
+        List.of(
+            false, true
+        ),
+        List.of(
+            true, false
+        ),
+        (v) -> v
+    );
+  }
 }
