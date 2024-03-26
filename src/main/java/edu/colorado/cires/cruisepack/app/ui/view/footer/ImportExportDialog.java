@@ -33,6 +33,7 @@ public class ImportExportDialog extends JDialog {
     this.importController = importController;
     this.personDatastore = personDatastore;
     this.reactiveViewRegistry = reactiveViewRegistry;
+    setLocationRelativeTo(owner);
     init();
   }
   

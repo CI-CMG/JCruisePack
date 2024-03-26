@@ -27,15 +27,16 @@ public class OptionDialog extends JDialog {
     private final JLabel label;
 
     public OptionDialog(Frame owner, String dialogMessage, List<String> buttonLabels) {
-        super(owner, null, true);
+      super(owner, null, true);
       this.label = new JLabel(dialogMessage);
-        this.buttonLabels = buttonLabels;
-        this.buttons = buttonLabels.stream()
-            .collect(Collectors.toMap(
-                l -> l,
-                JButton::new
-            ));
-        init();
+      this.buttonLabels = buttonLabels;
+      this.buttons = buttonLabels.stream()
+          .collect(Collectors.toMap(
+              l -> l,
+              JButton::new
+          ));
+      setLocationRelativeTo(owner);
+      init();
     }
 
     public JLabel getLabel() {

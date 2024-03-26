@@ -43,6 +43,7 @@ public class EditProjectDialog extends JDialog implements ReactiveView {
     super(owner, "Create Project", true);
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.projectController = projectController;
+    setLocationRelativeTo(owner);
   }
 
   public void init() {

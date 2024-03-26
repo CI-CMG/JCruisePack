@@ -83,6 +83,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
         this.reactiveViewRegistry = reactiveViewRegistry;
         this.personController = personController;
         this.personModel = personModel;
+        setLocationRelativeTo(owner);
     }
 
     public void init() {

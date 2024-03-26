@@ -20,6 +20,7 @@ public class SettingsDialog extends JDialog {
 
   public SettingsDialog(Frame owner, String title, boolean modal) {
     super(owner, title, modal);
+    setLocationRelativeTo(owner);
     init();
   }
   

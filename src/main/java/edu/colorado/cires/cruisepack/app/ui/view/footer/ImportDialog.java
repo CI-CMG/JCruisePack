@@ -28,7 +28,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -55,6 +54,7 @@ public class ImportDialog extends JDialog implements ReactiveView {
     this.personDatastore = personDatastore;
     this.importController = importController;
     this.reactiveViewRegistry = reactiveViewRegistry;
+    setLocationRelativeTo(owner);
     init();
   }
 

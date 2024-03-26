@@ -33,6 +33,7 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
     super(owner, "Manage Package Records", true);
     this.cruiseDataController = cruiseDataDatastore;
     this.reactiveViewRegistry = reactiveViewRegistry;
+    setLocationRelativeTo(owner);
   }
   
   public void init() {

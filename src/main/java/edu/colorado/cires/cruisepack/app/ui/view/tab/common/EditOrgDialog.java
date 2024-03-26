@@ -77,6 +77,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         this.organizationDatastore = organizationDatastore;
         this.organizationController = organizationController;
         this.organizationModel = organizationModel;
+        setLocationRelativeTo(owner);
     }
 
     public void init() {
