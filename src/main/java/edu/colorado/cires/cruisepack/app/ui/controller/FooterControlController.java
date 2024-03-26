@@ -13,7 +13,6 @@ import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.pack.ClearJobsPublisher;
-import edu.colorado.cires.cruisepack.app.service.pack.PackFormsPublisher;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
@@ -57,7 +56,6 @@ public class FooterControlController implements PropertyChangeListener {
   private final OrganizationDatastore organizationDatastore;
   private final ErrorModel errorModel;
   private final PackagingValidationService validationService;
-  private final PackFormsPublisher packFormsPublisher;
   private final ClearJobsPublisher clearJobsPublisher;
   private final QueueModel queueModel;
 
@@ -68,7 +66,7 @@ public class FooterControlController implements PropertyChangeListener {
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
       PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
       OrganizationDatastore organizationDatastore, ErrorModel errorModel, PackagingValidationService validationService,
-      PackFormsPublisher packFormsPublisher, ClearJobsPublisher clearJobsPublisher, QueueModel queueModel) {
+      ClearJobsPublisher clearJobsPublisher, QueueModel queueModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.peopleModel = peopleModel;
@@ -87,7 +85,6 @@ public class FooterControlController implements PropertyChangeListener {
     this.organizationDatastore = organizationDatastore;
     this.errorModel = errorModel;
     this.validationService = validationService;
-    this.packFormsPublisher = packFormsPublisher;
     this.clearJobsPublisher = clearJobsPublisher;
     this.queueModel = queueModel;
   }
@@ -105,14 +102,6 @@ public class FooterControlController implements PropertyChangeListener {
     footerControlModel.setStopButtonEnabled(stopButtonEnabled);
   }
 
-  public synchronized void setSaveButtonEnabled(boolean saveButtonEnabled) {
-    footerControlModel.setSaveButtonEnabled(saveButtonEnabled);
-  }
-
-  public synchronized void setPackageButtonEnabled(boolean packageButtonEnabled) {
-    footerControlModel.setPackageButtonEnabled(packageButtonEnabled);
-  }
-
   public synchronized void setSaveWarningDialogueVisible(boolean saveWarningDialogueVisible) {
     footerControlModel.setSaveWarningDialogueVisible(saveWarningDialogueVisible);
   }
@@ -127,25 +116,6 @@ public class FooterControlController implements PropertyChangeListener {
   
   public synchronized void setPackageIdCollisionDialogVisible(boolean packageIdCollisionDialogVisible) {
     footerControlModel.setPackageIdCollisionDialogVisible(packageIdCollisionDialogVisible);
-  }
-
-  public synchronized void startPackaging(String processId) {
-    validationService.validate().ifPresent(
-        packJob -> packFormsPublisher.publish(
-            this,
-            processId,
-            () -> {
-              setPackageButtonEnabled(false);
-              setSaveButtonEnabled(false);
-              setStopButtonEnabled(true);
-            },
-            (jobsRunning) -> {
-              setPackageButtonEnabled(true);
-              setSaveButtonEnabled(true);
-              setStopButtonEnabled(false);
-            }
-        )
-    );
   }
   
   public synchronized void addToQueue() {

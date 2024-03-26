@@ -4,6 +4,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.pack.ClearJobsPublisher;
 import edu.colorado.cires.cruisepack.app.service.pack.PackQueuePublisher;
 import edu.colorado.cires.cruisepack.app.service.pack.StopJobPublisher;
+import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.queue.QueueModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
@@ -22,16 +23,16 @@ public class QueueController implements PropertyChangeListener {
   private final QueueModel queueModel;
   private final PackQueuePublisher packQueuePublisher;
   private final StopJobPublisher stopJobPublisher;
-  private final ClearJobsPublisher clearJobsPublisher;
+  private final FooterControlController footerControlController;
 
   @Autowired
   public QueueController(ReactiveViewRegistry reactiveViewRegistry, QueueModel queueModel, PackQueuePublisher packQueuePublisher,
-      StopJobPublisher stopJobPublisher, ClearJobsPublisher clearJobsPublisher) {
+      StopJobPublisher stopJobPublisher, FooterControlController footerControlController) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.queueModel = queueModel;
     this.packQueuePublisher = packQueuePublisher;
     this.stopJobPublisher = stopJobPublisher;
-    this.clearJobsPublisher = clearJobsPublisher;
+    this.footerControlController = footerControlController;
   }
   
   @PostConstruct
@@ -57,20 +58,22 @@ public class QueueController implements PropertyChangeListener {
         () -> {
           queueModel.updateStopButton(true, processId);
           queueModel.updateRemoveButton(false, processId);
-          queueModel.updateStopAllButton(true);
+          
+          footerControlController.setStopButtonEnabled(true);
         },
-        (jobsInProgress) -> {
+        (queueEmpty) -> {
           queueModel.updateStopButton(false, processId);
           queueModel.updateRemoveButton(true, processId);
-          queueModel.updateStopAllButton(jobsInProgress);
           
           queueModel.removeFromQueue(packJobPanel);
+          
+          footerControlController.setStopButtonEnabled(!queueEmpty);
         }
     );
   }
   
-  public void stop() {
-    clearJobsPublisher.publish(this, queueModel::clearQueue);
+  public void stop(String processId) {
+    stopJobPublisher.publish(this, processId);
   }
 
   @Override

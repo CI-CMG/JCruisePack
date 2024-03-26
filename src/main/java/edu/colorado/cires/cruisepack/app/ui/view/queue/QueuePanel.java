@@ -12,13 +12,11 @@ import edu.colorado.cires.cruisepack.app.ui.controller.queue.QueueController;
 import edu.colorado.cires.cruisepack.app.ui.model.queue.QueueModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
-import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,6 @@ public class QueuePanel extends JPanel implements ReactiveView {
   private final JPanel listingPanel = new JPanel();
   
   private final JPanel fluff = new JPanel();
-  private final JButton stopPackingButton = new JButton("Clear Queue");
 
   @Autowired
   public QueuePanel(ReactiveViewRegistry reactiveViewRegistry, QueueController queueController, CruiseDataDatastore cruiseDataDatastore) {
@@ -50,17 +47,11 @@ public class QueuePanel extends JPanel implements ReactiveView {
   public void init() {
     reactiveViewRegistry.register(this);
     
-    initializeFields();
     setupLayout();
-    setupMvc();
   }
 
   public List<PackJobPanel> getRows() {
     return rows;
-  }
-
-  private void initializeFields() {
-    stopPackingButton.setEnabled(false);
   }
   
   private void setupLayout() {
@@ -70,23 +61,9 @@ public class QueuePanel extends JPanel implements ReactiveView {
     listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
     add(new JScrollPane(listingPanel), configureLayout(0, 0, c -> c.weighty = 100));
     
-    JPanel footerButtonPanel = new JPanel();
-    footerButtonPanel.setLayout(new BorderLayout());
-    
-    JPanel batchButtonsPanel = new JPanel();
-    batchButtonsPanel.setLayout(new BorderLayout());
-    batchButtonsPanel.add(stopPackingButton, BorderLayout.EAST);
-    
-    footerButtonPanel.add(batchButtonsPanel, BorderLayout.EAST);
-    add(footerButtonPanel, configureLayout(0, 1, c -> c.weighty = 0));
-
     queueController.getQueue().stream()
         .map(PackJobPanel::new)
         .forEach(this::addPackJob);
-  }
-  
-  private void setupMvc() {
-    stopPackingButton.addActionListener((evt) -> rows.forEach(packJobPanel -> queueController.stop()));
   }
   
   private void addPackJob(PackJobPanel panel) {
@@ -96,7 +73,7 @@ public class QueuePanel extends JPanel implements ReactiveView {
     listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
 
     panel.addRemoveListener(queueController::removeFromQueue);
-    panel.addStopListener(packJobPanel -> queueController.stop());
+    panel.addStopListener(packJobPanel -> queueController.stop(packJobPanel.getProcessId()));
     panel.init();
     
     revalidate();
@@ -135,7 +112,6 @@ public class QueuePanel extends JPanel implements ReactiveView {
            .filter(packJobPanel -> !datastorePackageIds.contains(packJobPanel.getPackJob().getPackageId()))
            .forEach(queueController::removeFromQueue);
       }
-      case QueueModel.UPDATE_STOP_ALL_BUTTON -> updateButtonEnabled(stopPackingButton, evt);
       default -> rows.stream()
           .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
           .findFirst()
