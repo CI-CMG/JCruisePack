@@ -2,10 +2,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
@@ -14,8 +12,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -34,23 +30,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrganizationDatastore extends PropertyChangeModel implements PropertyChangeListener {
+public class OrganizationDatastore extends PropertyChangeModel {
     public static final DropDownItem UNSELECTED_ORGANIZATION = new DropDownItem("", "Select Organization");
 
     private final ServiceProperties serviceProperties;
     private List<DropDownItem> organizationDropDowns;
-    private final ReactiveViewRegistry reactiveViewRegistry;
-    private  List<Organization> organizations;
+  private  List<Organization> organizations;
 
     @Autowired
-    public OrganizationDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
+    public OrganizationDatastore(ServiceProperties serviceProperties) {
         this.serviceProperties = serviceProperties;
-        this.reactiveViewRegistry = reactiveViewRegistry;
     }
 
     @PostConstruct
     public void init() {
-        addChangeListener(this);
         load();
     }
 
@@ -172,12 +165,5 @@ public class OrganizationDatastore extends PropertyChangeModel implements Proper
         return organizations.stream()
             .filter(o -> o.getName().equals(name))
             .findFirst();
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        for (ReactiveView view : reactiveViewRegistry.getViews()) {
-            view.onChange(evt);
-        }
     }
 }

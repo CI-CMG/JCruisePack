@@ -98,6 +98,7 @@ public class FooterControlController implements PropertyChangeListener {
     errorModel.addChangeListener(this);
     cruiseDataDatastore.addChangeListener(this);
     personDatastore.addChangeListener(this);
+    organizationDatastore.addChangeListener(this);
   }
 
   public synchronized void setStopButtonEnabled(boolean stopButtonEnabled) {
