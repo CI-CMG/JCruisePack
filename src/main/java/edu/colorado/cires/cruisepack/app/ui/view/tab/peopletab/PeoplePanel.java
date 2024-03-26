@@ -7,8 +7,10 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.controller.OrganizationController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PeopleController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
+import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
@@ -19,6 +21,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.tab.common.EditPersonDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
@@ -28,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -58,17 +62,21 @@ public class PeoplePanel extends JPanel implements ReactiveView {
   private DropDownItemList sourceOrganizationsField;
   private DropDownItemList fundingOrganizationsField;
   private final EditPersonDialog editPersonDialog;
-  private final EditOrgDialog editOrgDialog;
+  private EditOrgDialog editOrgDialog;
+  private final OrganizationController organizationController;
+  private final OrganizationModel organizationModel;
 
   @Autowired
-  public PeoplePanel(ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore, EditPersonDialog editPersonDialog, EditOrgDialog editOrgButton) {
+  public PeoplePanel(ReactiveViewRegistry reactiveViewRegistry, PersonDatastore personDatastore, PeopleController peopleController, PeopleModel peopleModel, OrganizationDatastore organizationDatasore, EditPersonDialog editPersonDialog,
+      OrganizationController organizationController, OrganizationModel organizationModel) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.personDatastore = personDatastore;
     this.organizationDatasore = organizationDatasore;
     this.peopleController = peopleController;
     this.peopleModel = peopleModel;
     this.editPersonDialog = editPersonDialog;
-    this.editOrgDialog = editOrgButton;
+    this.organizationController = organizationController;
+    this.organizationModel = organizationModel;
   }
 
 
@@ -116,6 +124,17 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editOrgButton = new JButton(CREATE_ORG_LABEL);
     editOrgButton.addActionListener(e -> {
+      if (editOrgDialog == null) {
+        editOrgDialog = new EditOrgDialog(
+            (Frame) SwingUtilities.getWindowAncestor(this),
+            reactiveViewRegistry, 
+            organizationDatasore,
+            organizationController,
+            organizationModel
+        );
+        editOrgDialog.init();
+      }
+
       editOrgDialog.pack();
       editOrgDialog.setVisible(true);
     });

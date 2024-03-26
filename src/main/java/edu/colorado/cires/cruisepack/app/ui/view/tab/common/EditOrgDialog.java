@@ -10,6 +10,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 
 import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
 import java.awt.BorderLayout;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
@@ -43,8 +44,6 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.SimpleDocumentListener;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
 import jakarta.annotation.PostConstruct;
 
-@Component
-@ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class EditOrgDialog extends JDialog implements ReactiveView {
 
     private static final String ORG_EDITOR_HEADER = "Organization Editor";
@@ -89,17 +88,15 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
     private final OrganizationController organizationController;
     private final OrganizationModel organizationModel;
 
-    @Autowired
-    public EditOrgDialog(ReactiveViewRegistry reactiveViewRegistry, OrganizationDatastore organizationDatastore, OrganizationController organizationController, OrganizationModel organizationModel) {
-        super((JFrame) null, ORG_EDITOR_HEADER, true);
+    public EditOrgDialog(Frame owner, ReactiveViewRegistry reactiveViewRegistry, OrganizationDatastore organizationDatastore, OrganizationController organizationController, OrganizationModel organizationModel) {
+        super(owner, ORG_EDITOR_HEADER, true);
         this.reactiveViewRegistry = reactiveViewRegistry;
         this.organizationDatastore = organizationDatastore;
         this.organizationController = organizationController;
         this.organizationModel = organizationModel;
     }
 
-    @PostConstruct
-    private void init() {
+    public void init() {
         initializeFields();
         setupLayout();
         setupMvc();
