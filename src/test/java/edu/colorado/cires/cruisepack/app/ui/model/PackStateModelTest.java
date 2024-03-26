@@ -21,6 +21,11 @@ class PackStateModelTest extends PropertyChangeModelTest<PackStateModel> {
   }
   
   @Test
+  void getPackJob() {
+    assertEquals(PACK_JOB, model.getPackJob());
+  }
+  
+  @Test
   void incrementProgress() {
     model.setProgressIncrement((float) 100 / 200);
     
