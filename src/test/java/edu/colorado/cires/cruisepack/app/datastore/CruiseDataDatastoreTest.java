@@ -17,12 +17,17 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
+import edu.colorado.cires.cruisepack.app.ui.controller.Events;
+import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModelTest;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class CruiseDataDatastoreTest {
+class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastore> {
   
   private static final Path TEST_PATH = Paths.get("target").resolve("test-dir");
   private static final MetadataService METADATA_SERVICE = mock(MetadataService.class);
@@ -44,16 +49,40 @@ class CruiseDataDatastoreTest {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().setPropertyNamingStrategy(
       new PropertyNamingStrategies.SnakeCaseStrategy()
   );
-  private final CruiseDataDatastore datastore = new CruiseDataDatastore(
-      METADATA_SERVICE, 
-      SERVICE_PROPERTIES,
-      OBJECT_MAPPER
-  );
-  
+
+  @Override
+  protected CruiseDataDatastore createModel() {
+    return new CruiseDataDatastore(
+        METADATA_SERVICE,
+        SERVICE_PROPERTIES,
+        OBJECT_MAPPER
+    );
+  }
+
   @BeforeEach
   void beforeEach() {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
     reset(METADATA_SERVICE);
+    
+    model = createModel();
+    model.addChangeListener(
+        (evt) -> {
+          String propertyName = evt.getPropertyName();
+          List<PropertyChangeEvent> value = getEventMap().get(propertyName);
+          if (value == null) {
+            List<PropertyChangeEvent> events = new ArrayList<>(0);
+            events.add(evt);
+            getEventMap().put(
+                propertyName, events
+            );
+          } else {
+            value.add(evt);
+            getEventMap().put(
+                propertyName, value
+            );
+          }
+        }
+    );
   }
 
   @Test
@@ -69,7 +98,7 @@ class CruiseDataDatastoreTest {
     
     Path testFile = TEST_PATH.resolve("output-directory").resolve("test.json");
     FileUtils.createParentDirectories(testFile.toFile());
-    datastore.saveCruiseToPath(packJob, testFile);
+    model.saveCruiseToPath(packJob, testFile);
     
     assertTrue(testFile.toFile().exists());
     
@@ -83,12 +112,12 @@ class CruiseDataDatastoreTest {
     save("PACKAGE-ID-1");
     save("PACKAGE-ID-2");
     
-    datastore.load();
+    model.load();
     
-    datastore.delete("PACKAGE-ID-1");
-    datastore.delete("PACKAGE-ID-2");
+    model.delete("PACKAGE-ID-1");
+    model.delete("PACKAGE-ID-2");
     
-    assertTrue(datastore.getCruises().isEmpty());
+    assertTrue(model.getCruises().isEmpty());
     
     try (Stream<Path> paths = Files.walk(TEST_PATH.resolve("work-dir").resolve("local-data").resolve("cruise-metadata"))) {
       assertEquals(0, paths.map(Path::toFile).filter(File::isFile).count());
@@ -104,7 +133,7 @@ class CruiseDataDatastoreTest {
         .resolve("PACKAGE-ID-1.json");
     FileUtils.createParentDirectories(outputPath.toFile());
     
-    datastore.saveCruises(List.of(
+    model.saveCruises(List.of(
         CruiseData.builder()
             .withCruiseId("CRUISE-ID")
             .withPackageId("PACKAGE-ID-1")
@@ -138,7 +167,7 @@ class CruiseDataDatastoreTest {
         .resolve("PACKAGE-ID.json");
     FileUtils.createParentDirectories(outputPath.toFile());
     
-    datastore.saveCruise(CruiseData.builder()
+    model.saveCruise(CruiseData.builder()
             .withCruiseId("CRUISE-ID")
             .withPackageId("PACKAGE-ID")
             .withUse(false)
@@ -277,7 +306,7 @@ class CruiseDataDatastoreTest {
             .build()
     );
     
-    datastore.saveCruise(
+    model.saveCruise(
         row,
         packDir,
         metadataAuthorName
@@ -298,9 +327,9 @@ class CruiseDataDatastoreTest {
   void init() throws Exception {
     save("PACKAGE-ID-1");
     
-    datastore.init();
+    model.init();
     
-    List<CruiseData> cruises = datastore.getCruises();
+    List<CruiseData> cruises = model.getCruises();
     assertEquals(1, cruises.size());
     assertEquals("CRUISE-ID", cruises.get(0).getCruiseId());
     assertEquals("PACKAGE-ID-1", cruises.get(0).getPackageId());
@@ -311,14 +340,20 @@ class CruiseDataDatastoreTest {
     save("PACKAGE-ID-1");
     save("PACKAGE-ID-2");
     
-    datastore.load();
+    model.load();
     
-    List<CruiseData> cruises = datastore.getCruises();
+    List<CruiseData> cruises = model.getCruises();
     assertEquals(2, cruises.size());
     assertEquals("PACKAGE-ID-1", cruises.get(0).getPackageId());
     assertEquals("CRUISE-ID", cruises.get(0).getCruiseId());
     assertEquals("PACKAGE-ID-2", cruises.get(1).getPackageId());
     assertEquals("CRUISE-ID", cruises.get(1).getCruiseId());
+    
+    assertChangeEvent(
+        Events.UPDATE_CRUISE_DATA_STORE,
+        Collections.emptyList(),
+        cruises
+    );
   }
 
   @Test
@@ -330,21 +365,21 @@ class CruiseDataDatastoreTest {
         .resolve("PACKAGE-ID-1.json");
     FileUtils.createParentDirectories(outputPath.toFile());
 
-    datastore.saveCruise(CruiseData.builder()
+    model.saveCruise(CruiseData.builder()
         .withCruiseId("CRUISE-ID")
         .withPackageId("PACKAGE-ID-1")
         .withUse(false)
         .build());
     
-    datastore.saveCruise(CruiseData.builder()
+    model.saveCruise(CruiseData.builder()
         .withCruiseId("CRUISE-ID")
         .withPackageId("PACKAGE-ID-2")
         .withUse(true)
         .build());
     
-    datastore.load();
+    model.load();
     
-    List<DropDownItem> items = datastore.getDropDownItems();
+    List<DropDownItem> items = model.getDropDownItems();
     assertEquals(2, items.size());
     assertEquals(CruiseDataDatastore.UNSELECTED_CRUISE, items.get(0));
     assertEquals(new DropDownItem("PACKAGE-ID-2", "PACKAGE-ID-2"), items.get(1));
@@ -362,15 +397,15 @@ class CruiseDataDatastoreTest {
         ));
     FileUtils.createParentDirectories(outputPath.toFile());
     
-    datastore.load();
+    model.load();
     
-    assertTrue(datastore.getByPackageId(packageId).isEmpty());
+    assertTrue(model.getByPackageId(packageId).isEmpty());
     
     save(packageId);
     
-    datastore.load();
+    model.load();
 
-    Optional<CruiseData> maybeResult = datastore.getByPackageId(packageId);
+    Optional<CruiseData> maybeResult = model.getByPackageId(packageId);
     assertTrue(maybeResult.isPresent());
     assertEquals(packageId, maybeResult.get().getPackageId());
     assertEquals("CRUISE-ID", maybeResult.get().getCruiseId());
@@ -381,7 +416,7 @@ class CruiseDataDatastoreTest {
     Path metadataDir = TEST_PATH.resolve("work-dir")
       .resolve("local-data")
       .resolve("cruise-metadata");
-    Exception exception = assertThrows(IllegalStateException.class, datastore::load);
+    Exception exception = assertThrows(IllegalStateException.class, model::load);
     assertEquals(String.format(
         "Cannot read cruise metadata from directory: %s", metadataDir
     ), exception.getMessage());
@@ -399,7 +434,7 @@ class CruiseDataDatastoreTest {
         .withInstrument("Instrument name")
         .build());
     
-    Exception exception = assertThrows(IllegalStateException.class, datastore::load);
+    Exception exception = assertThrows(IllegalStateException.class, model::load);
     assertEquals(String.format(
         "Cannot read cruise metadata from file: %s", metadataDir
     ), exception.getMessage());
@@ -422,7 +457,7 @@ class CruiseDataDatastoreTest {
             "%s.json", packageId
         ));
     FileUtils.createParentDirectories(outputPath.toFile());
-    datastore.saveCruise(packJob);
+    model.saveCruise(packJob);
 
     assertTrue(outputPath.toFile().exists());
 
