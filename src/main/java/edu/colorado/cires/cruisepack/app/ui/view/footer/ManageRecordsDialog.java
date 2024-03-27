@@ -7,6 +7,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ComponentEventListener;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
@@ -28,12 +29,18 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
   private final JTable table = new JTable();
   private final DefaultTableModel tableModel = new CheckboxTableModel();
   private final JButton saveButton = new JButton("Save");
+  
+  private final List<ComponentEventListener<ManageRecordsDialog>> closeListeners = new ArrayList<>(0);
 
   public ManageRecordsDialog(Frame owner, CruiseDataController cruiseDataDatastore, ReactiveViewRegistry reactiveViewRegistry) {
     super(owner, "Manage Package Records", true);
     this.cruiseDataController = cruiseDataDatastore;
     this.reactiveViewRegistry = reactiveViewRegistry;
     setLocationRelativeTo(owner);
+  }
+  
+  public void addCloseListener(ComponentEventListener<ManageRecordsDialog> listener) {
+    closeListeners.add(listener);
   }
   
   public void init() {
@@ -107,7 +114,7 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
     );
     
     if (choice == JOptionPane.YES_OPTION) {
-      setVisible(false);
+      closeListeners.forEach(listener -> listener.handle(this));
     }
   }
 

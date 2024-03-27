@@ -161,6 +161,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
             reactiveViewRegistry
         );
         manageRecordsDialog.init();
+        manageRecordsDialog.addCloseListener((dialog) -> {
+          manageRecordsDialog.dispose();
+          manageRecordsDialog = null;
+        });
       }
       
       manageRecordsDialog.pack();
