@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.service;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.ImportModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.io.FileInputStream;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import javax.swing.JOptionPane;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
@@ -36,12 +38,15 @@ public class ImportService {
   private final Validator validator;
   private final CruiseDataDatastore datastore;
   private final Path templatePath;
+  private final OptionPaneGenerator optionPaneGenerator;
 
   @Autowired
-  public ImportService(Validator validator, CruiseDataDatastore datastore, ServiceProperties serviceProperties) {
+  public ImportService(Validator validator, CruiseDataDatastore datastore, ServiceProperties serviceProperties,
+      OptionPaneGenerator optionPaneGenerator) {
     this.validator = validator;
     this.datastore = datastore;
     this.templatePath = getTemplatePath(serviceProperties);
+    this.optionPaneGenerator = optionPaneGenerator;
   }
   
   private Path getTemplatePath(ServiceProperties serviceProperties) {
@@ -88,12 +93,41 @@ public class ImportService {
   private void importSheet(Sheet sheet, ImportModel model) throws Exception {
     try (Stream<Row> stream = sheet.openStream()) {
       List<Row> rows = stream.toList();
+      boolean overwriteAll = false;
+      boolean skipAll = false;
       for (int i = 2; i < rows.size(); i++) { // skip template instructions and header
         ImportRow importRow = fromRow(rows.get(i));
         if (StringUtils.isBlank(importRow.getCruiseID())) {
-          LOGGER.warn("Detected blank cruise ID. Import row will be skipped");
+          LOGGER.warn(String.format(
+              "Detected blank cruise ID. Row %s will be skipped", i
+          ));
         } else {
-          datastore.saveCruise(importRow, model.getDestinationPath(), model.getMetadataAuthor().getValue());
+          boolean stepOverwrite = overwriteAll;
+          
+          ResponseStatus status = datastore.saveCruise(importRow, model.getDestinationPath(), model.getMetadataAuthor().getValue(), stepOverwrite, skipAll);
+          if (!status.equals(ResponseStatus.CONFLICT)) {
+            continue;
+          }
+
+          int choice = optionPaneGenerator.createOptionPane(
+              String.format("Cruise with package id %s already exists", PackJobUtils.resolvePackageId(importRow.getCruiseID(), importRow.getLeg())),
+              "Conflict",
+              JOptionPane.WARNING_MESSAGE,
+              "JOptionPane.warningIcon",
+              new String[]{"Skip", "Skip All", "Overwrite", "Overwrite All"},
+              "Skip"
+          );
+          
+          if (choice == 1) {
+            skipAll = true;
+          } else if (choice == 2) {
+            stepOverwrite = true;
+            datastore.saveCruise(importRow, model.getDestinationPath(), model.getMetadataAuthor().getValue(), stepOverwrite, skipAll);
+          } else if (choice == 3) {
+            overwriteAll = true;
+            stepOverwrite = overwriteAll;
+            datastore.saveCruise(importRow, model.getDestinationPath(), model.getMetadataAuthor().getValue(), stepOverwrite, skipAll);
+          }
         }
       }
     }

@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -12,6 +13,7 @@ import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.ImportModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import jakarta.validation.metadata.ConstraintDescriptor;
@@ -48,11 +50,13 @@ class ImportServiceTest {
   private static final CruiseDataDatastore datastore = mock(CruiseDataDatastore.class);
   
   private final Validator validator = mock(Validator.class);
+  private final OptionPaneGenerator optionPaneGenerator = mock(OptionPaneGenerator.class);
   
   private final ImportService service = new ImportService(
       validator,
       datastore,
-      SERVICE_PROPERTIES
+      SERVICE_PROPERTIES,
+      optionPaneGenerator
   );
   
   @BeforeEach
@@ -104,26 +108,41 @@ class ImportServiceTest {
     importModel.setImportPath(spreadsheetPath);
     importModel.setDestinationPath(destinationPath);
     importModel.setMetadataAuthor(new DropDownItem("1", "test-metadata-author"));
+
+    when(datastore.saveCruise(
+        any(), any(), any(), any(Boolean.class), any(Boolean.class)
+    )).thenReturn(ResponseStatus.SUCCESS);
     
     service.importCruises(importModel);
 
     ArgumentCaptor<ImportRow> importRowArgumentCaptor = ArgumentCaptor.forClass(ImportRow.class);
     ArgumentCaptor<Path> destinationPathArgumentCaptor = ArgumentCaptor.forClass(Path.class);
     ArgumentCaptor<String> metadataAuthorNameArgumentCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<Boolean> overwriteArgumentCaptor = ArgumentCaptor.forClass(Boolean.class);
+    ArgumentCaptor<Boolean> skipArgumentCaptor = ArgumentCaptor.forClass(Boolean.class);
     verify(datastore, times(10)).saveCruise(
-        importRowArgumentCaptor.capture(), destinationPathArgumentCaptor.capture(), metadataAuthorNameArgumentCaptor.capture()
+        importRowArgumentCaptor.capture(),
+        destinationPathArgumentCaptor.capture(),
+        metadataAuthorNameArgumentCaptor.capture(),
+        overwriteArgumentCaptor.capture(),
+        skipArgumentCaptor.capture()
     );
     
     List<ImportRow> importRowArguments = importRowArgumentCaptor.getAllValues();
     List<Path> destinationPathArguments = destinationPathArgumentCaptor.getAllValues();
     List<String> metadataAuthorNameArguments = metadataAuthorNameArgumentCaptor.getAllValues();
+    List<Boolean> overwriteArguments = overwriteArgumentCaptor.getAllValues();
+    List<Boolean> skipArguments = skipArgumentCaptor.getAllValues();
     assertEquals(importRowArguments.size(), destinationPathArguments.size());
     assertEquals(destinationPathArguments.size(), metadataAuthorNameArguments.size());
+    assertEquals(overwriteArguments.size(), destinationPathArguments.size());
+    assertEquals(skipArguments.size(), overwriteArguments.size());
     
     for (int i = 0; i < importRowArguments.size(); i++) {
       assertEquals(importModel.getDestinationPath(), destinationPathArguments.get(i));
       assertEquals(importModel.getMetadataAuthor().getValue(), metadataAuthorNameArguments.get(i));
-      
+      assertFalse(overwriteArguments.get(i));
+      assertFalse(skipArguments.get(i));
       assertImportRowsEqual(importRows.get(i), importRowArguments.get(i));
     }
   }
@@ -138,7 +157,7 @@ class ImportServiceTest {
     ));
     
     service.importCruises(importModel);
-    verify(datastore, times(0)).saveCruise(any(), any(), any());
+    verify(datastore, times(0)).saveCruise(any(), any(), any(), any(Boolean.class), any(Boolean.class));
     
     assertEquals("invalid author", importModel.getMetadataAuthorError());
     assertEquals("invalid destination path", importModel.getDestinationPathError());

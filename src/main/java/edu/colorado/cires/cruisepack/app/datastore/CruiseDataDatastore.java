@@ -5,6 +5,7 @@ import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.ImportRow;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
+import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
@@ -88,12 +89,28 @@ public class CruiseDataDatastore extends PropertyChangeModel {
     saveCruise(cruiseData, getMetadataPath(cruiseData.getPackageId()));
   }
   
-  public void saveCruise(ImportRow importRow, Path packageDestinationPath, String metadataAuthorName) throws Exception {
+  public ResponseStatus saveCruise(ImportRow importRow, Path packageDestinationPath, String metadataAuthorName, boolean overwrite, boolean skip) {
     CruiseData cruiseData = metadataService.createData(importRow, packageDestinationPath, metadataAuthorName);
-    saveCruise(
-        cruiseData,
-        getMetadataPath(cruiseData.getPackageId())
-    );
+    if (!overwrite) {
+      Optional<CruiseData> existing = getByPackageId(cruiseData.getPackageId());
+      if (existing.isPresent()) {
+        if (!skip) {
+          return ResponseStatus.CONFLICT;
+        } else {
+          return ResponseStatus.SUCCESS;
+        }
+      }
+    }
+
+    try {
+      saveCruise(
+          cruiseData,
+          getMetadataPath(cruiseData.getPackageId())
+      );
+      return ResponseStatus.SUCCESS;
+    } catch (Exception e) {
+      return ResponseStatus.ERROR;
+    }
   }
 
   @PostConstruct

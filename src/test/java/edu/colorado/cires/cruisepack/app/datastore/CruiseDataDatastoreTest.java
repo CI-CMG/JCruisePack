@@ -306,10 +306,14 @@ class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastor
             .build()
     );
     
+    model.load();
+    
     model.saveCruise(
         row,
         packDir,
-        metadataAuthorName
+        metadataAuthorName,
+        false,
+        false
     );
 
     assertTrue(outputPath.toFile().exists());

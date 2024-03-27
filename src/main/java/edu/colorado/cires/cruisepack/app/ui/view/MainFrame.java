@@ -1,6 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.view;
 
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
+import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
 import jakarta.annotation.PostConstruct;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -22,12 +23,14 @@ public class MainFrame extends JFrame {
   private static final int MIN_HEIGHT = 600;
 
   private final UiRefresher uiRefresher;
+  private final OptionPaneGenerator optionPaneGenerator;
   private final RootPanel rootPanel;
   private final FooterControlController footerControlController;
 
   @Autowired
-  public MainFrame(UiRefresher uiRefresher, RootPanel rootPanel, FooterControlController footerControlController) {
+  public MainFrame(UiRefresher uiRefresher, OptionPaneGenerator optionPaneGenerator, RootPanel rootPanel, FooterControlController footerControlController) {
     this.uiRefresher = uiRefresher;
+    this.optionPaneGenerator = optionPaneGenerator;
     this.rootPanel = rootPanel;
     this.footerControlController = footerControlController;
   }
@@ -35,6 +38,7 @@ public class MainFrame extends JFrame {
   @PostConstruct
   public void init() {
     uiRefresher.setMainFrame(this);
+    optionPaneGenerator.setMainFrame(this);
     setDefaultLookAndFeelDecorated(true);
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
     setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
