@@ -21,6 +21,8 @@ import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -51,7 +54,7 @@ public class SqliteMigrator {
   private final ProjectDatastore projectDatastore;
   private final ShipDatastore shipDatastore;
   private final InstrumentDatastore instrumentDatastore;
-  private final ErrorModel errorModel;
+  private final OptionPaneGenerator optionPaneGenerator;
 
   @Autowired
   public SqliteMigrator(
@@ -62,7 +65,7 @@ public class SqliteMigrator {
       PersonDatastore personDatastore,
       ProjectDatastore projectDatastore,
       ShipDatastore shipDatastore,
-      InstrumentDatastore instrumentDatastore, ErrorModel errorModel) {
+      InstrumentDatastore instrumentDatastore, OptionPaneGenerator optionPaneGenerator) {
     this.uuidGenerator = uuidGenerator;
     this.objectMapper = objectMapper;
     this.cruiseDataDatastore = cruiseDataDatastore;
@@ -71,7 +74,7 @@ public class SqliteMigrator {
     this.projectDatastore = projectDatastore;
     this.shipDatastore = shipDatastore;
     this.instrumentDatastore = instrumentDatastore;
-    this.errorModel = errorModel;
+    this.optionPaneGenerator = optionPaneGenerator;
   }
 
   private static SessionFactory createSessionFactory(Path file, Class<?>... classes) {
@@ -259,9 +262,17 @@ public class SqliteMigrator {
         });
         List<InstrumentData> checkedInstruments = new ArrayList<>();
         for (InstrumentData instrument : instruments) {
-          String uuid = instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(instrument.getType(), instrument.getInstrument());
+          String uuid = instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(
+              InstrumentGroupName.fromLongName(instrument.getType()).getShortName(), instrument.getInstrument()
+          );
           if (uuid == null) {
-            throw new IllegalStateException("Unable to find instrument '" + instrument.getType() + ":" + instrument.getInstrument() + "'");
+            String message = "Unable to find instrument '" + instrument.getType() + ":" + instrument.getInstrument() + "'";
+            optionPaneGenerator.createMessagePane(
+                message,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+            );
+            throw new IllegalStateException(message);
           }
           checkedInstruments.add(InstrumentData.builder(instrument).withUuid(uuid).build());
         }
@@ -289,7 +300,13 @@ public class SqliteMigrator {
     String shipUuid = shipName == null ? null : shipDatastore.getShipUuidForName(shipName);
 
     if (shipName != null && shipUuid == null) {
-      throw new IllegalStateException("Unable to find ship with name '" + shipName + "'");
+      String message = "Unable to find ship with name '" + shipName + "'";
+      optionPaneGenerator.createMessagePane(
+          message,
+          "Error",
+          JOptionPane.ERROR_MESSAGE
+      );
+      throw new IllegalStateException(message);
     }
 
     return CruiseData.builder()
@@ -365,9 +382,13 @@ public class SqliteMigrator {
                 cruiseDataDatastore.saveCruise(d);
               } catch (Exception e) {
                 LOGGER.error("Failed to migrate cruise: {}", d.getPackageId());
-                errorModel.emitErrorMessage(String.format(
-                    "Failed to migrate %s: %s", d.getPackageId(), e.getMessage()
-                ));
+                optionPaneGenerator.createMessagePane(
+                    String.format(
+                        "Failed to migrate %s: %s", d.getPackageId(), e.getMessage()
+                    ),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
               }
             });
       });

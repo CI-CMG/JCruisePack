@@ -26,7 +26,8 @@ import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
-import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
 import edu.colorado.cires.cruisepack.xml.person.Person;
@@ -111,16 +112,16 @@ public class SqliteMigratorTest {
     when(shipDatastore.getShipUuidForName("Falkor (FK)")).thenReturn("391b3824-b82f-40c1-9a53-ef1cdfd9f0c6");
     when(shipDatastore.getShipUuidForName("Oscar Dyson (DY)")).thenReturn("a24caa2a-1c39-41b9-ba7a-eede10ccc4f6");
 
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("CTD", "SBE 911plus")).thenReturn("45080730-69c6-11e0-ae3e-0800200c9a66");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Water Column Sonar", "Simrad EK60")).thenReturn("b7ae3f00-701c-11e0-a1f0-0800200c9a66");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Water Column Sonar", "Simrad EK80")).thenReturn("cfc2ac19-b32a-4753-a934-efe8a57cc496");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Water Column Sonar", "Kongsberg EM302")).thenReturn("794feae0-679a-11e0-ae3e-0800200c9a66");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Navigation", "C-NAV 3050 GPS")).thenReturn("41f56f00-69d1-11e0-ae3e-0800200c9a66");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Multibeam Bathymetry", "Simrad ME70")).thenReturn("26fca400-154a-11e1-be50-0800200c9a66");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Water Column Sonar", "Simrad ME70")).thenReturn("26fca400-154a-11e1-be50-0800200c9a66");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Multibeam Bathymetry", "Kongsberg EM2040")).thenReturn("69bc77a-9244-43fe-b1b8-d0c937017f5c");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Multibeam Bathymetry", "Kongsberg EM304")).thenReturn("69bc77a-9244-43fe-b1b8-d0c937017f5c");
-    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName("Magnetics", "Kokusai Electronics PMM-100")).thenReturn("5de5f056-73e4-4505-8949-a0387ecfde72");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("CTD").getShortName(), "SBE 911plus")).thenReturn("45080730-69c6-11e0-ae3e-0800200c9a66");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Water Column Sonar").getShortName(), "Simrad EK60")).thenReturn("b7ae3f00-701c-11e0-a1f0-0800200c9a66");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Water Column Sonar").getShortName(), "Simrad EK80")).thenReturn("cfc2ac19-b32a-4753-a934-efe8a57cc496");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Water Column Sonar").getShortName(), "Kongsberg EM302")).thenReturn("794feae0-679a-11e0-ae3e-0800200c9a66");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Navigation").getShortName(), "C-NAV 3050 GPS")).thenReturn("41f56f00-69d1-11e0-ae3e-0800200c9a66");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Multibeam Bathymetry").getShortName(), "Simrad ME70")).thenReturn("26fca400-154a-11e1-be50-0800200c9a66");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Water Column Sonar").getShortName(), "Simrad ME70")).thenReturn("26fca400-154a-11e1-be50-0800200c9a66");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Multibeam Bathymetry").getShortName(), "Kongsberg EM2040")).thenReturn("69bc77a-9244-43fe-b1b8-d0c937017f5c");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Multibeam Bathymetry").getShortName(), "Kongsberg EM304")).thenReturn("69bc77a-9244-43fe-b1b8-d0c937017f5c");
+    when(instrumentDatastore.getInstrumentUuidForDatasetTypeAndInstrumentName(InstrumentGroupName.fromLongName("Magnetics").getShortName(), "Kokusai Electronics PMM-100")).thenReturn("5de5f056-73e4-4505-8949-a0387ecfde72");
 
 
     SqliteMigrator migrator = new SqliteMigrator(
@@ -132,7 +133,8 @@ public class SqliteMigratorTest {
         projectDatastore,
         shipDatastore,
         instrumentDatastore,
-        new ErrorModel());
+        mock(OptionPaneGenerator.class)
+    );
     migrator.migrate(oldCp);
 
     List<String> expectedOrgs = readOrganizations(expected.resolve("organizations.xml")).getOrganizations().getOrganizations().stream().map(SqliteMigratorTest::toXml).toList();
