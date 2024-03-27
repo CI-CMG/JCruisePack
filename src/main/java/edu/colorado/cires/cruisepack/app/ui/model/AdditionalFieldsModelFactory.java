@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
 
 public class AdditionalFieldsModelFactory {
   
@@ -35,7 +36,7 @@ public class AdditionalFieldsModelFactory {
         "calibration_date",
         otherFields,
         String.class,
-        (v) -> v == null ? null : LocalDate.parse(v),
+        (v) -> StringUtils.isBlank(v) ? null : LocalDate.parse(v),
         model::setCalibrationDate
     );
     
