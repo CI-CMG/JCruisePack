@@ -4,9 +4,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
-import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
-import java.util.Collections;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +30,9 @@ public class ErrorDialog extends java.awt.Component implements ReactiveView {
     if (evt.getPropertyName().equals(Events.EMIT_ERROR_MESSAGE)) {
       JOptionPane.showMessageDialog(
           SwingUtilities.getWindowAncestor(this),
-          evt.getNewValue(),
+          String.format(
+              "<html><B>%s</B></html>", evt.getNewValue()
+          ),
           "Error",
           JOptionPane.ERROR_MESSAGE
       );
