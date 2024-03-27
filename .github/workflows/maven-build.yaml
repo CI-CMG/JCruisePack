@@ -248,7 +248,6 @@ jobs:
           -i jars
           --main-class org.springframework.boot.loader.launch.JarLauncher
           --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-          --about-url https://github.com/CI-CMG/JCruisePack
           -t app-image
           --icon cruise_pack_icon.ico
           --java-options '-splash:$APPDIR/splash.png'
