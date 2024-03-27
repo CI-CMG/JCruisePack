@@ -11,11 +11,15 @@ import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.model.OmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PackageModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
+import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path.Node;
 import jakarta.validation.Validator;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +27,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +51,7 @@ public class PackagingValidationService {
   private final FooterControlModel footerControlModel;
   private final ServiceProperties serviceProperties;
   private final ErrorModel errorModel;
+  private final OptionPaneGenerator optionPaneGenerator;
 
   @Autowired
   public PackagingValidationService(
@@ -54,7 +62,8 @@ public class PackagingValidationService {
       DatasetsModel datasetsModel,
       InstrumentDatastore instrumentDatastore,
       PeopleModel peopleModel,
-      PersonDatastore personDatastore, FooterControlModel footerControlModel, ServiceProperties serviceProperties, ErrorModel errorModel
+      PersonDatastore personDatastore, FooterControlModel footerControlModel, ServiceProperties serviceProperties, ErrorModel errorModel,
+      OptionPaneGenerator optionPaneGenerator
   ) {
     this.validator = validator;
     this.packageModel = packageModel;
@@ -67,6 +76,7 @@ public class PackagingValidationService {
     this.footerControlModel = footerControlModel;
     this.serviceProperties = serviceProperties;
     this.errorModel = errorModel;
+    this.optionPaneGenerator = optionPaneGenerator;
   }
 
   public Optional<PackJob> validate() {
@@ -100,15 +110,33 @@ public class PackagingValidationService {
       if (errorMessages.isEmpty()) {
         
         List<String> warningMessages = checkWarnings(packJob);
-        warningMessages.removeAll(footerControlModel.getIgnoredWarningMessages());
-        footerControlModel.clearIgnoreWarningMessage();
-        
+
         if (warningMessages.isEmpty()) {
           return Optional.of(packJob);
-        } else {
-          footerControlModel.setWarningMessages(warningMessages);
         }
         
+        boolean continuePacking = false;
+        for (String message : warningMessages) {
+          int choice = optionPaneGenerator.createOptionPane(
+              message,
+              null,
+              JOptionPane.WARNING_MESSAGE,
+              "JOptionPane.warningIcon",
+              new String[]{
+                  "Cancel Job", "Continue Job"
+              },
+              "Cancel Job"
+          );
+          if (choice == 0) {
+            return Optional.empty();
+          } if (choice == 1) {
+            continuePacking = true;
+          }
+        }
+        
+        if (continuePacking) {
+          return Optional.of(packJob);
+        }
       }
       
       return Optional.empty();
@@ -140,6 +168,24 @@ public class PackagingValidationService {
         throw new RuntimeException(e);
       }
     }
+    
+    packJob.getInstruments().values().stream()
+        .flatMap(List::stream)
+        .map(InstrumentDetail::getDataPath)
+        .filter(StringUtils::isNotBlank)
+        .map(Paths::get)
+        .map(Path::toAbsolutePath)
+        .filter(path -> {
+          try {
+            return FileUtils.isEmptyDirectory(path.toFile());
+          } catch (IOException e) {
+            throw new IllegalStateException(String.format(
+                "Failed to determine if %s is empty", path
+            ), e);
+          }
+        }).map(file -> String.format(
+            "%s is empty and will not appear in output package", file
+        )).forEach(warningMessages::add);
     
     return warningMessages;
   }
