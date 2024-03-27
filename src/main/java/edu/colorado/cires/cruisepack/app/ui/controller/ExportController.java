@@ -48,9 +48,10 @@ public class ExportController {
     this.errorModel = errorModel;
   }
   
-  public void exportCruise(Path path) {
+  public boolean exportCruise(Path path) {
     if (packageModel.getCruiseId() == null) {
       footerControlModel.setSaveWarningDialogueVisible(true);
+      return false;
     } else {
       PackJob packJob = PackJobUtils.create(
           packageModel,
@@ -66,11 +67,13 @@ public class ExportController {
             packJob,
             path.resolve(packJob.getPackageId() + ".json")
         );
+        return true;
       } catch (Exception e) {
         LOGGER.error("Failed to export cruise: {}", packJob.getPackageId(), e);
         errorModel.emitErrorMessage(String.format(
             "Failed to export %s: %s", packJob.getPackageId(), e.getMessage()
         ));
+        return false;
       }
     }
   }

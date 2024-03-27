@@ -6,8 +6,11 @@ import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.ui.controller.ExportController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ImportController;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ComponentEventListener;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -26,6 +29,8 @@ public class ImportExportDialog extends JDialog {
   private final JButton importButton = new JButton("Import Excel Sheet");
   private final JButton exportButton = new JButton("Export JSON");
   
+  private final List<ComponentEventListener<ImportExportDialog>> closeListeners = new ArrayList<>(0);
+  
   public ImportExportDialog(Frame owner, ExportController exportController, ImportController importController, PersonDatastore personDatastore,
       ReactiveViewRegistry reactiveViewRegistry) {
     super(owner, "Import/Export", true);
@@ -35,6 +40,10 @@ public class ImportExportDialog extends JDialog {
     this.reactiveViewRegistry = reactiveViewRegistry;
     setLocationRelativeTo(owner);
     init();
+  }
+  
+  public void addCloseListener(ComponentEventListener<ImportExportDialog> listener) {
+    closeListeners.add(listener);
   }
   
   private void init() {
@@ -68,6 +77,12 @@ public class ImportExportDialog extends JDialog {
             importController,
             reactiveViewRegistry
         );
+        importDialog.addCloseListener((dialog) -> {
+          importDialog.dispose();
+          importDialog = null;
+          
+          closeListeners.forEach(listener -> listener.handle(this));
+        });
       }
       
       importDialog.pack();
@@ -80,7 +95,10 @@ public class ImportExportDialog extends JDialog {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-      exportController.exportCruise(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+      boolean success = exportController.exportCruise(fileChooser.getSelectedFile().toPath().toAbsolutePath().normalize());
+      if (success) {
+        closeListeners.forEach(listener -> listener.handle(this));
+      }
     }
   }
 }

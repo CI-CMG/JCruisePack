@@ -13,6 +13,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ImportController;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
+import edu.colorado.cires.cruisepack.app.ui.view.tab.common.ComponentEventListener;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
@@ -22,6 +23,8 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -48,6 +51,8 @@ public class ImportDialog extends JDialog implements ReactiveView {
   private final JButton selectFileButton = new JButton("Select Excel File");
   private final JButton selectDirectoryButton = new JButton("Select Directory");
   private final JButton saveButton = new JButton("Download Template");
+  
+  private final List<ComponentEventListener<ImportDialog>> closeListeners = new ArrayList<>(0);
 
   public ImportDialog(Frame owner, PersonDatastore personDatastore, ImportController importController, ReactiveViewRegistry reactiveViewRegistry) {
     super(owner, "Import Excel Spreadsheet", true);
@@ -62,6 +67,10 @@ public class ImportDialog extends JDialog implements ReactiveView {
     initializeFields();
     setupLayout();
     setupMvc();
+  }
+  
+  public void addCloseListener(ComponentEventListener<ImportDialog> listener) {
+    closeListeners.add(listener);
   }
   
   private void initializeFields() {
@@ -134,7 +143,7 @@ public class ImportDialog extends JDialog implements ReactiveView {
     importButton.addActionListener((evt) -> {
       boolean success = importController.importCruises();
       if (success) {
-        setVisible(false);
+        closeListeners.forEach(listener -> listener.handle(this));
       }
     });
     

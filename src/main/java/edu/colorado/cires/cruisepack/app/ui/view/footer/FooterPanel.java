@@ -182,6 +182,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
             personDatastore,
             reactiveViewRegistry
         );
+        importExportDialog.addCloseListener((dialog) -> {
+          importExportDialog.dispose();
+          importExportDialog = null;
+        });
       }
       
       importExportDialog.pack();
