@@ -10,6 +10,12 @@ cruise-pack:
   ui: true
 
 spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+        connection:
+          driver_class: org.sqlite.JDBC
   jackson:
     default-property-inclusion: non_null
     serialization:
