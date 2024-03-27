@@ -5,6 +5,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLay
 import edu.colorado.cires.cruisepack.app.ui.view.common.ValueChangeListener;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class SettingsDialog extends JDialog {
   
   private void setupLayout() {
     setLayout(new GridBagLayout());
-    add(migrateButton, configureLayout(0, 0, c -> c.weighty = 0));
+    add(migrateButton, configureLayout(0, 0, c -> { c.weighty = 0; c.insets = new Insets(10, 10, 10, 10); }));
   }
   
   private void setupMvc() {
