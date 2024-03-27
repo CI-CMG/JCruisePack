@@ -4,6 +4,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelTe
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgressBarModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
+import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.migration.SqliteMigrator;
 import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
@@ -23,8 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -82,12 +82,13 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final UiRefresher uiRefresher;
   private String packageIdCollisionDialogText;
   private String saveExitAppDialogText;
+  private final ServiceProperties serviceProperties;
 
   @Autowired
   public FooterPanel(ReactiveViewRegistry reactiveViewRegistry, FooterControlController footerControlController,
       FooterControlModel footerControlModel,
       SqliteMigrator sqliteMigrator, CruiseDataController cruiseDataController, ExportController exportController, ImportController importController,
-      PersonDatastore personDatastore, UiRefresher uiRefresher)
+      PersonDatastore personDatastore, UiRefresher uiRefresher, ServiceProperties serviceProperties)
       throws IOException {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlController = footerControlController;
@@ -98,6 +99,7 @@ public class FooterPanel extends JPanel implements ReactiveView {
     this.importController = importController;
     this.personDatastore = personDatastore;
     this.uiRefresher = uiRefresher;
+    this.serviceProperties = serviceProperties;
     this.docsButton = new JButton(new ImageIcon(ImageIO.read(
         Objects.requireNonNull(getClass().getResource(String.format(
             "/%s", HELP_ICON_NAME
@@ -206,27 +208,26 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private void handleOpenFile() {
     try {
       String os = System.getProperty("os.name");
-      URI manualURI = Objects.requireNonNull(getClass().getResource(String.format(
-          "/%s", USER_MANUAL_NAME
-      ))).toURI();
+      String manualPath = Paths.get(serviceProperties.getWorkDir()).resolve("config")
+          .resolve(USER_MANUAL_NAME).toAbsolutePath().toFile().toString();
       String command = null;
       if (os.contains("Mac")) {
         command = String.format(
-            "open %s", manualURI
+            "open %s", manualPath
         );
       } else if (os.contains("Windows")) {
         command = String.format(
-            "start %s", manualURI
+            "start %s", manualPath
         );
       } else if (os.contains("Linux")) {
         command = String.format(
-            "xdg-open %s", manualURI
+            "xdg-open %s", manualPath
         );
       }
       if (command != null) {
         Runtime.getRuntime().exec(command);
       }
-    } catch (IOException | URISyntaxException e) {
+    } catch (IOException e) {
       throw new IllegalStateException(String.format(
           "Failed to open %s", USER_MANUAL_NAME
       ), e);

@@ -41,6 +41,12 @@ public class CruisePackPreSpringStarter {
       Path log4jXml = configDir.resolve("log4j2.xml");
       Path importTemplate = configDir.resolve("cruise_import.xlsx");
       Path waterColumnCalibrationTemplate = configDir.resolve("sonar_calibration_information.xlsx");
+      Path userManual = configDir.resolve("CruisePack_manual.pdf");
+      
+      if (!Files.isRegularFile(userManual)) {
+        System.out.println("Initializing CruisePack_manual.pdf");
+        copyFromClassPath(userManual, "/edu/colorado/cires/cruisepack/app/init/CruisePack_manual.pdf");
+      }
 
       if (!Files.isRegularFile(applicationProperties)) {
         System.out.println("Initializing application.properties");
