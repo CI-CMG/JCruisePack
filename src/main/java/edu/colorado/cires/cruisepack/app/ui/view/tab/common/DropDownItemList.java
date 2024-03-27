@@ -29,13 +29,25 @@ public class DropDownItemList extends JComponent {
   private List<DropDownItemPanel> dropDownItems;
   private final List<ComponentEventListener<DropDownItemPanel>> addItemListeners = new ArrayList<>(0);
   private final List<ComponentEventListener<DropDownItemPanel>> removeItemListeners = new ArrayList<>(0);
+  private final boolean editableItems;
   
   public DropDownItemList(String headerLabelText, String addButtonText, List<DropDownItem> options, DropDownItem defaultOption) {
     this.headerLabelText = headerLabelText;
     this.addButton = new JButton(addButtonText);
     this.options = options;
     this.defaultOption = defaultOption;
+    editableItems = false;
     
+    init();
+  }
+
+  public DropDownItemList(String headerLabelText, String addButtonText, List<DropDownItem> options, DropDownItem defaultOption, boolean editableItems) {
+    this.headerLabelText = headerLabelText;
+    this.addButton = new JButton(addButtonText);
+    this.options = options;
+    this.defaultOption = defaultOption;
+    this.editableItems = editableItems;
+
     init();
   }
   
@@ -111,7 +123,7 @@ public class DropDownItemList extends JComponent {
   
   private void setupMvc() {
     addButton.addActionListener((evt) -> {
-      DropDownItemPanel panel = new DropDownItemPanel(options, defaultOption);
+      DropDownItemPanel panel = new DropDownItemPanel(options, defaultOption, true);
       
       for (ComponentEventListener<DropDownItemPanel> listener : addItemListeners) {
         listener.handle(panel);

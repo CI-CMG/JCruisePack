@@ -10,15 +10,20 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class DropDownItemPanel extends JPanel implements ReactiveView {
   
@@ -31,13 +36,24 @@ public class DropDownItemPanel extends JPanel implements ReactiveView {
   
   private final JComboBox<DropDownItem> comboBox = new JComboBox<>();
   private final JButton removeButton = new JButton("Remove");
+  private final String newItemUUID = UUID.randomUUID().toString();
   
+  public DropDownItemPanel(List<DropDownItem> options, DropDownItem defaultOption, boolean editable) {
+    this.defaultOption = defaultOption;
+    this.model = new DropDownItemModel(defaultOption);
+    this.controller = new DropDownItemController(this.model, this);
+    this.options = options;
+    comboBox.setEditable(editable);
+    
+    init();
+  }
+
   public DropDownItemPanel(List<DropDownItem> options, DropDownItem defaultOption) {
     this.defaultOption = defaultOption;
     this.model = new DropDownItemModel(defaultOption);
     this.controller = new DropDownItemController(this.model, this);
     this.options = options;
-    
+
     init();
   }
   
@@ -67,10 +83,52 @@ public class DropDownItemPanel extends JPanel implements ReactiveView {
       }
     });
     
-    comboBox.addItemListener((evt) -> {
-      DropDownItem item = (DropDownItem) evt.getItem();
-      controller.setItem(item);
-    });
+    if (comboBox.isEditable()) {
+      JTextField textField = (JTextField) comboBox.getEditor().getEditorComponent();
+      textField.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+          List<DropDownItem> currentOptions = new ArrayList<>(options);
+          String text = textField.getText();
+          Optional<DropDownItem> maybeItemWithUUID = currentOptions.stream()
+              .filter(d -> d.getId().equals(newItemUUID))
+              .findFirst();
+          Optional<DropDownItem> maybeItemWithName = currentOptions.stream()
+              .filter(d -> d.getValue().equals(text))
+              .findFirst();
+          if (maybeItemWithUUID.isEmpty()) {
+            if (maybeItemWithName.isEmpty()) {
+              DropDownItem newItem = new DropDownItem(
+                  newItemUUID, text
+              );
+              currentOptions.add(newItem);
+              updateOptions(currentOptions);
+              controller.setItem(newItem);
+            } else {
+              controller.setItem(maybeItemWithName.get());
+            }
+          } else {
+            DropDownItem itemWithUUID = maybeItemWithUUID.get();
+            if (maybeItemWithName.isPresent()) {
+              DropDownItem itemWithName = maybeItemWithName.get();
+              if (!itemWithName.getValue().equals(itemWithUUID.getValue())) {
+                currentOptions.remove(itemWithUUID);
+                updateOptions(currentOptions);
+              }
+              controller.setItem(itemWithName);
+            } else {
+              if (!itemWithUUID.getValue().equals(text)) {
+                currentOptions.remove(itemWithUUID);
+                itemWithUUID = new DropDownItem(itemWithUUID.getId(), text);
+                currentOptions.add(itemWithUUID);
+                updateOptions(currentOptions);
+                controller.setItem(itemWithUUID);
+              }
+            }
+          }
+        }
+      });
+    }
   }
   
   public DropDownItemModel getModel() {

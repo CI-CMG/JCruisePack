@@ -23,9 +23,13 @@ import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.model.queue.QueueModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.queue.PackJobPanel;
+import edu.colorado.cires.cruisepack.xml.projects.Project;
 import jakarta.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,6 +225,18 @@ public class FooterControlController implements PropertyChangeListener {
       return false;
     }
     try {
+      List<String> projects = packJob.getProjects();
+      projects.forEach(project -> {
+        Optional<Project> maybeExistingProject = projectDatastore.findByName(project);
+        if (maybeExistingProject.isEmpty()) {
+          Project newProject = new Project();
+          newProject.setUuid(UUID.randomUUID().toString());
+          newProject.setName(project);
+          newProject.setUse(true);
+          projectDatastore.save(newProject);
+        }
+      });
+      
       cruiseDataDatastore.saveCruise(packJob);
     } catch (Exception e) {
       LOGGER.error("Failed to save cruise: {}", packageId, e);

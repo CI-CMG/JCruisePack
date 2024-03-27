@@ -143,7 +143,7 @@ public class PackageModel extends PropertyChangeModel {
     if (!cruiseMetadata.getProjects().isEmpty()) {
       clearProjects();
       for (DropDownItem item : projects.stream().filter(dd -> cruiseMetadata.getProjects().contains(dd.getValue())).toList()) {
-        DropDownItemPanel panel = new DropDownItemPanel(projects, ProjectDatastore.UNSELECTED_PROJECT);
+        DropDownItemPanel panel = new DropDownItemPanel(projects, ProjectDatastore.UNSELECTED_PROJECT, true);
         panel.getModel().setItem(item);
         addProject(panel);
       }
