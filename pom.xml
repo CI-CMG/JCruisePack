@@ -259,6 +259,10 @@
     </dependency>
     <dependency>
       <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-community-dialects</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.orm</groupId>
       <artifactId>hibernate-testing</artifactId>
       <scope>test</scope>
     </dependency>
