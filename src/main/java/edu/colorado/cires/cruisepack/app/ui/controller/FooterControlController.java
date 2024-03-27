@@ -8,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
+import edu.colorado.cires.cruisepack.app.migration.SqliteMigrator;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
@@ -62,6 +63,7 @@ public class FooterControlController implements PropertyChangeListener {
   private final PackagingValidationService validationService;
   private final ClearJobsPublisher clearJobsPublisher;
   private final QueueModel queueModel;
+  private final SqliteMigrator sqliteMigrator;
 
   @Autowired
   public FooterControlController(ReactiveViewRegistry reactiveViewRegistry, FooterControlModel footerControlModel,
@@ -70,7 +72,7 @@ public class FooterControlController implements PropertyChangeListener {
       CruiseDataDatastore cruiseDataDatastore, ConfigurableApplicationContext applicationContext, ProjectDatastore projectDatastore,
       PortDatastore portDatastore, ShipDatastore shipDatastore, SeaDatastore seaDatastore, PersonDatastore personDatastore,
       OrganizationDatastore organizationDatastore, ErrorModel errorModel, PackagingValidationService validationService,
-      ClearJobsPublisher clearJobsPublisher, QueueModel queueModel) {
+      ClearJobsPublisher clearJobsPublisher, QueueModel queueModel, SqliteMigrator sqliteMigrator) {
     this.reactiveViewRegistry = reactiveViewRegistry;
     this.footerControlModel = footerControlModel;
     this.peopleModel = peopleModel;
@@ -91,6 +93,7 @@ public class FooterControlController implements PropertyChangeListener {
     this.validationService = validationService;
     this.clearJobsPublisher = clearJobsPublisher;
     this.queueModel = queueModel;
+    this.sqliteMigrator = sqliteMigrator;
   }
 
   @PostConstruct
@@ -100,6 +103,7 @@ public class FooterControlController implements PropertyChangeListener {
     cruiseDataDatastore.addChangeListener(this);
     personDatastore.addChangeListener(this);
     organizationDatastore.addChangeListener(this);
+    sqliteMigrator.addChangeListener(this);
   }
 
   public synchronized void setStopButtonEnabled(boolean stopButtonEnabled) {

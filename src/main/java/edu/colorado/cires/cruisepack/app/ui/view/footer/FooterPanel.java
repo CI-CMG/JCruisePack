@@ -199,10 +199,8 @@ public class FooterPanel extends JPanel implements ReactiveView {
     settingsButton.addActionListener((evt) -> {
       SettingsDialog settingsDialog = new SettingsDialog((Frame) SwingUtilities.getWindowAncestor(this), "Settings", true);
       settingsDialog.addMigrateListener((p) -> {
-        try {
-          sqliteMigrator.migrate(p);
-          settingsDialog.dispose();
-        } catch (Exception ignored) {}
+        new Thread(() -> sqliteMigrator.migrate(p, processId)).start();
+        settingsDialog.dispose();
       });
       
       settingsDialog.pack();

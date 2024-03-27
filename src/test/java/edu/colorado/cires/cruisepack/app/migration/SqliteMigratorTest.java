@@ -135,7 +135,7 @@ public class SqliteMigratorTest {
         instrumentDatastore,
         mock(OptionPaneGenerator.class)
     );
-    migrator.migrate(oldCp);
+    migrator.migrate(oldCp, "TEST");
 
     List<String> expectedOrgs = readOrganizations(expected.resolve("organizations.xml")).getOrganizations().getOrganizations().stream().map(SqliteMigratorTest::toXml).toList();
     ArgumentCaptor<Organization> orgCaptor = ArgumentCaptor.forClass(Organization.class);

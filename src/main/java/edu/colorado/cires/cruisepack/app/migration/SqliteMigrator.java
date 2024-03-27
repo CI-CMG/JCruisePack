@@ -20,7 +20,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
-import edu.colorado.cires.cruisepack.app.ui.model.ErrorModel;
+import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
 import edu.colorado.cires.cruisepack.xml.organization.Organization;
@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SqliteMigrator {
+public class SqliteMigrator extends PropertyChangeModel {
   
   private static final Logger LOGGER = LoggerFactory.getLogger(SqliteMigrator.class);
 
@@ -55,6 +55,8 @@ public class SqliteMigrator {
   private final ShipDatastore shipDatastore;
   private final InstrumentDatastore instrumentDatastore;
   private final OptionPaneGenerator optionPaneGenerator;
+  private float progress = 0;
+  private float progressIncrement = 0;
 
   @Autowired
   public SqliteMigrator(
@@ -337,61 +339,129 @@ public class SqliteMigrator {
         .build();
   }
 
-  public void migrate(Path oldCruisePackDir) {
+  private void resolveProgressIncrement(Path localData, Path cruiseData) {
+    long count = 0;
+    try (SessionFactory localDataFactory = createSessionFactory(localData, OrganizationEntity.class, PersonEntity.class, ProjectEntity.class)) {
+      count = localDataFactory.fromStatelessSession(session -> {
+        long nPeople = session.createSelectionQuery("from PersonEntity", PersonEntity.class)
+            .getResultList().size();
+        long nOrgs = session.createSelectionQuery("from OrganizationEntity", OrganizationEntity.class)
+            .getResultList().size();
+        long nProjects = session.createSelectionQuery("from ProjectEntity", ProjectEntity.class)
+            .getResultList().size();
+        return nPeople + nOrgs + nProjects;
+      });
+    }
+
+    try (SessionFactory cruiseSessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
+      count += cruiseSessionFactory.fromStatelessSession(session -> session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
+          .getResultList().size());
+    }
+
+    progress = 0;
+    if (count <= 0) {
+      progressIncrement = 0;
+    } else {
+      progressIncrement = (float) 100 / count;
+    }
+  }
+  
+  private void resetProgressIncrement(String processId) {
+    int oldProgress = (int) Math.floor(progress);
+    int newProgress = 0;
+    fireChangeEvent(String.format(
+        "UPDATE_PROGRESS_%s", processId
+    ), oldProgress, newProgress);
+    progressIncrement = 0;
+    progress = 0;
+  }
+  
+  private void incrementProgress(String processId) {
+    int oldProgress = (int) Math.floor(progress);
+    int newProgress = (int) Math.floor(progress + progressIncrement);
+    
+    fireChangeEvent(String.format(
+        "UPDATE_PROGRESS_%s", processId
+    ), oldProgress, newProgress);
+    progress += progressIncrement;
+  }
+
+  public void migrate(Path oldCruisePackDir, String processId) {
     Path database = oldCruisePackDir.resolve("database").toAbsolutePath().normalize();
     Path cruiseData = database.resolve("cruiseData.sqlite");
     Path localData = database.resolve("localData.sqlite");
 
+    try {
+      resolveProgressIncrement(localData, cruiseData);
+      
+      try (SessionFactory sessionFactory = createSessionFactory(
+          localData,
+          OrganizationEntity.class,
+          PersonEntity.class,
+          ProjectEntity.class
+      )) {
+        sessionFactory.inTransaction(session -> {
+          session.createSelectionQuery("from PersonEntity", PersonEntity.class)
+              .getResultList().stream()
+              .peek((p) -> incrementProgress(processId))
+              .map(this::toPerson)
+              .filter(person -> personDatastore.findByName(person.getName()).isEmpty())
+              .forEach(personDatastore::save);
 
+          session.createSelectionQuery("from OrganizationEntity", OrganizationEntity.class)
+              .getResultList().stream()
+              .peek((o) -> incrementProgress(processId))
+              .map(this::toOrganization)
+              .filter(org -> organizationDatastore.findByName(org.getName()).isEmpty())
+              .forEach(organizationDatastore::save);
 
-    try (SessionFactory sessionFactory = createSessionFactory(
-        localData,
-        OrganizationEntity.class,
-        PersonEntity.class,
-        ProjectEntity.class
-    )) {
-      sessionFactory.inTransaction(session -> {
-        session.createSelectionQuery("from PersonEntity", PersonEntity.class)
-            .getResultList().stream()
-            .map(this::toPerson)
-            .filter(person -> personDatastore.findByName(person.getName()).isEmpty())
-            .forEach(personDatastore::save);
+          session.createSelectionQuery("from ProjectEntity", ProjectEntity.class)
+              .getResultList().stream()
+              .peek((p) -> incrementProgress(processId))
+              .map(this::toProject)
+              .filter(project -> projectDatastore.findByName(project.getName()).isEmpty())
+              .forEach(projectDatastore::save);
+        });
+      }
 
-        session.createSelectionQuery("from OrganizationEntity", OrganizationEntity.class)
-            .getResultList().stream()
-            .map(this::toOrganization)
-            .filter(org -> organizationDatastore.findByName(org.getName()).isEmpty())
-            .forEach(organizationDatastore::save);
+      try (SessionFactory sessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
+        sessionFactory.inTransaction(session -> {
+          session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
+              .getResultList().stream()
+              .peek((c) -> incrementProgress(processId))
+              .map(this::toCruiseMetadata)
+              .filter(cruise -> cruise.getPackageId() != null)
+              .forEach(d -> {
+                try {
+                  cruiseDataDatastore.saveCruise(d);
+                } catch (Exception e) {
+                  LOGGER.error("Failed to migrate cruise: {}", d.getPackageId());
+                  optionPaneGenerator.createMessagePane(
+                      String.format(
+                          "Failed to migrate %s: %s", d.getPackageId(), e.getMessage()
+                      ),
+                      "Error",
+                      JOptionPane.ERROR_MESSAGE
+                  );
+                }
+              });
+        });
+      }
 
-        session.createSelectionQuery("from ProjectEntity", ProjectEntity.class)
-            .getResultList().stream()
-            .map(this::toProject)
-            .filter(project -> projectDatastore.findByName(project.getName()).isEmpty())
-            .forEach(projectDatastore::save);
-      });
-    }
-
-    try (SessionFactory sessionFactory = createSessionFactory(cruiseData, CruiseDataEntity.class)) {
-      sessionFactory.inTransaction(session -> {
-        session.createSelectionQuery("from CruiseDataEntity", CruiseDataEntity.class)
-            .getResultList().stream()
-            .map(this::toCruiseMetadata)
-            .filter(cruise -> cruise.getPackageId() != null)
-            .forEach(d -> {
-              try {
-                cruiseDataDatastore.saveCruise(d);
-              } catch (Exception e) {
-                LOGGER.error("Failed to migrate cruise: {}", d.getPackageId());
-                optionPaneGenerator.createMessagePane(
-                    String.format(
-                        "Failed to migrate %s: %s", d.getPackageId(), e.getMessage()
-                    ),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
-              }
-            });
-      });
+      resetProgressIncrement(processId);
+      optionPaneGenerator.createMessagePane(
+          "Migration complete",
+          null,
+          JOptionPane.PLAIN_MESSAGE
+      );
+    } catch (Exception e) {
+      resetProgressIncrement(processId);
+      optionPaneGenerator.createMessagePane(
+          "Migration failed",
+          null,
+          JOptionPane.ERROR_MESSAGE
+      );
+      throw new IllegalStateException("Migration failed", e);
     }
 
   }
