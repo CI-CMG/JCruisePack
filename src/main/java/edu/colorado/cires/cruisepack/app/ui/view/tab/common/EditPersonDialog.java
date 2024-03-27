@@ -25,14 +25,13 @@ import java.awt.GridBagLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
-import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -325,24 +324,23 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
         saveButton.addActionListener((e) -> {
             ResponseStatus status = personController.submit();
             if (status.equals(ResponseStatus.SUCCESS)) {
-                OptionDialog closeAfterSaveDialog = new OptionDialog(
+                int choice = JOptionPane.showConfirmDialog(
                     ancestor,
                     closeAfterSaveDialogText,
-                    List.of("No", "Yes")
+                    null,
+                    JOptionPane.YES_NO_OPTION
                 );
                 
-                closeAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
-                
-                closeAfterSaveDialog.pack();
-                closeAfterSaveDialog.setVisible(true);
+                if (choice == JOptionPane.YES_OPTION) {
+                    setVisible(true);
+                }
             } else if (status.equals(ResponseStatus.CONFLICT)) {
-                OptionDialog collisionDialog = new OptionDialog(
+                JOptionPane.showMessageDialog(
                     ancestor,
                     collisionDialogText,
-                    List.of("OK")
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
                 );
-                collisionDialog.pack();
-                collisionDialog.setVisible(true);
             }
         });
 
@@ -350,32 +348,28 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent event) {
-                OptionDialog optionDialog = new OptionDialog(
+                int choice = JOptionPane.showConfirmDialog(
                     ancestor,
                     "<html><B>Save changes before closing?</B></html>",
-                    List.of("Cancel", "No", "Yes")
+                    null,
+                    JOptionPane.YES_NO_OPTION
                 );
-
-                optionDialog.addListener("No", (evt) -> {
-                    setVisible(false);
-                });
-                optionDialog.addListener("Yes", (evt) -> {
+                
+                if (choice == JOptionPane.YES_OPTION) {
                     ResponseStatus status = personController.submit();
                     if (status.equals(ResponseStatus.SUCCESS)) {
                         setVisible(false);
                     } else if (status.equals(ResponseStatus.CONFLICT)) {
-                        OptionDialog collisionDialog = new OptionDialog(
+                        JOptionPane.showMessageDialog(
                             ancestor,
                             "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new person, please modify the name to make it unique.</B></html>",
-                            List.of("OK")
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
                         );
-                        collisionDialog.pack();
-                        collisionDialog.setVisible(true);
                     }
-                });
-                
-                optionDialog.pack();
-                optionDialog.setVisible(true);
+                } else if (choice == JOptionPane.NO_OPTION) {
+                    setVisible(false);
+                }
             }
         });
     }

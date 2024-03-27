@@ -7,7 +7,6 @@ import edu.colorado.cires.cruisepack.app.ui.controller.CruiseDataController;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -98,15 +98,17 @@ public class ManageRecordsDialog extends JDialog implements ReactiveView {
     }
     cruiseDataController.updateCruises(newData);
 
-     OptionDialog exitAfterSaveDialog = new OptionDialog(
-        (Frame) SwingUtilities.getWindowAncestor(this),
+    int choice = JOptionPane.showConfirmDialog(
+        SwingUtilities.getWindowAncestor(this),
         "<html><B>Package display status was updated. Do you want to exit editor?</B></html>",
-        List.of("No", "Yes")
+        null,
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.PLAIN_MESSAGE
     );
-
-    exitAfterSaveDialog.addListener("Yes", (evt) -> setVisible(false));
-    exitAfterSaveDialog.pack();
-    exitAfterSaveDialog.setVisible(true);
+    
+    if (choice == JOptionPane.YES_OPTION) {
+      setVisible(false);
+    }
   }
 
   @Override

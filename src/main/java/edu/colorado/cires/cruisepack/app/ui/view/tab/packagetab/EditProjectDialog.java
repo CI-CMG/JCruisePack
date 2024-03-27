@@ -12,17 +12,16 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.ProjectModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.StatefulRadioButton;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
-import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -113,14 +112,12 @@ public class EditProjectDialog extends JDialog implements ReactiveView {
       case ProjectModel.UPDATE_UUID -> updateTextField(uuidField, evt);
       case ProjectModel.UPDATE_USE -> updateStatefulRadioButton(useField, evt);
       case ProjectModel.EMIT_SAVE_FAILURE -> {
-        OptionDialog collisionDialog = new OptionDialog(
-            (Frame) SwingUtilities.getWindowAncestor(this),
+        JOptionPane.showMessageDialog(
+            SwingUtilities.getWindowAncestor(this),
             "<html><B>This name already exists. Check the pull-down for the existing entry for this name. CruisePack requires unique names. If this is a new project, please modify the name to make it unique.</B></html>",
-            List.of("OK")
+            "Error",
+            JOptionPane.ERROR_MESSAGE
         );
-        
-        collisionDialog.pack();
-        collisionDialog.setVisible(true);
       }
     }
   }

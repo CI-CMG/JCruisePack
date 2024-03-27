@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import java.awt.Frame;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,13 +30,12 @@ public class ErrorDialog extends java.awt.Component implements ReactiveView {
   @Override
   public void onChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(Events.EMIT_ERROR_MESSAGE)) {
-      OptionDialog errorDialog = new OptionDialog(
-          (Frame) SwingUtilities.getWindowAncestor(this), 
-          (String) evt.getNewValue(),
-          Collections.singletonList("OK")
+      JOptionPane.showMessageDialog(
+          SwingUtilities.getWindowAncestor(this),
+          evt.getNewValue(),
+          "Error",
+          JOptionPane.ERROR_MESSAGE
       );
-      errorDialog.pack();
-      errorDialog.setVisible(true);
     }
   }
 }

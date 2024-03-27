@@ -1,20 +1,17 @@
 package edu.colorado.cires.cruisepack.app.ui.view;
 
+import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import jakarta.annotation.PostConstruct;
-
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 
 @Component
 @ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
@@ -55,20 +52,19 @@ public class MainFrame extends JFrame {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent event) {
-        OptionDialog optionDialog = new OptionDialog(
+        int choice = JOptionPane.showConfirmDialog(
             ancestor,
             "<html><B>The current information might not be saved. Do you want to save before exiting CruisePack?</B></html>",
-            List.of("Cancel", "No", "Yes")
+            null,
+            JOptionPane.YES_NO_CANCEL_OPTION
         );
-
-        optionDialog.addListener("No", (evt) -> footerControlController.exitApplication());
-        optionDialog.addListener("Yes", (evt) -> {
+        
+        if (choice == JOptionPane.YES_OPTION) {
           footerControlController.saveForms(true);
           footerControlController.exitApplication();
-        });
-        
-        optionDialog.pack();
-        optionDialog.setVisible(true);
+        } else if (choice == JOptionPane.NO_OPTION) {
+          footerControlController.exitApplication();
+        }
       }
     });
 

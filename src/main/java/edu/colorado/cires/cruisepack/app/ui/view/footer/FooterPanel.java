@@ -1,6 +1,5 @@
 package edu.colorado.cires.cruisepack.app.ui.view.footer;
 
-import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateLabelText;
 import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgressBarModel;
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
@@ -16,16 +15,12 @@ import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
-import edu.colorado.cires.cruisepack.app.ui.view.tab.common.OptionDialog;
 import jakarta.annotation.PostConstruct;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,9 +29,11 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -262,114 +259,84 @@ public class FooterPanel extends JPanel implements ReactiveView {
         boolean newValue = (boolean) evt.getNewValue();
         
         if (newValue) {
-          OptionDialog saveWarningDialog =  new OptionDialog(
-              (Frame) SwingUtilities.getWindowAncestor(this),
+          JOptionPane.showMessageDialog(
+              SwingUtilities.getWindowAncestor(this),
               "<html><B>The cruise ID field is empty. Please enter a cruise ID and other details before packaging.</B></html>",
-              Collections.singletonList("OK")
+              "Error",
+              JOptionPane.ERROR_MESSAGE
           );
-
-          saveWarningDialog.addListener("OK", (event) -> footerControlController.setSaveWarningDialogueVisible(false));
-          saveWarningDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-              footerControlController.setSaveWarningDialogueVisible(false);
-            }
-          });
-          
-          saveWarningDialog.pack();
-          saveWarningDialog.setVisible(true);
+          footerControlController.setSaveWarningDialogueVisible(false);
         }
       }
       break;
       case Events.UPDATE_SAVE_EXIT_APP_DIALOGUE_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
         if (newValue) {
-          OptionDialog saveExitAppDialog = new OptionDialog(
-              (Frame) SwingUtilities.getWindowAncestor(this),
+          int choice = JOptionPane.showConfirmDialog(
+              SwingUtilities.getWindowAncestor(this),
               saveExitAppDialogText,
-              List.of("No", "Yes")
+              null,
+              JOptionPane.YES_NO_OPTION,
+              JOptionPane.WARNING_MESSAGE
           );
-
-          saveExitAppDialog.addListener("Yes", (event) -> footerControlController.exitApplication());
-          saveExitAppDialog.addListener("No", (event) -> footerControlController.setSaveExitAppDialogueVisible(false));
-          saveExitAppDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent event) {
-              footerControlController.setSaveExitAppDialogueVisible(false);
-            }
-          });
-          saveExitAppDialog.pack();
-          saveExitAppDialog.setVisible(true);
+          
+          if (choice == JOptionPane.YES_OPTION) {
+            footerControlController.exitApplication();
+          }
+          
+          footerControlController.setSaveExitAppDialogueVisible(false);
         }
       }
       break;
       case Events.UPDATE_SAVE_OR_UPDATE_DIALOG_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
         if (newValue) {
-          OptionDialog saveOrUpdateDialog = new OptionDialog(
-              (Frame) SwingUtilities.getWindowAncestor(this),
+          int choice = JOptionPane.showOptionDialog(
+              SwingUtilities.getWindowAncestor(this),
               "<html><B>The current package ID is different than the saved value. Click \"Update\" to update current record. Click \"Create New\" to create a new record for this new package ID.</B></html>",
-              List.of("Cancel", "Update", "Create New")
+              null,
+              JOptionPane.DEFAULT_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              UIManager.getIcon("JOptionPane.warningIcon"),
+              new Object[]{ "Cancel", "Update", "Create New" },
+              "Create New"
           );
-
-          saveOrUpdateDialog.addListener("Cancel", (event) -> footerControlController.setSaveOrUpdateDialogVisible(false));
-          saveOrUpdateDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-              footerControlController.setSaveOrUpdateDialogVisible(false);
-            }
-          });
-          saveOrUpdateDialog.addListener("Update", (event) -> {
-            footerControlController.setSaveOrUpdateDialogVisible(false);
+          
+          if (choice == 1) {
             footerControlController.update(false);
-          });
-          saveOrUpdateDialog.addListener("Create New", (event) -> {
             footerControlController.setSaveOrUpdateDialogVisible(false);
+          } else if (choice == 2) {
             footerControlController.create(false);
-          });
-          saveOrUpdateDialog.pack();
-          saveOrUpdateDialog.setVisible(true);
+          }
+          
+          footerControlController.setSaveOrUpdateDialogVisible(false);
         }
       }
       break;
       case Events.UPDATE_PACKAGE_ID_COLLISION_DIALOG_VISIBLE: {
         boolean newValue = (boolean) evt.getNewValue();
         if (newValue) {
-          OptionDialog packageIdCollisionDialog = new OptionDialog(
-              (Frame) SwingUtilities.getWindowAncestor(this),
+          JOptionPane.showMessageDialog(
+              SwingUtilities.getWindowAncestor(this),
               packageIdCollisionDialogText,
-              List.of("OK")
+              "Error",
+              JOptionPane.ERROR_MESSAGE
           );
-
-          packageIdCollisionDialog.addListener("OK", (event) -> footerControlController.setPackageIdCollisionDialogVisible(false));
-          packageIdCollisionDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-              footerControlController.setPackageIdCollisionDialogVisible(false);
-            }
-          });
-          
-          packageIdCollisionDialog.pack();
-          packageIdCollisionDialog.setVisible(true);
+          footerControlController.setPackageIdCollisionDialogVisible(false);
         }
       }
       break;
       case Events.UPDATE_JOB_ERRORS: {
         String newValue = (String) evt.getNewValue();
         if (newValue != null && !newValue.isBlank()) {
-          OptionDialog jobErrorsDialog = new OptionDialog(
-              (Frame) SwingUtilities.getWindowAncestor(this),
-              "<html><B>Packaging failed</B></html>",
-              List.of("OK")
+          JOptionPane.showMessageDialog(
+              SwingUtilities.getWindowAncestor(this),
+              String.format(
+                  "<html><B>%s</B></html>", newValue
+              ),
+              "Error",
+              JOptionPane.ERROR_MESSAGE
           );
-          updateLabelText(jobErrorsDialog.getLabel(), new PropertyChangeEvent(
-              evt,
-              "UPDATE_JOB_ERRORS",
-              jobErrorsDialog.getLabel().getText(),
-              String.format("<html><B>%s</B></html>", newValue)
-          ));
-          jobErrorsDialog.pack();
-          jobErrorsDialog.setVisible(true);
         }
       }
       break;
@@ -377,17 +344,21 @@ public class FooterPanel extends JPanel implements ReactiveView {
         List<?> newValue = (List<?>) evt.getNewValue();
         for (Object obj : newValue) {
           String message = (String) obj;
-          OptionDialog optionDialog = new OptionDialog(
-              (Frame) SwingUtilities.getWindowAncestor(this), 
-              message, 
-              List.of("OK", "Ignore")
-          );
-          optionDialog.addListener("Ignore", (event) ->
-              footerControlModel.addIgnoreWarningMessage(message)
+          
+          int choice = JOptionPane.showOptionDialog(
+              SwingUtilities.getWindowAncestor(this),
+              message,
+              null,
+              JOptionPane.DEFAULT_OPTION,
+              JOptionPane.WARNING_MESSAGE,
+              UIManager.getIcon("JOptionPane.warningIcon"),
+              new Object[] { "OK", "Ignore" },
+              "OK"
           );
           
-          optionDialog.pack();
-          optionDialog.setVisible(true);
+          if (choice == 1) {
+            footerControlModel.addIgnoreWarningMessage(message);
+          }
         }
       case Events.EMIT_PACKAGE_ID:
         saveExitAppDialogText = String.format("<html><B>%s data has been updated. Do you want to exit editor?</B></html>", evt.getNewValue());
