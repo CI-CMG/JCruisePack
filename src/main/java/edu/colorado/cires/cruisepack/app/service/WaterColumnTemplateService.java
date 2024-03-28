@@ -33,16 +33,16 @@ public class WaterColumnTemplateService {
     if (!Objects.requireNonNull(path, "path must not be null").toFile().isDirectory()) {
       throw new IllegalArgumentException("Path must be directory: " + path);
     }
-    try (
-        InputStream inputStream = new FileInputStream(templatePath.toFile());
-        OutputStream outputStream = new FileOutputStream(path.resolve(TEMPLATE_FILE_NAME).toFile())
-    ) {
+    try (InputStream inputStream = new FileInputStream(templatePath.toFile()); 
+        OutputStream outputStream = new FileOutputStream(path.resolve(TEMPLATE_FILE_NAME).toFile())) {
       IOUtils.copy(
           Objects.requireNonNull(inputStream, "Failed to open template: " + TEMPLATE_FILE_NAME),
           outputStream
       );
     } catch (IOException e) {
-      throw new IllegalStateException("Could not read import template", e);
+      throw new IllegalStateException(String.format(
+          "Could not read import template: %s", templatePath
+      ), e);
     }
   }
 }
