@@ -268,7 +268,7 @@ public final class PackJobUtils {
 
   public static PackJob create(PackageModel packageModel, PeopleModel peopleModel, OmicsModel omicsModel, CruiseInformationModel cruiseInformationModel, DatasetsModel datasetsModel, InstrumentDatastore instrumentDatastore, PersonDatastore personDatastore) {
     String packageId = resolvePackageId(packageModel);
-    Person omicsContact = personDatastore.getByUUID(omicsModel.getContact().getId()).orElse(null);
+    Person omicsContact = personDatastore.findByUUID(omicsModel.getContact().getId()).orElse(null);
 
     List<String> omicsSamplingTypes = new ArrayList<>(0);
     SamplingTypesModel samplingTypesModel = omicsModel.getSamplingTypes();
@@ -385,7 +385,7 @@ public final class PackJobUtils {
                 .withUuid(dd.getItem().getId())
                 .withName(dd.getItem().getValue())
                 .build()).toList())
-        .setMetadataAuthor(peopleModel.getMetadataAuthor() == null ? null : personDatastore.getByUUID(peopleModel.getMetadataAuthor().getId()).orElse(null))
+        .setMetadataAuthor(peopleModel.getMetadataAuthor() == null ? null : personDatastore.findByUUID(peopleModel.getMetadataAuthor().getId()).orElse(null))
         .build();
   }
 

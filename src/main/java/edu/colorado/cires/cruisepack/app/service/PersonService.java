@@ -91,7 +91,7 @@ public class PersonService {
                 personModel.setUuid(UUID.randomUUID().toString());
                 
             }
-            Optional<Person> maybePerson = personDatastore.getByUUID(personModel.getUuid());
+            Optional<Person> maybePerson = personDatastore.findByUUID(personModel.getUuid());
             if (maybePerson.isPresent()) {
                 Person existingPerson = maybePerson.get();
                 if (!existingPerson.getName().equals(personModel.getName()) && personWithNameExists) {

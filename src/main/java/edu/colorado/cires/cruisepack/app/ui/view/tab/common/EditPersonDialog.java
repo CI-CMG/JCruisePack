@@ -285,7 +285,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
 
         peopleList.addItemListener((evt) -> {
             DropDownItem item = (DropDownItem) evt.getItem();
-            personDatastore.getByUUID(item.getId()).ifPresent(person -> {
+            personDatastore.findByUUID(item.getId()).ifPresent(person -> {
                 personController.setName(person.getName());
                 personController.setPosition(person.getPosition());
                 personController.setOrganization(person.getOrganization());

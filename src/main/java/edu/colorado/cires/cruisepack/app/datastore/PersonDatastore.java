@@ -83,7 +83,7 @@ public class PersonDatastore extends PropertyChangeModel {
     public List<DropDownItem> getEnabledPersonDropDowns() {
         return personDropDowns.stream()
             .filter((dd) -> 
-                getByUUID(dd.getId())
+                findByUUID(dd.getId())
                     .map(Person::isUse)
                     .orElse(dd.equals(UNSELECTED_PERSON))
             ).collect(Collectors.toList());
@@ -159,7 +159,7 @@ public class PersonDatastore extends PropertyChangeModel {
         return person;
     }
     
-    public Optional<Person> getByUUID(String uuid) {
+    public Optional<Person> findByUUID(String uuid) {
         return people.stream()
             .filter(p -> p.getUuid().equals(uuid))
             .findFirst();
