@@ -33,23 +33,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectDatastore extends PropertyChangeModel implements PropertyChangeListener {
+public class ProjectDatastore extends PropertyChangeModel {
   public static final DropDownItem UNSELECTED_PROJECT = new DropDownItem("", "Select Project");
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> projectDropDowns;
-  private final ReactiveViewRegistry reactiveViewRegistry;
   private  List<Project> projects;
 
   @Autowired
-  public ProjectDatastore(ServiceProperties serviceProperties, ReactiveViewRegistry reactiveViewRegistry) {
+  public ProjectDatastore(ServiceProperties serviceProperties) {
     this.serviceProperties = serviceProperties;
-    this.reactiveViewRegistry = reactiveViewRegistry;
   }
 
   @PostConstruct
   public void init() {
-    addChangeListener(this);
     load();
   }
 
@@ -133,28 +130,9 @@ public class ProjectDatastore extends PropertyChangeModel implements PropertyCha
     return Optional.of(projectData);
   }
 
-  public Optional<Project> getByUUID(String uuid) {
-    return projects.stream()
-        .filter(o -> o.getUuid().equals(uuid))
-        .findFirst();
-  }
-
   public Optional<Project> findByName(String name) {
     return projects.stream()
         .filter(o -> o.getName().equals(name))
         .findFirst();
-  }
-
-  public List<DropDownItem> getProjectDropDownsMatchingNames(List<String> names) {
-    return projectDropDowns.stream()
-        .filter((dd) -> names.contains(dd.getValue()))
-        .toList();
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    for (ReactiveView view : reactiveViewRegistry.getViews()) {
-      view.onChange(evt);
-    }
   }
 }

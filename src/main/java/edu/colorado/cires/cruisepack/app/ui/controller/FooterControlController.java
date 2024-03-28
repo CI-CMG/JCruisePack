@@ -104,6 +104,7 @@ public class FooterControlController implements PropertyChangeListener {
     personDatastore.addChangeListener(this);
     organizationDatastore.addChangeListener(this);
     sqliteMigrator.addChangeListener(this);
+    projectDatastore.addChangeListener(this);
   }
 
   public synchronized void setStopButtonEnabled(boolean stopButtonEnabled) {
