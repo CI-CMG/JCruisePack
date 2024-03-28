@@ -73,7 +73,10 @@ public class DatasetsPanel extends JPanel implements ReactiveView {
     switch (evt.getPropertyName()) {
       case Events.ADD_DATASET -> datasetConfigurationPanel.createRow((DatasetPanel<? extends AdditionalFieldsModel, ?>) evt.getNewValue());
       case Events.REMOVE_DATASET -> datasetConfigurationPanel.removeRow((DatasetPanel<? extends AdditionalFieldsModel, ?>) evt.getOldValue());
-      case Events.CLEAR_DATASET_LIST -> datasetConfigurationPanel.removeAllRows();
+      case Events.CLEAR_DATASET_LIST -> {
+        datasetConfigurationPanel.removeDocumentsPanel();
+        datasetConfigurationPanel.removeAllRows();
+      }
     }
   }
 }

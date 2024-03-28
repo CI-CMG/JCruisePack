@@ -43,6 +43,7 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   private final List<DatasetListener> datasetCreatedListeners = new ArrayList<>(0);
   private final List<DatasetListener> datasetRemovedListeners = new ArrayList<>(0);
   private final CruiseDocumentsPanel cruiseDocumentsPanel;
+  private DocumentsPanel documentsPanel;
 
   private List<JPanel> rows = new ArrayList<>();
   private JLabel datasetsErrorLabel = createErrorLabel();
@@ -152,12 +153,8 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   }
   
   private void createDocumentsPanel() {
-    DocumentsPanel documentsPanel = new DocumentsPanel(cruiseDocumentsPanel);
-    documentsPanel.addRemovedListener((p) -> {
-      removeRow(p);
-      p.restoreDefaultState();
-      
-    });
+    documentsPanel = new DocumentsPanel(cruiseDocumentsPanel);
+    documentsPanel.addRemovedListener((p) -> removeDocumentsPanel());
     remove(fluff);
     add(documentsPanel, configureLayout(0, rows.size(), c -> {
       c.fill = GridBagConstraints.HORIZONTAL;
@@ -167,6 +164,12 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
     rows.add(documentsPanel);
     addFluff();
     uiRefresher.refresh();
+  }
+  
+  public void removeDocumentsPanel() {
+    removeRow(documentsPanel);
+    documentsPanel.restoreDefaultState();
+    documentsPanel = null;
   }
   
   public void createRow(DatasetPanel<? extends AdditionalFieldsModel, ?> row) {
@@ -204,11 +207,12 @@ public class DatasetConfigurationPanel extends JPanel implements ReactiveView {
   @Override
   public void onChange(PropertyChangeEvent evt) {
     switch (evt.getPropertyName()) {
-      case Events.UPDATE_DATASETS_ERROR:
-        updateLabelText(datasetsErrorLabel, evt);
-        break;
-      default:
-        break;
+      case Events.UPDATE_DATASETS_ERROR -> updateLabelText(datasetsErrorLabel, evt);
+      case Events.UPDATE_DOCS_DIRECTORY -> {
+        if (documentsPanel == null) {
+          createDocumentsPanel();
+        }
+      }
     }
   }
 }
