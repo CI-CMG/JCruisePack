@@ -60,7 +60,7 @@ class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastor
   }
 
   @BeforeEach
-  void beforeEach() {
+  public void beforeEach() {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
     reset(METADATA_SERVICE);
     

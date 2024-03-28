@@ -27,7 +27,7 @@ public abstract class PropertyChangeModelTest<T extends PropertyChangeModel> {
   protected T model;
 
   @BeforeEach
-  void beforeEach() {
+  public void beforeEach() {
     clearEvents();
     model = createModel();
     addChangeListener();
@@ -136,12 +136,12 @@ public abstract class PropertyChangeModelTest<T extends PropertyChangeModel> {
     eventMap.clear();
   }
 
-  protected class CustomConstraintViolation implements ConstraintViolation<T> {
+  public static class CustomConstraintViolation<T> implements ConstraintViolation<T> {
     
     private final String message;
     private final Path propertyPath;
 
-    protected CustomConstraintViolation(String message, String propertyPath) {
+    public CustomConstraintViolation(String message, String propertyPath) {
       this.message = message;
       this.propertyPath = PathImpl.createPathFromString(propertyPath);
     }
