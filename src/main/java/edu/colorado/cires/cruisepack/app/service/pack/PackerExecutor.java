@@ -1,9 +1,7 @@
 package edu.colorado.cires.cruisepack.app.service.pack;
 
-import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.AdditionalFiles;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
-import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.service.InstrumentStatus;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
@@ -28,17 +26,12 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,18 +45,16 @@ class PackerExecutor {
 
   private final PackStateModel packStateModel;
   private final PackerFileController packerFileController;
-  private final InstrumentDatastore instrumentDatastore;
   private final Path workDirectory;
   private final Runnable executeBefore;
   private final Runnable executeAfter;
 
   public PackerExecutor(
-      MetadataService metadataService, InstrumentDatastore instrumentDatastore, Path workDirectory,
+      MetadataService metadataService, Path workDirectory,
       Runnable executeBefore, Runnable executeAfter, String processId, PackJob packJob
   ) {
     this.packStateModel = new PackStateModel(processId, packJob);
     this.packerFileController = new PackerFileController(packStateModel, metadataService);
-    this.instrumentDatastore = instrumentDatastore;
     this.workDirectory = workDirectory;
     this.executeBefore = executeBefore;
     this.executeAfter = executeAfter;
@@ -85,16 +76,16 @@ class PackerExecutor {
     executeBefore.run();
     try {
 ////    rawCheck(packJob); //TODO add to validation phase
-      PackJob packJobWithAncillaryInstruments = addAncillaryDataToPackJob(packStateModel.getPackJob()); // TODO this should already be specified in pack job
+      PackJob packJob = packStateModel.getPackJob();
       packStateModel.setProcessing(true);
-      packStateModel.setProgressIncrement(100f / getTotalSteps(packJobWithAncillaryInstruments));
-      resetBagDirs(packJobWithAncillaryInstruments);
-      copyDocs(packJobWithAncillaryInstruments);
+      packStateModel.setProgressIncrement(100f / getTotalSteps(packJob));
+      resetBagDirs(packJob);
+      copyDocs(packJob);
       packStateModel.incrementProgress();
-      copyOmics(packJobWithAncillaryInstruments);
+      copyOmics(packJob);
       packStateModel.incrementProgress();
-      packData(packJobWithAncillaryInstruments); // progress incremented internally after each instrument is processed
-      packMainBag(packJobWithAncillaryInstruments);
+      packData(packJob); // progress incremented internally after each instrument is processed
+      packMainBag(packJob);
       packStateModel.incrementProgress();
     } catch (Exception e) {
       LOGGER.error("An error occurred while packing", e);
@@ -417,53 +408,6 @@ class PackerExecutor {
       
       packStateModel.incrementProgress();
     }
-  }
-  
-  private PackJob addAncillaryDataToPackJob(PackJob packJob) {
-    Map<InstrumentDetailPackageKey, List<InstrumentDetail>> packJobInstruments = new HashMap<>(packJob.getInstruments());
-    for (Entry<InstrumentDetailPackageKey, List<InstrumentDetail>> entry : packJob.getInstruments().entrySet()) {
-      List<InstrumentDetail> ancillaryDetails = new ArrayList<>(0);
-      String ancillaryGroupShortType = "ANCILLARY";
-      for (InstrumentDetail instrumentDetail : entry.getValue()) {
-        String ancillaryPath = instrumentDetail.getAncillaryDataPath();
-        if (StringUtils.isNotBlank(ancillaryPath)) {
-          String ancillaryInstrumentName = String.format(
-              "%s Ancillary",
-              instrumentDatastore.getNameForShortCode(entry.getKey().getInstrumentGroupShortType())
-          );
-          instrumentDatastore.getInstrumentFromShortGroupTypeAndInstrumentName(ancillaryGroupShortType, ancillaryInstrumentName).ifPresent(
-              referenceInstrument -> ancillaryDetails.add(
-                  InstrumentDetail.builder()
-                      .setInstrument(ancillaryInstrumentName)
-                      .setStatus(instrumentDetail.getStatus())
-                      .setDataPath(ancillaryPath)
-                      .setDataComment(instrumentDetail.getAncillaryDataDetails())
-                      .setReleaseDate(instrumentDetail.getReleaseDate())
-                      .setShortName(referenceInstrument.getShortName())
-                      .setBagName(String.format(
-                          "%s_ANCILLARY_%s",
-                          packJob.getCruiseId(), referenceInstrument.getShortName()
-                      )).setDirName(referenceInstrument.getShortName())
-                      .build()
-              )
-          );
-        }
-      }
-
-      if (!ancillaryDetails.isEmpty()) {
-        packJobInstruments.put(
-            new InstrumentDetailPackageKey(
-                ancillaryGroupShortType,
-                ancillaryDetails.get(0).getShortName()
-            ),
-            ancillaryDetails
-        );
-      }
-    }
-    
-    return PackJob.builder(packJob)
-        .setInstruments(packJobInstruments)
-        .build();
   }
 
   /*

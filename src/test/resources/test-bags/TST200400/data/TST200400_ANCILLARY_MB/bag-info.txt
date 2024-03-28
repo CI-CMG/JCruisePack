@@ -6,5 +6,5 @@ External-Description: TST200400_description
 External-Identifier: TST200400
 Cruise Name: TST200400_title
 Instrument: Multibeam Bathymetry Ancillary
-Payload-Oxum: 1600.5
+Payload-Oxum: 1431.5
 Bagging-Date: 2024-03-14

@@ -128,6 +128,8 @@ public class DropDownItemPanel extends JPanel implements ReactiveView {
           }
         }
       });
+    } else {
+      comboBox.addItemListener((evt) -> controller.setItem((DropDownItem) evt.getItem()));
     }
   }
   

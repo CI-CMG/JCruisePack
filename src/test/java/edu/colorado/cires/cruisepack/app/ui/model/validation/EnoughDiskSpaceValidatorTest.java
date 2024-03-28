@@ -38,7 +38,6 @@ public class EnoughDiskSpaceValidatorTest extends ConstraintValidatorTest<PackJo
           Collections.singletonList(InstrumentDetail.builder()
             .setShortName(InstrumentGroupName.WATER_COLUMN.getShortName())
             .setDataPath(DATA_PATH.toString())
-            .setAncillaryDataPath(ANCILLARY_PATH.toString())
             .setAdditionalField(Map.entry("calibration_report_path", CALIBRATION_REPORT_PATH))
             .setAdditionalField(Map.entry("calibration_data_path", CALIBRATION_DATA_PATH))
           .build())
@@ -154,35 +153,6 @@ public class EnoughDiskSpaceValidatorTest extends ConstraintValidatorTest<PackJo
       );
       cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(ANCILLARY_PATH)).thenReturn(
           BigInteger.valueOf(1)
-      );
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(CALIBRATION_REPORT_PATH)).thenReturn(
-          BigInteger.valueOf(1)
-      );
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(Paths.get(CALIBRATION_DATA_PATH))).thenReturn(
-          BigInteger.valueOf(1)
-      );
-
-      assertFalse(validator.isValid(PACK_JOB, VALIDATOR_CONTEXT));
-    }
-  }
-
-  @Test
-  void testValidatorAncillaryPathFail() {
-    try (MockedStatic<CruisePackFileUtils> cruisePackFileUtils = mockStatic(CruisePackFileUtils.class)) {
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getUsableSpace(PACKAGE_DIRECTORY)).thenReturn(
-          BigInteger.valueOf(USABLE_SPACE)
-      );
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(DOCUMENTS_DIRECTORY)).thenReturn(
-          BigInteger.valueOf(1)
-      );
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(OMICS_TRACKING_SHEET_PATH)).thenReturn(
-          BigInteger.valueOf(1)
-      );
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(DATA_PATH)).thenReturn(
-          BigInteger.valueOf(1)
-      );
-      cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(ANCILLARY_PATH)).thenReturn(
-          BigInteger.valueOf(USABLE_SPACE)
       );
       cruisePackFileUtils.when(() -> CruisePackFileUtils.getSize(CALIBRATION_REPORT_PATH)).thenReturn(
           BigInteger.valueOf(1)

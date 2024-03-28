@@ -3,6 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
 import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,8 +50,21 @@ public class DatasetsModel extends PropertyChangeModel {
   public void updateFormState(Cruise metadata) {
     clearDatasets();
     
-    for (Instrument instrument : metadata.getInstruments()) {
+    for (Instrument instrument : metadata.getInstruments().stream().filter(i -> !i.getType().contains("Ancillary Data")).toList()) {
       DatasetPanel<? extends AdditionalFieldsModel, ?> panel = factoryResolver.createDatasetPanel(instrument);
+      Optional<Instrument> maybeAncillaryInstrument = metadata.getInstruments().stream()
+          .filter(i -> i.getType().equals("Ancillary Data"))
+          .filter(i -> i.getInstrument().equals(String.format("%s Ancillary", instrument.getType())))
+          .filter(i -> i.getStatus().equals(instrument.getStatus()))
+          .filter(i -> i.getUuid().equals(instrument.getUuid()))
+          .findFirst();
+      if (maybeAncillaryInstrument.isPresent()) {
+        Instrument ancillaryInstrument = maybeAncillaryInstrument.get();
+        if (ancillaryInstrument instanceof InstrumentData) {
+          panel.getModel().setAncillaryPath(((InstrumentData) ancillaryInstrument).getDataPath());
+        }
+        panel.getModel().setAncillaryDetails(ancillaryInstrument.getDataComment());
+      }
       addDataset(panel);
     }
 

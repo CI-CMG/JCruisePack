@@ -18,14 +18,11 @@ class PackingScheduler {
 
   private final MetadataService metadataService;
   private final ServiceProperties serviceProperties;
-  private final InstrumentDatastore instrumentDatastore;
 
   @Autowired
-  public PackingScheduler(MetadataService metadataService, ServiceProperties serviceProperties,
-      InstrumentDatastore instrumentDatastore) {
+  public PackingScheduler(MetadataService metadataService, ServiceProperties serviceProperties) {
     this.metadataService = metadataService;
     this.serviceProperties = serviceProperties;
-    this.instrumentDatastore = instrumentDatastore;
   }
   
   public void scheduleJob(PackingJobEvent packingJobEvent) {
@@ -65,7 +62,6 @@ class PackingScheduler {
     PackJob packJob = packingJob.packJob();
     return new PackerExecutor(
         metadataService,
-        instrumentDatastore,
         Paths.get(serviceProperties.getWorkDir()),
         packingJob.executeBefore(),
         () -> {

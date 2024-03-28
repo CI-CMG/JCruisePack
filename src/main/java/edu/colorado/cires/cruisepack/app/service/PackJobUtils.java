@@ -71,7 +71,39 @@ public final class PackJobUtils {
       instrumentModel.getPackageKey().ifPresent(key -> instrumentDatastore.getInstrument(key).flatMap(instrumentModel::getInstrumentNameHolder).ifPresent(nameHolder -> {
         List<InstrumentNameHolder> holders = namers.computeIfAbsent(key, k -> new ArrayList<>());
         holders.add(nameHolder);
+        
+        if (instrumentModel.getAncillaryPath() != null) {
+          InstrumentDetailPackageKey ancillaryKey = new InstrumentDetailPackageKey(
+              "ANCILLARY",
+              String.format(
+                  "%s Ancillary", 
+                  InstrumentGroupName.fromShortName(
+                      instrumentModel.getInstrumentGroupShortCode()
+                  ).getLongName()
+              )
+          );
+          
+          InstrumentNameHolder ancillaryNameHolder = instrumentDatastore.getInstrument(ancillaryKey).map(instrument -> new InstrumentNameHolder(
+              nameHolder.getUuid(),
+              instrument.getName(),
+              instrument.getShortName(),
+              InstrumentStatus.forValue(instrumentModel.getProcessingLevel()),
+              instrumentModel.getAncillaryPath(),
+              Collections.emptyList(),
+              instrumentModel.getPublicReleaseDate(),
+              instrumentModel.getAncillaryDetails(),
+              null,
+              null,
+              null
+          )).orElse(null);
+          
+          if (ancillaryNameHolder != null) {
+            List<InstrumentNameHolder> ancillaryHolders = namers.computeIfAbsent(ancillaryKey, k -> new ArrayList<>());
+            ancillaryHolders.add(ancillaryNameHolder);
+          }
+        }
       }));
+      
     }
     DatasetNameResolver.setDirNamesOnInstruments(packageId, namers);
     return namers;
@@ -107,9 +139,7 @@ public final class PackJobUtils {
             .setBagName(nameHolder.getBagName())
             .setAdditionalFiles(nameHolder.getAdditionalFiles())
             .setReleaseDate(nameHolder.getReleaseDate())
-            .setDataComment(nameHolder.getDataComment())
-            .setAncillaryDataPath(nameHolder.getAncillaryDataPath() == null ? null : nameHolder.getAncillaryDataPath().toString())
-            .setAncillaryDataDetails(nameHolder.getAncillaryDataDetails());
+            .setDataComment(nameHolder.getDataComment());
 
         if (nameHolder.getAdditionalFields() != null) {
           for (Entry<String, Object> e : nameHolder.getAdditionalFields().entrySet()) {
@@ -197,7 +227,7 @@ public final class PackJobUtils {
         .setDirName(instrument.getDirName())
         .setBagName(instrument.getBagName())
         .setDataComment(instrument.getDataComment())
-        .setAncillaryDataDetails(instrument.getAncillaryDataDetails())
+
         .setAdditionalFiles(Collections.emptyList());
 
     for (Entry<String, Object> entry : instrument.getOtherFields().entrySet()) {
@@ -206,9 +236,7 @@ public final class PackJobUtils {
 
     if (instrument instanceof InstrumentData) {
       Path dataPath = ((InstrumentData) instrument).getDataPath();
-      Path ancillaryPath = ((InstrumentData) instrument).getAncillaryDataPath();
-      builder = builder.setDataPath(dataPath == null ? null : dataPath.toString())
-          .setAncillaryDataPath(ancillaryPath == null ? null : ancillaryPath.toString());
+      builder = builder.setDataPath(dataPath == null ? null : dataPath.toString());
     }
 
     return builder.build();

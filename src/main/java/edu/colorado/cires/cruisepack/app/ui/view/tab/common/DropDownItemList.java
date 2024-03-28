@@ -123,7 +123,7 @@ public class DropDownItemList extends JComponent {
   
   private void setupMvc() {
     addButton.addActionListener((evt) -> {
-      DropDownItemPanel panel = new DropDownItemPanel(options, defaultOption, true);
+      DropDownItemPanel panel = new DropDownItemPanel(options, defaultOption, editableItems);
       
       for (ComponentEventListener<DropDownItemPanel> listener : addItemListeners) {
         listener.handle(panel);

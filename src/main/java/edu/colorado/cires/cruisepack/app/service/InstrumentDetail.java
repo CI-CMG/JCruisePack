@@ -31,15 +31,12 @@ public class InstrumentDetail {
   private final String dirName;
   private final String bagName;
   private final String dataComment;
-  private final String ancillaryDataPath;
-  private final String ancillaryDataDetails;
   private final List<AdditionalFiles> additionalFiles;
   private final Map<String, Object> additionalFields;
   //  private final Consumer<CustomInstrumentProcessingContext> customHandler;
 
   private InstrumentDetail(InstrumentStatus status, String uuid, LocalDate releaseDate, String instrument, String shortName, Set<String> extensions, String dataPath, boolean flatten,
-      String dirName, String bagName, String dataComment, List<AdditionalFiles> additionalFiles, Map<String, Object> additionalFields,
-      String ancillaryDataPath, String ancillaryDataDetails
+      String dirName, String bagName, String dataComment, List<AdditionalFiles> additionalFiles, Map<String, Object> additionalFields
   ) {
     this.status = status;
     this.uuid = uuid;
@@ -54,8 +51,6 @@ public class InstrumentDetail {
     this.dataComment = dataComment;
     this.additionalFiles = additionalFiles;
     this.additionalFields = additionalFields;
-    this.ancillaryDataDetails = ancillaryDataDetails;
-    this.ancillaryDataPath = ancillaryDataPath;
   }
 
   public InstrumentStatus getStatus() {
@@ -110,14 +105,6 @@ public class InstrumentDetail {
     return additionalFields;
   }
 
-  public String getAncillaryDataPath() {
-    return ancillaryDataPath;
-  }
-
-  public String getAncillaryDataDetails() {
-    return ancillaryDataDetails;
-  }
-
   public static class Builder {
 
     private InstrumentStatus status;
@@ -133,8 +120,6 @@ public class InstrumentDetail {
     private String dataComment;
     private List<AdditionalFiles> additionalFiles = Collections.emptyList();
     private Map<String, Object> additionalFields = new HashMap<>();
-    private String ancillaryDataPath;
-    private String ancillaryDataDetails;
 
     private Builder() {
 
@@ -154,8 +139,6 @@ public class InstrumentDetail {
       dataComment = src.dataComment;
       additionalFiles = src.additionalFiles;
       additionalFields = src.additionalFields;
-      ancillaryDataPath = src.ancillaryDataPath;
-      ancillaryDataDetails = src.ancillaryDataDetails;
     }
 
     public Builder setStatus(InstrumentStatus status) {
@@ -225,20 +208,10 @@ public class InstrumentDetail {
       this.additionalFields.put(entry.getKey(), entry.getValue());
       return this;
     }
-    
-    public Builder setAncillaryDataPath(String ancillaryDataPath) {
-      this.ancillaryDataPath = ancillaryDataPath;
-      return this;
-    }
-    
-    public Builder setAncillaryDataDetails(String ancillaryDataDetails) {
-      this.ancillaryDataDetails = ancillaryDataDetails;
-      return this;
-    }
 
     public InstrumentDetail build() {
       return new InstrumentDetail(status, uuid, releaseDate, instrument, shortName, extensions, dataPath, flatten,
-          dirName, bagName, dataComment, additionalFiles, additionalFields, ancillaryDataPath, ancillaryDataDetails);
+          dirName, bagName, dataComment, additionalFiles, additionalFields);
     }
   }
 }

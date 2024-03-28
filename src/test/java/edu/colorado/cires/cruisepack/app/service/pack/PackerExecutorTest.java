@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.doReturn;
 
-import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
@@ -67,9 +66,6 @@ public class PackerExecutorTest {
   
   @Autowired
   private MetadataService metadataService;
-  
-  @Autowired
-  private InstrumentDatastore instrumentDatastore;
 
   @BeforeAll
   public static void beforeAll() {
@@ -110,8 +106,6 @@ public class PackerExecutorTest {
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122")
             .setDirName("EM122")
             .setBagName("TST200400_MB-BATHY_EM122")
-            .setAncillaryDataPath("src/test/resources/test-src/TST200400/data/TST200400_ANCILLARY_MB/data/MB")
-            .setAncillaryDataDetails("Ancillary details 1")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PROCESSED)
@@ -139,6 +133,16 @@ public class PackerExecutorTest {
             .build()
     );
     instruments.put(new InstrumentDetailPackageKey("MB-BATHY", "EM122"), instrumentDetails);
+    instruments.put(new InstrumentDetailPackageKey("Multibeam Bathymetry Ancillary", "MB"), List.of(
+        InstrumentDetail.builder()
+            .setStatus(InstrumentStatus.RAW)
+            .setInstrument("Multibeam Bathymetry Ancillary")
+            .setShortName("MB")
+            .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_ANCILLARY_MB/data/MB")
+            .setDirName("MB")
+            .setBagName("TST200400_ANCILLARY_MB")
+            .build()
+    ));
 
     Person person = new Person();
     person.setName("TEST_NAME");
@@ -170,7 +174,6 @@ public class PackerExecutorTest {
 
     new PackerExecutor(
         metadataService,
-        instrumentDatastore,
         workDir,
         () -> {},
         () -> {},
@@ -310,7 +313,6 @@ public class PackerExecutorTest {
 
     PackerExecutor packerExecutor = new PackerExecutor(
         metadataService,
-        instrumentDatastore,
         workDir,
         () -> {},
         () -> {},
@@ -381,7 +383,6 @@ public class PackerExecutorTest {
 
     new PackerExecutor(
         metadataService,
-        instrumentDatastore,
         workDir,
         () -> {},
         () -> {},

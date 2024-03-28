@@ -6,5 +6,5 @@ External-Description: TST200400_description
 External-Identifier: TST200400
 Cruise Name: TST200400_title
 Instrument: longem122
-Payload-Oxum: 162052.12
+Payload-Oxum: 161897.12
 Bagging-Date: __BAGGING_DATE__

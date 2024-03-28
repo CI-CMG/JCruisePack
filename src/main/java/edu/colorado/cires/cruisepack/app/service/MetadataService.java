@@ -278,7 +278,6 @@ public class MetadataService {
       for (InstrumentDetail instrumentDetail : entry.getValue()) {
         instruments.add(InstrumentData.builder(instrumentDetailToJson(entry.getKey(), instrumentDetail))
                 .withDataPath(instrumentDetail.getDataPath() == null ? null : Paths.get(instrumentDetail.getDataPath()))
-                .withAncillaryDataPath(instrumentDetail.getAncillaryDataPath() == null ? null : Paths.get(instrumentDetail.getAncillaryDataPath()))
             .build());
       }
     }
@@ -296,8 +295,7 @@ public class MetadataService {
         .withStatus(instrumentDetail.getStatus() == null ? null : instrumentDetail.getStatus().getStrValue())
         .withDataComment(instrumentDetail.getDataComment())
         .withDirName(instrumentDetail.getDirName())
-        .withBagName(instrumentDetail.getBagName())
-        .withAncillaryDataDetails(instrumentDetail.getAncillaryDataDetails());
+        .withBagName(instrumentDetail.getBagName());
     
     for (Entry<String, Object> entry : instrumentDetail.getAdditionalFields().entrySet()) {
       builder = builder.withOtherField(entry.getKey(), entry.getValue());
