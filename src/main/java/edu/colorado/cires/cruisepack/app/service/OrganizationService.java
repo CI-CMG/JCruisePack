@@ -80,7 +80,7 @@ public class OrganizationService {
                 organizationModel.setUuid(UUID.randomUUID().toString());
             }
 
-            Optional<Organization> maybeOrganization = organizationDatastore.getByUUID(organizationModel.getUuid());
+            Optional<Organization> maybeOrganization = organizationDatastore.findByUUID(organizationModel.getUuid());
             if (maybeOrganization.isPresent()) {
                 Organization existingOrganization = maybeOrganization.get();
                 if (!existingOrganization.getName().equals(organizationModel.getName()) && organizationWithNameExists) {

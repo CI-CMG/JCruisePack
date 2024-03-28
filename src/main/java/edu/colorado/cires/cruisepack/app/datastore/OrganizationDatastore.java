@@ -69,7 +69,7 @@ public class OrganizationDatastore extends PropertyChangeModel {
     public List<DropDownItem> getEnabledOrganizationDropDowns() {
         return organizationDropDowns.stream()
         .filter(dd -> 
-            getByUUID(dd.getId())
+            findByUUID(dd.getId())
                 .map(Organization::isUse)
                 .orElse(dd.equals(UNSELECTED_ORGANIZATION))
         )
@@ -155,7 +155,7 @@ public class OrganizationDatastore extends PropertyChangeModel {
         return Optional.of(organizationData);
     }
     
-    public Optional<Organization> getByUUID(String uuid) {
+    public Optional<Organization> findByUUID(String uuid) {
         return organizations.stream()
             .filter(o -> o.getUuid().equals(uuid))
             .findFirst();

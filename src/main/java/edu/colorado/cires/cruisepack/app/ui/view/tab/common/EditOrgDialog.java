@@ -249,7 +249,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
 
         orgList.addItemListener((evt) -> {
             DropDownItem item = (DropDownItem) evt.getItem();
-            organizationDatastore.getByUUID(item.getId()).ifPresent(organization -> {
+            organizationDatastore.findByUUID(item.getId()).ifPresent(organization -> {
                 organizationController.setName(organization.getName());
                 organizationController.setStreet(organization.getStreet());
                 organizationController.setCity(organization.getCity());
