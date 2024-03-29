@@ -161,7 +161,7 @@ jobs:
         run: >
           jpackage
           --type app-image
-          --icon cruise_pack_icon.png
+          --icon icon.png
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
           --name 'Cruise Pack'
@@ -183,7 +183,7 @@ jobs:
       - name: Upload application image
         uses: actions/upload-artifact@v4
         with: 
-          name: cruise-pack-linux-application-image
+          name: cruise-pack-linux-application-image-x64
           path: "Cruise Pack"
   windows-x64:
     needs: build
@@ -327,12 +327,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
-      - run: ls cruise-pack-linux-application-image
       - run: mkdir release
       - run: cp cruise-pack-install-mac-arm64.dmg/*.dmg release/cruise-pack-install-mac-arm64-${{ needs.build.outputs.version }}.dmg
       - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
       - run: cp cruise-pack-install-linux-x64.deb/*.deb release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.deb
       - run: cp cruise-pack-install-linux-x64.rpm/*.rpm release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.rpm
+      - run: zip -r release/cruise-pack-linux-application-image-x64-${{ needs.build.outputs.version }}.zip cruise-pack-linux-application-image-x64
 #      - run: cp cruise-pack-install-win-per-machine-x64.exe/*.exe release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.exe
       - run: cp cruise-pack-install-win-per-machine-x64.msi/*.msi release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.msi
 #      - run: cp cruise-pack-install-win-per-user-x64.exe/*.exe release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.exe
