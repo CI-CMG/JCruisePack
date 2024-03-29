@@ -140,12 +140,12 @@ jobs:
       - name: Upload installer Deb
         uses: actions/upload-artifact@v4
         with:
-          name: cruise-pack-linux-x64.deb
+          name: cruise-pack-install-linux-x64.deb
           path: "cruisepack-linux-x64-installer*.deb"
       - name: Upload installer RPM
         uses: actions/upload-artifact@v4
         with:
-          name: cruise-pack-linux-x64.rpm
+          name: cruise-pack-install-linux-x64.rpm
           path: "cruisepack-linux-x64-installer*.rpm"
   windows-x64:
     needs: build
@@ -292,7 +292,8 @@ jobs:
       - run: mkdir release
       - run: cp cruise-pack-install-mac-arm64.dmg/*.dmg release/cruise-pack-install-mac-arm64-${{ needs.build.outputs.version }}.dmg
       - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
-      - run: cp cruise-pack-
+      - run: cp cruise-pack-install-linux-x64.deb/*.deb release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.deb
+      - run: cp cruise-pack-install-linux-x64.rpm/*.rpm release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.rpm
 #      - run: cp cruise-pack-install-win-per-machine-x64.exe/*.exe release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.exe
       - run: cp cruise-pack-install-win-per-machine-x64.msi/*.msi release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.msi
 #      - run: cp cruise-pack-install-win-per-user-x64.exe/*.exe release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.exe
