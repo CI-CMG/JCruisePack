@@ -132,21 +132,43 @@ jobs:
           path: jars
       - run: cp splash.png jars
       - name: Package jar as deb installer
-        run: "jpackage --name CruisePack-Linux-x64-Installer --type deb -i jars --main-class org.springframework.boot.loader.launch.JarLauncher --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
+        run: >
+          jpackage
+          --type deb
+          --icon cruise_pack_icon.png
+          --vendor 'CIRES - University of Colorado' 
+          --java-options '-splash:$APPDIR/splash.png'
+          --name 'Cruise Pack'
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          --about-url https://github.com/CI-CMG/JCruisePack
+          --linux-shortcut
       - name: Package jar as rpm installer
-        run: "jpackage --name CruisePack-Linux-x64-Installer --type rpm -i jars --main-class org.springframework.boot.loader.launch.JarLauncher --main-jar  cruise-pack-${{ needs.build.outputs.version }}-exe.jar"
+        run: >
+          jpackage
+          --type rpm
+          --icon cruise_pack_icon.png
+          --vendor 'CIRES - University of Colorado' 
+          --java-options '-splash:$APPDIR/splash.png'
+          --name 'Cruise Pack'
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          --about-url https://github.com/CI-CMG/JCruisePack
+          --linux-shortcut
       - name: View artifacts
         run: ls -l
       - name: Upload installer Deb
         uses: actions/upload-artifact@v4
         with:
           name: cruise-pack-install-linux-x64.deb
-          path: "cruisepack-linux-x64-installer*.deb"
+          path: "*.deb"
       - name: Upload installer RPM
         uses: actions/upload-artifact@v4
         with:
           name: cruise-pack-install-linux-x64.rpm
-          path: "cruisepack-linux-x64-installer*.rpm"
+          path: "*.rpm"
   windows-x64:
     needs: build
     runs-on: windows-2019
