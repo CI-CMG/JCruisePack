@@ -157,6 +157,17 @@ jobs:
           --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
           --about-url https://github.com/CI-CMG/JCruisePack
           --linux-shortcut
+      - name: Package jar as application image
+        run: >
+          jpackage
+          --type app-image
+          --icon cruise_pack_icon.png
+          --vendor 'CIRES - University of Colorado' 
+          --java-options '-splash:$APPDIR/splash.png'
+          --name 'Cruise Pack'
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
       - name: View artifacts
         run: ls -l
       - name: Upload installer Deb
