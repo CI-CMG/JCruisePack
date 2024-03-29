@@ -180,6 +180,11 @@ jobs:
         with:
           name: cruise-pack-install-linux-x64.rpm
           path: "*.rpm"
+      - name: Upload application image
+        uses: actions/upload-artifact@v4
+        with: 
+          name: cruise-pack-linux-application-image
+          path: "Cruise Pack"
   windows-x64:
     needs: build
     runs-on: windows-2019
@@ -322,6 +327,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
+      - run: ls cruise-pack-linux-application-image
       - run: mkdir release
       - run: cp cruise-pack-install-mac-arm64.dmg/*.dmg release/cruise-pack-install-mac-arm64-${{ needs.build.outputs.version }}.dmg
       - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
