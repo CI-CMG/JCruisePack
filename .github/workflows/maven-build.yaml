@@ -148,7 +148,7 @@ jobs:
         run: >
           jpackage
           --type rpm
-          --icon cruise_pack_icon.png
+          --icon icon.png
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
           --name 'Cruise Pack'
