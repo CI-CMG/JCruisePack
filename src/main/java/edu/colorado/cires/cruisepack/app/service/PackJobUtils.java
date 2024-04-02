@@ -190,10 +190,18 @@ public final class PackJobUtils {
   private static Map<InstrumentDetailPackageKey, List<InstrumentDetail>> resolveInstruments(List<edu.colorado.cires.cruisepack.app.service.metadata.Instrument> instruments, InstrumentDatastore instrumentDatastore) {
     Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new HashMap<>(0);
     instruments.forEach(instrument -> {
-      InstrumentDetailPackageKey key = new InstrumentDetailPackageKey(
-          InstrumentGroupName.fromLongName(instrument.getType()).getShortName(),
-          instrument.getInstrument()
-      );
+      InstrumentDetailPackageKey key;
+      if (instrument.getType().equals("Ancillary Data")) {
+        key = new InstrumentDetailPackageKey(
+            "ANCILLARY",
+            instrument.getShortName()
+        );
+      } else {
+        key = new InstrumentDetailPackageKey(
+            InstrumentGroupName.fromLongName(instrument.getType()).getShortName(),
+            instrument.getShortName()
+        );
+      }
 
       List<InstrumentDetail> instrumentDetails = map.get(key);
       if (instrumentDetails == null) {
