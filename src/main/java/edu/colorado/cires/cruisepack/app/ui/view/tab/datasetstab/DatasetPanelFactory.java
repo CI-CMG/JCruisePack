@@ -48,7 +48,7 @@ public abstract class DatasetPanelFactory<T extends AdditionalFieldsModel, C ext
     }
     
     model.setComments(instrument.getDataComment());
-    model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getInstrument()));
+    model.setInstrument(new DropDownItem(instrument.getUuid(), instrument.getShortName()));
     model.setAncillaryDetails(instrument.getAncillaryDataDetails());
     model.setProcessingLevel(instrument.getStatus());
     if (instrument.getReleaseDate() != null) {

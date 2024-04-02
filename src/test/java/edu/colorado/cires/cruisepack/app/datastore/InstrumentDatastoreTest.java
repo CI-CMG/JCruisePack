@@ -73,7 +73,7 @@ class InstrumentDatastoreTest extends XMLDatastoreTest<InstrumentData> {
         .map(InstrumentGroup::getInstruments)
         .map(InstrumentList::getInstruments)
         .flatMap(List::stream)
-        .map(i -> new NameUUIDPair(i.getUuid(), i.getName()))
+        .map(i -> new NameUUIDPair(i.getUuid(), i.getShortName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(
         InstrumentDatastore.UNSELECTED_INSTRUMENT.getId(), InstrumentDatastore.UNSELECTED_INSTRUMENT.getValue()
@@ -94,7 +94,7 @@ class InstrumentDatastoreTest extends XMLDatastoreTest<InstrumentData> {
     
     String actual = datastore.getInstrumentUuidForDatasetTypeAndInstrumentName(
         InstrumentGroupName.WATER_COLUMN.getShortName(),
-        "Atlas Hydrosweep DS"
+        "Hydrosweep-DS"
     );
     
     assertNotNull(actual);

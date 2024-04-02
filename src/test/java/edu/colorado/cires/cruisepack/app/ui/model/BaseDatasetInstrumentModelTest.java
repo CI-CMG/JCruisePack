@@ -146,6 +146,7 @@ class BaseDatasetInstrumentModelTest extends PropertyChangeModelTest<BaseDataset
     Instrument referenceInstrument = new Instrument();
     referenceInstrument.setUuid(UUID.randomUUID().toString());
     referenceInstrument.setName("instrument 1");
+    referenceInstrument.setShortName("instrument-short-name-1");
     
     Optional<InstrumentNameHolder> maybeNameHolder = model.getInstrumentNameHolder(referenceInstrument);
     assertTrue(maybeNameHolder.isEmpty());
@@ -189,7 +190,7 @@ class BaseDatasetInstrumentModelTest extends PropertyChangeModelTest<BaseDataset
       }
     });
     
-    selectedInstrument = new DropDownItem(referenceInstrument.getUuid(), referenceInstrument.getName());
+    selectedInstrument = new DropDownItem(referenceInstrument.getUuid(), referenceInstrument.getShortName());
     model.setInstrument(selectedInstrument);
     maybeNameHolder = model.getInstrumentNameHolder(referenceInstrument);
     assertFalse(maybeNameHolder.isEmpty());

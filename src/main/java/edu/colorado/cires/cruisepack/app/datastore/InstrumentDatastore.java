@@ -65,7 +65,7 @@ public class InstrumentDatastore {
     instrumentDropDowns = new HashMap<>(0);
     instrumentData.getInstrumentGroups().getInstrumentGroups().forEach((ig) -> {
       List<DropDownItem> instruments = new ArrayList<>(ig.getInstruments().getInstruments().stream()
-        .map(i -> new DropDownItem(i.getUuid(), i.getName()))
+        .map(i -> new DropDownItem(i.getUuid(), i.getShortName()))
         .sorted((i1, i2) -> i1.getValue().compareToIgnoreCase(i2.getValue()))
         .toList());
       instruments.add(0, UNSELECTED_INSTRUMENT);
@@ -74,6 +74,18 @@ public class InstrumentDatastore {
         instruments
       );
     });
+  }
+  
+  public Optional<Instrument> getInstrumentByTypeAndInstrumentName(String type, String instrumentName) {
+    return instrumentData.getInstrumentGroups().getInstrumentGroups().stream()
+        .filter(instrumentGroup -> instrumentGroup.getShortType().equals(type))
+        .findFirst()
+        .flatMap(instrumentGroup -> 
+              instrumentGroup.getInstruments().getInstruments().stream()
+                .filter(instrument -> instrument.getName().equals(instrumentName))
+                .findFirst()
+        );
+
   }
 
   public Optional<Instrument> getInstrument(InstrumentDetailPackageKey key) {

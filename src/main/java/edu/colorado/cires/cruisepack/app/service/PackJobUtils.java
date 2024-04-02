@@ -73,17 +73,13 @@ public final class PackJobUtils {
         holders.add(nameHolder);
         
         if (instrumentModel.getAncillaryPath() != null) {
-          InstrumentDetailPackageKey ancillaryKey = new InstrumentDetailPackageKey(
-              "ANCILLARY",
-              String.format(
-                  "%s Ancillary", 
-                  InstrumentGroupName.fromShortName(
+          InstrumentNameHolder ancillaryNameHolder = instrumentDatastore.getInstrumentByTypeAndInstrumentName(
+              "ANCILLARY", String.format(
+                  "%s Ancillary", InstrumentGroupName.fromShortName(
                       instrumentModel.getInstrumentGroupShortCode()
-                  ).getLongName()
+                  ).getLongName() 
               )
-          );
-          
-          InstrumentNameHolder ancillaryNameHolder = instrumentDatastore.getInstrument(ancillaryKey).map(instrument -> new InstrumentNameHolder(
+          ).map(instrument -> new InstrumentNameHolder(
               nameHolder.getUuid(),
               instrument.getName(),
               instrument.getShortName(),
@@ -98,6 +94,11 @@ public final class PackJobUtils {
           )).orElse(null);
           
           if (ancillaryNameHolder != null) {
+            InstrumentDetailPackageKey ancillaryKey = new InstrumentDetailPackageKey(
+                "ANCILLARY",
+                ancillaryNameHolder.getShortName()
+            );
+            
             List<InstrumentNameHolder> ancillaryHolders = namers.computeIfAbsent(ancillaryKey, k -> new ArrayList<>());
             ancillaryHolders.add(ancillaryNameHolder);
           }
