@@ -581,10 +581,11 @@
             <artifactId>dependency-check-maven</artifactId>
             <version>6.5.0</version>
             <configuration>
-              <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+              <failBuildOnCVSS>0</failBuildOnCVSS>
               <suppressionFiles>
                 <suppressionFile>${project.basedir}/owasp-dep-check-suppression.xml</suppressionFile>
               </suppressionFiles>
+              <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
             </configuration>
             <executions>
               <execution>
