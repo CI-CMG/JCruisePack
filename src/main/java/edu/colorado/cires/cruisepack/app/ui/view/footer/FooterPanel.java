@@ -209,10 +209,10 @@ public class FooterPanel extends JPanel implements ReactiveView {
   }
   
   private void handleOpenFile() {
+    String manualPath = Paths.get(serviceProperties.getWorkDir()).resolve("config")
+        .resolve(USER_MANUAL_NAME).toAbsolutePath().toFile().toString();
     try {
       String os = System.getProperty("os.name");
-      String manualPath = Paths.get(serviceProperties.getWorkDir()).resolve("config")
-          .resolve(USER_MANUAL_NAME).toAbsolutePath().toFile().toString();
       String command = null;
       if (os.contains("Mac")) {
         command = String.format(
@@ -231,6 +231,14 @@ public class FooterPanel extends JPanel implements ReactiveView {
         Runtime.getRuntime().exec(command);
       }
     } catch (IOException e) {
+      JOptionPane.showMessageDialog(
+          SwingUtilities.getWindowAncestor(this),
+          String.format(
+              "Failed to open user manual. User manual can be opened at %s", manualPath
+          ),
+          "Error",
+          JOptionPane.ERROR_MESSAGE
+      );
       throw new IllegalStateException(String.format(
           "Failed to open %s", USER_MANUAL_NAME
       ), e);
