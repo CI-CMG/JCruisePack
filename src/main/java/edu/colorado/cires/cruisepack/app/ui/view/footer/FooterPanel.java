@@ -16,9 +16,11 @@ import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import jakarta.annotation.PostConstruct;
+import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -209,26 +211,20 @@ public class FooterPanel extends JPanel implements ReactiveView {
   }
   
   private void handleOpenFile() {
-    String manualPath = Paths.get(serviceProperties.getWorkDir()).resolve("config")
-        .resolve(USER_MANUAL_NAME).toAbsolutePath().toFile().toString();
+    File manualPath = Paths.get(serviceProperties.getWorkDir()).resolve("config")
+        .resolve(USER_MANUAL_NAME).toAbsolutePath().toFile();
     try {
-      String os = System.getProperty("os.name");
-      String command = null;
-      if (os.contains("Mac")) {
-        command = String.format(
-            "open %s", manualPath
+      if (Desktop.isDesktopSupported()) {
+        Desktop.getDesktop().open(manualPath);
+      } else {
+        JOptionPane.showMessageDialog(
+            SwingUtilities.getWindowAncestor(this),
+            String.format(
+                "Failed to open user manual. User manual can be opened at %s", manualPath
+            ),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
         );
-      } else if (os.contains("Windows")) {
-        command = String.format(
-            "start %s", manualPath
-        );
-      } else if (os.contains("Linux")) {
-        command = String.format(
-            "xdg-open %s", manualPath
-        );
-      }
-      if (command != null) {
-        Runtime.getRuntime().exec(command);
       }
     } catch (IOException e) {
       JOptionPane.showMessageDialog(
