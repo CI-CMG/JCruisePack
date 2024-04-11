@@ -60,7 +60,8 @@ jobs:
         env:
           MY_KEYCHAIN: tmp-keychain
           MY_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
-          CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          APP_CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
           CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           IDENTITY_CERTIFICATE: 'Developer ID Application: University of Colorado Boulder (8JR6566HZ6)'
       - name: Package jar as dmg installer
@@ -113,7 +114,8 @@ jobs:
         env:
           MY_KEYCHAIN: tmp-keychain
           MY_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
-          CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          APP_CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
           CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           IDENTITY_CERTIFICATE: 'Developer ID Application: University of Colorado Boulder (8JR6566HZ6)'
       - name: Package jar as dmg installer

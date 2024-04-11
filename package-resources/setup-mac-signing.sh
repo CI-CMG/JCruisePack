@@ -3,9 +3,10 @@
 set -ex
 
 #decode certificate
-echo "$CERT_BASE64" > app_sign.p12.txt
+echo "$APP_CERT_BASE64" > app_sign.p12.txt
+echo "$INSTALL_CERT_BASE64" > install_sign.p12.txt
 base64 -d -i app_sign.p12.txt -o app_sign.p12
-CERT=app_sign.p12
+base64 -d -i install_sign.p12.txt -o install_sign.p12
 
 # default again user login keychain
 security list-keychains -d user -s login.keychain
@@ -23,7 +24,8 @@ security set-keychain-settings "$MY_KEYCHAIN"
 security unlock-keychain -p "$MY_KEYCHAIN_PASSWORD" "$MY_KEYCHAIN"
 
 # Add certificate to keychain
-security import $CERT -k "$MY_KEYCHAIN" -P "$CERT_PASSWORD" -A -T "/usr/bin/codesign" -T "/usr/bin/productsign"
+security import app_sign.p12 -k "$MY_KEYCHAIN" -P "$CERT_PASSWORD" -A -T "/usr/bin/codesign" -T "/usr/bin/productsign"
+security import install_sign.p12 -k "$MY_KEYCHAIN" -P "$CERT_PASSWORD" -A -T "/usr/bin/codesign" -T "/usr/bin/productsign"
 
 # Enable codesigning from a non user interactive shell
 security set-key-partition-list -S apple-tool:,apple:, -s -k $MY_KEYCHAIN_PASSWORD -D "${IDENTITY_CERTIFICATE}" -t private $MY_KEYCHAIN
