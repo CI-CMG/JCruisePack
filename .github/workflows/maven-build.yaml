@@ -64,7 +64,7 @@ jobs:
           INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
-          IDENTITY_CERTIFICATE: 'Developer ID Application: University of Colorado Boulder (8JR6566HZ6)'
+          IDENTITY_CERTIFICATE: 'Developer ID Installer: University of Colorado Boulder (8JR6566HZ6)'
       - name: Package jar as dmg installer
         run: >
           jpackage
@@ -119,7 +119,7 @@ jobs:
           INSTALL_CERT_BASE64: ${{ secrets.CP_APPLE_INSTALL_CERT_BASE64 }}
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
-          IDENTITY_CERTIFICATE: 'Developer ID Application: University of Colorado Boulder (8JR6566HZ6)'
+          IDENTITY_CERTIFICATE: 'Developer ID Installer: University of Colorado Boulder (8JR6566HZ6)'
       - name: Package jar as dmg installer
         run: >
           jpackage
