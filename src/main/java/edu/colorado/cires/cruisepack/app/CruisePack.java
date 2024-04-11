@@ -8,8 +8,6 @@ import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.ui.view.MainFrame;
 import java.awt.Font;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -21,13 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
-import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.EventListener;
 
 @SpringBootApplication
 public class CruisePack implements ApplicationListener<ApplicationStartingEvent> {

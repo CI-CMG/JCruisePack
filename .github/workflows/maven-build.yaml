@@ -55,9 +55,18 @@ jobs:
           name: exe-jar
           path: jars
       - run: cp splash.png jars
+      - name: Create signing keychain
+        run: chmod +x setup-mac-signing.sh && ./setup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: tmp-keychain
+          MY_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+          CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
+          IDENTITY_CERTIFICATE: 'Developer ID Application: University of Colorado Boulder (8JR6566HZ6)'
       - name: Package jar as dmg installer
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --icon cruise_pack.icns
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
@@ -67,6 +76,13 @@ jobs:
           --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
           --about-url https://github.com/CI-CMG/JCruisePack
           --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
+          --mac-sign 
+          --mac-signing-key-user-name 'University of Colorado Boulder' 
+          --mac-package-signing-prefix 'edu.colorado.cires.cruisepack.app.'
+      - name: Cleanup signing keychain
+        run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: tmp-keychain
       - name: View artifacts
         run: ls -l
       - name: Upload installer
@@ -93,9 +109,18 @@ jobs:
           name: exe-jar
           path: jars
       - run: cp splash.png jars
+      - name: Create signing keychain
+        run: chmod +x setup-mac-signing.sh && ./setup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: tmp-keychain
+          MY_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+          CERT_BASE64: ${{ secrets.CP_APPLE_DEV_CERT_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
+          IDENTITY_CERTIFICATE: 'Developer ID Application: University of Colorado Boulder (8JR6566HZ6)'
       - name: Package jar as dmg installer
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --icon cruise_pack.icns
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
@@ -105,6 +130,13 @@ jobs:
           --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
           --about-url https://github.com/CI-CMG/JCruisePack
           --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
+          --mac-sign 
+          --mac-signing-key-user-name 'University of Colorado Boulder' 
+          --mac-package-signing-prefix 'edu.colorado.cires.cruisepack.app.'
+      - name: Cleanup signing keychain
+        run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
+        env:
+          MY_KEYCHAIN: tmp-keychain
       - name: View artifacts
         run: ls -l
       - name: Upload installer
@@ -134,6 +166,7 @@ jobs:
       - name: Package jar as deb installer
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --type deb
           --icon cruise_pack_icon.png
           --vendor 'CIRES - University of Colorado' 
@@ -147,6 +180,7 @@ jobs:
       - name: Package jar as rpm installer
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --type rpm
           --icon icon.png
           --vendor 'CIRES - University of Colorado' 
@@ -160,6 +194,7 @@ jobs:
       - name: Package jar as application image
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --type app-image
           --icon icon.png
           --vendor 'CIRES - University of Colorado' 
@@ -207,6 +242,7 @@ jobs:
       - name: Package jar as msi per-user
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --dest per-user
           --name "Cruise Pack"
           -i jars
@@ -223,28 +259,10 @@ jobs:
           --java-options '-splash:$APPDIR/splash.png'
           --vendor "CIRES - University of Colorado"
           --win-per-user-install
-#      - name: Package jar as exe per-user
-#        run: >
-#          jpackage
-#          --dest per-user
-#          --name "Cruise Pack"
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          --about-url https://github.com/CI-CMG/JCruisePack
-#          --win-dir-chooser
-#          --win-help-url https://github.com/CI-CMG/JCruisePack
-#          -t exe
-#          --icon cruise_pack_icon.ico
-#          --win-menu
-#          --win-shortcut
-#          --win-shortcut-prompt
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --vendor "CIRES - University of Colorado"
-#          --win-per-user-install
       - name: Package jar as msi per-machine
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --dest per-machine
           --name "Cruise Pack"
           -i jars
@@ -260,27 +278,10 @@ jobs:
           --win-shortcut-prompt
           --java-options '-splash:$APPDIR/splash.png'
           --vendor "CIRES - University of Colorado"
-#      - name: Package jar as exe per-machine
-#        run: >
-#          jpackage
-#          --dest per-machine
-#          --name "Cruise Pack"
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          --about-url https://github.com/CI-CMG/JCruisePack
-#          --win-dir-chooser
-#          --win-help-url https://github.com/CI-CMG/JCruisePack
-#          -t exe
-#          --icon cruise_pack_icon.ico
-#          --win-menu
-#          --win-shortcut
-#          --win-shortcut-prompt
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --vendor "CIRES - University of Colorado"
       - name: Package jar as exe application
         run: >
           jpackage
+          --app-version ${{ needs.build.outputs.version }}
           --dest application
           --name "Cruise Pack"
           -i jars
@@ -297,21 +298,11 @@ jobs:
         with:
           name: cruise-pack-install-win-per-user-x64.msi
           path: "per-user/*.msi"
-#      - name: Upload installer per-user exe
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-install-win-per-user-x64.exe
-#          path: "per-user/*.exe"
       - name: Upload installer per-machine msi
         uses: actions/upload-artifact@v4
         with:
           name: cruise-pack-install-win-per-machine-x64.msi
           path: "per-machine/*.msi"
-#      - name: Upload installer per-machine exe
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-install-win-per-machine-x64.exe
-#          path: "per-machine/*.exe"
       - name: Upload application
         uses: actions/upload-artifact@v4
         with:
@@ -333,9 +324,7 @@ jobs:
       - run: cp cruise-pack-install-linux-x64.deb/*.deb release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.deb
       - run: cp cruise-pack-install-linux-x64.rpm/*.rpm release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.rpm
       - run: zip -r release/cruise-pack-linux-application-image-x64-${{ needs.build.outputs.version }}.zip cruise-pack-linux-application-image-x64
-#      - run: cp cruise-pack-install-win-per-machine-x64.exe/*.exe release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.exe
       - run: cp cruise-pack-install-win-per-machine-x64.msi/*.msi release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.msi
-#      - run: cp cruise-pack-install-win-per-user-x64.exe/*.exe release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.exe
       - run: cp cruise-pack-install-win-per-user-x64.msi/*.msi release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.msi
       - run: cp exe-jar/* release
       - run: (cd cruise-pack-win-x64 && zip -r ../release/cruise-pack-win-x64-${{ needs.build.outputs.version }}.zip 'Cruise Pack')
