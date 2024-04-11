@@ -4,7 +4,7 @@ set -ex
 
 #decode certificate
 echo "$CERT_BASE64" > app_sign.p12.txt
-base64 --decode app_sign.p12.txt > app_sign.p12
+base64 -d -i app_sign.p12.txt -o app_sign.p12
 CERT=app_sign.p12
 
 # default again user login keychain
