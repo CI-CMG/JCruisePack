@@ -78,7 +78,7 @@ jobs:
           --about-url https://github.com/CI-CMG/JCruisePack
           --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
           --mac-sign 
-          --mac-signing-key-user-name 'University of Colorado Boulder' 
+          --mac-signing-key-user-name 'University of Colorado Boulder (8JR6566HZ6)' 
           --mac-package-signing-prefix 'edu.colorado.cires.cruisepack.app.'
       - name: Cleanup signing keychain
         run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
@@ -133,7 +133,7 @@ jobs:
           --about-url https://github.com/CI-CMG/JCruisePack
           --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
           --mac-sign 
-          --mac-signing-key-user-name 'University of Colorado Boulder' 
+          --mac-signing-key-user-name 'University of Colorado Boulder (8JR6566HZ6)' 
           --mac-package-signing-prefix 'edu.colorado.cires.cruisepack.app.'
       - name: Cleanup signing keychain
         run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
