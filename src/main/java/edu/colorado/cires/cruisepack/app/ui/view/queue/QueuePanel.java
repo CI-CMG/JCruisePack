@@ -13,12 +13,13 @@ import edu.colorado.cires.cruisepack.app.ui.model.queue.QueueModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import jakarta.annotation.PostConstruct;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -27,13 +28,13 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(value="cruise-pack.ui", havingValue = "true")
 public class QueuePanel extends JPanel implements ReactiveView {
   
+  private static final Logger LOGGER = LoggerFactory.getLogger(QueuePanel.class);
+  
   private final ReactiveViewRegistry reactiveViewRegistry;
   private final QueueController queueController;
   private final CruiseDataDatastore cruiseDataDatastore;
-
-  private final List<PackJobPanel> rows = new ArrayList<>(0);
-  private final JPanel listingPanel = new JPanel();
   
+  private final JPanel listingPanel = new JPanel();
   private final JPanel fluff = new JPanel();
 
   @Autowired
@@ -50,15 +51,16 @@ public class QueuePanel extends JPanel implements ReactiveView {
     setupLayout();
   }
 
-  public List<PackJobPanel> getRows() {
-    return rows;
+  public int getNRows() {
+    return (int) Arrays.stream(listingPanel.getComponents())
+        .filter(c -> c instanceof PackJobPanel)
+        .count();
   }
   
   private void setupLayout() {
     setLayout(new GridBagLayout());
-    
     listingPanel.setLayout(new GridBagLayout());
-    listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
+    listingPanel.add(fluff, configureLayout(0, listingPanel.getComponentCount(), c -> c.weighty = 100));
     add(new JScrollPane(listingPanel), configureLayout(0, 0, c -> c.weighty = 100));
     
     queueController.getQueue().stream()
@@ -68,31 +70,34 @@ public class QueuePanel extends JPanel implements ReactiveView {
   
   private void addPackJob(PackJobPanel panel) {
     listingPanel.remove(fluff);
-    listingPanel.add(panel, configureLayout(0, rows.size(), c -> { c.weighty = 0; c.insets = new Insets(5, 5, 5, 5); }));
-    rows.add(panel);
-    listingPanel.add(fluff, configureLayout(0, rows.size(), c -> c.weighty = 100));
+    listingPanel.add(panel, configureLayout(0, panel.getComponentCount() - 1, c -> c.weighty = 0));
+    listingPanel.add(fluff, configureLayout(0, panel.getComponentCount() - 1, c -> c.weighty = 100));
 
     panel.addRemoveListener(queueController::removeFromQueue);
     panel.addStopListener(packJobPanel -> queueController.stop(packJobPanel.getProcessId()));
     panel.init();
     
     revalidate();
+    LOGGER.warn("Listing pannel size: {}", listingPanel.getComponentCount());
 
     queueController.submit(panel);
   }
   
   private void removePackJob(PackJobPanel panel) {
     listingPanel.remove(panel);
-    rows.remove(panel);
     
     revalidate();
+    LOGGER.warn("Listing pannel size: {}", listingPanel.getComponentCount());
   }
   
   private void clearPackJobs() {
-    int nItems = rows.size();
-    while (nItems > 0) {
-      removePackJob(rows.get(nItems - 1));
-      nItems = rows.size();
+    int nItems = getComponentCount();
+    while (nItems > 1) {
+      java.awt.Component component = listingPanel.getComponent(nItems - 1);
+      if (component instanceof PackJobPanel) {
+        removePackJob((PackJobPanel) component);
+        nItems = listingPanel.getComponentCount();
+      }
     }
   }
 
@@ -108,11 +113,15 @@ public class QueuePanel extends JPanel implements ReactiveView {
            .toList();
        
        // remove panels removed from datastore
-       rows.stream()
+        Arrays.stream(listingPanel.getComponents())
+            .filter(c -> c instanceof PackJobPanel)
+            .map(c -> (PackJobPanel) c)
            .filter(packJobPanel -> !datastorePackageIds.contains(packJobPanel.getPackJob().getPackageId()))
            .forEach(queueController::removeFromQueue);
       }
-      default -> rows.stream()
+      default -> Arrays.stream(listingPanel.getComponents())
+          .filter(c -> c instanceof PackJobPanel)
+          .map(c -> (PackJobPanel) c)
           .filter(p -> evt.getPropertyName().endsWith(p.getProcessId()))
           .findFirst()
           .ifPresent(packJobPanel -> {

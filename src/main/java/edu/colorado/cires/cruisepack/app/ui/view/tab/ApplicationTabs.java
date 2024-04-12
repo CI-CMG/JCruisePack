@@ -59,7 +59,7 @@ public class ApplicationTabs extends JTabbedPane implements ReactiveView {
     addTab(CRUISE_TAB_NAME, cruisePanel);
     addTab(OMICS_TAB_NAME, omicsPanel);
     addTab(DATASETS_TAB_NAME, datasetsPanel);
-    addTab(generateQueueTabText(queuePanel.getRows().size()), queuePanel);
+    addTab(generateQueueTabText(queuePanel.getNRows()), queuePanel);
   }
   
   private String generateQueueTabText(int queueSize) {

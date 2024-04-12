@@ -1,7 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service.pack;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import java.beans.PropertyChangeListener;
