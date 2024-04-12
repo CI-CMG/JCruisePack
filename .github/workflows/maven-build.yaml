@@ -1,7 +1,7 @@
 name: maven-build
 on:
   push:
-  workflow_dispatch:
+    branches: [ "trunk" ]
 jobs:
   build:
     runs-on: ubuntu-latest
