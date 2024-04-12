@@ -88,6 +88,23 @@ jobs:
         run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
         env:
           MY_KEYCHAIN: tmp-keychain
+      - name: Store notarization credentials
+        run: >
+          xcrun notarytool store-credentials notarytool-password
+          --apple-id $APPLE_NOTARIZATION_ID
+          --team-id $APPLE_NOTARIZATION_TEAM_ID
+          --password $APPLE_NOTARIZATION_PASSWORD
+        env:
+          APPLE_NOTARIZATION_ID: ${{ secrets.APPLE_NOTARIZATION_ID }}
+          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+      - name: Notarize artifact
+        run: >
+          xcrun notarytool submit *.dmg
+          --wait 
+          --keychain-profile notarytool-password
+      - name: Staple notarization ticket to artifact
+        run: xcrun stapler staple *.dmg
       - name: View artifacts
         run: ls -l
       - name: Upload installer
@@ -147,6 +164,23 @@ jobs:
         run: chmod +x cleanup-mac-signing.sh && ./cleanup-mac-signing.sh
         env:
           MY_KEYCHAIN: tmp-keychain
+      - name: Store notarization credentials
+        run: >
+          xcrun notarytool store-credentials notarytool-password
+          --apple-id $APPLE_NOTARIZATION_ID
+          --team-id $APPLE_NOTARIZATION_TEAM_ID
+          --password $APPLE_NOTARIZATION_PASSWORD
+        env:
+          APPLE_NOTARIZATION_ID: ${{ secrets.APPLE_NOTARIZATION_ID }}
+          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+      - name: Notarize artifact
+        run: >
+          xcrun notarytool submit *.dmg
+          --wait 
+          --keychain-profile notarytool-password
+      - name: Staple notarization ticket to artifact
+        run: xcrun stapler staple *.dmg
       - name: View artifacts
         run: ls -l
       - name: Upload installer
