@@ -67,6 +67,7 @@ jobs:
       - name: Package jar as dmg installer
         run: >
           jpackage
+          --verbose
           --icon cruise_pack.icns
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
@@ -124,6 +125,7 @@ jobs:
       - name: Package jar as dmg installer
         run: >
           jpackage
+          --verbose
           --icon cruise_pack.icns
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
@@ -172,6 +174,7 @@ jobs:
       - name: Package jar as deb installer
         run: >
           jpackage
+          --verbose
           --type deb
           --icon cruise_pack_icon.png
           --vendor 'CIRES - University of Colorado' 
@@ -185,6 +188,7 @@ jobs:
       - name: Package jar as rpm installer
         run: >
           jpackage
+          --verbose
           --type rpm
           --icon icon.png
           --vendor 'CIRES - University of Colorado' 
@@ -198,6 +202,7 @@ jobs:
       - name: Package jar as application image
         run: >
           jpackage
+          --verbose
           --type app-image
           --icon icon.png
           --vendor 'CIRES - University of Colorado' 
@@ -245,6 +250,7 @@ jobs:
       - name: Package jar as msi per-user
         run: >
           jpackage
+          --verbose
           --dest per-user
           --name "Cruise Pack"
           -i jars
@@ -264,6 +270,7 @@ jobs:
       - name: Package jar as msi per-machine
         run: >
           jpackage
+          --verbose
           --dest per-machine
           --name "Cruise Pack"
           -i jars
@@ -282,6 +289,7 @@ jobs:
       - name: Package jar as exe application
         run: >
           jpackage
+          --verbose
           --dest application
           --name "Cruise Pack"
           -i jars
