@@ -14,6 +14,10 @@ public class ReactiveViewRegistry {
   public void register(ReactiveView view) {
     reactiveViews.add(view);
   }
+  
+  public void deRegister(ReactiveView view) {
+    reactiveViews.remove(view);
+  }
 
   public Collection<ReactiveView> getViews() {
     return reactiveViews;

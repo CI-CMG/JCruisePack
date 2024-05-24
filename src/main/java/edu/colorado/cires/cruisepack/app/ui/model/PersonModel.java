@@ -51,6 +51,8 @@ public class PersonModel extends PropertyChangeModel {
 
     @NotNull
     private boolean use = false;
+    
+    private boolean dialogVisible = false;
 
     public void restoreDefaults() {
         setName(null);
@@ -262,6 +264,10 @@ public class PersonModel extends PropertyChangeModel {
 
     public void setEmailError(String emailError) {
         setIfChanged(Events.UPDATE_PERSON_EMAIL_ERROR, emailError, () -> this.emailError, (e) -> this.emailError = e);
+    }
+    
+    public void setDialogVisible(boolean dialogVisible) {
+        setIfChanged(Events.UPDATE_PERSON_DIALOG_VISIBLE, dialogVisible, () -> this.dialogVisible, (v) -> this.dialogVisible = v);
     }
 
     public String getOrcidIDError() {

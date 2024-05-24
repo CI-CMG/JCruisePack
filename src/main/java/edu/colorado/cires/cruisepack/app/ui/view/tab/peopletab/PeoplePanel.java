@@ -120,19 +120,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editPeopleButton = new JButton(CREATE_PEOPLE_LABEL);
     editPeopleButton.addActionListener(e -> {
-      if (editPersonDialog == null) {
-        editPersonDialog = new EditPersonDialog(
-            (Frame) SwingUtilities.getWindowAncestor(this),
-            personDatastore,
-            reactiveViewRegistry,
-            personController,
-            personModel
-        );
-        editPersonDialog.init();
-      }
-      
-      editPersonDialog.pack();
-      editPersonDialog.setVisible(true);
+      personController.setDialogVisible(true);
     });
     add(editPeopleButton, configureLayout(0, 2, c -> {
       c.weighty = 0;
@@ -238,6 +226,26 @@ public class PeoplePanel extends JPanel implements ReactiveView {
         fundingOrganizationsField.updateOptions(options);
         sourceOrganizationsField.updateOptions(options);
         break;
+      case Events.UPDATE_PERSON_DIALOG_VISIBLE:
+        boolean visible = (boolean) evt.getNewValue();
+        if (editPersonDialog == null) {
+          editPersonDialog = new EditPersonDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              personDatastore,
+              reactiveViewRegistry,
+              personController,
+              personModel
+          );
+          editPersonDialog.init();
+          editPersonDialog.pack();
+        }
+        
+        editPersonDialog.setVisible(visible);
+        
+        if (!visible) {
+          editPersonDialog.tearDown();
+          editPersonDialog = null;
+        }
       default:
         break;
     }

@@ -95,4 +95,8 @@ public class PersonController implements PropertyChangeListener {
         return personService.save(personModel);
     }
     
+    public void setDialogVisible(boolean dialogVisible) {
+        personModel.setDialogVisible(dialogVisible);
+    }
+    
 }

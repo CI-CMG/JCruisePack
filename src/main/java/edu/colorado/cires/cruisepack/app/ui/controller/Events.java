@@ -131,6 +131,7 @@ public final class Events {
   public static final String UPDATE_PERSON_EMAIL_ERROR = "UPDATE_PERSON_EMAIL_ERROR";
   public static final String UPDATE_PERSON_ORCID_ID_ERROR = "UPDATE_ORCID_ID_ERROR";
   public static final String UPDATE_PERSON_UUID_ERROR = "UPDATE_PERSON_UUID_ERROR";
+  public static final String UPDATE_PERSON_DIALOG_VISIBLE = "UPDATE_PERSON_DIALOG_VISIBLE";
 
   // Organization
   public static final String UPDATE_ORG_NAME = "UPDATE_ORG_NAME";

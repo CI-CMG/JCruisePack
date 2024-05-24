@@ -90,6 +90,11 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
         setupLayout();
         setupMvc();
     }
+    
+    public void tearDown() {
+        reactiveViewRegistry.deRegister(this);
+        dispose();
+    }
 
     private void initializeFields() {
         peopleList.setModel(new DefaultComboBoxModel<>(personDatastore.getAllPersonDropDowns().toArray(new DropDownItem[0])));
@@ -332,7 +337,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
                 );
                 
                 if (choice == JOptionPane.YES_OPTION) {
-                    setVisible(true);
+                    personController.setDialogVisible(false);
                 }
             } else if (status.equals(ResponseStatus.CONFLICT)) {
                 JOptionPane.showMessageDialog(
@@ -358,7 +363,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
                 if (choice == JOptionPane.YES_OPTION) {
                     ResponseStatus status = personController.submit();
                     if (status.equals(ResponseStatus.SUCCESS)) {
-                        setVisible(false);
+                        personController.setDialogVisible(false);
                     } else if (status.equals(ResponseStatus.CONFLICT)) {
                         JOptionPane.showMessageDialog(
                             ancestor,
@@ -368,7 +373,7 @@ public class EditPersonDialog extends JDialog implements ReactiveView {
                         );
                     }
                 } else if (choice == JOptionPane.NO_OPTION) {
-                    setVisible(false);
+                    personController.setDialogVisible(false);
                 }
             }
         });
