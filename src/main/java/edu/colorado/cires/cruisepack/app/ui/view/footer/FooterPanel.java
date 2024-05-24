@@ -48,7 +48,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private static final String MANAGE_RECORDS_LABEL = "Manage Records";
   private static final String IMPORT_EXPORT_LABEL = "Import / Export";
   private static final String CLEAR_FORM_LABEL = "Clear Form";
-  private static final String STOP_LABEL = "Stop Packaging";
   private static final String SAVE_LABEL = "Save For Later";
   private static final String PACKAGE_LABEL = "Package Data";
   private static final String SETTINGS_LABEL = "Settings";
@@ -70,7 +69,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
   private final JButton manageRecordsButton = new JButton(MANAGE_RECORDS_LABEL);
   private final JButton importExportButton = new JButton(IMPORT_EXPORT_LABEL);
   private final JButton clearFormButton = new JButton(CLEAR_FORM_LABEL);
-  private final JButton stopButton = new JButton(STOP_LABEL);
   private final JButton saveButton = new JButton(SAVE_LABEL);
   private final JButton packageButton = new JButton(PACKAGE_LABEL);
   private final JButton settingsButton = new JButton(SETTINGS_LABEL);
@@ -116,7 +114,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
   }
 
   private void initializeFields() {
-    stopButton.setEnabled(footerControlModel.isStopButtonEnabled());
     packageButton.setEnabled(footerControlModel.isPackageButtonEnabled());
     saveButton.setEnabled(footerControlModel.isSaveButtonEnabled());
     progressBar.setModel(progressBarModel);
@@ -132,7 +129,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
     row1.add(manageRecordsButton, configureLayout(2, 0));
     row1.add(importExportButton, configureLayout(3, 0));
     row1.add(clearFormButton, configureLayout(4, 0));
-    row1.add(stopButton, configureLayout(5, 0));
     row1.add(saveButton, configureLayout(6, 0));
     row1.add(packageButton, configureLayout(7, 0));
     add(row1, configureLayout(0, 0));
@@ -195,8 +191,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
       importExportDialog.pack();
       importExportDialog.setVisible(true);
     });
-    
-    stopButton.addActionListener((evt) -> footerControlController.stopPackaging());
     
     docsButton.addActionListener((evt) -> handleOpenFile());
     
@@ -264,13 +258,6 @@ public class FooterPanel extends JPanel implements ReactiveView {
         boolean newValue = (boolean) evt.getNewValue();
         if (packageButton.isEnabled() != newValue) {
           packageButton.setEnabled(newValue);
-        }
-      }
-      break;
-      case Events.UPDATE_STOP_BUTTON_ENABLED: {
-        boolean newValue = (boolean) evt.getNewValue();
-        if (stopButton.isEnabled() != newValue) {
-          stopButton.setEnabled(newValue);
         }
       }
       break;
