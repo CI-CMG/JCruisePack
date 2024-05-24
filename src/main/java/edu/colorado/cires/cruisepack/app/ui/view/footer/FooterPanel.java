@@ -16,6 +16,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.FooterControlModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.UiRefresher;
 import jakarta.annotation.PostConstruct;
+import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Frame;
 import java.awt.GridBagLayout;
@@ -127,19 +128,20 @@ public class FooterPanel extends JPanel implements ReactiveView {
     JPanel row1 = new JPanel();
     row1.setLayout(new GridBagLayout());
     row1.add(docsButton, configureLayout(0, 0, c -> c.weightx = 0));
-    row1.add(manageRecordsButton, configureLayout(1, 0));
-    row1.add(importExportButton, configureLayout(2, 0));
-    row1.add(clearFormButton, configureLayout(3, 0));
-    row1.add(stopButton, configureLayout(4, 0));
-    row1.add(saveButton, configureLayout(5, 0));
-    row1.add(packageButton, configureLayout(6, 0));
+    row1.add(settingsButton, configureLayout(1, 0, c -> c.weightx = 0));
+    row1.add(manageRecordsButton, configureLayout(2, 0));
+    row1.add(importExportButton, configureLayout(3, 0));
+    row1.add(clearFormButton, configureLayout(4, 0));
+    row1.add(stopButton, configureLayout(5, 0));
+    row1.add(saveButton, configureLayout(6, 0));
+    row1.add(packageButton, configureLayout(7, 0));
     add(row1, configureLayout(0, 0));
 
 
     JPanel row2 = new JPanel();
-    row2.setLayout(new GridBagLayout());
-    row2.add(progressBar, configureLayout(0, 0));
-    row2.add(settingsButton, configureLayout(1, 0, c -> c.weightx = 0));
+    row2.setLayout(new BorderLayout());
+    row2.add(progressBar, BorderLayout.CENTER);
+    progressBar.setVisible(false);
     add(row2, configureLayout(0, 1));
   }
 
@@ -201,7 +203,14 @@ public class FooterPanel extends JPanel implements ReactiveView {
     settingsButton.addActionListener((evt) -> {
       SettingsDialog settingsDialog = new SettingsDialog((Frame) SwingUtilities.getWindowAncestor(this), "Settings", true);
       settingsDialog.addMigrateListener((p) -> {
-        new Thread(() -> sqliteMigrator.migrate(p, processId)).start();
+        new Thread(() -> {
+          try {
+            progressBar.setVisible(true);
+            sqliteMigrator.migrate(p, processId);
+          } finally {
+            progressBar.setVisible(false);
+          }
+        }).start();
         settingsDialog.dispose();
       });
       
