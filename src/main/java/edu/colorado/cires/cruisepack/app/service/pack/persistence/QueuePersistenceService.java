@@ -68,7 +68,7 @@ class QueuePersistenceService {
               cruiseData, seaDatastore, portDatastore, personDatastore, instrumentDatastore
           ))
           .map(PackJobPanel::new)
-          .forEach(queueModel::addToQueue);
+          .forEach(p -> new Thread(() -> queueModel.addToQueue(p)).start());
     } catch (IOException e) {
       throw new IllegalStateException(String.format(
           "Failed to read queue file: %s", queuePath
