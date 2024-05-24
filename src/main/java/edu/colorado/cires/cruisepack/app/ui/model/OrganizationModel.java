@@ -39,6 +39,8 @@ public class OrganizationModel extends PropertyChangeModel {
 
     @NotNull
     private boolean use = false;
+    
+    private boolean dialogVisible;
 
     public String getName() {
         return name;
@@ -190,6 +192,10 @@ public class OrganizationModel extends PropertyChangeModel {
 
     public void setUuidError(String uuidError) {
         setIfChanged(Events.UPDATE_ORG_UUID_ERROR, uuidError, () -> this.uuidError, (e) -> this.uuidError = e);
+    }
+    
+    public void setDialogVisible(boolean dialogVisible) {
+        setIfChanged(Events.UPDATE_ORG_DIALOG_VISIBLE, dialogVisible, () -> this.dialogVisible, (v) -> this.dialogVisible = dialogVisible);
     }
 
     public void restoreDefaults() {

@@ -85,6 +85,11 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
         setupLayout();
         setupMvc();
     }
+    
+    public void tearDown() {
+        reactiveViewRegistry.deRegister(this);
+        dispose();
+    }
 
     private void initializeFields() {
         orgList.setModel(new DefaultComboBoxModel<>(organizationDatastore.getAllOrganizationDropDowns().toArray(new DropDownItem[0])));
@@ -291,7 +296,7 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
                 );
                 
                 if (choice == JOptionPane.YES_OPTION) {
-                    setVisible(false);
+                    organizationModel.setDialogVisible(false);
                 }
             } else if (status.equals(ResponseStatus.CONFLICT)) {
                 JOptionPane.showMessageDialog(
@@ -316,11 +321,11 @@ public class EditOrgDialog extends JDialog implements ReactiveView {
                 );
                 
                 if (choice == JOptionPane.NO_OPTION) {
-                    setVisible(false);
+                    organizationModel.setDialogVisible(false);
                 } else if (choice == JOptionPane.YES_OPTION) {
                     ResponseStatus status = organizationController.submit();
                     if (status.equals(ResponseStatus.SUCCESS)) {
-                        setVisible(false);
+                        organizationModel.setDialogVisible(false);
                     } else if (status.equals(ResponseStatus.CONFLICT)) {
                         JOptionPane.showMessageDialog(
                             ancestor,

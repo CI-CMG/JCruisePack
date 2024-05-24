@@ -128,19 +128,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
     
     JButton editOrgButton = new JButton(CREATE_ORG_LABEL);
     editOrgButton.addActionListener(e -> {
-      if (editOrgDialog == null) {
-        editOrgDialog = new EditOrgDialog(
-            (Frame) SwingUtilities.getWindowAncestor(this),
-            reactiveViewRegistry, 
-            organizationDatasore,
-            organizationController,
-            organizationModel
-        );
-        editOrgDialog.init();
-      }
-
-      editOrgDialog.pack();
-      editOrgDialog.setVisible(true);
+      organizationController.setDialogVisible(true);
     });
     add(editOrgButton, configureLayout(1, 2, c -> {
       c.weighty = 0;
@@ -227,7 +215,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
         sourceOrganizationsField.updateOptions(options);
         break;
       case Events.UPDATE_PERSON_DIALOG_VISIBLE:
-        boolean visible = (boolean) evt.getNewValue();
+        boolean personDialogVisible = (boolean) evt.getNewValue();
         if (editPersonDialog == null) {
           editPersonDialog = new EditPersonDialog(
               (Frame) SwingUtilities.getWindowAncestor(this),
@@ -240,11 +228,31 @@ public class PeoplePanel extends JPanel implements ReactiveView {
           editPersonDialog.pack();
         }
         
-        editPersonDialog.setVisible(visible);
+        editPersonDialog.setVisible(personDialogVisible);
         
-        if (!visible) {
+        if (!personDialogVisible) {
           editPersonDialog.tearDown();
           editPersonDialog = null;
+        }
+      case Events.UPDATE_ORG_DIALOG_VISIBLE:
+        boolean orgDialogVisible = (boolean) evt.getNewValue();
+        if (editOrgDialog == null) {
+          editOrgDialog = new EditOrgDialog(
+              (Frame) SwingUtilities.getWindowAncestor(this),
+              reactiveViewRegistry,
+              organizationDatasore,
+              organizationController,
+              organizationModel
+          );
+          editOrgDialog.init();
+          editOrgDialog.pack();
+        }
+
+        editOrgDialog.setVisible(orgDialogVisible);
+        
+        if (!orgDialogVisible) {
+          editOrgDialog.tearDown();
+          editOrgDialog = null;
         }
       default:
         break;

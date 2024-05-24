@@ -67,6 +67,10 @@ public class OrganizationController implements PropertyChangeListener {
     public void restoreDefaults() {
         organizationModel.restoreDefaults();
     }
+    
+    public void setDialogVisible(boolean dialogVisible) {
+        organizationModel.setDialogVisible(dialogVisible);
+    }
 
     public ResponseStatus submit() {
         return organizationService.save(organizationModel);

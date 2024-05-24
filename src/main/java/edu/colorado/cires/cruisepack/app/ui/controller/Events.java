@@ -143,7 +143,7 @@ public final class Events {
   public static final String UPDATE_ORG_COUNTRY = "UPDATE_ORG_COUNTRY";
   public static final String UPDATE_ORG_PHONE = "UPDATE_ORG_PHONE";
   public static final String UPDATE_ORG_EMAIL = "UPDATE_ORG_EMAIL";
-  public static final String UPDATE_ORG_ORCID_ID = "UPDATE_ORG_ORCID_ID";
+  public static final String UPDATE_ORG_DIALOG_VISIBLE = "UPDATE_ORG_DIALOG_VISIBLE";
   public static final String UPDATE_ORG_UUID = "UPDATE_ORG_UUID";
   public static final String UPDATE_ORG_USE = "UPDATE_ORG_USE";
   public static final String UPDATE_ORG_NAME_ERROR = "UPDATE_ORG_NAME_ERROR";
