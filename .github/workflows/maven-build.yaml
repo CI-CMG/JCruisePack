@@ -106,6 +106,8 @@ jobs:
           --keychain-profile notarytool-password > submission.txt 2>&1 &&
           export SUBMISSIONID=`awk '/id: / { print $2;exit; }' submission.txt` &&
           xcrun notarytool log $SUBMISSIONID --keychain-profile notarytool-password
+      - name: Print submission.txt
+        run: cat submission.txt
       - name: Staple notarization ticket to artifact
         run: xcrun stapler staple *.dmg
       - name: View artifacts
