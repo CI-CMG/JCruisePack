@@ -68,7 +68,6 @@ jobs:
       - run: cp all-jars/*-no-dep.jar jars
       - run: cp lib/* jars/lib
       - run: cp splash.png jars
-      - run: cp target/libsplash.png jars
       - name: Create signing keychain
         run: chmod +x setup-mac-signing.sh && ./setup-mac-signing.sh
         env:
