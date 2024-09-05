@@ -100,7 +100,8 @@ jobs:
           APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
       - name: Notarize artifact
         run: >
-          xcrun notarytool --verbose submit *.dmg
+          xcrun notarytool submit *.dmg
+          --verbose
           --wait 
           --keychain-profile notarytool-password > submission.txt 2>&1 &&
           export SUBMISSIONID=`awk '/id: / { print $2;exit; }' submission.txt` &&
