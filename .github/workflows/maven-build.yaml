@@ -30,12 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: exe-jar
-          path: "target/*.jar"
-      - name: Upload Lib
-        uses: actions/upload-artifact@v4
-        with:
-          name: lib
-          path: "target/lib/*"
+          path: "target/*-exe.jar"
       - name: Upload Splash
         uses: actions/upload-artifact@v4
         with:
@@ -58,17 +53,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: exe-jar
-          path: all-jars
-      - name: Download Lib
-        uses: actions/download-artifact@v4
-        with:
-          name: lib
-          path: lib
-      - run: mkdir -p jars/lib
-      - run: cp all-jars/*-no-dep.jar jars
-      - run: cp lib/* jars/lib
+          path: jars
       - run: cp splash.png jars
-      - run: cp target/libsplash.png jars
       - name: Create signing keychain
         run: chmod +x setup-mac-signing.sh && ./setup-mac-signing.sh
         env:
@@ -85,11 +71,10 @@ jobs:
           --icon cruise_pack.icns
           --vendor 'CIRES - University of Colorado' 
           --java-options '-splash:$APPDIR/splash.png'
-          --java-options '-Dloader.path=$APPDIR/lib'
           --name 'Cruise Pack'
           -i jars
-          --main-class org.springframework.boot.loader.launch.PropertiesLauncher
-          --main-jar cruise-pack-${{ needs.build.outputs.version }}-no-dep.jar
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
           --about-url https://github.com/CI-CMG/JCruisePack
           --mac-package-identifier edu.colorado.cires.cruisepack.app.CruisePack
           --mac-sign 
@@ -210,190 +195,190 @@ jobs:
 #        with:
 #          name: cruise-pack-install-mac-arm64.dmg
 #          path: "*.dmg"
-#  linux-x64:
-#    needs: build
-#    runs-on: ubuntu-20.04
-#    steps:
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#      - name: Download Resources
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: package-resources
-#      - name: Download Jar
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: exe-jar
-#          path: jars
-#      - run: cp splash.png jars
-#      - name: Package jar as deb installer
-#        run: >
-#          jpackage
-#          --verbose
-#          --type deb
-#          --icon cruise_pack_icon.png
-#          --vendor 'CIRES - University of Colorado'
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --name 'Cruise Pack'
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          --about-url https://github.com/CI-CMG/JCruisePack
-#          --linux-shortcut
-#      - name: Package jar as rpm installer
-#        run: >
-#          jpackage
-#          --verbose
-#          --type rpm
-#          --icon icon.png
-#          --vendor 'CIRES - University of Colorado'
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --name 'Cruise Pack'
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          --about-url https://github.com/CI-CMG/JCruisePack
-#          --linux-shortcut
-#      - name: Package jar as application image
-#        run: >
-#          jpackage
-#          --verbose
-#          --type app-image
-#          --icon icon.png
-#          --vendor 'CIRES - University of Colorado'
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --name 'Cruise Pack'
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#      - name: View artifacts
-#        run: ls -l
-#      - name: Upload installer Deb
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-install-linux-x64.deb
-#          path: "*.deb"
-#      - name: Upload installer RPM
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-install-linux-x64.rpm
-#          path: "*.rpm"
-#      - name: Upload application image
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-linux-application-image-x64
-#          path: "Cruise Pack"
-#  windows-x64:
-#    needs: build
-#    runs-on: windows-2019
-#    steps:
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: '17'
-#          distribution: 'temurin'
-#      - name: Download Resources
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: package-resources
-#      - name: Download Jar
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: exe-jar
-#          path: jars
-#      - run: cp splash.png jars
-#      - name: Package jar as msi per-user
-#        run: >
-#          jpackage
-#          --verbose
-#          --dest per-user
-#          --name "Cruise Pack"
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          --about-url https://github.com/CI-CMG/JCruisePack
-#          --win-dir-chooser
-#          --win-help-url https://github.com/CI-CMG/JCruisePack
-#          -t msi
-#          --icon cruise_pack_icon.ico
-#          --win-menu
-#          --win-shortcut
-#          --win-shortcut-prompt
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --vendor "CIRES - University of Colorado"
-#          --win-per-user-install
-#      - name: Package jar as msi per-machine
-#        run: >
-#          jpackage
-#          --verbose
-#          --dest per-machine
-#          --name "Cruise Pack"
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          --about-url https://github.com/CI-CMG/JCruisePack
-#          --win-dir-chooser
-#          --win-help-url https://github.com/CI-CMG/JCruisePack
-#          -t msi
-#          --icon cruise_pack_icon.ico
-#          --win-menu
-#          --win-shortcut
-#          --win-shortcut-prompt
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --vendor "CIRES - University of Colorado"
-#      - name: Package jar as exe application
-#        run: >
-#          jpackage
-#          --verbose
-#          --dest application
-#          --name "Cruise Pack"
-#          -i jars
-#          --main-class org.springframework.boot.loader.launch.JarLauncher
-#          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
-#          -t app-image
-#          --icon cruise_pack_icon.ico
-#          --java-options '-splash:$APPDIR/splash.png'
-#          --vendor "CIRES - University of Colorado"
-#      - name: View artifacts
-#        run: dir
-#      - name: Upload installer per-user msi
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-install-win-per-user-x64.msi
-#          path: "per-user/*.msi"
-#      - name: Upload installer per-machine msi
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-install-win-per-machine-x64.msi
-#          path: "per-machine/*.msi"
-#      - name: Upload application
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: cruise-pack-win-x64
-#          path: application
+  linux-x64:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download Resources
+        uses: actions/download-artifact@v4
+        with:
+          name: package-resources
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+          path: jars
+      - run: cp splash.png jars
+      - name: Package jar as deb installer
+        run: >
+          jpackage
+          --verbose
+          --type deb
+          --icon cruise_pack_icon.png
+          --vendor 'CIRES - University of Colorado' 
+          --java-options '-splash:$APPDIR/splash.png'
+          --name 'Cruise Pack'
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          --about-url https://github.com/CI-CMG/JCruisePack
+          --linux-shortcut
+      - name: Package jar as rpm installer
+        run: >
+          jpackage
+          --verbose
+          --type rpm
+          --icon icon.png
+          --vendor 'CIRES - University of Colorado' 
+          --java-options '-splash:$APPDIR/splash.png'
+          --name 'Cruise Pack'
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          --about-url https://github.com/CI-CMG/JCruisePack
+          --linux-shortcut
+      - name: Package jar as application image
+        run: >
+          jpackage
+          --verbose
+          --type app-image
+          --icon icon.png
+          --vendor 'CIRES - University of Colorado' 
+          --java-options '-splash:$APPDIR/splash.png'
+          --name 'Cruise Pack'
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+      - name: View artifacts
+        run: ls -l
+      - name: Upload installer Deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: cruise-pack-install-linux-x64.deb
+          path: "*.deb"
+      - name: Upload installer RPM
+        uses: actions/upload-artifact@v4
+        with:
+          name: cruise-pack-install-linux-x64.rpm
+          path: "*.rpm"
+      - name: Upload application image
+        uses: actions/upload-artifact@v4
+        with: 
+          name: cruise-pack-linux-application-image-x64
+          path: "Cruise Pack"
+  windows-x64:
+    needs: build
+    runs-on: windows-2019
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Download Resources
+        uses: actions/download-artifact@v4
+        with:
+          name: package-resources
+      - name: Download Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: exe-jar
+          path: jars
+      - run: cp splash.png jars
+      - name: Package jar as msi per-user
+        run: >
+          jpackage
+          --verbose
+          --dest per-user
+          --name "Cruise Pack"
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          --about-url https://github.com/CI-CMG/JCruisePack
+          --win-dir-chooser
+          --win-help-url https://github.com/CI-CMG/JCruisePack
+          -t msi
+          --icon cruise_pack_icon.ico
+          --win-menu
+          --win-shortcut
+          --win-shortcut-prompt
+          --java-options '-splash:$APPDIR/splash.png'
+          --vendor "CIRES - University of Colorado"
+          --win-per-user-install
+      - name: Package jar as msi per-machine
+        run: >
+          jpackage
+          --verbose
+          --dest per-machine
+          --name "Cruise Pack"
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          --about-url https://github.com/CI-CMG/JCruisePack
+          --win-dir-chooser
+          --win-help-url https://github.com/CI-CMG/JCruisePack
+          -t msi
+          --icon cruise_pack_icon.ico
+          --win-menu
+          --win-shortcut
+          --win-shortcut-prompt
+          --java-options '-splash:$APPDIR/splash.png'
+          --vendor "CIRES - University of Colorado"
+      - name: Package jar as exe application
+        run: >
+          jpackage
+          --verbose
+          --dest application
+          --name "Cruise Pack"
+          -i jars
+          --main-class org.springframework.boot.loader.launch.JarLauncher
+          --main-jar cruise-pack-${{ needs.build.outputs.version }}-exe.jar
+          -t app-image
+          --icon cruise_pack_icon.ico
+          --java-options '-splash:$APPDIR/splash.png'
+          --vendor "CIRES - University of Colorado"
+      - name: View artifacts
+        run: dir
+      - name: Upload installer per-user msi
+        uses: actions/upload-artifact@v4
+        with:
+          name: cruise-pack-install-win-per-user-x64.msi
+          path: "per-user/*.msi"
+      - name: Upload installer per-machine msi
+        uses: actions/upload-artifact@v4
+        with:
+          name: cruise-pack-install-win-per-machine-x64.msi
+          path: "per-machine/*.msi"
+      - name: Upload application
+        uses: actions/upload-artifact@v4
+        with:
+          name: cruise-pack-win-x64
+          path: application
   release:
     needs:
       - build
       - osx-x64
 #      - osx-arm64
-#      - linux-x64
-#      - windows-x64
+      - linux-x64
+      - windows-x64
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
       - run: mkdir release
 #      - run: cp cruise-pack-install-mac-arm64.dmg/*.dmg release/cruise-pack-install-mac-arm64-${{ needs.build.outputs.version }}.dmg
-      - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
-#      - run: cp cruise-pack-install-linux-x64.deb/*.deb release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.deb
-#      - run: cp cruise-pack-install-linux-x64.rpm/*.rpm release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.rpm
-#      - run: zip -r release/cruise-pack-linux-application-image-x64-${{ needs.build.outputs.version }}.zip cruise-pack-linux-application-image-x64
-#      - run: cp cruise-pack-install-win-per-machine-x64.msi/*.msi release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.msi
-#      - run: cp cruise-pack-install-win-per-user-x64.msi/*.msi release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.msi
-#      - run: cp exe-jar/* release
-#      - run: (cd cruise-pack-win-x64 && zip -r ../release/cruise-pack-win-x64-${{ needs.build.outputs.version }}.zip 'Cruise Pack')
+#      - run: cp cruise-pack-install-mac-x64.dmg/*.dmg release/cruise-pack-install-mac-x64-${{ needs.build.outputs.version }}.dmg
+      - run: cp cruise-pack-install-linux-x64.deb/*.deb release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.deb
+      - run: cp cruise-pack-install-linux-x64.rpm/*.rpm release/cruise-pack-install-linux-x64-${{ needs.build.outputs.version }}.rpm
+      - run: zip -r release/cruise-pack-linux-application-image-x64-${{ needs.build.outputs.version }}.zip cruise-pack-linux-application-image-x64
+      - run: cp cruise-pack-install-win-per-machine-x64.msi/*.msi release/cruise-pack-install-win-per-machine-x64-${{ needs.build.outputs.version }}.msi
+      - run: cp cruise-pack-install-win-per-user-x64.msi/*.msi release/cruise-pack-install-win-per-user-x64-${{ needs.build.outputs.version }}.msi
+      - run: cp exe-jar/* release
+      - run: (cd cruise-pack-win-x64 && zip -r ../release/cruise-pack-win-x64-${{ needs.build.outputs.version }}.zip 'Cruise Pack')
       - run: ls -l release
       - name: Update branch release
         uses: eine/tip@master
