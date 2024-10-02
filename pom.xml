@@ -168,6 +168,10 @@
           <artifactId>spring-boot-starter-logging</artifactId>
           <groupId>org.springframework.boot</groupId>
         </exclusion>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-web</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
