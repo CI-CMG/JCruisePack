@@ -5,7 +5,7 @@ jar -xf ./jars/cruise-pack-1.0.0-SNAPSHOT-exe.jar BOOT-INF/lib/darklaf-macos-3.0
 jar -xf ./jars/cruise-pack-1.0.0-SNAPSHOT-exe.jar BOOT-INF/lib/sqlite-jdbc-3.45.1.0.jar
 
 echo Extracting dylaf dylib files
-ls .jars
+ls ./jars
 jar -xf ./jars/BOOT-INF/lib/darklaf-macos-3.0.2.jar com/github/weisj/darklaf/platform/darklaf-macos/libdarklaf-macos-arm64.dylib
 
 echo Extracting sqlite dylib files
