@@ -8,6 +8,7 @@ echo Extracting dylaf dylib files
 jar -xf ./jars/BOOT-INF/lib/darklaf-macos-3.0.2.jar com/github/weisj/darklaf/platform/darklaf-macos/libdarklaf-macos-arm64.dylib
 
 echo Extracting sqlite dylib files
+ls .jars
 jar -xf ./jars/BOOT-INF/lib/sqlite-jdbc-3.45.1.0.jar org/sqlite/native/Mac/aarch64/libsqlitejdbc.dylib
 
 echo Signing dylaf dylib files
