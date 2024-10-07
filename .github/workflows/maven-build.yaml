@@ -65,10 +65,10 @@ jobs:
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
       - name: Specialized signing
-        run: bash ./mac-signing.sh "$MY_KEYCHAIN" "$APPLE_NOTARIZATION_TEAM_ID"
+        run: bash ./mac-signing.sh "$MY_KEYCHAIN" "$MAC_SIGNING_KEY_USER_NAME"
         env:
           MY_KEYCHAIN: tmp-keychain
-          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
       - name: Package jar as dmg installer
         run: >
           jpackage
@@ -146,10 +146,10 @@ jobs:
           APP_CERT_PASSWORD: ${{ secrets.CP_APPLE_DEV_CERT_PASSWORD }}
           INSTALL_CERT_PASSWORD: ${{ secrets.CP_APPLE_INSTALL_CERT_PASSWORD }}
       - name: Specialized signing
-        run: bash ./mac-signing-arm64.sh "$MY_KEYCHAIN" "$APPLE_NOTARIZATION_TEAM_ID"
+        run: bash ./mac-signing-arm64.sh "$MY_KEYCHAIN" "$MAC_SIGNING_KEY_USER_NAME"
         env:
           MY_KEYCHAIN: tmp-keychain
-          APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
+          MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
       - name: Package jar as dmg installer
         run: >
           jpackage
