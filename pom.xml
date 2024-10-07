@@ -148,13 +148,6 @@
         <artifactId>commons-lang3</artifactId>
         <version>3.14.0</version>
       </dependency>
-<!--      <dependency>-->
-<!--        <groupId>org.hibernate.orm</groupId>-->
-<!--        <artifactId>hibernate-platform</artifactId>-->
-<!--        <version>6.4.4.Final</version>-->
-<!--        <type>pom</type>-->
-<!--        <scope>import</scope>-->
-<!--      </dependency>-->
     </dependencies>
   </dependencyManagement>
 
