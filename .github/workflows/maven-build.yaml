@@ -105,13 +105,14 @@ jobs:
           APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
       - name: Notarize artifact
         run: >
-          xcrun notarytool submit *.dmg
+          export FILENAME="$(ls *.dmg)" && 
+          xcrun notarytool submit "$FILENAME"
           --wait 
           --keychain-profile notarytool-password > submission.txt 2>&1 &&
           export SUBMISSIONID=`awk '/id: / { print $2;exit; }' submission.txt` &&
           xcrun notarytool log $SUBMISSIONID --keychain-profile notarytool-password
       - name: Staple notarization ticket to artifact
-        run: xcrun stapler staple *.dmg
+        run: export FILENAME="$(ls *.dmg)" && xcrun stapler staple "$FILENAME"
       - name: View artifacts
         run: ls -l
       - name: Upload installer
@@ -188,11 +189,14 @@ jobs:
           APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
       - name: Notarize artifact
         run: >
-          xcrun notarytool submit *.dmg
+          export FILENAME="$(ls *.dmg)" && 
+          xcrun notarytool submit "$FILENAME"
           --wait 
           --keychain-profile notarytool-password > submission.txt 2>&1 &&
           export SUBMISSIONID=`awk '/id: / { print $2;exit; }' submission.txt` &&
           xcrun notarytool log $SUBMISSIONID --keychain-profile notarytool-password
+      - name: Staple notarization ticket to artifact
+        run: export FILENAME="$(ls *.dmg)" && xcrun stapler staple "$FILENAME"
       - name: View artifacts
         run: ls -l
       - name: Display path
