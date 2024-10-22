@@ -195,6 +195,8 @@ jobs:
           xcrun notarytool log $SUBMISSIONID --keychain-profile notarytool-password
       - name: View artifacts
         run: ls -l
+      - name: Display path
+        run: pwd
       - name: Staple notarization ticket to artifact
         run: xcrun stapler staple *.dmg
       - name: Upload installer
