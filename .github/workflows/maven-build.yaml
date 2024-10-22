@@ -464,8 +464,9 @@ jobs:
   release:
     needs:
       - build
-      - osx-x64
-      - osx-arm64
+      - package-osx
+#      - osx-x64
+#      - osx-arm64
       - linux-x64
       - windows-x64
     runs-on: ubuntu-latest
