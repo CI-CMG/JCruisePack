@@ -83,6 +83,9 @@ jobs:
           MY_KEYCHAIN: sign-keychain
           MAC_SIGNING_KEY_USER_NAME: ${{ secrets.MAC_SIGNING_KEY_USER_NAME }}
 
+      - name: Name of version being created
+        run: echo ${{ needs.build.outputs.version }}
+
       - name: Package jar as dmg installer
         run: >
           jpackage
