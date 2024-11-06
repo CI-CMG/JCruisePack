@@ -1,8 +1,8 @@
 set -ex
 
 echo Extracting internal jar files
-jar -xf ./jars/cruise-pack-1.0.0-SNAPSHOT-exe.jar BOOT-INF/lib/darklaf-macos-3.0.2.jar
-jar -xf ./jars/cruise-pack-1.0.0-SNAPSHOT-exe.jar BOOT-INF/lib/sqlite-jdbc-3.45.1.0.jar
+jar -xf $2 BOOT-INF/lib/darklaf-macos-3.0.2.jar
+jar -xf $2 BOOT-INF/lib/sqlite-jdbc-3.45.1.0.jar
 
 echo Extracting dylaf dylib files
 jar -xf ./BOOT-INF/lib/darklaf-macos-3.0.2.jar com/github/weisj/darklaf/platform/darklaf-macos/libdarklaf-macos-x86-64.dylib
@@ -29,5 +29,5 @@ echo Repacking dylaf dylib files
 jar -uf ./BOOT-INF/lib/darklaf-macos-3.0.2.jar com/github/weisj/darklaf/platform/darklaf-macos/libdarklaf-macos-x86-64.dylib
 
 echo Repacking internal jar files
-jar -uf ./jars/cruise-pack-1.0.0-SNAPSHOT-exe.jar BOOT-INF/lib/darklaf-macos-3.0.2.jar
-jar -uf ./jars/cruise-pack-1.0.0-SNAPSHOT-exe.jar BOOT-INF/lib/sqlite-jdbc-3.45.1.0.jar
+jar -uf $2 BOOT-INF/lib/darklaf-macos-3.0.2.jar
+jar -uf $2 BOOT-INF/lib/sqlite-jdbc-3.45.1.0.jar
