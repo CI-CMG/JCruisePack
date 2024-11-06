@@ -216,6 +216,10 @@ jobs:
 #        run: export FILENAME="$(ls *.dmg)" && xcrun stapler staple "$FILENAME"
 #      - name: View artifacts
 #        run: ls -l
+  upload-installers:
+    needs: build
+    runs-on: macos-14
+    steps:
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
