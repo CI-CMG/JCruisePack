@@ -483,6 +483,7 @@ jobs:
     needs:
       - build
       - package-osx
+      - upload-installers
 #      - osx-x64
 #      - osx-arm64
       - linux-x64
