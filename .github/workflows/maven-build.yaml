@@ -217,7 +217,9 @@ jobs:
 #      - name: View artifacts
 #        run: ls -l
   upload-installers:
-    needs: build
+    needs:
+      - build
+      - package-osx
     runs-on: macos-14
     steps:
       - name: Upload installer
