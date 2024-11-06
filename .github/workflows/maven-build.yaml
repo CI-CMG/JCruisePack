@@ -40,7 +40,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        os: [ macos-14, macos-12 ]
+        os: [ macos-12 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up JDK 17
