@@ -2,6 +2,8 @@
 
 set -ex
 
+#REMOVE THIS COMMENT LATER
+
 #decode certificate
 echo "$APP_CERT_BASE64" > app_sign.p12.txt
 echo "$INSTALL_CERT_BASE64" > install_sign.p12.txt
