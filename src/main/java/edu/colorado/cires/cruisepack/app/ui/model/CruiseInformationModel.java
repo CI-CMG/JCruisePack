@@ -7,12 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CruiseInformationModel extends PropertyChangeModel {
-  @NotBlank
+  @NotBlank(message="suggested field")
   private String cruiseTitle;
   private String cruiseTitleError = null;
   private String cruisePurpose;
   private String cruisePurposeError = null;
-  @NotBlank
   private String cruiseDescription;
   private String cruiseDescriptionError = null;
 

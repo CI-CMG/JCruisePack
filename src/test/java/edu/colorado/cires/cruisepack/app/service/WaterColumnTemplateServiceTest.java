@@ -59,8 +59,8 @@ class WaterColumnTemplateServiceTest {
         InputStream savedFile = new FileInputStream(outputFile.resolve(TEMPLATE_NAME).toFile())
     ) {
       assertEquals(
-          DigestUtils.sha256Hex(sourceFile),
-          DigestUtils.sha256Hex(savedFile)
+          DigestUtils.md5Hex(sourceFile),
+          DigestUtils.md5Hex(savedFile)
       );
     } catch (IOException e) {
       throw new IllegalStateException("Failed to read template files", e);

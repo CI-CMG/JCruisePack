@@ -39,7 +39,7 @@ public class Bagger {
   }
   
   public Bagger() {
-    this.algorithms = Collections.singletonList(StandardSupportedAlgorithms.SHA256);
+    this.algorithms = Collections.singletonList(StandardSupportedAlgorithms.MD5);
   }
 
   public Bag readOrCreateBag(Path folder)

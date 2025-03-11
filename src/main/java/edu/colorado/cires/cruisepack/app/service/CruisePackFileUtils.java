@@ -110,7 +110,7 @@ public final class CruisePackFileUtils {
 
   public static String computeChecksum(Path path) {
     try (InputStream inputStream = new FileInputStream(path.toFile())) {
-      return DigestUtils.sha256Hex(inputStream);
+      return DigestUtils.md5Hex(inputStream);
     } catch (IOException e) {
       throw new IllegalStateException(String.format(
           "Failed to compute checksum for %s",

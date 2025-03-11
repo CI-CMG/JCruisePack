@@ -22,7 +22,7 @@ import jakarta.validation.Payload;
 @Documented
 public @interface ValidPortDropDownItem {
 
-    String message() default "invalid value";
+    String message() default "suggested field";
     
     Class<?>[] groups() default {};
 

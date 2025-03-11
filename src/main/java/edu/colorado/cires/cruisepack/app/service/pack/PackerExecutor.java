@@ -125,12 +125,12 @@ class PackerExecutor {
       throw new IllegalStateException("Unable to create main bag, ", e);
     }
     
-    Path manifestFile = mainBagPath.resolve("manifest-sha256.txt");
+    Path manifestFile = mainBagPath.resolve("manifest-md5.txt");
     try (FileWriter fileWriter = new FileWriter(manifestFile.toFile(), StandardCharsets.UTF_8, true)) {
 
       try (Stream<Path> paths = Files.walk(mainBagPath)) {
         paths.filter(p -> p.toFile().isFile())
-            .filter(p -> p.toString().endsWith("sha256.txt"))
+            .filter(p -> p.toString().endsWith("md5.txt"))
             .filter(p -> !p.equals(manifestFile))
             .forEach(p -> packerFileController.concatManifests(p, mainBagPath, fileWriter));
       } catch (IOException e) {
@@ -150,7 +150,7 @@ class PackerExecutor {
       throw new RuntimeException(e);
     }
 
-    Path tagManifestFile = mainBagPath.resolve("tagmanifest-sha256.txt");
+    Path tagManifestFile = mainBagPath.resolve("tagmanifest-md5.txt");
     try (FileWriter tagManifestWriter = new FileWriter(tagManifestFile.toFile(), StandardCharsets.UTF_8, true)) {
       packerFileController.appendToManifest(mainBagPath.resolve("bag-info.txt"), mainBagPath, tagManifestWriter);
       packerFileController.appendToManifest(mainBagPath.resolve("bagit.txt"), mainBagPath, tagManifestWriter);
@@ -393,7 +393,7 @@ class PackerExecutor {
           packerFileController.bagInPlace(
               instrumentBagRootDir,
               createMetadataFromCruiseMetadata(datasetMetadata),
-              Collections.singletonList(StandardSupportedAlgorithms.SHA256)
+              Collections.singletonList(StandardSupportedAlgorithms.MD5)
           );
         } catch (NoSuchAlgorithmException | IOException e) {
           throw new RuntimeException("Unable to create bag: " + instrumentBagRootDir, e);

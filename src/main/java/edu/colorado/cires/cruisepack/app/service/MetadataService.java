@@ -310,7 +310,7 @@ public class MetadataService {
       Instrument instrument = resolveInstrument(cruiseMetadata, dataset);
       PackageInstrument packageInstrument = PackageInstrument.builder()
           .withInstrument(instrument)
-          .withTypeName(dataset.getShortName())
+          .withTypeName(InstrumentGroupName.fromLongName(instrument.getType()).getShortName())
           .withFlatten(dataset.isFlatten())
           .withExtensions(new ArrayList<>(dataset.getExtensions()))
           .build();

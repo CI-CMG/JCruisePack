@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -92,12 +93,8 @@ public class PackagingValidationService {
     updateDatasetsErrors(datasetsViolations);
     updatePeopleErrors(peopleViolations);
     
-    if (
-        packageViolations.isEmpty() &&
-            cruiseInformationViolations.isEmpty() &&
-            omicsViolations.isEmpty() &&
-            datasetsViolations.isEmpty() &&
-            peopleViolations.isEmpty()) {
+    if (packageViolations.isEmpty() && cruiseInformationViolations.isEmpty() && omicsViolations.isEmpty() &&
+            datasetsViolations.isEmpty() && peopleViolations.isEmpty()) {
       footerControlModel.setJobErrors(null);
       
       PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
@@ -140,6 +137,101 @@ public class PackagingValidationService {
       }
       
       return Optional.empty();
+    }
+    else {
+      List<ConstraintViolation> suggestedViolations = new ArrayList<>();
+      int total = (packageViolations.size() +
+                    cruiseInformationViolations.size() +
+                    omicsViolations.size() +
+                    datasetsViolations.size() +
+                    peopleViolations.size());
+      for (ConstraintViolation<PackageModel> packageViolation : packageViolations) {
+        if (Objects.equals(packageViolation.getMessage(), "suggested field")){
+          suggestedViolations.add(packageViolation);
+        }
+      }
+      for (ConstraintViolation<CruiseInformationModel> cruiseInformationViolation : cruiseInformationViolations) {
+        if (Objects.equals(cruiseInformationViolation.getMessage(), "suggested field")){
+          suggestedViolations.add(cruiseInformationViolation);
+        }
+      }
+      for (ConstraintViolation<OmicsModel> omicsViolation : omicsViolations) {
+        if (Objects.equals(omicsViolation.getMessage(), "suggested field")){
+          suggestedViolations.add(omicsViolation);
+        }
+      }
+      for (ConstraintViolation<DatasetsModel> datasetsViolation : datasetsViolations) {
+        if (Objects.equals(datasetsViolation.getMessage(), "suggested field")){
+          suggestedViolations.add(datasetsViolation);
+        }
+      }
+      for (ConstraintViolation<PeopleModel> peopleViolation : peopleViolations) {
+        if (Objects.equals(peopleViolation.getMessage(), "suggested field")){
+          suggestedViolations.add(peopleViolation);
+        }
+      }
+      if (total == suggestedViolations.size()) {
+        String outMessage = "Missing Suggested Fields:";
+        for (ConstraintViolation v : suggestedViolations) {
+          outMessage += "\n - " + v.getPropertyPath();
+        }
+        int cancelInt = optionPaneGenerator.createOptionPane(
+            outMessage,
+            null,
+            JOptionPane.WARNING_MESSAGE,
+            "JOptionPane.warningIcon",
+            new String[]{
+                "Cancel Job", "Continue Job"
+            },
+            "Cancel Job"
+        );
+        if (cancelInt == 0) {
+          return Optional.empty();
+        }
+
+        footerControlModel.setJobErrors(null);
+
+        PackJob packJob = PackJobUtils.create(packageModel, peopleModel, omicsModel, cruiseInformationModel, datasetsModel, instrumentDatastore, personDatastore);
+
+        Set<ConstraintViolation<PackJob>> constraintViolations = validator.validate(packJob);
+
+        String errorMessages = constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
+        footerControlModel.setJobErrors(errorMessages);
+
+        if (errorMessages.isEmpty()) {
+
+          List<String> warningMessages = checkWarnings(packJob);
+
+          if (warningMessages.isEmpty()) {
+            return Optional.of(packJob);
+          }
+
+          boolean continuePacking = false;
+          for (String message : warningMessages) {
+            int choice = optionPaneGenerator.createOptionPane(
+                message,
+                null,
+                JOptionPane.WARNING_MESSAGE,
+                "JOptionPane.warningIcon",
+                new String[]{
+                    "Cancel Job", "Continue Job"
+                },
+                "Cancel Job"
+            );
+            if (choice == 0) {
+              return Optional.empty();
+            } if (choice == 1) {
+              continuePacking = true;
+            }
+          }
+
+          if (continuePacking) {
+            return Optional.of(packJob);
+          }
+        }
+
+        return Optional.empty();
+      }
     }
     errorModel.emitErrorMessage(
         "Failed to submit form. Please fix indicated errors and re-submit form"
