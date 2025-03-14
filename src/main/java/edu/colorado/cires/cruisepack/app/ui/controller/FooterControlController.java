@@ -13,6 +13,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackJobUtils;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
+import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.service.pack.ClearJobsPublisher;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
@@ -139,7 +140,7 @@ public class FooterControlController implements PropertyChangeListener {
     clearJobsPublisher.publish(this, queueModel::clearQueue);
   }
 
-  public void updateFormState(Cruise cruiseMetadata) {
+  public void updateFormState(Cruise<PeopleOrg, PeopleOrg, PeopleOrg> cruiseMetadata) {
     packageModel.restoreDefaults(true);
     peopleModel.restoreDefaults();
     cruiseInformationModel.restoreDefaults();

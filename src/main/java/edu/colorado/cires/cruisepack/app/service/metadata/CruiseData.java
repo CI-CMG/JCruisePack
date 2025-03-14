@@ -4,16 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import edu.colorado.cires.cruisepack.xml.organization.Organization;
+import edu.colorado.cires.cruisepack.xml.person.Person;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = CruiseData.Builder.class)
-public class CruiseData extends Cruise {
+public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
 
   private final boolean use;
   @JsonIgnore
@@ -146,14 +150,23 @@ public class CruiseData extends Cruise {
       cruiseTitle = src.getCruiseTitle();
       cruisePurpose = src.getCruisePurpose();
       cruiseDescription = src.getCruiseDescription();
-      sponsors = src.getSponsors();
-      funders = src.getFunders();
-      scientists = src.getScientists();
+      sponsors = toPeopleOrg(src.getSponsors(), Organization::getUuid, Organization::getName);
+      funders = toPeopleOrg(src.getFunders(), Organization::getUuid, Organization::getName);
+      scientists = toPeopleOrg(src.getScientists(), Person::getUuid, Person::getName);
       projects = src.getProjects();
       omics = src.getOmics();
       metadataAuthor = src.getMetadataAuthor();
       instruments = src.getInstruments();
       packageInstruments = src.getPackageInstruments();
+    }
+
+    private <M> List<PeopleOrg> toPeopleOrg(List<M> objects, Function<M, String> getUuid, Function<M, String> getName) {
+      return objects.stream()
+          .map(scientist -> PeopleOrg.builder()
+              .withUuid(getUuid.apply(scientist))
+              .withName(getName.apply(scientist))
+              .build())
+          .collect(Collectors.toList());
     }
 
     private Builder(CruiseData src) {

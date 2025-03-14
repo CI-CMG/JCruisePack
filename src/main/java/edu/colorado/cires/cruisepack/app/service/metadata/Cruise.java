@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @JsonTypeInfo(use = Id.NONE)
 @JsonSubTypes({ @Type(CruiseMetadata.class), @Type(CruiseData.class) })
-public abstract class Cruise {
+public abstract class Cruise<Sci, F, Spo> {
 
   private final String cruiseId;
   private final String segmentId;
@@ -26,9 +26,9 @@ public abstract class Cruise {
   private final String cruiseTitle;
   private final String cruisePurpose;
   private final String cruiseDescription;
-  private final List<PeopleOrg> sponsors;
-  private final List<PeopleOrg> funders;
-  private final List<PeopleOrg> scientists;
+  private final List<Spo> sponsors;
+  private final List<F> funders;
+  private final List<Sci> scientists;
   private final List<String> projects;
   private final Omics omics;
   private final MetadataAuthor metadataAuthor;
@@ -37,7 +37,7 @@ public abstract class Cruise {
 
   protected Cruise(String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid, String departurePort,
       String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
-      String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists, List<String> projects, Omics omics,
+      String cruiseDescription, List<Spo> sponsors, List<F> funders, List<Sci> scientists, List<String> projects, Omics omics,
       MetadataAuthor metadataAuthor, List<Instrument> instruments, Map<String, PackageInstrument> packageInstruments) {
     this.cruiseId = cruiseId;
     this.segmentId = segmentId;
@@ -119,15 +119,15 @@ public abstract class Cruise {
     return cruiseDescription;
   }
 
-  public List<PeopleOrg> getSponsors() {
+  public List<Spo> getSponsors() {
     return sponsors;
   }
 
-  public List<PeopleOrg> getFunders() {
+  public List<F> getFunders() {
     return funders;
   }
 
-  public List<PeopleOrg> getScientists() {
+  public List<Sci> getScientists() {
     return scientists;
   }
 

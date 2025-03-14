@@ -12,6 +12,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
+import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import edu.colorado.cires.cruisepack.xml.person.Person;
 import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
@@ -642,7 +643,7 @@ class PackerExecutor {
       metadata.add("Source-Organization", String.join(
          ", ",
          cruiseMetadata.getSponsors().stream()
-             .map(PeopleOrg::getName)
+             .map(Organization::getName)
              .collect(Collectors.toSet())
       ));
     }

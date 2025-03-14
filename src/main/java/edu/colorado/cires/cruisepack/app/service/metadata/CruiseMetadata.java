@@ -3,6 +3,8 @@ package edu.colorado.cires.cruisepack.app.service.metadata;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import edu.colorado.cires.cruisepack.xml.organization.Organization;
+import edu.colorado.cires.cruisepack.xml.person.Person;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -11,11 +13,11 @@ import java.util.Map;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonDeserialize(builder = CruiseMetadata.Builder.class)
-public class CruiseMetadata extends Cruise {
+public class CruiseMetadata extends Cruise<Person, Organization, Organization> {
 
   private CruiseMetadata(String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
-      String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists, List<String> projects, Omics omics,
+      String cruiseDescription, List<Organization> sponsors, List<Organization> funders, List<Person> scientists, List<String> projects, Omics omics,
       MetadataAuthor metadataAuthor, List<Instrument> instruments, Map<String, PackageInstrument> packageInstruments) {
     super(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate, seaArea,
         cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
@@ -46,9 +48,9 @@ public class CruiseMetadata extends Cruise {
     private String cruiseTitle;
     private String cruisePurpose;
     private String cruiseDescription;
-    private List<PeopleOrg> sponsors = Collections.emptyList();
-    private List<PeopleOrg> funders = Collections.emptyList();
-    private List<PeopleOrg> scientists = Collections.emptyList();
+    private List<Organization> sponsors = Collections.emptyList();
+    private List<Organization> funders = Collections.emptyList();
+    private List<Person> scientists = Collections.emptyList();
     private List<String> projects = Collections.emptyList();
     private Omics omics;
     private MetadataAuthor metadataAuthor;
@@ -154,7 +156,7 @@ public class CruiseMetadata extends Cruise {
       return this;
     }
 
-    public Builder withSponsors(List<PeopleOrg> sponsors) {
+    public Builder withSponsors(List<Organization> sponsors) {
       if (sponsors == null) {
         sponsors = new ArrayList<>(0);
       }
@@ -162,7 +164,7 @@ public class CruiseMetadata extends Cruise {
       return this;
     }
 
-    public Builder withFunders(List<PeopleOrg> funders) {
+    public Builder withFunders(List<Organization> funders) {
       if (funders == null) {
         funders = new ArrayList<>(0);
       }
@@ -170,7 +172,7 @@ public class CruiseMetadata extends Cruise {
       return this;
     }
 
-    public Builder withScientists(List<PeopleOrg> scientists) {
+    public Builder withScientists(List<Person> scientists) {
       if (scientists == null) {
         scientists = new ArrayList<>(0);
       }

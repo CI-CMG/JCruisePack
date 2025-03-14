@@ -19,6 +19,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
+import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -77,8 +79,8 @@ public class MetadataService {
         .withCruiseTitle(packJob.getCruiseTitle())
         .withCruisePurpose(packJob.getCruisePurpose())
         .withCruiseDescription(packJob.getCruiseDescription())
-       .withSponsors(packJob.getSources())
-       .withFunders(packJob.getFunders())
+       .withSponsors(inflatePersonOrgList(packJob.getSources(), organizationDatastore::findByUUID))
+       .withFunders(inflatePersonOrgList(packJob.getFunders(), organizationDatastore::findByUUID))
        .withMetadataAuthor(packJob.getMetadataAuthor() == null ? null : MetadataAuthor.builder()
        .withUuid(packJob.getMetadataAuthor().getUuid())
        .withName(packJob.getMetadataAuthor().getName())
@@ -86,7 +88,7 @@ public class MetadataService {
        .withPhone(packJob.getMetadataAuthor().getPhone())
        .build())
        //        .withProjects()
-       .withScientists(packJob.getScientists())
+       .withScientists(inflatePersonOrgList(packJob.getScientists(), personDatastore::findByUUID))
         .withOmics(
             new OmicsMetadata(
                 packJob.getOmicsBioProjectAccession(),
@@ -104,7 +106,24 @@ public class MetadataService {
         .withInstruments(getInstrumentsJson(packJob))
         .build();
   }
-  
+
+  private <T> List<T> inflatePersonOrgList(List<PeopleOrg> peopleOrgs, Function<String, Optional<T>> getByUuid) {
+    List<T> result = new ArrayList<>(0);
+
+    for (PeopleOrg source : peopleOrgs) {
+      String uuid = source.getUuid();
+      T object = getByUuid.apply(uuid).orElseThrow(
+          () -> new RuntimeException(String.format(
+              "%s not found", uuid
+          ))
+      );
+      
+      result.add(object);
+    }
+    
+    return result;
+  }
+
   public CruiseData createData(PackJob packJob) {
     return CruiseData.builder()
         .withUse(true)

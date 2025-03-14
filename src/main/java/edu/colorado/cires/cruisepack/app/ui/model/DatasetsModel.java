@@ -47,7 +47,7 @@ public class DatasetsModel extends PropertyChangeModel {
     setDocumentsPathError(null);
   }
   
-  public void updateFormState(Cruise metadata) {
+  public void updateFormState(Cruise<?, ?, ?> metadata) {
     clearDatasets();
     
     for (Instrument instrument : metadata.getInstruments().stream().filter(i -> !i.getType().contains("Ancillary Data")).toList()) {
