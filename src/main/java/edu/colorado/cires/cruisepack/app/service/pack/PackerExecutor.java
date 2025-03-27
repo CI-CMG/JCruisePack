@@ -12,7 +12,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Person;
 import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.beans.PropertyChangeListener;

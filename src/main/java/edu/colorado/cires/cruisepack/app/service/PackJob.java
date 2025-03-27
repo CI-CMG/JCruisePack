@@ -2,7 +2,7 @@ package edu.colorado.cires.cruisepack.app.service;
 
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.EnoughDiskSpace;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Person;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;

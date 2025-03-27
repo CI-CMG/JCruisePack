@@ -1,18 +1,15 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.projects.Project;
-import edu.colorado.cires.cruisepack.xml.projects.ProjectData;
-import edu.colorado.cires.cruisepack.xml.projects.ProjectList;
+import edu.colorado.cires.cruisepack.data.Project;
+import edu.colorado.cires.cruisepack.data.ProjectData;
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXB;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileOutputStream;
@@ -39,10 +36,12 @@ public class ProjectDatastore extends PropertyChangeModel {
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> projectDropDowns;
   private  List<Project> projects;
+  private final ObjectMapper objectMapper;
 
   @Autowired
-  public ProjectDatastore(ServiceProperties serviceProperties) {
+  public ProjectDatastore(ServiceProperties serviceProperties, ObjectMapper objectMapper) {
     this.serviceProperties = serviceProperties;
+    this.objectMapper = objectMapper;
   }
 
   @PostConstruct
@@ -71,10 +70,9 @@ public class ProjectDatastore extends PropertyChangeModel {
 
   public void save(Project project) {
     ProjectData newProjectData = new ProjectData();
-    ProjectList newProjectList = new ProjectList();
-    List<Project> listWithNewProject = newProjectList.getProjects();
+    List<Project> listWithNewProject = new ArrayList<>();
     listWithNewProject.add(project);
-    newProjectData.setProjects(newProjectList);
+    newProjectData.setProjects(listWithNewProject);
     List<Project> mergedProjects = mergeProjects(
         readProjects("local-data"),
         Optional.of(newProjectData)
@@ -82,19 +80,18 @@ public class ProjectDatastore extends PropertyChangeModel {
 
     ProjectData projectData = new ProjectData();
     projectData.setDataVersion("1.0");
-    ProjectList projectList = new ProjectList();
-    List<Project> projects = projectList.getProjects();
+    List<Project> projects = new ArrayList<>();
     projects.addAll(
         mergedProjects
     );
-    projectData.setProjects(projectList);
+    projectData.setProjects(projects);
 
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("local-data");
     Path projectsFile = dataDir.resolve("projects.xml");
 
-    try (OutputStream outputStream = new FileOutputStream(projectsFile.toFile())) {
-      JAXB.marshal(projectData, outputStream);
+    try {
+      objectMapper.writeValue(projectsFile.toFile(), newProjectData);
     } catch (Exception e) {
       throw new IllegalStateException("Failed to save drop down items: ", e);
     }
@@ -105,8 +102,8 @@ public class ProjectDatastore extends PropertyChangeModel {
 
   private List<Project> mergeProjects(Optional<ProjectData> defaults, Optional<ProjectData> overrides) {
     Map<String, Project> merged = new HashMap<>(0);
-    defaults.map(od -> od.getProjects().getProjects()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-    overrides.map(od -> od.getProjects().getProjects()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+    defaults.map(ProjectData::getProjects).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+    overrides.map(ProjectData::getProjects).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
 
     return merged.values().stream()
         .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
@@ -120,14 +117,12 @@ public class ProjectDatastore extends PropertyChangeModel {
     if (!Files.isRegularFile(projectsFile)) {
       return Optional.empty();
     }
-    ProjectData projectData;
-    try (Reader reader = Files.newBufferedReader(projectsFile, StandardCharsets.UTF_8)) {
-      projectData = (ProjectData) JAXBContext.newInstance(ProjectData.class)
-          .createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+
+    try {
+      return Optional.of(objectMapper.readValue(projectsFile.toFile(), ProjectData.class));
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + projectsFile, e);
     }
-    return Optional.of(projectData);
   }
 
   public Optional<Project> findByName(String name) {

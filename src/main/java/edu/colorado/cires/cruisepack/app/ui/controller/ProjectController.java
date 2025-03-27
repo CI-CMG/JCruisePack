@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.ui.controller;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.ui.model.ProjectModel;
 import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Person;
 import edu.colorado.cires.cruisepack.xml.projects.Project;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.ConstraintViolation;

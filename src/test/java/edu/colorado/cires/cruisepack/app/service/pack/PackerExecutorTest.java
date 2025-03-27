@@ -13,7 +13,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Person;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
