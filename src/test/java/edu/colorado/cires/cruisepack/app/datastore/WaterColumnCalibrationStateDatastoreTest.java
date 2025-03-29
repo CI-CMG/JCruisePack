@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.waterColumnCalibrationState.WaterColumnCalibrationStateData;
+import edu.colorado.cires.cruisepack.data.WaterColumnCalibrationStateData;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class WaterColumnCalibrationStateDatastoreTest extends XMLDatastoreTest<WaterCol
     datastore.init();
 
     Set<NameUUIDPair> expected = readFile(WaterColumnCalibrationStateData.class).getWaterColumnCalibrationStates()
-        .getWaterColumnCalibrationStates().stream()
+        .stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(

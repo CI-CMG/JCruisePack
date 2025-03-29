@@ -119,13 +119,11 @@ public final class PackJobUtils {
         Instrument instrument = instrumentDatastore.getInstrument(pkg)
             .orElseThrow(() -> new IllegalStateException("Unable to find instrument " + pkg));
         Set<String> exts = new LinkedHashSet<>();
-        FileExtensionList fileExtensionList = instrument.getFileExtensions();
-        if (fileExtensionList != null) {
-          List<String> extList = fileExtensionList.getFileExtensions();
+          List<String> extList = instrument.getFileExtensions();
           if (extList != null) {
             exts.addAll(extList);
           }
-        }
+
 
         InstrumentDetail.Builder builder = InstrumentDetail.builder()
             .setUuid(nameHolder.getUuid())
@@ -229,7 +227,7 @@ public final class PackJobUtils {
         .setInstrument(instrument.getInstrument())
         .setShortName(instrument.getShortName())
         .setExtensions(
-            xmlInstrument.getFileExtensions() == null ? null : new HashSet<>(xmlInstrument.getFileExtensions().getFileExtensions())
+            xmlInstrument.getFileExtensions() == null ? null : new HashSet<>(xmlInstrument.getFileExtensions())
         )
         .setFlatten(xmlInstrument.isFlatten())
         .setDirName(instrument.getDirName())

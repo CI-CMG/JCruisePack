@@ -77,10 +77,9 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
     public void save(Organization organization) {
         OrganizationData newOrganizationData = new OrganizationData();
-        OrganizationList newOrganizationList = new OrganizationList();
-        List<Organization> listWithNewOrganization = newOrganizationList.getOrganizations();
+        List<Organization> listWithNewOrganization = new ArrayList<>();
         listWithNewOrganization.add(organization);
-        newOrganizationData.setOrganizations(newOrganizationList);
+        newOrganizationData.setOrganizations(listWithNewOrganization);
         List<Organization> mergedOrganizations = mergeOrganizations(
             readOrganizations("local-data"),
              Optional.of(newOrganizationData)
@@ -88,12 +87,11 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
         OrganizationData organizationData = new OrganizationData();
         organizationData.setDataVersion("1.0");
-        OrganizationList organizationList = new OrganizationList();
-        List<Organization> organizations = organizationList.getOrganizations();
+        List<Organization> organizations = new ArrayList<>();
         organizations.addAll(
             mergedOrganizations
         );
-        organizationData.setOrganizations(organizationList);
+        organizationData.setOrganizations(organizations);
 
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");
@@ -129,8 +127,8 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
     private List<Organization> mergeOrganizations(Optional<OrganizationData> defaults, Optional<OrganizationData> overrides) {
         Map<String, Organization> merged = new HashMap<>(0);
-        defaults.map(od -> od.getOrganizations().getOrganizations()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-        overrides.map(od -> od.getOrganizations().getOrganizations()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+        defaults.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+        overrides.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
 
         return merged.values().stream()
             .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))

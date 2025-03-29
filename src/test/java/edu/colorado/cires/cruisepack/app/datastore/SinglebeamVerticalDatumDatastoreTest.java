@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.singlebeamVerticalDatum.SinglebeamVerticalDatumData;
+import edu.colorado.cires.cruisepack.data.SinglebeamVerticalDatumData;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -21,8 +21,7 @@ class SinglebeamVerticalDatumDatastoreTest extends XMLDatastoreTest<SinglebeamVe
   void init() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(SinglebeamVerticalDatumData.class).getSinglebeamVerticalDatums()
-        .getSinglebeamVerticalData().stream()
+    Set<NameUUIDPair> expected = readFile(SinglebeamVerticalDatumData.class).getSinglebeamVerticalDatums().stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(

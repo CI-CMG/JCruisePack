@@ -94,8 +94,8 @@ public class PersonDatastore extends PropertyChangeModel {
 
     private List<Person> mergeDropDownItemLists(Optional<PersonData> defaults, Optional<PersonData> overrides) {
         Map<String, Person> merged = new HashMap<>(0);
-        defaults.map(pd -> pd.getPeople().getPersons()).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
-        overrides.map(pd -> pd.getPeople().getPersons()).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
+        defaults.map(PersonData::getPeople).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
+        overrides.map(PersonData::getPeople).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
 
         return merged.values().stream()
             .sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()))
@@ -104,10 +104,9 @@ public class PersonDatastore extends PropertyChangeModel {
 
     public void save(Person person) {
         PersonData newPersonData = new PersonData();
-        PersonList newPersonList = new PersonList();
-        List<Person> listWithNewPerson = newPersonList.getPersons();
+        List<Person> listWithNewPerson = new ArrayList<>();
         listWithNewPerson.add(person);
-        newPersonData.setPeople(newPersonList);
+        newPersonData.setPeople(listWithNewPerson);
         List<Person> mergedPeople = mergeDropDownItemLists(
             readPeople("local-data"),
             Optional.of(newPersonData)
@@ -115,12 +114,11 @@ public class PersonDatastore extends PropertyChangeModel {
 
         PersonData personData = new PersonData();
         personData.setDataVersion("1.0");
-        PersonList personList = new PersonList();
-        List<Person> people = personList.getPersons();
+        List<Person> people = new ArrayList<>();
         people.addAll(
             mergedPeople
         );
-        personData.setPeople(personList);
+        personData.setPeople(people);
 
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");

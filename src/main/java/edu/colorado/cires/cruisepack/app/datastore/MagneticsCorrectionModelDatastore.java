@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.magneticsCorrectionModel.MagneticsCorrectionModelData;
+import edu.colorado.cires.cruisepack.data.MagneticsCorrectionModelData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -49,9 +49,9 @@ public class MagneticsCorrectionModelDatastore {
             throw new IllegalStateException("Unable to parse " + correctionModelsFile, e);
         }
 
-        correctionModelDropDowns = new ArrayList<>(data.getMagneticsCorrectionModels().getMagneticsCorrectionModels().size() + 1);
+        correctionModelDropDowns = new ArrayList<>(data.getMagneticsCorrectionModels().size() + 1);
         correctionModelDropDowns.add(UNSELECTED_CORRECTION_MODEL);
-        data.getMagneticsCorrectionModels().getMagneticsCorrectionModels().stream()
+        data.getMagneticsCorrectionModels().stream()
             .sorted((m1, m2) -> m1.getName().compareToIgnoreCase(m2.getName()))
             .map(m -> new DropDownItem(m.getUuid(), m.getName()))
             .forEach(correctionModelDropDowns::add);

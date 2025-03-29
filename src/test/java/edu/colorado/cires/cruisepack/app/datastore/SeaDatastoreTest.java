@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.sea.SeaData;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ class SeaDatastoreTest extends XMLDatastoreTest<SeaData> {
   void init() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(SeaData.class).getSeas().getSeas().stream()
+    Set<NameUUIDPair> expected = readFile(SeaData.class).getSeas().stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(

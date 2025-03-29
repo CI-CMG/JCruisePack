@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.navigationDatum.NavigationDatumData;
+import edu.colorado.cires.cruisepack.data.NavigationDatumData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -48,9 +48,9 @@ public class NavigationDatumDatastore {
             throw new IllegalStateException("Unable to parse " + navigationDatumsFile, e);
         }
 
-        navigationDatumDropDowns = new ArrayList<>(data.getNavigationDatums().getNavigationData().size() + 1);
+        navigationDatumDropDowns = new ArrayList<>(data.getNavigationDatums().size() + 1);
         navigationDatumDropDowns.add(UNSELECTED_NAVIGATION_DATUM);
-        data.getNavigationDatums().getNavigationData().stream()
+        data.getNavigationDatums().stream()
             .sorted((d1, d2) -> d1.getName().compareToIgnoreCase(d2.getName()))
             .map(d -> new DropDownItem(d.getUuid(), d.getName()))
             .forEach(navigationDatumDropDowns::add);

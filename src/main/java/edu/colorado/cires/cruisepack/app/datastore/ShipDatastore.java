@@ -2,8 +2,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.ship.Ship;
-import edu.colorado.cires.cruisepack.xml.ship.ShipData;
+import edu.colorado.cires.cruisepack.data.Ship;
+import edu.colorado.cires.cruisepack.data.ShipData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -46,9 +46,9 @@ public class ShipDatastore {
     } catch (IOException | JAXBException e) {
       throw new IllegalStateException("Unable to parse " + shipFile, e);
     }
-    shipDropDowns = new ArrayList<>(shipData.getShips().getShips().size() + 1);
+    shipDropDowns = new ArrayList<>(shipData.getShips().size() + 1);
     shipDropDowns.add(UNSELECTED_SHIP);
-    shipData.getShips().getShips().stream()
+    shipData.getShips().stream()
         .filter(Ship::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))

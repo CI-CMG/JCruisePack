@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.waterColumnCalibrationState.WaterColumnCalibrationStateData;
+import edu.colorado.cires.cruisepack.data.WaterColumnCalibrationStateData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -48,9 +48,9 @@ public class WaterColumnCalibrationStateDatastore {
             throw new IllegalStateException("Unable to parse " + calibrationStatesFile, e);
         }
 
-        calibrationStateDropDowns = new ArrayList<>(data.getWaterColumnCalibrationStates().getWaterColumnCalibrationStates().size() + 1);
+        calibrationStateDropDowns = new ArrayList<>(data.getWaterColumnCalibrationStates().size() + 1);
         calibrationStateDropDowns.add(UNSELECTED_CALIBRATION_STATE);
-        data.getWaterColumnCalibrationStates().getWaterColumnCalibrationStates().stream()
+        data.getWaterColumnCalibrationStates().stream()
             .sorted((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()))
             .map(c -> new DropDownItem(c.getUuid(), c.getName()))
             .forEach(calibrationStateDropDowns::add);

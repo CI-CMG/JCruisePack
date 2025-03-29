@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.projects.Project;
-import edu.colorado.cires.cruisepack.xml.projects.ProjectData;
-import edu.colorado.cires.cruisepack.xml.projects.ProjectList;
+import edu.colorado.cires.cruisepack.data.Project;
+import edu.colorado.cires.cruisepack.data.ProjectData;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ class ProjectDatastoreTest extends OverridableXMLDatastoreTest<ProjectData> {
     SERVICE_PROPERTIES.setWorkDir(TEST_PATH.toString());
   }
   
-  private final ProjectDatastore datastore = new ProjectDatastore(SERVICE_PROPERTIES);
+  private final ProjectDatastore datastore = new ProjectDatastore(SERVICE_PROPERTIES, new ObjectMapper());
 
   @Test
   void init() {
@@ -26,7 +26,7 @@ class ProjectDatastoreTest extends OverridableXMLDatastoreTest<ProjectData> {
     
     assertThrows(IllegalStateException.class, () -> readFile(ProjectData.class)); // no default file
     
-    assertTrue(readLocalFile(ProjectData.class).getProjects().getProjects().isEmpty());
+    assertTrue(readLocalFile(ProjectData.class).getProjects().isEmpty());
   }
 
   @Test
@@ -42,7 +42,7 @@ class ProjectDatastoreTest extends OverridableXMLDatastoreTest<ProjectData> {
 
     assertThrows(IllegalStateException.class, () -> readFile(ProjectData.class)); // no default file
 
-    Optional<Project> maybeSavedProject = readLocalFile(ProjectData.class).getProjects().getProjects().stream()
+    Optional<Project> maybeSavedProject = readLocalFile(ProjectData.class).getProjects().stream()
         .filter(p -> p.getUuid().equals(project.getUuid()) && p.getName().equals(project.getName()))
         .findFirst();
     assertTrue(maybeSavedProject.isPresent());
@@ -80,12 +80,11 @@ class ProjectDatastoreTest extends OverridableXMLDatastoreTest<ProjectData> {
   protected ProjectData createDataObject() {
     ProjectData data = new ProjectData();
     data.setDataVersion("1.0");
-    data.setProjects(new ProjectList());
     return data;
   }
 
   @Override
   protected String getXMLFilename() {
-    return "projects.xml";
+    return "projects.json";
   }
 }

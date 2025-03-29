@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.gravityCorrectionModel.GravityCorrectionModelData;
+import edu.colorado.cires.cruisepack.data.GravityCorrectionModelData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -49,9 +49,9 @@ public class GravityCorrectionModelDatastore {
             throw new IllegalStateException("Unable to parse " + correctionModelsFile, e);
         }
 
-        correctionModelDropDowns = new ArrayList<>(data.getGravityCorrectionModels().getGravityCorrectionModels().size() + 1);
+        correctionModelDropDowns = new ArrayList<>(data.getGravityCorrectionModels().size() + 1);
         correctionModelDropDowns.add(UNSELECTED_CORRECTION_MODEL);
-        data.getGravityCorrectionModels().getGravityCorrectionModels().stream()
+        data.getGravityCorrectionModels().stream()
             .sorted((m1, m2) -> m1.getName().compareToIgnoreCase(m2.getName()))
             .map(m -> new DropDownItem(m.getUuid(), m.getName()))
             .forEach(correctionModelDropDowns::add);

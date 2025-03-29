@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.singlebeamVerticalDatum.SinglebeamVerticalDatumData;
+import edu.colorado.cires.cruisepack.data.SinglebeamVerticalDatumData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -49,9 +49,9 @@ public class SinglebeamVerticalDatumDatastore {
             throw new IllegalStateException("Unable to parse " + verticalDatumsFile, e);
         }
 
-        verticalDatumDropDowns = new ArrayList<>(data.getSinglebeamVerticalDatums().getSinglebeamVerticalData().size() + 1);
+        verticalDatumDropDowns = new ArrayList<>(data.getSinglebeamVerticalDatums().size() + 1);
         verticalDatumDropDowns.add(UNSELECTED_VERTICAL_DATUM);
-        data.getSinglebeamVerticalDatums().getSinglebeamVerticalData().stream()
+        data.getSinglebeamVerticalDatums().stream()
             .sorted((d1, d2) -> d1.getName().compareToIgnoreCase(d2.getName()))
             .map(d -> new DropDownItem(d.getUuid(), d.getName()))
             .forEach(verticalDatumDropDowns::add);

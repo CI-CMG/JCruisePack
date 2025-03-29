@@ -28,12 +28,12 @@ import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
 import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
 import edu.colorado.cires.cruisepack.app.ui.view.common.OptionPaneGenerator;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
-import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
+import edu.colorado.cires.cruisepack.data.Organization;
+import edu.colorado.cires.cruisepack.data.OrganizationData;
 import edu.colorado.cires.cruisepack.data.Person;
 import edu.colorado.cires.cruisepack.data.PersonData;
-import edu.colorado.cires.cruisepack.xml.projects.Project;
-import edu.colorado.cires.cruisepack.xml.projects.ProjectData;
+import edu.colorado.cires.cruisepack.data.Project;
+import edu.colorado.cires.cruisepack.data.ProjectData;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -137,22 +137,22 @@ public class SqliteMigratorTest {
     );
     migrator.migrate(oldCp, "TEST");
 
-    List<String> expectedOrgs = readOrganizations(expected.resolve("organizations.xml")).getOrganizations().getOrganizations().stream().map(SqliteMigratorTest::toXml).toList();
+    List<String> expectedOrgs = readOrganizations(expected.resolve("organizations.json")).getOrganizations().stream().map(SqliteMigratorTest::toJson).toList();
     ArgumentCaptor<Organization> orgCaptor = ArgumentCaptor.forClass(Organization.class);
     verify(organizationDatastore, times(expectedOrgs.size())).save(orgCaptor.capture());
-    List<String> capturedOrgs = orgCaptor.getAllValues().stream().map(SqliteMigratorTest::toXml).collect(Collectors.toList());
+    List<String> capturedOrgs = orgCaptor.getAllValues().stream().map(SqliteMigratorTest::toJson).collect(Collectors.toList());
     assertEquals(expectedOrgs, capturedOrgs);
 
-    List<String> expectedPeople = readPeople(expected.resolve("people.xml")).getPeople().getPersons().stream().map(SqliteMigratorTest::toXml).collect(Collectors.toList());
+    List<String> expectedPeople = readPeople(expected.resolve("people.json")).getPeople().stream().map(SqliteMigratorTest::toJson).collect(Collectors.toList());
     ArgumentCaptor<Person> personCaptor = ArgumentCaptor.forClass(Person.class);
     verify(personDatastore, times(expectedPeople.size())).save(personCaptor.capture());
-    List<String> capturedPeople = personCaptor.getAllValues().stream().map(SqliteMigratorTest::toXml).collect(Collectors.toList());
+    List<String> capturedPeople = personCaptor.getAllValues().stream().map(SqliteMigratorTest::toJson).collect(Collectors.toList());
     assertEquals(expectedPeople, capturedPeople);
 
-    List<String> expectedProjects = readProjects(expected.resolve("projects.xml")).getProjects().getProjects().stream().map(SqliteMigratorTest::toXml).collect(Collectors.toList());
+    List<String> expectedProjects = readProjects(expected.resolve("projects.json")).getProjects().stream().map(SqliteMigratorTest::toJson).collect(Collectors.toList());
     ArgumentCaptor<Project> projectCaptor = ArgumentCaptor.forClass(Project.class);
     verify(projectDatastore, times(expectedProjects.size())).save(projectCaptor.capture());
-    List<String> capturedProjects = projectCaptor.getAllValues().stream().map(SqliteMigratorTest::toXml).collect(Collectors.toList());
+    List<String> capturedProjects = projectCaptor.getAllValues().stream().map(SqliteMigratorTest::toJson).collect(Collectors.toList());
     assertEquals(expectedProjects, capturedProjects);
 
     List<String> expectedCruises = new ArrayList<>();
@@ -224,10 +224,14 @@ public class SqliteMigratorTest {
 
   }
 
-  private static String toXml(Object o) {
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    JAXB.marshal(o, outputStream);
-    return outputStream.toString(StandardCharsets.UTF_8);
+  private static String toJson(Object o) {
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      return mapper.writeValueAsString(o);
+    }
+    catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private OrganizationData readOrganizations(Path path) throws IOException, JAXBException {

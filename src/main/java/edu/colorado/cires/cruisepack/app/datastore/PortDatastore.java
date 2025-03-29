@@ -2,8 +2,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.port.Port;
-import edu.colorado.cires.cruisepack.xml.port.PortData;
+import edu.colorado.cires.cruisepack.data.Port;
+import edu.colorado.cires.cruisepack.data.PortData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -46,9 +46,9 @@ public class PortDatastore {
     } catch (IOException | JAXBException e) {
       throw new IllegalStateException("Unable to parse " + portFile, e);
     }
-    portDropDowns = new ArrayList<>(portData.getPorts().getPorts().size() + 1);
+    portDropDowns = new ArrayList<>(portData.getPorts().size() + 1);
     portDropDowns.add(UNSELECTED_PORT);
-    portData.getPorts().getPorts().stream()
+    portData.getPorts().stream()
         .filter(Port::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))

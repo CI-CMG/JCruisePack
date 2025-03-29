@@ -17,7 +17,7 @@ import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModelTest;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
+import edu.colorado.cires.cruisepack.data.Organization;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.util.Collections;

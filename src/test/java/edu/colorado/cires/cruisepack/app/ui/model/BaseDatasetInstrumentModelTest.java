@@ -13,7 +13,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.dataset.GravityAdditionalField
 import edu.colorado.cires.cruisepack.app.ui.model.dataset.NavigationAdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
-import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
+import edu.colorado.cires.cruisepack.data.Instrument;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collections;
