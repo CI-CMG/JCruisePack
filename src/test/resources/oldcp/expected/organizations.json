@@ -1,0 +1,148 @@
+{
+  "dataVersion" : "1.0",
+  "organizations" : [ {
+    "name" : "AFSC",
+    "street" : "7600 Sand Point Way N.E., Building 4",
+    "city" : "Seattle",
+    "state" : "WA",
+    "zip" : "98115",
+    "country" : "USA",
+    "email" : null,
+    "phone" : "206-526-4000",
+    "uuid" : "01082b23-154c-4c2d-bef7-5e35315d41e0",
+    "use" : true
+  }, {
+    "name" : "NEFSC",
+    "street" : "166 Water Street",
+    "city" : "Woods Hole",
+    "state" : "MA",
+    "zip" : "02543-1026",
+    "country" : "USA",
+    "email" : null,
+    "phone" : "508-495-2000",
+    "uuid" : "ebd76260-2bad-4f23-ac30-62726422f231",
+    "use" : true
+  }, {
+    "name" : "NWFSC",
+    "street" : "2725 Montlake Boulevard East",
+    "city" : "Seattle",
+    "state" : "WA",
+    "zip" : "98112",
+    "country" : "USA",
+    "email" : null,
+    "phone" : "206-860-3200",
+    "uuid" : "95bb98c1-36ce-462d-b9aa-2caef4fa0a40",
+    "use" : true
+  }, {
+    "name" : "PIFSC",
+    "street" : "2570 Dole Street",
+    "city" : "Honolulu",
+    "state" : "HI",
+    "zip" : "96822-2396",
+    "country" : "USA",
+    "email" : null,
+    "phone" : "808-983-5300",
+    "uuid" : "cafb6caa-03af-4c54-8c8f-b5dbfc5734bf",
+    "use" : true
+  }, {
+    "name" : "SEFSC",
+    "street" : "75 Virginia Beach Dr.",
+    "city" : "Miami",
+    "state" : "FL",
+    "zip" : "33149",
+    "country" : "USA",
+    "email" : null,
+    "phone" : "305-361-4200",
+    "uuid" : "7ab0c8aa-8a78-4112-98f7-c93cea679192",
+    "use" : true
+  }, {
+    "name" : "SWFSC",
+    "street" : "8901 La Jolla Shores Dr.",
+    "city" : "La Jolla",
+    "state" : "CA",
+    "zip" : "92037",
+    "country" : "USA",
+    "email" : null,
+    "phone" : "858-546-7000",
+    "uuid" : "918a8687-8b33-4f70-b550-79a5273866fa",
+    "use" : true
+  }, {
+    "name" : "OER",
+    "street" : "SSMC3, 1315 East-West Highway, 10th Floor",
+    "city" : "Silver Spring",
+    "state" : "MD",
+    "zip" : "20910",
+    "country" : "USA",
+    "email" : "ncddcmetadata@noaa.gov",
+    "phone" : "301-734-1000",
+    "uuid" : "08D95C427FB128479945893256DADE37",
+    "use" : true
+  }, {
+    "name" : "Woods Hole",
+    "street" : "266 Woods Hole Road",
+    "city" : "Woods Hole",
+    "state" : "MA",
+    "zip" : "02543-1050",
+    "country" : "USA",
+    "email" : "information@whoi.edu",
+    "phone" : "508-289-2252",
+    "uuid" : "E125CE0B72B01442AAA4D711CAF3EB93",
+    "use" : true
+  }, {
+    "name" : "NERC",
+    "street" : "Polaris House, North Star Avenue",
+    "city" : "Swindon",
+    "state" : null,
+    "zip" : "SN2 1EU",
+    "country" : "UK",
+    "email" : null,
+    "phone" : "01793 411500",
+    "uuid" : "75d5e706-ca0f-4a53-9b09-752263669c8b",
+    "use" : true
+  }, {
+    "name" : "UNOLS",
+    "street" : "15 South Ferry Road",
+    "city" : "Narragansett",
+    "state" : "RI",
+    "zip" : "02882",
+    "country" : "USA",
+    "email" : "office@unols.org",
+    "phone" : "401-874-6825",
+    "uuid" : "900fba95-0b21-415c-96e3-2c8c0f82c5ca",
+    "use" : true
+  }, {
+    "name" : "ONMS",
+    "street" : "1305 East-West Highway",
+    "city" : "Silver Spring",
+    "state" : "MD",
+    "zip" : "20910",
+    "country" : "USA",
+    "email" : "sanctuaries@noaa.gov",
+    "phone" : "301-713-3125",
+    "uuid" : "1e78f564-ac17-4ebc-9a96-5caaecf7663b",
+    "use" : true
+  }, {
+    "name" : "U.S. National Science Foundation",
+    "street" : "4201 Wilson Blvd",
+    "city" : "Arlington",
+    "state" : "VA",
+    "zip" : "22230",
+    "country" : "USA",
+    "email" : "info@nsf.gov",
+    "phone" : null,
+    "uuid" : "f30655c4-4ead-4af3-8247-29e3cdb064a8",
+    "use" : true
+  }, {
+    "name" : "NMFS",
+    "uuid" : "14",
+    "use" : true
+  }, {
+    "name" : "OMAO",
+    "uuid" : "20",
+    "use" : true
+  }, {
+    "name" : "funded by a Line Office allocation",
+    "uuid" : "22",
+    "use" : true
+  } ]
+}

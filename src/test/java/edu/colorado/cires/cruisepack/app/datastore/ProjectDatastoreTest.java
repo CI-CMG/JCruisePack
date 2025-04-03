@@ -84,7 +84,7 @@ class ProjectDatastoreTest extends OverridableXMLDatastoreTest<ProjectData> {
   }
 
   @Override
-  protected String getXMLFilename() {
+  protected String getJSONFilename() {
     return "projects.json";
   }
 }

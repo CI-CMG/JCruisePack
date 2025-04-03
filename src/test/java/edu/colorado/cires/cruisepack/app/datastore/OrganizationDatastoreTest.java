@@ -185,8 +185,8 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "organizations.xml";
+  protected String getJSONFilename() {
+    return "organizations.json";
   }
 
   private static Organization createOrganization(String suffix, boolean use) {

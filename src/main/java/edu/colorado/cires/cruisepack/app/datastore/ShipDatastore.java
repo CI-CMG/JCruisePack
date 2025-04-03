@@ -36,7 +36,7 @@ public class ShipDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path shipFile = dataDir.resolve("ships.xml");
+    Path shipFile = dataDir.resolve("ships.json");
     if (!Files.isRegularFile(shipFile)) {
       throw new IllegalStateException("Unable to read " + shipFile);
     }

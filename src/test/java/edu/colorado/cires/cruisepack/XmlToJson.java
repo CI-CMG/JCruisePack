@@ -2,7 +2,6 @@ package edu.colorado.cires.cruisepack;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import edu.colorado.cires.cruisepack.data.FileExtension;
 import edu.colorado.cires.cruisepack.xml.gravityCorrectionModel.GravityCorrectionModelList;
 import edu.colorado.cires.cruisepack.xml.gravityCorrectionModel.GravityCorrectionModel;
 import edu.colorado.cires.cruisepack.xml.instrument.*;
@@ -19,6 +18,9 @@ import edu.colorado.cires.cruisepack.xml.port.PortData;
 import edu.colorado.cires.cruisepack.xml.person.PersonData;
 import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
 import edu.colorado.cires.cruisepack.xml.port.PortList;
+import edu.colorado.cires.cruisepack.xml.projects.Project;
+import edu.colorado.cires.cruisepack.xml.projects.ProjectData;
+import edu.colorado.cires.cruisepack.xml.projects.ProjectList;
 import edu.colorado.cires.cruisepack.xml.sea.Sea;
 import edu.colorado.cires.cruisepack.xml.sea.SeaData;
 import edu.colorado.cires.cruisepack.xml.sea.SeaList;
@@ -83,6 +85,9 @@ public class XmlToJson {
         NavigationDatumData navigationDatumData = unmarshalData(basePath, NavigationDatumData.class, "navigationDatums.xml");
         objectMapper.writeValue(basePath.resolve("navigationDatums.json").toFile(), convertNavigationDatumData(navigationDatumData));
 
+        ProjectData projectData = unmarshalData(basePath, ProjectData.class, "projects.xml");
+        objectMapper.writeValue(basePath.resolve("projects.json").toFile(), convertProjectData(projectData));
+
     }
 
     private static <T> T unmarshalData(Path basePath, Class<T> cls, String fileName) throws JAXBException, IOException {
@@ -128,12 +133,6 @@ public class XmlToJson {
         instrumentJson.setUse(instrumentXml.isUse());
         instrumentJson.setFlatten(instrumentXml.isFlatten());
         return instrumentJson;
-    }
-
-    private static edu.colorado.cires.cruisepack.data.FileExtension convertFileExtensionData(FileExtension fileExtensionXml) {
-        edu.colorado.cires.cruisepack.data.FileExtension fileExtensionJson = new edu.colorado.cires.cruisepack.data.FileExtension();
-        fileExtensionJson.setExtension(fileExtensionXml.getExtension());
-        return fileExtensionJson;
     }
 
     private static edu.colorado.cires.cruisepack.data.AdditionalField convertAdditionalFields(AdditionalField instrumentXml) {
@@ -343,5 +342,23 @@ public class XmlToJson {
         navigationDatumJson.setName(navigationDatumXml.getName());
         navigationDatumJson.setUuid(navigationDatumXml.getUuid());
         return navigationDatumJson;
+    }
+
+    private static edu.colorado.cires.cruisepack.data.ProjectData convertProjectData(ProjectData projectDataXml) {
+        edu.colorado.cires.cruisepack.data.ProjectData projectDataJson = new edu.colorado.cires.cruisepack.data.ProjectData();
+        projectDataJson.setDataVersion(projectDataXml.getDataVersion());
+        ProjectList projectGroupList = projectDataXml.getProjects();
+        if (projectGroupList != null) {
+            projectDataJson.setProjects(projectGroupList.getProjects().stream().map(XmlToJson::convertProjectGroup).collect(Collectors.toList()));
+        }
+        return projectDataJson;
+    }
+
+    private static edu.colorado.cires.cruisepack.data.Project convertProjectGroup (Project projectXml){
+        edu.colorado.cires.cruisepack.data.Project projectJson = new edu.colorado.cires.cruisepack.data.Project();
+        projectJson.setName(projectXml.getName());
+        projectJson.setUuid(projectXml.getUuid());
+        projectJson.setUse(projectXml.isUse());
+        return projectJson;
     }
 }

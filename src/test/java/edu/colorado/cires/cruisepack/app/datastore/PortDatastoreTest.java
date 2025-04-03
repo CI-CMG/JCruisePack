@@ -53,7 +53,7 @@ class PortDatastoreTest extends XMLDatastoreTest<PortData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "ports.xml";
+  protected String getJSONFilename() {
+    return "ports.json";
   }
 }

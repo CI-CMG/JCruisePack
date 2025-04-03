@@ -48,18 +48,18 @@ public class CruisePackPreSpringStarterTest {
         testDir.resolve("config"),
         testDir.resolve("data"),
         testDir.resolve("config/application.properties"),
-        testDir.resolve("config/log4j2.xml"),
-        testDir.resolve("data/gravityCorrectionModels.xml"),
-        testDir.resolve("data/instruments.xml"),
-        testDir.resolve("data/magneticsCorrectionModels.xml"),
-        testDir.resolve("data/navigationDatums.xml"),
-        testDir.resolve("data/organizations.xml"),
-        testDir.resolve("data/people.xml"),
-        testDir.resolve("data/ports.xml"),
-        testDir.resolve("data/seas.xml"),
-        testDir.resolve("data/ships.xml"),
-        testDir.resolve("data/singlebeamVerticalDatums.xml"),
-        testDir.resolve("data/waterColumnCalibrationStates.xml")
+        testDir.resolve("config/log4j2.json"),
+        testDir.resolve("data/gravityCorrectionModels.json"),
+        testDir.resolve("data/instruments.json"),
+        testDir.resolve("data/magneticsCorrectionModels.json"),
+        testDir.resolve("data/navigationDatums.json"),
+        testDir.resolve("data/organizations.json"),
+        testDir.resolve("data/people.json"),
+        testDir.resolve("data/ports.json"),
+        testDir.resolve("data/seas.json"),
+        testDir.resolve("data/ships.json"),
+        testDir.resolve("data/singlebeamVerticalDatums.json"),
+        testDir.resolve("data/waterColumnCalibrationStates.json")
     ));
     expected.stream().forEach(f -> {
       assertTrue(paths.contains(f));

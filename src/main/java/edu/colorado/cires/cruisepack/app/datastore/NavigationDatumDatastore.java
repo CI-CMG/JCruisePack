@@ -36,7 +36,7 @@ public class NavigationDatumDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path navigationDatumsFile = dataDir.resolve("navigationDatums.xml");
+        Path navigationDatumsFile = dataDir.resolve("navigationDatums.json");
         if (!Files.isRegularFile(navigationDatumsFile)) {
             throw new IllegalStateException("Unable to read " + navigationDatumsFile);
         }

@@ -52,7 +52,7 @@ class SeaDatastoreTest extends XMLDatastoreTest<SeaData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "seas.xml";
+  protected String getJSONFilename() {
+    return "seas.json";
   }
 }

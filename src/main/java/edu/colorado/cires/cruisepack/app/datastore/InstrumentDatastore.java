@@ -44,7 +44,7 @@ public class InstrumentDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path instrumentFile = dataDir.resolve("instruments.xml");
+    Path instrumentFile = dataDir.resolve("instruments.json");
     if (!Files.isRegularFile(instrumentFile)) {
       throw new IllegalStateException("Unable to read " + instrumentFile);
     }

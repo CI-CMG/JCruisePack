@@ -52,7 +52,7 @@ class ShipDatastoreTest extends XMLDatastoreTest<ShipData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "ships.xml";
+  protected String getJSONFilename() {
+    return "ships.json";
   }
 }

@@ -40,8 +40,8 @@ class PackerExecutor {
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerExecutor.class);
 
   private static final String LOCAL_DATA = "local-data";
-  private static final String PEOPLE_XML = "people.xml";
-  private static final String ORGANIZATIONS_XML = "organizations.xml";
+  private static final String PEOPLE_JSON = "people.json";
+  private static final String ORGANIZATIONS_JSON = "organizations.json";
 
   private final PackStateModel packStateModel;
   private final PackerFileController packerFileController;
@@ -487,16 +487,16 @@ class PackerExecutor {
 
   private void copyLocalData(Path instrumentBagDataDir) {
     Path systemLocalData = workDirectory.resolve(LOCAL_DATA);
-    Path people = systemLocalData.resolve(PEOPLE_XML);
-    Path organizations = systemLocalData.resolve(ORGANIZATIONS_XML);
+    Path people = systemLocalData.resolve(PEOPLE_JSON);
+    Path organizations = systemLocalData.resolve(ORGANIZATIONS_JSON);
     Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);
     if (Files.isRegularFile(people)) {
       packerFileController.mkDir(localData);
-      packerFileController.copy(people, localData.resolve(PEOPLE_XML));
+      packerFileController.copy(people, localData.resolve(PEOPLE_JSON));
     }
     if (Files.isRegularFile(organizations)) {
       packerFileController.mkDir(localData);
-      packerFileController.copy(organizations, localData.resolve(ORGANIZATIONS_XML));
+      packerFileController.copy(organizations, localData.resolve(ORGANIZATIONS_JSON));
     }
   }
 

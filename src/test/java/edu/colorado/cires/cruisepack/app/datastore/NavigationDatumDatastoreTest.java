@@ -40,7 +40,7 @@ class NavigationDatumDatastoreTest extends XMLDatastoreTest<NavigationDatumData>
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "navigationDatums.xml";
+  protected String getJSONFilename() {
+    return "navigationDatums.json";
   }
 }

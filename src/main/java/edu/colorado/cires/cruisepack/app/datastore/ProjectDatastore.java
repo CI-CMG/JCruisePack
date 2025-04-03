@@ -88,7 +88,7 @@ public class ProjectDatastore extends PropertyChangeModel {
 
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("local-data");
-    Path projectsFile = dataDir.resolve("projects.xml");
+    Path projectsFile = dataDir.resolve("projects.json");
 
     try {
       objectMapper.writeValue(projectsFile.toFile(), newProjectData);
@@ -113,7 +113,7 @@ public class ProjectDatastore extends PropertyChangeModel {
   private Optional<ProjectData> readProjects(String dir) {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve(dir);
-    Path projectsFile = dataDir.resolve("projects.xml");
+    Path projectsFile = dataDir.resolve("projects.json");
     if (!Files.isRegularFile(projectsFile)) {
       return Optional.empty();
     }

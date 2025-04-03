@@ -83,8 +83,8 @@ public class PackerExecutorTest {
   public void beforeEach() throws Exception {
     FileUtils.deleteQuietly(workDir.toFile());
     Files.createDirectories(workDir.resolve("local-data"));
-    Files.createFile(workDir.resolve("local-data").resolve("people.xml"));
-    Files.createFile(workDir.resolve("local-data").resolve("organizations.xml"));
+    Files.createFile(workDir.resolve("local-data").resolve("people.json"));
+    Files.createFile(workDir.resolve("local-data").resolve("organizations.json"));
     FileUtils.deleteQuietly(mainBagRootDir.toFile());
     Files.createDirectories(mainBagRootDir);
     CruisePackPreSpringStarter.start();

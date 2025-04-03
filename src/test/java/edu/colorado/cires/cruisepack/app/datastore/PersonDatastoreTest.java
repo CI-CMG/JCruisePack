@@ -172,8 +172,8 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "people.xml";
+  protected String getJSONFilename() {
+    return "people.json";
   }
   
   private static Person createPerson(String suffix, boolean use) {

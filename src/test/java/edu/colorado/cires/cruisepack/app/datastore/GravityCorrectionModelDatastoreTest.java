@@ -20,8 +20,8 @@ class GravityCorrectionModelDatastoreTest extends XMLDatastoreTest<GravityCorrec
   private final GravityCorrectionModelDatastore datastore = new GravityCorrectionModelDatastore(SERVICE_PROPERTIES);
   
   @Override
-  protected String getXMLFilename() {
-    return "gravityCorrectionModels.xml";
+  protected String getJSONFilename() {
+    return "gravityCorrectionModels.json";
   }
 
   @Test

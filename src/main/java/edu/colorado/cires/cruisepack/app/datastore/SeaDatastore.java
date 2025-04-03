@@ -35,7 +35,7 @@ public class SeaDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path seaFile = dataDir.resolve("seas.xml");
+    Path seaFile = dataDir.resolve("seas.json");
     if (!Files.isRegularFile(seaFile)) {
       throw new IllegalStateException("Unable to read " + seaFile);
     }

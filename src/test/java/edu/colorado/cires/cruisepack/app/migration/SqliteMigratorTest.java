@@ -234,24 +234,15 @@ public class SqliteMigratorTest {
     }
   }
 
-  private OrganizationData readOrganizations(Path path) throws IOException, JAXBException {
-    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      return (OrganizationData) JAXBContext.newInstance(OrganizationData.class)
-          .createUnmarshaller().unmarshal(reader);
-    }
+  private OrganizationData readOrganizations(Path path) throws IOException {
+      return objectMapper.readValue(path.toFile(), OrganizationData.class);
   }
 
-  private PersonData readPeople(Path path) throws IOException, JAXBException {
-    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      return (PersonData) JAXBContext.newInstance(PersonData.class)
-          .createUnmarshaller().unmarshal(reader);
-    }
+  private PersonData readPeople(Path path) throws IOException {
+    return objectMapper.readValue(path.toFile(), PersonData.class);
   }
 
-  private ProjectData readProjects(Path path) throws IOException, JAXBException {
-    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      return (ProjectData) JAXBContext.newInstance(ProjectData.class)
-          .createUnmarshaller().unmarshal(reader);
-    }
+  private ProjectData readProjects(Path path) throws IOException {
+    return objectMapper.readValue(path.toFile(), ProjectData.class);
   }
 }

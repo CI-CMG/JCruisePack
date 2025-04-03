@@ -22,13 +22,13 @@ public abstract class OverridableXMLDatastoreTest<T> extends XMLDatastoreTest<T>
     FileUtils.forceMkdir(TEST_LOCAL_DATA_PATH.toFile());
     
     T dataObject = createDataObject();
-    try (OutputStream outputStream = new FileOutputStream(TEST_LOCAL_DATA_PATH.resolve(getXMLFilename()).toFile())) {
+    try (OutputStream outputStream = new FileOutputStream(TEST_LOCAL_DATA_PATH.resolve(getJSONFilename()).toFile())) {
       JAXB.marshal(dataObject, outputStream);
     }
   }
   
   protected T readLocalFile(Class<T> clazz) {
-    Path path = TEST_LOCAL_DATA_PATH.resolve(getXMLFilename());
+    Path path = TEST_LOCAL_DATA_PATH.resolve(getJSONFilename());
     try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
       Object deserialized = JAXBContext.newInstance(clazz).createUnmarshaller().unmarshal(reader);
       return (T) deserialized;

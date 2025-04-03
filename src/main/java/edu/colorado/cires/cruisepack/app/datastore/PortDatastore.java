@@ -36,7 +36,7 @@ public class PortDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path portFile = dataDir.resolve("ports.xml");
+    Path portFile = dataDir.resolve("ports.json");
     if (!Files.isRegularFile(portFile)) {
       throw new IllegalStateException("Unable to read " + portFile);
     }

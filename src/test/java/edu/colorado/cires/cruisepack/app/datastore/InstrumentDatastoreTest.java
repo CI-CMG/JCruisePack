@@ -115,7 +115,7 @@ class InstrumentDatastoreTest extends XMLDatastoreTest<InstrumentData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "instruments.xml";
+  protected String getJSONFilename() {
+    return "instruments.json";
   }
 }

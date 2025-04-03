@@ -37,7 +37,7 @@ public class SinglebeamVerticalDatumDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path verticalDatumsFile = dataDir.resolve("singlebeamVerticalDatums.xml");
+        Path verticalDatumsFile = dataDir.resolve("singlebeamVerticalDatums.json");
         if (!Files.isRegularFile(verticalDatumsFile)) {
             throw new IllegalStateException("Unable to read " + verticalDatumsFile);
         }

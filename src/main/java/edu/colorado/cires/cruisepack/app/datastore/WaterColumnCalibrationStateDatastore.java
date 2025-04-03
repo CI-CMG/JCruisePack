@@ -36,7 +36,7 @@ public class WaterColumnCalibrationStateDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path calibrationStatesFile = dataDir.resolve("waterColumnCalibrationStates.xml");
+        Path calibrationStatesFile = dataDir.resolve("waterColumnCalibrationStates.json");
         if (!Files.isRegularFile(calibrationStatesFile)) {
             throw new IllegalStateException("Unable to read " + calibrationStatesFile);
         }

@@ -36,7 +36,7 @@ class SinglebeamVerticalDatumDatastoreTest extends XMLDatastoreTest<SinglebeamVe
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "singlebeamVerticalDatums.xml";
+  protected String getJSONFilename() {
+    return "singlebeamVerticalDatums.json";
   }
 }

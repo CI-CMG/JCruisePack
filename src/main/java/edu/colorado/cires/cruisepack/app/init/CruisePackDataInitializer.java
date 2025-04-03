@@ -10,7 +10,7 @@ public final class CruisePackDataInitializer {
   public static Resource[] getPackagedData() {
     PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(CruisePackDataInitializer.class.getClassLoader());
     try {
-      return resolver.getResources("classpath:/edu/colorado/cires/cruisepack/data/*.xml");
+      return resolver.getResources("classpath:/edu/colorado/cires/cruisepack/data/*.json");
     } catch (IOException e) {
       throw new RuntimeException("Unable to resolve data files", e);
     }

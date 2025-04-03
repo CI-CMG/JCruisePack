@@ -37,7 +37,7 @@ class WaterColumnCalibrationStateDatastoreTest extends XMLDatastoreTest<WaterCol
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "waterColumnCalibrationStates.xml";
+  protected String getJSONFilename() {
+    return "waterColumnCalibrationStates.json";
   }
 }

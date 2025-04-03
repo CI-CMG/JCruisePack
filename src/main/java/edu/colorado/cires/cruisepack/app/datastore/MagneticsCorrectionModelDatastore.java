@@ -36,7 +36,7 @@ public class MagneticsCorrectionModelDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path correctionModelsFile = dataDir.resolve("magneticsCorrectionModels.xml");
+        Path correctionModelsFile = dataDir.resolve("magneticsCorrectionModels.json");
 
         if (!Files.isRegularFile(correctionModelsFile)) {
             throw new IllegalStateException("Unable to read " + correctionModelsFile);

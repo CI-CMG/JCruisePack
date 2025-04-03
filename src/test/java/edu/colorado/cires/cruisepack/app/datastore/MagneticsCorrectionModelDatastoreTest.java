@@ -39,7 +39,7 @@ class MagneticsCorrectionModelDatastoreTest extends XMLDatastoreTest<MagneticsCo
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "magneticsCorrectionModels.xml";
+  protected String getJSONFilename() {
+    return "magneticsCorrectionModels.json";
   }
 }

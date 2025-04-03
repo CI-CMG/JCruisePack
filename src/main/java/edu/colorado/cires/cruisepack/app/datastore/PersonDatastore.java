@@ -64,7 +64,7 @@ public class PersonDatastore extends PropertyChangeModel {
     private Optional<PersonData> readPeople(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
-        Path peopleFile = dataDir.resolve("people.xml");
+        Path peopleFile = dataDir.resolve("people.json");
         if (!Files.isRegularFile(peopleFile)) {
             return Optional.empty();
         }
@@ -122,7 +122,7 @@ public class PersonDatastore extends PropertyChangeModel {
 
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");
-        Path peopleFile = dataDir.resolve("people.xml");
+        Path peopleFile = dataDir.resolve("people.json");
 
         try (OutputStream outputStream = new FileOutputStream(peopleFile.toFile())) {
             JAXB.marshal(personData, outputStream);
