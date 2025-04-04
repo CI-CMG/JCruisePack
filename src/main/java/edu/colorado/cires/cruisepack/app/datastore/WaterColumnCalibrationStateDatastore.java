@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -42,9 +44,10 @@ public class WaterColumnCalibrationStateDatastore {
         }
 
         WaterColumnCalibrationStateData data;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(calibrationStatesFile, StandardCharsets.UTF_8)) {
-            data = (WaterColumnCalibrationStateData) JAXBContext.newInstance(WaterColumnCalibrationStateData.class).createUnmarshaller().unmarshal(reader);
-        } catch (IOException | JAXBException e) {
+            data = objectMapper.readValue(reader, WaterColumnCalibrationStateData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + calibrationStatesFile, e);
         }
 

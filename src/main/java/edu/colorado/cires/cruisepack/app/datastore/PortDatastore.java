@@ -1,9 +1,11 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Port;
 import edu.colorado.cires.cruisepack.data.PortData;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -41,9 +43,10 @@ public class PortDatastore {
       throw new IllegalStateException("Unable to read " + portFile);
     }
     PortData portData;
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(portFile, StandardCharsets.UTF_8)) {
-      portData = (PortData) JAXBContext.newInstance(PortData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      portData = objectMapper.readValue(reader, PortData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + portFile, e);
     }
     portDropDowns = new ArrayList<>(portData.getPorts().size() + 1);

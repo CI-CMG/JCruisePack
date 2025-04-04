@@ -1,9 +1,11 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Sea;
 import edu.colorado.cires.cruisepack.data.SeaData;
+import edu.colorado.cires.cruisepack.data.ShipData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -40,9 +42,10 @@ public class SeaDatastore {
       throw new IllegalStateException("Unable to read " + seaFile);
     }
     SeaData seaData;
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(seaFile, StandardCharsets.UTF_8)) {
-      seaData = (SeaData) JAXBContext.newInstance(SeaData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      seaData = objectMapper.readValue(reader, SeaData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + seaFile, e);
     }
     seaDropDowns = new ArrayList<>(seaData.getSeas().size() + 1);

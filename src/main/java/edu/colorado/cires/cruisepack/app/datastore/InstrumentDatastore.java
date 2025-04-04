@@ -1,11 +1,13 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Instrument;
 import edu.colorado.cires.cruisepack.data.InstrumentData;
 import edu.colorado.cires.cruisepack.data.InstrumentGroup;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -48,9 +50,10 @@ public class InstrumentDatastore {
     if (!Files.isRegularFile(instrumentFile)) {
       throw new IllegalStateException("Unable to read " + instrumentFile);
     }
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(instrumentFile, StandardCharsets.UTF_8)) {
-      instrumentData = (InstrumentData) JAXBContext.newInstance(InstrumentData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      instrumentData = objectMapper.readValue(reader, InstrumentData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + instrumentFile, e);
     }
     datasetTypeDropDowns = new ArrayList<>(instrumentData.getInstrumentGroups().size() + 1);

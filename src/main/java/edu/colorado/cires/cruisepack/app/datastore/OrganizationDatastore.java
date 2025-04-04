@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
@@ -7,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Organization;
 import edu.colorado.cires.cruisepack.data.OrganizationData;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
@@ -96,9 +98,9 @@ public class OrganizationDatastore extends PropertyChangeModel {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");
         Path organizationsFile = dataDir.resolve("organizations.json");
-
+        ObjectMapper objectMapper = new ObjectMapper();
         try (OutputStream outputStream = new FileOutputStream(organizationsFile.toFile())) {
-            JAXB.marshal(organizationData, outputStream);
+          objectMapper.writeValue(outputStream, organizationData);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to save drop down items: ", e);
         }
@@ -143,10 +145,10 @@ public class OrganizationDatastore extends PropertyChangeModel {
             return Optional.empty();
         }
         OrganizationData organizationData;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
-            organizationData = (OrganizationData) JAXBContext.newInstance(OrganizationData.class)
-                .createUnmarshaller().unmarshal(reader);
-        } catch (IOException | JAXBException e) {
+          organizationData = objectMapper.readValue(reader, OrganizationData.class);
+      } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
         return Optional.of(organizationData);

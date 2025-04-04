@@ -36,6 +36,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -189,7 +190,7 @@ public class PackerExecutorTest {
       fileStream.filter(Files::isRegularFile).map(expectedRoot::relativize).forEach(expected::add);
     }
 
-    Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
+    Path actualRoot = mainBagRootDir.resolve("TST200400").resolve("data").resolve("TST200400_MB-BATHY_EM122");
     TreeSet<Path> actual = new TreeSet<>();
     try (Stream<Path> fileStream = Files.walk(actualRoot)) {
       fileStream.filter(Files::isRegularFile).map(actualRoot::relativize).forEach(actual::add);

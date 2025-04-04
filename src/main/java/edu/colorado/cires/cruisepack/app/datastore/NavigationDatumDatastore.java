@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -42,9 +44,10 @@ public class NavigationDatumDatastore {
         }
 
         NavigationDatumData data;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(navigationDatumsFile, StandardCharsets.UTF_8)) {
-            data = (NavigationDatumData) JAXBContext.newInstance(NavigationDatumData.class).createUnmarshaller().unmarshal(reader);
-        } catch (JAXBException | IOException e) {
+            data = objectMapper.readValue(reader, NavigationDatumData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + navigationDatumsFile, e);
         }
 

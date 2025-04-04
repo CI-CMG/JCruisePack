@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
@@ -7,6 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Person;
 import edu.colorado.cires.cruisepack.data.PersonData;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
@@ -69,10 +71,11 @@ public class PersonDatastore extends PropertyChangeModel {
             return Optional.empty();
         }
         PersonData personData;
+
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
-            personData = (PersonData) JAXBContext.newInstance(PersonData.class)
-                .createUnmarshaller().unmarshal(reader);
-        } catch (IOException | JAXBException e) {
+          personData = objectMapper.readValue(reader, PersonData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
         
@@ -123,9 +126,9 @@ public class PersonDatastore extends PropertyChangeModel {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");
         Path peopleFile = dataDir.resolve("people.json");
-
+        ObjectMapper objectMapper = new ObjectMapper();
         try (OutputStream outputStream = new FileOutputStream(peopleFile.toFile())) {
-            JAXB.marshal(personData, outputStream);
+          objectMapper.writeValue(outputStream, personData);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to save drop down items: ", e);
         }
@@ -152,7 +155,6 @@ public class PersonDatastore extends PropertyChangeModel {
         person.setOrcid(personModel.getOrcidID());
         person.setUuid(personModel.getUuid());
         person.setUse(personModel.isUse());
-        person.setUuid(personModel.getUuid());
         return person;
     }
     

@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Ship;
@@ -41,9 +42,10 @@ public class ShipDatastore {
       throw new IllegalStateException("Unable to read " + shipFile);
     }
     ShipData shipData;
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(shipFile, StandardCharsets.UTF_8)) {
-      shipData = (ShipData) JAXBContext.newInstance(ShipData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      shipData = objectMapper.readValue(reader, ShipData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + shipFile, e);
     }
     shipDropDowns = new ArrayList<>(shipData.getShips().size() + 1);
