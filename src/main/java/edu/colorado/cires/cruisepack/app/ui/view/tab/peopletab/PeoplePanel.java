@@ -234,6 +234,7 @@ public class PeoplePanel extends JPanel implements ReactiveView {
           editPersonDialog.tearDown();
           editPersonDialog = null;
         }
+        break;
       case Events.UPDATE_ORG_DIALOG_VISIBLE:
         boolean orgDialogVisible = (boolean) evt.getNewValue();
         if (editOrgDialog == null) {

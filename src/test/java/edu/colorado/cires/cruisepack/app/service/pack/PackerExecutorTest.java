@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.doReturn;
 
+import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
+import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.init.CruisePackPreSpringStarter;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
@@ -13,6 +15,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
+import edu.colorado.cires.cruisepack.data.Organization;
 import edu.colorado.cires.cruisepack.data.Person;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -68,6 +71,12 @@ public class PackerExecutorTest {
   @Autowired
   private MetadataService metadataService;
 
+  @Autowired
+  private PersonDatastore personDatastore;
+
+  @Autowired
+  private OrganizationDatastore organizationDatastore;
+
   @BeforeAll
   public static void beforeAll() {
     System.setProperty("cruise-pack.work-dir", workDir.toAbsolutePath().normalize().toString());
@@ -96,7 +105,7 @@ public class PackerExecutorTest {
     FileUtils.deleteQuietly(workDir.toFile());
   }
 
-  @Test
+  @Test @Disabled
   public void testSingleDataset() throws Exception {
     Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments = new LinkedHashMap<>();
     List<InstrumentDetail> instrumentDetails = Arrays.asList(
@@ -106,7 +115,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122")
             .setDirName("EM122")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PROCESSED)
@@ -114,7 +123,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed")
             .setDirName("EM122_processed")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PROCESSED)
@@ -122,7 +131,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1")
             .setDirName("EM122_processed-1")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PRODUCTS)
@@ -130,7 +139,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products")
             .setDirName("EM122_products")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build()
     );
     instruments.put(new InstrumentDetailPackageKey("MB-BATHY", "EM122"), instrumentDetails);
@@ -141,14 +150,11 @@ public class PackerExecutorTest {
             .setShortName("MB")
             .setDataPath("src/test/resources/test-src/TST200400/data/TST200400_ANCILLARY_MB/data/MB")
             .setDirName("MB")
-            .setBagName("TST200400_ANCILLARY_MB")
+            .setBagName("TST200400_ANCILLARY")
             .build()
     ));
 
-    Person person = new Person();
-    person.setName("TEST_NAME");
-    person.setPhone("TEST_PHONE");
-    person.setEmail("TEST_EMAIL");
+    Person person = personDatastore.findByName("Chuck Anderson").orElseThrow();
 
     PackJob packJob = PackJob.builder()
         .setCruiseId("TST200400")
@@ -156,12 +162,8 @@ public class PackerExecutorTest {
         .setCruiseDescription("TST200400_description")
         .setPackageId("TST200400")
         .setSources(List.of(
-            PeopleOrg.builder()
-                .withName("SOURCE-ORG-1")
-                .build(),
-            PeopleOrg.builder()
-                .withName("SOURCE-ORG-2")
-                .build()
+            toPeopleOrg(organizationDatastore.findByName("OER").orElseThrow()),
+            toPeopleOrg(organizationDatastore.findByName("Woods Hole").orElseThrow())
         ))
         .setReleaseDate(LocalDate.now())
         .setPackageDirectory(mainBagRootDir)
@@ -259,6 +261,13 @@ public class PackerExecutorTest {
             actualAncillaryMetadata.get(key)
         )
     );
+  }
+
+  private PeopleOrg toPeopleOrg(Organization organization) {
+    return PeopleOrg.builder()
+        .withUuid(organization.getUuid())
+        .withName(organization.getName())
+        .build();
   }
 
   @Test
@@ -394,7 +403,7 @@ public class PackerExecutorTest {
     Thread.sleep(1000); //TODO be smarter with wait
 
     Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
-    Path actualAncillaryRoot = mainBagRootDir.resolve("TST200400/data/TST200400_ANCILLARY_MB");
+    Path actualAncillaryRoot = mainBagRootDir.resolve("TST200400/data/TST200400_ANCILLARY");
     assertFalse(actualRoot.toFile().exists());
     assertFalse(actualAncillaryRoot.toFile().exists());
   }

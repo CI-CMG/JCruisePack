@@ -19,12 +19,12 @@ import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -342,7 +342,7 @@ public class MetadataService {
   }
 
   public void writeMetadata(CruiseMetadata cruiseMetadata, Path file) {
-    try (OutputStream outputStream = Files.newOutputStream(file)) {
+    try (OutputStream outputStream = Files.newOutputStream(file, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)) {
       objectMapper.writeValue(outputStream, cruiseMetadata);
     } catch (IOException e) {
       throw new IllegalStateException("Unable to write metadata " + file, e);

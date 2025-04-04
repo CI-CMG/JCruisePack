@@ -8,11 +8,7 @@ import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Organization;
 import edu.colorado.cires.cruisepack.data.OrganizationData;
-import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXB;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -89,10 +85,7 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
         OrganizationData organizationData = new OrganizationData();
         organizationData.setDataVersion("1.0");
-        List<Organization> organizations = new ArrayList<>();
-        organizations.addAll(
-            mergedOrganizations
-        );
+      List<Organization> organizations = new ArrayList<>(mergedOrganizations);
         organizationData.setOrganizations(organizations);
 
         Path workDir = Paths.get(serviceProperties.getWorkDir());

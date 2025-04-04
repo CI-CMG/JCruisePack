@@ -12,6 +12,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
+import edu.colorado.cires.cruisepack.data.Organization;
 import edu.colorado.cires.cruisepack.data.Person;
 import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
@@ -163,7 +164,7 @@ class PackerExecutor {
   private void resetBagDirs(PackJob packJob) {
     Path bagDirectory = packJob.getPackageDirectory().resolve(packJob.getPackageId());
     if (!bagDirectory.toFile().exists()) {
-      packerFileController.mkDir(bagDirectory.resolve(packJob.getPackageId()));
+      packerFileController.mkDir(bagDirectory);
     } else {
       packerFileController.cleanDir(bagDirectory); // TODO test
     }
@@ -273,7 +274,7 @@ class PackerExecutor {
   private void copyDocs(PackJob packJob) {
     if (packJob.getDocumentsPath() != null) {
       Path docsDir = packJob.getDocumentsPath().toAbsolutePath().normalize();
-      Path targetDocs = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("docs").toAbsolutePath().normalize();
+      Path targetDocs = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("data").resolve("docs").toAbsolutePath().normalize();
       try {
         Files.walkFileTree(docsDir, new SimpleFileVisitor<>() {
 
@@ -327,7 +328,7 @@ class PackerExecutor {
   private void copyOmics(PackJob packJob) {
     if (packJob.getOmicsSampleTrackingSheetPath() != null) {
       Path omicsFile = packJob.getOmicsSampleTrackingSheetPath().toAbsolutePath().normalize();
-      Path omicsDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("omics").toAbsolutePath().normalize();
+      Path omicsDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("data").resolve("omics").toAbsolutePath().normalize();
       Path targetFile = omicsDir.resolve(omicsFile.getFileName());
       if (packerFileController.filterHidden(omicsFile)) {
         packerFileController.mkDir(omicsDir);
@@ -366,9 +367,8 @@ class PackerExecutor {
     );
 
     for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
-      String instrumentBagName = instruments.get(0).getBagName();
+      String instrumentBagName = instruments.get(0).getBagName() + '_' + instruments.get(0).getShortName();
       Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
-
       packerFileController.mkDir(instrumentBagRootDir);
 
       boolean bagContainsData = false;
@@ -539,7 +539,7 @@ class PackerExecutor {
           Path targetFile = resolveFinalPath(datasetDir, sourceDataDir, sourceFile, dataset);
           if (packerFileController.filterHidden(sourceFile)) {
             if (filterExtension(sourceFile, dataset) && packerFileController.filterTimeSize(sourceFile, targetFile)) {
-              packerFileController.mkDir(targetFile.getParent());
+//              packerFileController.mkDir(targetFile.getParent());
               packerFileController.copy(sourceFile, targetFile);
             }
           }
@@ -642,7 +642,7 @@ class PackerExecutor {
       metadata.add("Source-Organization", String.join(
          ", ",
          cruiseMetadata.getSponsors().stream()
-             .map(PeopleOrg::getName)
+             .map(Organization::getName)
              .collect(Collectors.toSet())
       ));
     }
