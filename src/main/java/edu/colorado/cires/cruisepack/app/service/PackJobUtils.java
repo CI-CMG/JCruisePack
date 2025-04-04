@@ -23,9 +23,8 @@ import edu.colorado.cires.cruisepack.app.ui.model.PeopleModel;
 import edu.colorado.cires.cruisepack.app.ui.model.SamplingTypesModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
-import edu.colorado.cires.cruisepack.xml.instrument.FileExtensionList;
-import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Instrument;
+import edu.colorado.cires.cruisepack.data.Person;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -120,13 +119,11 @@ public final class PackJobUtils {
         Instrument instrument = instrumentDatastore.getInstrument(pkg)
             .orElseThrow(() -> new IllegalStateException("Unable to find instrument " + pkg));
         Set<String> exts = new LinkedHashSet<>();
-        FileExtensionList fileExtensionList = instrument.getFileExtensions();
-        if (fileExtensionList != null) {
-          List<String> extList = fileExtensionList.getFileExtensions();
+          List<String> extList = instrument.getFileExtensions();
           if (extList != null) {
             exts.addAll(extList);
           }
-        }
+
 
         InstrumentDetail.Builder builder = InstrumentDetail.builder()
             .setUuid(nameHolder.getUuid())
@@ -230,7 +227,7 @@ public final class PackJobUtils {
         .setInstrument(instrument.getInstrument())
         .setShortName(instrument.getShortName())
         .setExtensions(
-            xmlInstrument.getFileExtensions() == null ? null : new HashSet<>(xmlInstrument.getFileExtensions().getFileExtensions())
+            xmlInstrument.getFileExtensions() == null ? null : new HashSet<>(xmlInstrument.getFileExtensions())
         )
         .setFlatten(xmlInstrument.isFlatten())
         .setDirName(instrument.getDirName())

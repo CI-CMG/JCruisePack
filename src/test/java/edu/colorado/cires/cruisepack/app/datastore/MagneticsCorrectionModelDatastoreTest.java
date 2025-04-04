@@ -3,8 +3,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.magneticsCorrectionModel.MagneticsCorrectionModel;
-import edu.colorado.cires.cruisepack.xml.magneticsCorrectionModel.MagneticsCorrectionModelData;
+import edu.colorado.cires.cruisepack.data.MagneticsCorrectionModel;
+import edu.colorado.cires.cruisepack.data.MagneticsCorrectionModelData;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,8 +22,7 @@ class MagneticsCorrectionModelDatastoreTest extends XMLDatastoreTest<MagneticsCo
   void init() {
     datastore.init();
 
-    List<MagneticsCorrectionModel> data = readFile(MagneticsCorrectionModelData.class).getMagneticsCorrectionModels()
-        .getMagneticsCorrectionModels();
+    List<MagneticsCorrectionModel> data = readFile(MagneticsCorrectionModelData.class).getMagneticsCorrectionModels();
 
     Set<NameUUIDPair> expected = data.stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
@@ -40,7 +39,7 @@ class MagneticsCorrectionModelDatastoreTest extends XMLDatastoreTest<MagneticsCo
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "magneticsCorrectionModels.xml";
+  protected String getJSONFilename() {
+    return "magneticsCorrectionModels.json";
   }
 }

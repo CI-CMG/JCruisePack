@@ -1,9 +1,10 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.ship.Ship;
-import edu.colorado.cires.cruisepack.xml.ship.ShipData;
+import edu.colorado.cires.cruisepack.data.Ship;
+import edu.colorado.cires.cruisepack.data.ShipData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -36,19 +37,20 @@ public class ShipDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path shipFile = dataDir.resolve("ships.xml");
+    Path shipFile = dataDir.resolve("ships.json");
     if (!Files.isRegularFile(shipFile)) {
       throw new IllegalStateException("Unable to read " + shipFile);
     }
     ShipData shipData;
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(shipFile, StandardCharsets.UTF_8)) {
-      shipData = (ShipData) JAXBContext.newInstance(ShipData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      shipData = objectMapper.readValue(reader, ShipData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + shipFile, e);
     }
-    shipDropDowns = new ArrayList<>(shipData.getShips().getShips().size() + 1);
+    shipDropDowns = new ArrayList<>(shipData.getShips().size() + 1);
     shipDropDowns.add(UNSELECTED_SHIP);
-    shipData.getShips().getShips().stream()
+    shipData.getShips().stream()
         .filter(Ship::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))

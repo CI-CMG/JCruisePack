@@ -1,13 +1,13 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentData;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentGroup;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentGroupList;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentList;
+import edu.colorado.cires.cruisepack.data.Instrument;
+import edu.colorado.cires.cruisepack.data.InstrumentData;
+import edu.colorado.cires.cruisepack.data.InstrumentGroup;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -46,25 +46,26 @@ public class InstrumentDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path instrumentFile = dataDir.resolve("instruments.xml");
+    Path instrumentFile = dataDir.resolve("instruments.json");
     if (!Files.isRegularFile(instrumentFile)) {
       throw new IllegalStateException("Unable to read " + instrumentFile);
     }
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(instrumentFile, StandardCharsets.UTF_8)) {
-      instrumentData = (InstrumentData) JAXBContext.newInstance(InstrumentData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      instrumentData = objectMapper.readValue(reader, InstrumentData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + instrumentFile, e);
     }
-    datasetTypeDropDowns = new ArrayList<>(instrumentData.getInstrumentGroups().getInstrumentGroups().size() + 1);
+    datasetTypeDropDowns = new ArrayList<>(instrumentData.getInstrumentGroups().size() + 1);
     datasetTypeDropDowns.add(UNSELECTED_DATASET_TYPE);
-    instrumentData.getInstrumentGroups().getInstrumentGroups().stream()
+    instrumentData.getInstrumentGroups().stream()
         .sorted((s1, s2) -> s1.getDataType().compareToIgnoreCase(s2.getDataType()))
         .map(instrumentGroup -> new DropDownItem(instrumentGroup.getShortType(), instrumentGroup.getDataType()))
         .forEach(datasetTypeDropDowns::add);
 
     instrumentDropDowns = new HashMap<>(0);
-    instrumentData.getInstrumentGroups().getInstrumentGroups().forEach((ig) -> {
-      List<DropDownItem> instruments = new ArrayList<>(ig.getInstruments().getInstruments().stream()
+    instrumentData.getInstrumentGroups().forEach((ig) -> {
+      List<DropDownItem> instruments = new ArrayList<>(ig.getInstruments().stream()
         .map(i -> new DropDownItem(i.getUuid(), i.getShortName()))
         .sorted((i1, i2) -> i1.getValue().compareToIgnoreCase(i2.getValue()))
         .toList());
@@ -77,11 +78,11 @@ public class InstrumentDatastore {
   }
   
   public Optional<Instrument> getInstrumentByTypeAndInstrumentName(String type, String instrumentName) {
-    return instrumentData.getInstrumentGroups().getInstrumentGroups().stream()
+    return instrumentData.getInstrumentGroups().stream()
         .filter(instrumentGroup -> instrumentGroup.getShortType().equals(type))
         .findFirst()
         .flatMap(instrumentGroup -> 
-              instrumentGroup.getInstruments().getInstruments().stream()
+              instrumentGroup.getInstruments().stream()
                 .filter(instrument -> instrument.getName().equals(instrumentName))
                 .findFirst()
         );
@@ -89,27 +90,23 @@ public class InstrumentDatastore {
   }
 
   public Optional<Instrument> getInstrument(InstrumentDetailPackageKey key) {
-    InstrumentGroupList instrumentGroupList = instrumentData.getInstrumentGroups();
-    if (instrumentGroupList != null) {
-      List<InstrumentGroup> instrumentGroups = instrumentGroupList.getInstrumentGroups();
+      List<InstrumentGroup> instrumentGroups = instrumentData.getInstrumentGroups();
       if (instrumentGroups != null) {
         Optional<InstrumentGroup> maybeGroup = instrumentGroups.stream()
             .filter(ig -> ig.getShortType().equals(key.getInstrumentGroupShortType()))
             .findFirst();
         if(maybeGroup.isPresent()) {
           InstrumentGroup ig = maybeGroup.get();
-          InstrumentList instrumentList = ig.getInstruments();
-          if (instrumentList != null) {
-            List<Instrument> instruments = instrumentList.getInstruments();
+            List<Instrument> instruments = ig.getInstruments();
             if (instruments != null) {
               return instruments.stream()
                   .filter(instrument -> instrument.getShortName().equals(key.getInstrumentShortCode()))
                   .findFirst();
             }
-          }
+
         }
       }
-    }
+
     return Optional.empty();
   }
 

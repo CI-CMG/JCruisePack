@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.gravityCorrectionModel.GravityCorrectionModelData;
+import edu.colorado.cires.cruisepack.data.GravityCorrectionModelData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -36,22 +38,23 @@ public class GravityCorrectionModelDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path correctionModelsFile = dataDir.resolve("gravityCorrectionModels.xml");
+        Path correctionModelsFile = dataDir.resolve("gravityCorrectionModels.json");
 
         if (!Files.isRegularFile(correctionModelsFile)) {
             throw new IllegalStateException("Unable to read " + correctionModelsFile);
         }
 
         GravityCorrectionModelData data;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(correctionModelsFile, StandardCharsets.UTF_8)) {
-            data = (GravityCorrectionModelData) JAXBContext.newInstance(GravityCorrectionModelData.class).createUnmarshaller().unmarshal(reader);
-        } catch (JAXBException | IOException e) {
+            data = objectMapper.readValue(reader, GravityCorrectionModelData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + correctionModelsFile, e);
         }
 
-        correctionModelDropDowns = new ArrayList<>(data.getGravityCorrectionModels().getGravityCorrectionModels().size() + 1);
+        correctionModelDropDowns = new ArrayList<>(data.getGravityCorrectionModels().size() + 1);
         correctionModelDropDowns.add(UNSELECTED_CORRECTION_MODEL);
-        data.getGravityCorrectionModels().getGravityCorrectionModels().stream()
+        data.getGravityCorrectionModels().stream()
             .sorted((m1, m2) -> m1.getName().compareToIgnoreCase(m2.getName()))
             .map(m -> new DropDownItem(m.getUuid(), m.getName()))
             .forEach(correctionModelDropDowns::add);

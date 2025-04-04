@@ -1,13 +1,14 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.person.Person;
-import edu.colorado.cires.cruisepack.xml.person.PersonData;
-import edu.colorado.cires.cruisepack.xml.person.PersonList;
+import edu.colorado.cires.cruisepack.data.Person;
+import edu.colorado.cires.cruisepack.data.PersonData;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
@@ -65,15 +66,16 @@ public class PersonDatastore extends PropertyChangeModel {
     private Optional<PersonData> readPeople(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
-        Path peopleFile = dataDir.resolve("people.xml");
+        Path peopleFile = dataDir.resolve("people.json");
         if (!Files.isRegularFile(peopleFile)) {
             return Optional.empty();
         }
         PersonData personData;
+
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
-            personData = (PersonData) JAXBContext.newInstance(PersonData.class)
-                .createUnmarshaller().unmarshal(reader);
-        } catch (IOException | JAXBException e) {
+          personData = objectMapper.readValue(reader, PersonData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
         
@@ -95,8 +97,8 @@ public class PersonDatastore extends PropertyChangeModel {
 
     private List<Person> mergeDropDownItemLists(Optional<PersonData> defaults, Optional<PersonData> overrides) {
         Map<String, Person> merged = new HashMap<>(0);
-        defaults.map(pd -> pd.getPeople().getPersons()).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
-        overrides.map(pd -> pd.getPeople().getPersons()).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
+        defaults.map(PersonData::getPeople).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
+        overrides.map(PersonData::getPeople).ifPresent(p -> p.forEach(i -> merged.put(i.getUuid(), i)));
 
         return merged.values().stream()
             .sorted((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()))
@@ -105,10 +107,9 @@ public class PersonDatastore extends PropertyChangeModel {
 
     public void save(Person person) {
         PersonData newPersonData = new PersonData();
-        PersonList newPersonList = new PersonList();
-        List<Person> listWithNewPerson = newPersonList.getPersons();
+        List<Person> listWithNewPerson = new ArrayList<>();
         listWithNewPerson.add(person);
-        newPersonData.setPeople(newPersonList);
+        newPersonData.setPeople(listWithNewPerson);
         List<Person> mergedPeople = mergeDropDownItemLists(
             readPeople("local-data"),
             Optional.of(newPersonData)
@@ -116,19 +117,18 @@ public class PersonDatastore extends PropertyChangeModel {
 
         PersonData personData = new PersonData();
         personData.setDataVersion("1.0");
-        PersonList personList = new PersonList();
-        List<Person> people = personList.getPersons();
+        List<Person> people = new ArrayList<>();
         people.addAll(
             mergedPeople
         );
-        personData.setPeople(personList);
+        personData.setPeople(people);
 
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");
-        Path peopleFile = dataDir.resolve("people.xml");
-
+        Path peopleFile = dataDir.resolve("people.json");
+        ObjectMapper objectMapper = new ObjectMapper();
         try (OutputStream outputStream = new FileOutputStream(peopleFile.toFile())) {
-            JAXB.marshal(personData, outputStream);
+          objectMapper.writeValue(outputStream, personData);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to save drop down items: ", e);
         }
@@ -155,7 +155,6 @@ public class PersonDatastore extends PropertyChangeModel {
         person.setOrcid(personModel.getOrcidID());
         person.setUuid(personModel.getUuid());
         person.setUse(personModel.isUse());
-        person.setUuid(personModel.getUuid());
         return person;
     }
     

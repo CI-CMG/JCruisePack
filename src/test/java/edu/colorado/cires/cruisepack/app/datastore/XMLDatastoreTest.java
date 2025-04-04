@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.init.CruisePackDataInitializer;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -29,12 +30,12 @@ abstract class XMLDatastoreTest<T> {
     FileUtils.deleteQuietly(TEST_PATH.toFile());
   }
   
-  protected abstract String getXMLFilename();
+  protected abstract String getJSONFilename();
   
   private void load() throws IOException {
     Resource[] resources = CruisePackDataInitializer.getPackagedData();
     for (Resource resource : resources) {
-      if (!resource.getFilename().equals(getXMLFilename())) {
+      if (!resource.getFilename().equals(getJSONFilename())) {
         continue;
       }
       Path dataFile = TEST_PATH.resolve("data").resolve(resource.getFilename());
@@ -47,11 +48,13 @@ abstract class XMLDatastoreTest<T> {
   }
   
   protected T readFile(Class<T> clazz) {
-    Path path = TEST_PATH.resolve("data").resolve(getXMLFilename());
+    Path path = TEST_PATH.resolve("data").resolve(getJSONFilename());
     try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      Object deserialized = JAXBContext.newInstance(clazz).createUnmarshaller().unmarshal(reader);
+//      Object deserialized = JAXBContext.newInstance(clazz).createUnmarshaller().unmarshal(reader);
+      ObjectMapper objectMapper = new ObjectMapper();
+      Object deserialized = objectMapper.readValue(reader, clazz);
       return (T) deserialized;
-    } catch (JAXBException | IOException e) {
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + path, e);
     }
   }

@@ -1,5 +1,6 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -22,17 +23,20 @@ public abstract class OverridableXMLDatastoreTest<T> extends XMLDatastoreTest<T>
     FileUtils.forceMkdir(TEST_LOCAL_DATA_PATH.toFile());
     
     T dataObject = createDataObject();
-    try (OutputStream outputStream = new FileOutputStream(TEST_LOCAL_DATA_PATH.resolve(getXMLFilename()).toFile())) {
-      JAXB.marshal(dataObject, outputStream);
+    ObjectMapper objectMapper = new ObjectMapper();
+    try (OutputStream outputStream = new FileOutputStream(TEST_LOCAL_DATA_PATH.resolve(getJSONFilename()).toFile())) {
+      objectMapper.writeValue(outputStream, dataObject);
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to serialize data object", e);
     }
   }
   
   protected T readLocalFile(Class<T> clazz) {
-    Path path = TEST_LOCAL_DATA_PATH.resolve(getXMLFilename());
-    try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      Object deserialized = JAXBContext.newInstance(clazz).createUnmarshaller().unmarshal(reader);
-      return (T) deserialized;
-    } catch (JAXBException | IOException e) {
+    Path path = TEST_LOCAL_DATA_PATH.resolve(getJSONFilename());
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.readValue(Files.newBufferedReader(path, StandardCharsets.UTF_8), clazz);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + path, e);
     }
   }

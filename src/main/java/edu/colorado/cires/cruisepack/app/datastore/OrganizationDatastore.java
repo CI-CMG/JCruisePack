@@ -1,13 +1,14 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
-import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
-import edu.colorado.cires.cruisepack.xml.organization.OrganizationList;
+import edu.colorado.cires.cruisepack.data.Organization;
+import edu.colorado.cires.cruisepack.data.OrganizationData;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXB;
 import jakarta.xml.bind.JAXBContext;
@@ -78,10 +79,9 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
     public void save(Organization organization) {
         OrganizationData newOrganizationData = new OrganizationData();
-        OrganizationList newOrganizationList = new OrganizationList();
-        List<Organization> listWithNewOrganization = newOrganizationList.getOrganizations();
+        List<Organization> listWithNewOrganization = new ArrayList<>();
         listWithNewOrganization.add(organization);
-        newOrganizationData.setOrganizations(newOrganizationList);
+        newOrganizationData.setOrganizations(listWithNewOrganization);
         List<Organization> mergedOrganizations = mergeOrganizations(
             readOrganizations("local-data"),
              Optional.of(newOrganizationData)
@@ -89,19 +89,18 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
         OrganizationData organizationData = new OrganizationData();
         organizationData.setDataVersion("1.0");
-        OrganizationList organizationList = new OrganizationList();
-        List<Organization> organizations = organizationList.getOrganizations();
+        List<Organization> organizations = new ArrayList<>();
         organizations.addAll(
             mergedOrganizations
         );
-        organizationData.setOrganizations(organizationList);
+        organizationData.setOrganizations(organizations);
 
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("local-data");
-        Path organizationsFile = dataDir.resolve("organizations.xml");
-
+        Path organizationsFile = dataDir.resolve("organizations.json");
+        ObjectMapper objectMapper = new ObjectMapper();
         try (OutputStream outputStream = new FileOutputStream(organizationsFile.toFile())) {
-            JAXB.marshal(organizationData, outputStream);
+          objectMapper.writeValue(outputStream, organizationData);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to save drop down items: ", e);
         }
@@ -130,8 +129,8 @@ public class OrganizationDatastore extends PropertyChangeModel {
 
     private List<Organization> mergeOrganizations(Optional<OrganizationData> defaults, Optional<OrganizationData> overrides) {
         Map<String, Organization> merged = new HashMap<>(0);
-        defaults.map(od -> od.getOrganizations().getOrganizations()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-        overrides.map(od -> od.getOrganizations().getOrganizations()).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+        defaults.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+        overrides.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
 
         return merged.values().stream()
             .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
@@ -141,15 +140,15 @@ public class OrganizationDatastore extends PropertyChangeModel {
     private Optional<OrganizationData> readOrganizations(String dir) {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve(dir);
-        Path peopleFile = dataDir.resolve("organizations.xml");
+        Path peopleFile = dataDir.resolve("organizations.json");
         if (!Files.isRegularFile(peopleFile)) {
             return Optional.empty();
         }
         OrganizationData organizationData;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
-            organizationData = (OrganizationData) JAXBContext.newInstance(OrganizationData.class)
-                .createUnmarshaller().unmarshal(reader);
-        } catch (IOException | JAXBException e) {
+          organizationData = objectMapper.readValue(reader, OrganizationData.class);
+      } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + peopleFile, e);
         }
         return Optional.of(organizationData);

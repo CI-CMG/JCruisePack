@@ -18,7 +18,7 @@ public class BaggerTest {
 
   private Path testDir = Paths.get("target/bagger-test");
   private Bagger bagger = new Bagger(
-      Collections.singletonList(StandardSupportedAlgorithms.SHA256)
+      Collections.singletonList(StandardSupportedAlgorithms.MD5)
   );
 
   @BeforeEach

@@ -17,12 +17,13 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,11 +35,13 @@ public class CruiseDataDatastore extends PropertyChangeModel {
   private final ServiceProperties serviceProperties;
   private final ObjectMapper objectMapper;
   private List<CruiseData> cruises;
+  private final Validator validator;
 
-  public CruiseDataDatastore(MetadataService metadataService, ServiceProperties serviceProperties, ObjectMapper objectMapper) {
+  public CruiseDataDatastore(MetadataService metadataService, ServiceProperties serviceProperties, ObjectMapper objectMapper, Validator validator) {
     this.metadataService = metadataService;
     this.serviceProperties = serviceProperties;
     this.objectMapper = objectMapper;
+      this.validator = validator;
   }
   
   public void saveCruiseToPath(PackJob packJob, Path path) throws Exception {
@@ -79,6 +82,10 @@ public class CruiseDataDatastore extends PropertyChangeModel {
     if (cruiseData.isDelete()) {
       Files.deleteIfExists(path);
     } else {
+      Set<ConstraintViolation<CruiseData>> violations = validator.validate(cruiseData);
+      if (!violations.isEmpty()) {
+        throw new ConstraintViolationException(violations);
+      }
       try (OutputStream outputStream = new FileOutputStream(path.toFile())) {
         objectMapper.writeValue(outputStream, cruiseData);
       }
@@ -124,7 +131,12 @@ public class CruiseDataDatastore extends PropertyChangeModel {
     try (Stream<Path> paths = Files.walk(cruiseMetadataDir).filter(p -> !p.toFile().isDirectory())) {
       paths.forEach(p -> {
         try {
-          cruises.add(objectMapper.readValue(p.toFile(), CruiseData.class));
+          CruiseData cruiseData = objectMapper.readValue(p.toFile(), CruiseData.class);
+          Set<ConstraintViolation<CruiseData>> violations = validator.validate(cruiseData);
+          if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+          }
+          cruises.add(cruiseData);
         } catch (IOException e) {
           throw new IllegalStateException("Cannot read cruise metadata from file: " + p, e);
         }

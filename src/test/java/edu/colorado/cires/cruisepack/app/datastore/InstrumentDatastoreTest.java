@@ -8,10 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetailPackageKey;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.InstrumentGroupName;
-import edu.colorado.cires.cruisepack.xml.instrument.Instrument;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentData;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentGroup;
-import edu.colorado.cires.cruisepack.xml.instrument.InstrumentList;
+import edu.colorado.cires.cruisepack.data.Instrument;
+import edu.colorado.cires.cruisepack.data.InstrumentData;
+import edu.colorado.cires.cruisepack.data.InstrumentGroup;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +30,7 @@ class InstrumentDatastoreTest extends XMLDatastoreTest<InstrumentData> {
   void init() {
     datastore.init();
     
-    Set<NameUUIDPair> expected = readFile(InstrumentData.class).getInstrumentGroups().getInstrumentGroups().stream()
+    Set<NameUUIDPair> expected = readFile(InstrumentData.class).getInstrumentGroups().stream()
         .map(i -> new NameUUIDPair(i.getShortType(), i.getDataType()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(
@@ -68,10 +67,9 @@ class InstrumentDatastoreTest extends XMLDatastoreTest<InstrumentData> {
   void getInstrumentDropDownsForDatasetType() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(InstrumentData.class).getInstrumentGroups().getInstrumentGroups().stream()
+    Set<NameUUIDPair> expected = readFile(InstrumentData.class).getInstrumentGroups().stream()
         .filter(i -> i.getDataType().equals(InstrumentGroupName.WATER_COLUMN.getLongName()))
         .map(InstrumentGroup::getInstruments)
-        .map(InstrumentList::getInstruments)
         .flatMap(List::stream)
         .map(i -> new NameUUIDPair(i.getUuid(), i.getShortName()))
         .collect(Collectors.toSet());
@@ -117,7 +115,7 @@ class InstrumentDatastoreTest extends XMLDatastoreTest<InstrumentData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "instruments.xml";
+  protected String getJSONFilename() {
+    return "instruments.json";
   }
 }

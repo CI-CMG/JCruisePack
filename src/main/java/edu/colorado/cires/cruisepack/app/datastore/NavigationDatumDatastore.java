@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.navigationDatum.NavigationDatumData;
+import edu.colorado.cires.cruisepack.data.NavigationDatumData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -36,21 +38,22 @@ public class NavigationDatumDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path navigationDatumsFile = dataDir.resolve("navigationDatums.xml");
+        Path navigationDatumsFile = dataDir.resolve("navigationDatums.json");
         if (!Files.isRegularFile(navigationDatumsFile)) {
             throw new IllegalStateException("Unable to read " + navigationDatumsFile);
         }
 
         NavigationDatumData data;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(navigationDatumsFile, StandardCharsets.UTF_8)) {
-            data = (NavigationDatumData) JAXBContext.newInstance(NavigationDatumData.class).createUnmarshaller().unmarshal(reader);
-        } catch (JAXBException | IOException e) {
+            data = objectMapper.readValue(reader, NavigationDatumData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + navigationDatumsFile, e);
         }
 
-        navigationDatumDropDowns = new ArrayList<>(data.getNavigationDatums().getNavigationData().size() + 1);
+        navigationDatumDropDowns = new ArrayList<>(data.getNavigationDatums().size() + 1);
         navigationDatumDropDowns.add(UNSELECTED_NAVIGATION_DATUM);
-        data.getNavigationDatums().getNavigationData().stream()
+        data.getNavigationDatums().stream()
             .sorted((d1, d2) -> d1.getName().compareToIgnoreCase(d2.getName()))
             .map(d -> new DropDownItem(d.getUuid(), d.getName()))
             .forEach(navigationDatumDropDowns::add);

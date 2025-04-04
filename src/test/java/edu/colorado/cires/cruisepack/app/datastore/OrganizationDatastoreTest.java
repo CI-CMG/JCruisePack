@@ -7,9 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
-import edu.colorado.cires.cruisepack.xml.organization.OrganizationData;
-import edu.colorado.cires.cruisepack.xml.organization.OrganizationList;
+import edu.colorado.cires.cruisepack.data.Organization;
+import edu.colorado.cires.cruisepack.data.OrganizationData;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
   void init() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    Set<NameUUIDPair> expected = readFile(OrganizationData.class).getOrganizations().stream()
         .map(o -> new NameUUIDPair(o.getUuid(), o.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(
@@ -46,7 +45,7 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
   void getEnabledOrganizationDropDowns() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    Set<NameUUIDPair> expected = readFile(OrganizationData.class).getOrganizations().stream()
         .filter(Organization::isUse)
         .map(o -> new NameUUIDPair(o.getUuid(), o.getName()))
         .collect(Collectors.toSet());
@@ -74,12 +73,12 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
         .findFirst();
     assertTrue(maybeSavedItem.isPresent());
 
-    Optional<Organization> maybeSavedOrganization = readFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    Optional<Organization> maybeSavedOrganization = readFile(OrganizationData.class).getOrganizations().stream()
         .filter(p -> p.getUuid().equals(organization.getUuid()) && p.getName().equals(organization.getName()))
         .findFirst();
     assertTrue(maybeSavedOrganization.isEmpty()); // should not be in default data file
 
-    maybeSavedOrganization = readLocalFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    maybeSavedOrganization = readLocalFile(OrganizationData.class).getOrganizations().stream()
         .filter(p -> p.getUuid().equals(organization.getUuid()) && p.getName().equals(organization.getName()))
         .findFirst();
     assertTrue(maybeSavedOrganization.isPresent()); // should be stored in overrides file
@@ -111,13 +110,13 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
             .findFirst().isEmpty()
     );
 
-    Optional<Organization> maybeSavedOrganization = readFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    Optional<Organization> maybeSavedOrganization = readFile(OrganizationData.class).getOrganizations().stream()
         .filter(p -> p.getUuid().equals(organization.getUuid()) && p.getName().equals(organization.getName()))
         .findFirst();
     assertTrue(maybeSavedOrganization.isPresent()); // should be present in default file without edits
     assertTrue(maybeSavedOrganization.get().isUse());
 
-    maybeSavedOrganization = readLocalFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    maybeSavedOrganization = readLocalFile(OrganizationData.class).getOrganizations().stream()
         .filter(p -> p.getUuid().equals(organization.getUuid()) && p.getName().equals(organization.getName()))
         .findFirst();
     assertTrue(maybeSavedOrganization.isPresent()); // should be stored in overrides file with edits
@@ -140,12 +139,12 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
         .findFirst();
     assertTrue(maybeSavedItem.isPresent());
 
-    Optional<Organization> maybeSavedOrganization = readFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    Optional<Organization> maybeSavedOrganization = readFile(OrganizationData.class).getOrganizations().stream()
         .filter(p -> p.getUuid().equals(organization.getUuid()) && p.getName().equals(organization.getName()))
         .findFirst();
     assertTrue(maybeSavedOrganization.isEmpty()); // should not be in default data file
 
-    maybeSavedOrganization = readLocalFile(OrganizationData.class).getOrganizations().getOrganizations().stream()
+    maybeSavedOrganization = readLocalFile(OrganizationData.class).getOrganizations().stream()
         .filter(p -> p.getUuid().equals(organization.getUuid()) && p.getName().equals(organization.getName()))
         .findFirst();
     assertTrue(maybeSavedOrganization.isPresent()); // should be stored in overrides file
@@ -182,13 +181,12 @@ class OrganizationDatastoreTest extends OverridableXMLDatastoreTest<Organization
   protected OrganizationData createDataObject() {
     OrganizationData data = new OrganizationData();
     data.setDataVersion("1.0");
-    data.setOrganizations(new OrganizationList());
     return data;
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "organizations.xml";
+  protected String getJSONFilename() {
+    return "organizations.json";
   }
 
   private static Organization createOrganization(String suffix, boolean use) {

@@ -13,7 +13,7 @@ import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.PackagingValidationService;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Person;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -36,6 +36,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -83,8 +84,8 @@ public class PackerExecutorTest {
   public void beforeEach() throws Exception {
     FileUtils.deleteQuietly(workDir.toFile());
     Files.createDirectories(workDir.resolve("local-data"));
-    Files.createFile(workDir.resolve("local-data").resolve("people.xml"));
-    Files.createFile(workDir.resolve("local-data").resolve("organizations.xml"));
+    Files.createFile(workDir.resolve("local-data").resolve("people.json"));
+    Files.createFile(workDir.resolve("local-data").resolve("organizations.json"));
     FileUtils.deleteQuietly(mainBagRootDir.toFile());
     Files.createDirectories(mainBagRootDir);
     CruisePackPreSpringStarter.start();
@@ -189,7 +190,7 @@ public class PackerExecutorTest {
       fileStream.filter(Files::isRegularFile).map(expectedRoot::relativize).forEach(expected::add);
     }
 
-    Path actualRoot = mainBagRootDir.resolve("TST200400/data/TST200400_MB-BATHY_EM122");
+    Path actualRoot = mainBagRootDir.resolve("TST200400").resolve("data").resolve("TST200400_MB-BATHY_EM122");
     TreeSet<Path> actual = new TreeSet<>();
     try (Stream<Path> fileStream = Files.walk(actualRoot)) {
       fileStream.filter(Files::isRegularFile).map(actualRoot::relativize).forEach(actual::add);

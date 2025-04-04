@@ -7,9 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.model.PersonModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.person.Person;
-import edu.colorado.cires.cruisepack.xml.person.PersonData;
-import edu.colorado.cires.cruisepack.xml.person.PersonList;
+import edu.colorado.cires.cruisepack.data.Person;
+import edu.colorado.cires.cruisepack.data.PersonData;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +27,7 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
   void init() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(PersonData.class).getPeople().getPersons().stream()
+    Set<NameUUIDPair> expected = readFile(PersonData.class).getPeople().stream()
         .map(p -> new NameUUIDPair(p.getUuid(), p.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(
@@ -46,7 +45,7 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
   void getEnabledPersonDropDowns() {
     datastore.init();
     
-    Set<NameUUIDPair> expected = readFile(PersonData.class).getPeople().getPersons().stream()
+    Set<NameUUIDPair> expected = readFile(PersonData.class).getPeople().stream()
         .filter(Person::isUse)
         .map(p -> new NameUUIDPair(p.getUuid(), p.getName()))
         .collect(Collectors.toSet());
@@ -74,12 +73,12 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
         .findFirst();
     assertTrue(maybeSavedItem.isPresent());
 
-    Optional<Person> maybeSavedPerson = readFile(PersonData.class).getPeople().getPersons().stream()
+    Optional<Person> maybeSavedPerson = readFile(PersonData.class).getPeople().stream()
         .filter(p -> p.getUuid().equals(person.getUuid()) && p.getName().equals(person.getName()))
         .findFirst();
     assertTrue(maybeSavedPerson.isEmpty()); // should not be in default data file
     
-    maybeSavedPerson = readLocalFile(PersonData.class).getPeople().getPersons().stream()
+    maybeSavedPerson = readLocalFile(PersonData.class).getPeople().stream()
         .filter(p -> p.getUuid().equals(person.getUuid()) && p.getName().equals(person.getName()))
         .findFirst();
     assertTrue(maybeSavedPerson.isPresent()); // should be stored in overrides file
@@ -105,13 +104,13 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
         .findFirst();
     assertTrue(maybeSavedItem.isPresent());
 
-    Optional<Person> maybeSavedPerson = readFile(PersonData.class).getPeople().getPersons().stream()
+    Optional<Person> maybeSavedPerson = readFile(PersonData.class).getPeople().stream()
         .filter(p -> p.getUuid().equals(person.getUuid()) && p.getName().equals(person.getName()))
         .findFirst();
     assertTrue(maybeSavedPerson.isPresent()); // should be present in default file without edits
     assertFalse(maybeSavedPerson.get().isUse());
 
-    maybeSavedPerson = readLocalFile(PersonData.class).getPeople().getPersons().stream()
+    maybeSavedPerson = readLocalFile(PersonData.class).getPeople().stream()
         .filter(p -> p.getUuid().equals(person.getUuid()) && p.getName().equals(person.getName()))
         .findFirst();
     assertTrue(maybeSavedPerson.isPresent()); // should be stored in overrides file with edits
@@ -134,12 +133,12 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
         .findFirst();
     assertTrue(maybeSavedItem.isPresent());
 
-    Optional<Person> maybeSavedPerson = readFile(PersonData.class).getPeople().getPersons().stream()
+    Optional<Person> maybeSavedPerson = readFile(PersonData.class).getPeople().stream()
         .filter(p -> p.getUuid().equals(person.getUuid()) && p.getName().equals(person.getName()))
         .findFirst();
     assertTrue(maybeSavedPerson.isEmpty()); // should not be in default data file
 
-    maybeSavedPerson = readLocalFile(PersonData.class).getPeople().getPersons().stream()
+    maybeSavedPerson = readLocalFile(PersonData.class).getPeople().stream()
         .filter(p -> p.getUuid().equals(person.getUuid()) && p.getName().equals(person.getName()))
         .findFirst();
     assertTrue(maybeSavedPerson.isPresent()); // should be stored in overrides file
@@ -173,8 +172,8 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "people.xml";
+  protected String getJSONFilename() {
+    return "people.json";
   }
   
   private static Person createPerson(String suffix, boolean use) {
@@ -253,7 +252,6 @@ class PersonDatastoreTest extends OverridableXMLDatastoreTest<PersonData> {
   protected PersonData createDataObject() {
     PersonData personData = new PersonData();
     personData.setDataVersion("1.0");
-    personData.setPeople(new PersonList());
     return personData;
   }
 }

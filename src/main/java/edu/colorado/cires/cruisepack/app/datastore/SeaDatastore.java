@@ -1,9 +1,11 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.sea.Sea;
-import edu.colorado.cires.cruisepack.xml.sea.SeaData;
+import edu.colorado.cires.cruisepack.data.Sea;
+import edu.colorado.cires.cruisepack.data.SeaData;
+import edu.colorado.cires.cruisepack.data.ShipData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -35,19 +37,20 @@ public class SeaDatastore {
   public void init() {
     Path workDir = Paths.get(serviceProperties.getWorkDir());
     Path dataDir = workDir.resolve("data");
-    Path seaFile = dataDir.resolve("seas.xml");
+    Path seaFile = dataDir.resolve("seas.json");
     if (!Files.isRegularFile(seaFile)) {
       throw new IllegalStateException("Unable to read " + seaFile);
     }
     SeaData seaData;
+    ObjectMapper objectMapper = new ObjectMapper();
     try (Reader reader = Files.newBufferedReader(seaFile, StandardCharsets.UTF_8)) {
-      seaData = (SeaData) JAXBContext.newInstance(SeaData.class).createUnmarshaller().unmarshal(reader);
-    } catch (IOException | JAXBException e) {
+      seaData = objectMapper.readValue(reader, SeaData.class);
+    } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + seaFile, e);
     }
-    seaDropDowns = new ArrayList<>(seaData.getSeas().getSeas().size() + 1);
+    seaDropDowns = new ArrayList<>(seaData.getSeas().size() + 1);
     seaDropDowns.add(UNSELECTED_SEA);
-    seaData.getSeas().getSeas().stream()
+    seaData.getSeas().stream()
         .filter(Sea::isUse)
         .sorted((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()))
         .map(ship -> new DropDownItem(ship.getUuid(), ship.getName()))

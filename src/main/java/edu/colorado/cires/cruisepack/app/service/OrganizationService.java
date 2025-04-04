@@ -1,6 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
+import edu.colorado.cires.cruisepack.data.Organization;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;

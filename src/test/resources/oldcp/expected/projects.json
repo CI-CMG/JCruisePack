@@ -1,0 +1,56 @@
+{
+  "dataVersion" : "1.0",
+  "projects" : [ {
+    "uuid" : "1",
+    "name" : "Project number one",
+    "use" : true
+  }, {
+    "uuid" : "2",
+    "name" : "Project number two",
+    "use" : true
+  }, {
+    "uuid" : "3",
+    "name" : "My new project",
+    "use" : true
+  }, {
+    "uuid" : "4",
+    "name" : "My new project 2",
+    "use" : true
+  }, {
+    "uuid" : "5",
+    "name" : "Autumn Bottom Trawl-Acoustics Survey",
+    "use" : true
+  }, {
+    "uuid" : "6",
+    "name" : "Spring Bottom Trawl-Acoustics Survey",
+    "use" : true
+  }, {
+    "uuid" : "7",
+    "name" : "AMAPPS",
+    "use" : true
+  }, {
+    "uuid" : "8",
+    "name" : "Northeast Deepwater Coral Habitats",
+    "use" : true
+  }, {
+    "uuid" : "9",
+    "name" : "Mespolagic DEEP -SEA",
+    "use" : true
+  }, {
+    "uuid" : "10",
+    "name" : "Spring Multispecies Bottom Trawl Survey",
+    "use" : true
+  }, {
+    "uuid" : "11",
+    "name" : "ECOMON",
+    "use" : true
+  }, {
+    "uuid" : "12",
+    "name" : "another new project",
+    "use" : true
+  }, {
+    "uuid" : "13",
+    "name" : "fooo",
+    "use" : true
+  } ]
+}

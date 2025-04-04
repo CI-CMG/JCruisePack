@@ -34,17 +34,17 @@ public class CruisePackDataInitializerTest {
   public void test() {
     List<String> files = Arrays.stream(CruisePackDataInitializer.getPackagedData()).map(Resource::getFilename).sorted().collect(Collectors.toList());
     assertEquals(Arrays.asList(
-        "gravityCorrectionModels.xml",
-        "instruments.xml",
-        "magneticsCorrectionModels.xml",
-        "navigationDatums.xml",
-        "organizations.xml",
-        "people.xml",
-        "ports.xml",
-        "seas.xml",
-        "ships.xml",
-        "singlebeamVerticalDatums.xml",
-        "waterColumnCalibrationStates.xml"
+        "gravityCorrectionModels.json",
+        "instruments.json",
+        "magneticsCorrectionModels.json",
+        "navigationDatums.json",
+        "organizations.json",
+        "people.json",
+        "ports.json",
+        "seas.json",
+        "ships.json",
+        "singlebeamVerticalDatums.json",
+        "waterColumnCalibrationStates.json"
     ), files);
 
   }

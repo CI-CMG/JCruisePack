@@ -12,8 +12,7 @@ import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
 import edu.colorado.cires.cruisepack.app.service.metadata.PackageInstrument;
 import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
-import edu.colorado.cires.cruisepack.xml.organization.Organization;
-import edu.colorado.cires.cruisepack.xml.person.Person;
+import edu.colorado.cires.cruisepack.data.Person;
 import gov.loc.repository.bagit.domain.Metadata;
 import gov.loc.repository.bagit.hash.StandardSupportedAlgorithms;
 import java.beans.PropertyChangeListener;
@@ -40,10 +39,9 @@ class PackerExecutor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PackerExecutor.class);
 
-  // Change from XML to JSON
   private static final String LOCAL_DATA = "local-data";
-  private static final String PEOPLE_XML = "people.xml";
-  private static final String ORGANIZATIONS_XML = "organizations.xml";
+  private static final String PEOPLE_JSON = "people.json";
+  private static final String ORGANIZATIONS_JSON = "organizations.json";
 
   private final PackStateModel packStateModel;
   private final PackerFileController packerFileController;
@@ -164,14 +162,10 @@ class PackerExecutor {
 
   private void resetBagDirs(PackJob packJob) {
     Path bagDirectory = packJob.getPackageDirectory().resolve(packJob.getPackageId());
-    for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
-      String instrumentBagName = instruments.get(0).getBagName() + '_' + instruments.get(0).getShortName();
-      Path instrumentBagRootDir = bagDirectory.resolve(instrumentBagName).toAbsolutePath().normalize();
-      if (!bagDirectory.toFile().exists()) {
-        packerFileController.mkDir(instrumentBagRootDir);
-      } else {
-        packerFileController.cleanDir(instrumentBagRootDir); // TODO test
-      }
+    if (!bagDirectory.toFile().exists()) {
+      packerFileController.mkDir(bagDirectory.resolve(packJob.getPackageId()));
+    } else {
+      packerFileController.cleanDir(bagDirectory); // TODO test
     }
   }
 
@@ -298,8 +292,6 @@ class PackerExecutor {
             if (packerFileController.filterHidden(sourceFile)) {
               if (packerFileController.filterTimeSize(sourceFile, targetFile)) {
                 packerFileController.mkDir(targetFile.getParent());
-                System.out.println("Created " + targetFile.getParent());
-
                 packerFileController.copy(sourceFile, targetFile);
               }
             }
@@ -374,10 +366,10 @@ class PackerExecutor {
     );
 
     for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
-      String instrumentBagName = instruments.get(0).getBagName() + '_' + instruments.get(0).getShortName();
+      String instrumentBagName = instruments.get(0).getBagName();
       Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
 
-//      packerFileController.mkDir(instrumentBagRootDir);
+      packerFileController.mkDir(instrumentBagRootDir);
 
       boolean bagContainsData = false;
       for (InstrumentDetail dataset : instruments) {
@@ -409,7 +401,6 @@ class PackerExecutor {
       } else {
         try {
           FileUtils.deleteDirectory(instrumentBagRootDir.toFile());
-          System.out.println("Deleted " + instrumentBagRootDir);
         } catch (IOException e) {
           throw new IllegalStateException("Unable to delete empty bag: " + instrumentBagRootDir, e);
         }
@@ -496,18 +487,19 @@ class PackerExecutor {
 
   private void copyLocalData(Path instrumentBagDataDir) {
     Path systemLocalData = workDirectory.resolve(LOCAL_DATA);
-    Path people = systemLocalData.resolve(PEOPLE_XML);
-    Path organizations = systemLocalData.resolve(ORGANIZATIONS_XML);
+    Path people = systemLocalData.resolve(PEOPLE_JSON);
+    Path organizations = systemLocalData.resolve(ORGANIZATIONS_JSON);
     Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);
     if (Files.isRegularFile(people)) {
       packerFileController.mkDir(localData);
-      packerFileController.copy(people, localData.resolve(PEOPLE_XML));
+      packerFileController.copy(people, localData.resolve(PEOPLE_JSON));
     }
     if (Files.isRegularFile(organizations)) {
       packerFileController.mkDir(localData);
-      packerFileController.copy(organizations, localData.resolve(ORGANIZATIONS_XML));
+      packerFileController.copy(organizations, localData.resolve(ORGANIZATIONS_JSON));
     }
   }
+
 
   private static boolean filterExtension(Path path, InstrumentDetail dataset) {
     if (!dataset.getExtensions().isEmpty() && InstrumentStatus.RAW == dataset.getStatus()) {
@@ -650,7 +642,7 @@ class PackerExecutor {
       metadata.add("Source-Organization", String.join(
          ", ",
          cruiseMetadata.getSponsors().stream()
-             .map(Organization::getName)
+             .map(PeopleOrg::getName)
              .collect(Collectors.toSet())
       ));
     }

@@ -3,7 +3,7 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.ship.ShipData;
+import edu.colorado.cires.cruisepack.data.ShipData;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ class ShipDatastoreTest extends XMLDatastoreTest<ShipData> {
   void init() {
     datastore.init();
     
-    Set<NameUUIDPair> expected = readFile(ShipData.class).getShips().getShips().stream()
+    Set<NameUUIDPair> expected = readFile(ShipData.class).getShips().stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(
@@ -52,7 +52,7 @@ class ShipDatastoreTest extends XMLDatastoreTest<ShipData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "ships.xml";
+  protected String getJSONFilename() {
+    return "ships.json";
   }
 }

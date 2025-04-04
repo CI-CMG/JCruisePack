@@ -3,8 +3,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.*;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.navigationDatum.NavigationDatum;
-import edu.colorado.cires.cruisepack.xml.navigationDatum.NavigationDatumData;
+import edu.colorado.cires.cruisepack.data.NavigationDatum;
+import edu.colorado.cires.cruisepack.data.NavigationDatumData;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,8 +23,7 @@ class NavigationDatumDatastoreTest extends XMLDatastoreTest<NavigationDatumData>
   void init() {
     datastore.init();
 
-    List<NavigationDatum> data = readFile(NavigationDatumData.class).getNavigationDatums()
-        .getNavigationData();
+    List<NavigationDatum> data = readFile(NavigationDatumData.class).getNavigationDatums();
     
     Set<NameUUIDPair> expected = data.stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
@@ -41,7 +40,7 @@ class NavigationDatumDatastoreTest extends XMLDatastoreTest<NavigationDatumData>
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "navigationDatums.xml";
+  protected String getJSONFilename() {
+    return "navigationDatums.json";
   }
 }

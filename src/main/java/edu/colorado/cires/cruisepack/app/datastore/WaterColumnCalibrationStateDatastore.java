@@ -1,5 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.colorado.cires.cruisepack.data.SeaData;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
-import edu.colorado.cires.cruisepack.xml.waterColumnCalibrationState.WaterColumnCalibrationStateData;
+import edu.colorado.cires.cruisepack.data.WaterColumnCalibrationStateData;
 import jakarta.annotation.PostConstruct;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -36,21 +38,22 @@ public class WaterColumnCalibrationStateDatastore {
     public void init() {
         Path workDir = Paths.get(serviceProperties.getWorkDir());
         Path dataDir = workDir.resolve("data");
-        Path calibrationStatesFile = dataDir.resolve("waterColumnCalibrationStates.xml");
+        Path calibrationStatesFile = dataDir.resolve("waterColumnCalibrationStates.json");
         if (!Files.isRegularFile(calibrationStatesFile)) {
             throw new IllegalStateException("Unable to read " + calibrationStatesFile);
         }
 
         WaterColumnCalibrationStateData data;
+        ObjectMapper objectMapper = new ObjectMapper();
         try (Reader reader = Files.newBufferedReader(calibrationStatesFile, StandardCharsets.UTF_8)) {
-            data = (WaterColumnCalibrationStateData) JAXBContext.newInstance(WaterColumnCalibrationStateData.class).createUnmarshaller().unmarshal(reader);
-        } catch (IOException | JAXBException e) {
+            data = objectMapper.readValue(reader, WaterColumnCalibrationStateData.class);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to parse " + calibrationStatesFile, e);
         }
 
-        calibrationStateDropDowns = new ArrayList<>(data.getWaterColumnCalibrationStates().getWaterColumnCalibrationStates().size() + 1);
+        calibrationStateDropDowns = new ArrayList<>(data.getWaterColumnCalibrationStates().size() + 1);
         calibrationStateDropDowns.add(UNSELECTED_CALIBRATION_STATE);
-        data.getWaterColumnCalibrationStates().getWaterColumnCalibrationStates().stream()
+        data.getWaterColumnCalibrationStates().stream()
             .sorted((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()))
             .map(c -> new DropDownItem(c.getUuid(), c.getName()))
             .forEach(calibrationStateDropDowns::add);

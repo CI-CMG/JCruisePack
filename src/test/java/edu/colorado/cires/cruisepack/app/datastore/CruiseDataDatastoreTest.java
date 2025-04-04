@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,7 @@ class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastor
   private static final Path TEST_PATH = Paths.get("target").resolve("test-dir");
   private static final MetadataService METADATA_SERVICE = mock(MetadataService.class);
   private static final ServiceProperties SERVICE_PROPERTIES = new ServiceProperties();
+  private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
   static {
     SERVICE_PROPERTIES.setWorkDir(
         TEST_PATH.resolve("work-dir").toString()
@@ -55,7 +58,9 @@ class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastor
     return new CruiseDataDatastore(
         METADATA_SERVICE,
         SERVICE_PROPERTIES,
-        OBJECT_MAPPER
+        OBJECT_MAPPER,
+            VALIDATOR
+
     );
   }
 

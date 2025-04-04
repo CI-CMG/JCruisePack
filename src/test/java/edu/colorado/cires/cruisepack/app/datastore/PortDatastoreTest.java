@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.port.PortData;
+import edu.colorado.cires.cruisepack.data.PortData;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class PortDatastoreTest extends XMLDatastoreTest<PortData> {
   void init() {
     datastore.init();
 
-    Set<NameUUIDPair> expected = readFile(PortData.class).getPorts().getPorts().stream()
+    Set<NameUUIDPair> expected = readFile(PortData.class).getPorts().stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
         .collect(Collectors.toSet());
     expected.add(new NameUUIDPair(
@@ -53,7 +53,7 @@ class PortDatastoreTest extends XMLDatastoreTest<PortData> {
   }
 
   @Override
-  protected String getXMLFilename() {
-    return "ports.xml";
+  protected String getJSONFilename() {
+    return "ports.json";
   }
 }

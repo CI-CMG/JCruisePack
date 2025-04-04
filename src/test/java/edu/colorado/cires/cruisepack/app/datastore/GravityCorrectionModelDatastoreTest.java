@@ -3,8 +3,8 @@ package edu.colorado.cires.cruisepack.app.datastore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.xml.gravityCorrectionModel.GravityCorrectionModel;
-import edu.colorado.cires.cruisepack.xml.gravityCorrectionModel.GravityCorrectionModelData;
+import edu.colorado.cires.cruisepack.data.GravityCorrectionModel;
+import edu.colorado.cires.cruisepack.data.GravityCorrectionModelData;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,16 +20,15 @@ class GravityCorrectionModelDatastoreTest extends XMLDatastoreTest<GravityCorrec
   private final GravityCorrectionModelDatastore datastore = new GravityCorrectionModelDatastore(SERVICE_PROPERTIES);
   
   @Override
-  protected String getXMLFilename() {
-    return "gravityCorrectionModels.xml";
+  protected String getJSONFilename() {
+    return "gravityCorrectionModels.json";
   }
 
   @Test
   void init() {
     datastore.init();
     
-    List<GravityCorrectionModel> data = readFile(GravityCorrectionModelData.class).getGravityCorrectionModels()
-        .getGravityCorrectionModels();
+    List<GravityCorrectionModel> data = readFile(GravityCorrectionModelData.class).getGravityCorrectionModels();
     
     Set<NameUUIDPair> expected = data.stream()
         .map(d -> new NameUUIDPair(d.getUuid(), d.getName()))
