@@ -1,10 +1,10 @@
-Source-Organization: SOURCE-ORG-1, SOURCE-ORG-2
-Contact-Name: TEST_NAME
-Contact-Phone: TEST_PHONE
-Contact-Email: TEST_EMAIL
+Source-Organization: OER, Woods Hole
+Contact-Name: Chuck Anderson
+Contact-Phone: 303-497-4742
+Contact-Email: charles.anderson@noaa.gov
 External-Description: TST200400_description
 External-Identifier: TST200400
 Cruise Name: TST200400_title
 Instrument: longem122
-Payload-Oxum: 161897.12
+Payload-Oxum: 162377.12
 Bagging-Date: __BAGGING_DATE__
