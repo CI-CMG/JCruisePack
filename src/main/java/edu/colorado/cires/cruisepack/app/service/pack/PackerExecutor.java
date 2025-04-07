@@ -368,7 +368,7 @@ class PackerExecutor {
 
     for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
       String instrumentBagName = instruments.get(0).getBagName() + '_' + instruments.get(0).getShortName();
-      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
+      Path instrumentBagRootDir = mainBagDataDir.resolve("data").resolve(instrumentBagName).toAbsolutePath().normalize();
       packerFileController.mkDir(instrumentBagRootDir);
 
       boolean bagContainsData = false;
@@ -499,7 +499,6 @@ class PackerExecutor {
       packerFileController.copy(organizations, localData.resolve(ORGANIZATIONS_JSON));
     }
   }
-
 
   private static boolean filterExtension(Path path, InstrumentDetail dataset) {
     if (!dataset.getExtensions().isEmpty() && InstrumentStatus.RAW == dataset.getStatus()) {

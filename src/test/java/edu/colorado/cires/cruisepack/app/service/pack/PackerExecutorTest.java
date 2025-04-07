@@ -105,7 +105,7 @@ public class PackerExecutorTest {
     FileUtils.deleteQuietly(workDir.toFile());
   }
 
-  @Test @Disabled
+  @Test
   public void testSingleDataset() throws Exception {
     Map<InstrumentDetailPackageKey, List<InstrumentDetail>> instruments = new LinkedHashMap<>();
     List<InstrumentDetail> instrumentDetails = Arrays.asList(
@@ -350,7 +350,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src-empty/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122")
             .setDirName("EM122")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PROCESSED)
@@ -358,7 +358,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src-empty/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed")
             .setDirName("EM122_processed")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PROCESSED)
@@ -366,7 +366,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src-empty/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_processed-1")
             .setDirName("EM122_processed-1")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build(),
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.PRODUCTS)
@@ -374,7 +374,7 @@ public class PackerExecutorTest {
             .setShortName("EM122")
             .setDataPath("src/test/resources/test-src-empty/TST200400/data/TST200400_MB-BATHY_EM122/data/EM122_products")
             .setDirName("EM122_products")
-            .setBagName("TST200400_MB-BATHY_EM122")
+            .setBagName("TST200400_MB-BATHY")
             .build()
     );
     instruments.put(new InstrumentDetailPackageKey("MB-BATHY", "EM122"), instrumentDetails);
