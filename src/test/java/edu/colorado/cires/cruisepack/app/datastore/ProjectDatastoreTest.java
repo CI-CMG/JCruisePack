@@ -18,7 +18,7 @@ class ProjectDatastoreTest extends OverridableXMLDatastoreTest<ProjectData> {
     SERVICE_PROPERTIES.setWorkDir(TEST_PATH.toString());
   }
   
-  private final ProjectDatastore datastore = new ProjectDatastore(SERVICE_PROPERTIES, new ObjectMapper());
+  private final ProjectDatastore datastore = new ProjectDatastore(SERVICE_PROPERTIES);
 
   @Test
   void init() {

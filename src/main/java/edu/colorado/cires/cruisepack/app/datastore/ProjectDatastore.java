@@ -1,22 +1,14 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.DatabaseObjectMapperFactory;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
-import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
-import edu.colorado.cires.cruisepack.app.ui.view.ReactiveViewRegistry;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Project;
 import edu.colorado.cires.cruisepack.data.ProjectData;
 import jakarta.annotation.PostConstruct;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,17 +23,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProjectDatastore extends PropertyChangeModel {
+
   public static final DropDownItem UNSELECTED_PROJECT = new DropDownItem("", "Select Project");
 
   private final ServiceProperties serviceProperties;
   private List<DropDownItem> projectDropDowns;
-  private  List<Project> projects;
-  private final ObjectMapper objectMapper;
+  private List<Project> projects;
 
   @Autowired
-  public ProjectDatastore(ServiceProperties serviceProperties, ObjectMapper objectMapper) {
+  public ProjectDatastore(ServiceProperties serviceProperties) {
     this.serviceProperties = serviceProperties;
-    this.objectMapper = objectMapper;
   }
 
   @PostConstruct
@@ -91,7 +82,7 @@ public class ProjectDatastore extends PropertyChangeModel {
     Path projectsFile = dataDir.resolve("projects.json");
 
     try {
-      objectMapper.writeValue(projectsFile.toFile(), newProjectData);
+      DatabaseObjectMapperFactory.getObjectMapper().writeValue(projectsFile.toFile(), newProjectData);
     } catch (Exception e) {
       throw new IllegalStateException("Failed to save drop down items: ", e);
     }
@@ -119,7 +110,7 @@ public class ProjectDatastore extends PropertyChangeModel {
     }
 
     try {
-      return Optional.of(objectMapper.readValue(projectsFile.toFile(), ProjectData.class));
+      return Optional.of(DatabaseObjectMapperFactory.getObjectMapper().readValue(projectsFile.toFile(), ProjectData.class));
     } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + projectsFile, e);
     }

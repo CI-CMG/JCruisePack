@@ -1,16 +1,12 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.DatabaseObjectMapperFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Ship;
 import edu.colorado.cires.cruisepack.data.ShipData;
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,9 +38,8 @@ public class ShipDatastore {
       throw new IllegalStateException("Unable to read " + shipFile);
     }
     ShipData shipData;
-    ObjectMapper objectMapper = new ObjectMapper();
-    try (Reader reader = Files.newBufferedReader(shipFile, StandardCharsets.UTF_8)) {
-      shipData = objectMapper.readValue(reader, ShipData.class);
+    try {
+      shipData = DatabaseObjectMapperFactory.getObjectMapper().readValue(shipFile.toFile(), ShipData.class);
     } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + shipFile, e);
     }

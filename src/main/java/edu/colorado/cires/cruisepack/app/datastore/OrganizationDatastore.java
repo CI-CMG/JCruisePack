@@ -1,7 +1,7 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.DatabaseObjectMapperFactory;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.OrganizationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
@@ -9,11 +9,7 @@ import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Organization;
 import edu.colorado.cires.cruisepack.data.OrganizationData;
 import jakarta.annotation.PostConstruct;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,134 +24,134 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrganizationDatastore extends PropertyChangeModel {
-    public static final DropDownItem UNSELECTED_ORGANIZATION = new DropDownItem("", "Select Organization");
 
-    private final ServiceProperties serviceProperties;
-    private List<DropDownItem> organizationDropDowns;
-  private  List<Organization> organizations;
+  public static final DropDownItem UNSELECTED_ORGANIZATION = new DropDownItem("", "Select Organization");
 
-    @Autowired
-    public OrganizationDatastore(ServiceProperties serviceProperties) {
-        this.serviceProperties = serviceProperties;
-    }
+  private final ServiceProperties serviceProperties;
+  private List<DropDownItem> organizationDropDowns;
+  private List<Organization> organizations;
 
-    @PostConstruct
-    public void init() {
-        load();
-    }
+  @Autowired
+  public OrganizationDatastore(ServiceProperties serviceProperties) {
+    this.serviceProperties = serviceProperties;
+  }
 
-    
-    private void load() {
-        organizations = mergeOrganizations(readOrganizations("data"), readOrganizations("local-data"));
-        List<DropDownItem> items = organizations.stream()
-            .map(o -> new DropDownItem(o.getUuid(), o.getName()))
-            .collect(Collectors.toList());
-        items.add(0, UNSELECTED_ORGANIZATION);
+  @PostConstruct
+  public void init() {
+    load();
+  }
 
-        setOrganizationDropDowns(items);
-    }
 
-    private void setOrganizationDropDowns(List<DropDownItem> items) {
-        setIfChanged(Events.UPDATE_ORGANIZATION_DATA_STORE, items, () -> new ArrayList<DropDownItem>(), (i) -> this.organizationDropDowns = i);
-    }
+  private void load() {
+    organizations = mergeOrganizations(readOrganizations("data"), readOrganizations("local-data"));
+    List<DropDownItem> items = organizations.stream()
+        .map(o -> new DropDownItem(o.getUuid(), o.getName()))
+        .collect(Collectors.toList());
+    items.add(0, UNSELECTED_ORGANIZATION);
 
-    public List<DropDownItem> getAllOrganizationDropDowns() {
-        return organizationDropDowns;
-    }
+    setOrganizationDropDowns(items);
+  }
 
-    public List<DropDownItem> getEnabledOrganizationDropDowns() {
-        return organizationDropDowns.stream()
-        .filter(dd -> 
+  private void setOrganizationDropDowns(List<DropDownItem> items) {
+    setIfChanged(Events.UPDATE_ORGANIZATION_DATA_STORE, items, () -> new ArrayList<DropDownItem>(), (i) -> this.organizationDropDowns = i);
+  }
+
+  public List<DropDownItem> getAllOrganizationDropDowns() {
+    return organizationDropDowns;
+  }
+
+  public List<DropDownItem> getEnabledOrganizationDropDowns() {
+    return organizationDropDowns.stream()
+        .filter(dd ->
             findByUUID(dd.getId())
                 .map(Organization::isUse)
                 .orElse(dd.equals(UNSELECTED_ORGANIZATION))
         )
         .collect(Collectors.toList());
+  }
+
+  public void save(Organization organization) {
+    OrganizationData newOrganizationData = new OrganizationData();
+    List<Organization> listWithNewOrganization = new ArrayList<>();
+    listWithNewOrganization.add(organization);
+    newOrganizationData.setOrganizations(listWithNewOrganization);
+    List<Organization> mergedOrganizations = mergeOrganizations(
+        readOrganizations("local-data"),
+        Optional.of(newOrganizationData)
+    );
+
+    OrganizationData organizationData = new OrganizationData();
+    organizationData.setDataVersion("1.0");
+    List<Organization> organizations = new ArrayList<>(mergedOrganizations);
+    organizationData.setOrganizations(organizations);
+
+    Path workDir = Paths.get(serviceProperties.getWorkDir());
+    Path dataDir = workDir.resolve("local-data");
+    Path organizationsFile = dataDir.resolve("organizations.json");
+
+    try {
+      DatabaseObjectMapperFactory.getObjectMapper().writeValue(organizationsFile.toFile(), organizationData);
+    } catch (Exception e) {
+      throw new IllegalStateException("Failed to save drop down items: ", e);
     }
 
-    public void save(Organization organization) {
-        OrganizationData newOrganizationData = new OrganizationData();
-        List<Organization> listWithNewOrganization = new ArrayList<>();
-        listWithNewOrganization.add(organization);
-        newOrganizationData.setOrganizations(listWithNewOrganization);
-        List<Organization> mergedOrganizations = mergeOrganizations(
-            readOrganizations("local-data"),
-             Optional.of(newOrganizationData)
-        );
+    load();
+  }
 
-        OrganizationData organizationData = new OrganizationData();
-        organizationData.setDataVersion("1.0");
-      List<Organization> organizations = new ArrayList<>(mergedOrganizations);
-        organizationData.setOrganizations(organizations);
+  public void save(OrganizationModel organizationModel) {
+    save(organizationFromModel(organizationModel));
+  }
 
-        Path workDir = Paths.get(serviceProperties.getWorkDir());
-        Path dataDir = workDir.resolve("local-data");
-        Path organizationsFile = dataDir.resolve("organizations.json");
-        ObjectMapper objectMapper = new ObjectMapper();
-        try (OutputStream outputStream = new FileOutputStream(organizationsFile.toFile())) {
-          objectMapper.writeValue(outputStream, organizationData);
-        } catch (Exception e) {
-            throw new IllegalStateException("Failed to save drop down items: ", e);
-        }
+  private Organization organizationFromModel(OrganizationModel organizationModel) {
+    Organization organization = new Organization();
+    organization.setName(organizationModel.getName());
+    organization.setStreet(organizationModel.getStreet());
+    organization.setCity(organizationModel.getCity());
+    organization.setState(organizationModel.getState());
+    organization.setZip(organizationModel.getZip());
+    organization.setCountry(organizationModel.getCountry());
+    organization.setPhone(organizationModel.getPhone());
+    organization.setEmail(organizationModel.getEmail());
+    organization.setUuid(organizationModel.getUuid());
+    organization.setUse(organizationModel.isUse());
+    return organization;
+  }
 
-        load();
+  private List<Organization> mergeOrganizations(Optional<OrganizationData> defaults, Optional<OrganizationData> overrides) {
+    Map<String, Organization> merged = new HashMap<>(0);
+    defaults.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+    overrides.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
+
+    return merged.values().stream()
+        .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
+        .collect(Collectors.toList());
+  }
+
+  private Optional<OrganizationData> readOrganizations(String dir) {
+    Path workDir = Paths.get(serviceProperties.getWorkDir());
+    Path dataDir = workDir.resolve(dir);
+    Path peopleFile = dataDir.resolve("organizations.json");
+    if (!Files.isRegularFile(peopleFile)) {
+      return Optional.empty();
     }
+    OrganizationData organizationData;
+    try {
+      organizationData = DatabaseObjectMapperFactory.getObjectMapper().readValue(peopleFile.toFile(), OrganizationData.class);
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to parse " + peopleFile, e);
+    }
+    return Optional.of(organizationData);
+  }
 
-    public void save(OrganizationModel organizationModel) {
-        save(organizationFromModel(organizationModel));
-    }
+  public Optional<Organization> findByUUID(String uuid) {
+    return organizations.stream()
+        .filter(o -> o.getUuid().equals(uuid))
+        .findFirst();
+  }
 
-    private Organization organizationFromModel(OrganizationModel organizationModel) {
-        Organization organization = new Organization();
-        organization.setName(organizationModel.getName());
-        organization.setStreet(organizationModel.getStreet()); 
-        organization.setCity(organizationModel.getCity());
-        organization.setState(organizationModel.getState());
-        organization.setZip(organizationModel.getZip());
-        organization.setCountry(organizationModel.getCountry());
-        organization.setPhone(organizationModel.getPhone());
-        organization.setEmail(organizationModel.getEmail());
-        organization.setUuid(organizationModel.getUuid());
-        organization.setUse(organizationModel.isUse());
-        return organization;
-    }
-
-    private List<Organization> mergeOrganizations(Optional<OrganizationData> defaults, Optional<OrganizationData> overrides) {
-        Map<String, Organization> merged = new HashMap<>(0);
-        defaults.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-        overrides.map(OrganizationData::getOrganizations).ifPresent(o1 -> o1.forEach(o -> merged.put(o.getUuid(), o)));
-
-        return merged.values().stream()
-            .sorted((o1, o2) -> o1.getUuid().compareToIgnoreCase(o2.getUuid()))
-            .collect(Collectors.toList());
-    }
-
-    private Optional<OrganizationData> readOrganizations(String dir) {
-        Path workDir = Paths.get(serviceProperties.getWorkDir());
-        Path dataDir = workDir.resolve(dir);
-        Path peopleFile = dataDir.resolve("organizations.json");
-        if (!Files.isRegularFile(peopleFile)) {
-            return Optional.empty();
-        }
-        OrganizationData organizationData;
-        ObjectMapper objectMapper = new ObjectMapper();
-        try (Reader reader = Files.newBufferedReader(peopleFile, StandardCharsets.UTF_8)) {
-          organizationData = objectMapper.readValue(reader, OrganizationData.class);
-      } catch (IOException e) {
-            throw new IllegalStateException("Unable to parse " + peopleFile, e);
-        }
-        return Optional.of(organizationData);
-    }
-    
-    public Optional<Organization> findByUUID(String uuid) {
-        return organizations.stream()
-            .filter(o -> o.getUuid().equals(uuid))
-            .findFirst();
-    }
-    
-    public Optional<Organization> findByName(String name) {
-        return organizations.stream()
-            .filter(o -> o.getName().equals(name))
-            .findFirst();
-    }
+  public Optional<Organization> findByName(String name) {
+    return organizations.stream()
+        .filter(o -> o.getName().equals(name))
+        .findFirst();
+  }
 }

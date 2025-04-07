@@ -73,7 +73,7 @@ class PackerExecutor {
     packStateModel.setProcessing(false);
   }
 
-  public void startPacking() {
+  public void startPacking() throws PackerExecutorException {
     executeBefore.run();
     try {
 ////    rawCheck(packJob); //TODO add to validation phase
@@ -89,8 +89,9 @@ class PackerExecutor {
       packMainBag(packJob);
       packStateModel.incrementProgress();
     } catch (Exception e) {
-      LOGGER.error("An error occurred while packing", e);
-    } finally {
+      throw new PackerExecutorException("An error occurred while packing", e);
+    }
+    finally {
       stopPacking();
       executeAfter.run();
     }
@@ -138,12 +139,12 @@ class PackerExecutor {
         throw new RuntimeException(e);
       }
 
-      Path omicsPath = mainBagPath.resolve("data").resolve("omics");
+      Path omicsPath = mainBagPath.resolve("omics");
       if (omicsPath.toFile().exists()) {
         packerFileController.appendToManifest(omicsPath, mainBagPath, fileWriter);
       }
 
-      Path docsPath = mainBagPath.resolve("data").resolve("docs");
+      Path docsPath = mainBagPath.resolve("docs");
       if (docsPath.toFile().exists()) {
         packerFileController.appendToManifest(docsPath, mainBagPath, fileWriter);
       }
@@ -274,7 +275,7 @@ class PackerExecutor {
   private void copyDocs(PackJob packJob) {
     if (packJob.getDocumentsPath() != null) {
       Path docsDir = packJob.getDocumentsPath().toAbsolutePath().normalize();
-      Path targetDocs = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("data").resolve("docs").toAbsolutePath().normalize();
+      Path targetDocs = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("docs").toAbsolutePath().normalize();
       try {
         Files.walkFileTree(docsDir, new SimpleFileVisitor<>() {
 
@@ -328,7 +329,7 @@ class PackerExecutor {
   private void copyOmics(PackJob packJob) {
     if (packJob.getOmicsSampleTrackingSheetPath() != null) {
       Path omicsFile = packJob.getOmicsSampleTrackingSheetPath().toAbsolutePath().normalize();
-      Path omicsDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("data").resolve("omics").toAbsolutePath().normalize();
+      Path omicsDir = packJob.getPackageDirectory().resolve(packJob.getPackageId()).resolve("omics").toAbsolutePath().normalize();
       Path targetFile = omicsDir.resolve(omicsFile.getFileName());
       if (packerFileController.filterHidden(omicsFile)) {
         packerFileController.mkDir(omicsDir);
@@ -368,7 +369,7 @@ class PackerExecutor {
 
     for (List<InstrumentDetail> instruments : packJob.getInstruments().values()) {
       String instrumentBagName = instruments.get(0).getBagName() + '_' + instruments.get(0).getShortName();
-      Path instrumentBagRootDir = mainBagDataDir.resolve("data").resolve(instrumentBagName).toAbsolutePath().normalize();
+      Path instrumentBagRootDir = mainBagDataDir.resolve(instrumentBagName).toAbsolutePath().normalize();
       packerFileController.mkDir(instrumentBagRootDir);
 
       boolean bagContainsData = false;

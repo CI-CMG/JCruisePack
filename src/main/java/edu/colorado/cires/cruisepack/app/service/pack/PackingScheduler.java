@@ -24,7 +24,7 @@ class PackingScheduler {
     this.serviceProperties = serviceProperties;
   }
   
-  public void scheduleJob(PackingJobEvent packingJobEvent) {
+  public void scheduleJob(PackingJobEvent packingJobEvent) throws PackerExecutorException {
     PackerExecutor executor = createExecutor(
         packingJobEvent.getPackingJob()
     );
@@ -37,7 +37,7 @@ class PackingScheduler {
     }
   }
   
-  private void startPacking(PackerExecutor packerExecutor) {
+  private void startPacking(PackerExecutor packerExecutor) throws PackerExecutorException {
     packerExecutor.startPacking();
   }
   
@@ -69,7 +69,12 @@ class PackingScheduler {
 
           PackerExecutor executor = packExecutions.peek();
           if (executor != null) {
-            startPacking(executor);
+            try {
+              startPacking(executor);
+            } catch (PackerExecutorException e) {
+              //TODO should this be handled better
+              throw new RuntimeException("An error occurred while packing", e);
+            }
           }
         },
         packingJob.processId(),

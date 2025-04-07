@@ -1,6 +1,6 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
 import edu.colorado.cires.cruisepack.data.NavigationDatum;

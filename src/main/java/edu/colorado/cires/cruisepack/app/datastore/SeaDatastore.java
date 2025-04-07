@@ -1,17 +1,12 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.DatabaseObjectMapperFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Sea;
 import edu.colorado.cires.cruisepack.data.SeaData;
-import edu.colorado.cires.cruisepack.data.ShipData;
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,9 +37,8 @@ public class SeaDatastore {
       throw new IllegalStateException("Unable to read " + seaFile);
     }
     SeaData seaData;
-    ObjectMapper objectMapper = new ObjectMapper();
-    try (Reader reader = Files.newBufferedReader(seaFile, StandardCharsets.UTF_8)) {
-      seaData = objectMapper.readValue(reader, SeaData.class);
+    try {
+      seaData = DatabaseObjectMapperFactory.getObjectMapper().readValue(seaFile.toFile(), SeaData.class);
     } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + seaFile, e);
     }
@@ -64,7 +58,7 @@ public class SeaDatastore {
   public String getSeaNameForUuid(String uuid) {
     return seaDropDowns.stream().filter(dd -> uuid.equals(dd.getId())).findFirst().map(DropDownItem::getValue).orElse(null);
   }
-  
+
   public String getSeaUuidForName(String name) {
     return seaDropDowns.stream().filter(dd -> dd.getValue().equals(name)).findFirst().map(DropDownItem::getId).orElse(null);
   }

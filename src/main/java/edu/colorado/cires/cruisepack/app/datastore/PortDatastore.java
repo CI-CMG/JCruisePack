@@ -1,17 +1,12 @@
 package edu.colorado.cires.cruisepack.app.datastore;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
+import edu.colorado.cires.cruisepack.app.service.DatabaseObjectMapperFactory;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.data.Port;
 import edu.colorado.cires.cruisepack.data.PortData;
-import edu.colorado.cires.cruisepack.data.SeaData;
 import jakarta.annotation.PostConstruct;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,9 +38,8 @@ public class PortDatastore {
       throw new IllegalStateException("Unable to read " + portFile);
     }
     PortData portData;
-    ObjectMapper objectMapper = new ObjectMapper();
-    try (Reader reader = Files.newBufferedReader(portFile, StandardCharsets.UTF_8)) {
-      portData = objectMapper.readValue(reader, PortData.class);
+    try {
+      portData = DatabaseObjectMapperFactory.getObjectMapper().readValue(portFile.toFile(), PortData.class);
     } catch (IOException e) {
       throw new IllegalStateException("Unable to parse " + portFile, e);
     }
@@ -65,7 +59,7 @@ public class PortDatastore {
   public String getPortNameForUuid(String uuid) {
     return portDropDowns.stream().filter(dd -> uuid.equals(dd.getId())).findFirst().map(DropDownItem::getValue).orElse(null);
   }
-  
+
   public String getPortUuidForName(String name) {
     return portDropDowns.stream().filter(dd -> dd.getValue().equals(name)).findFirst().map(DropDownItem::getId).orElse(null);
   }

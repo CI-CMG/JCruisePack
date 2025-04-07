@@ -51,7 +51,7 @@ public class DatasetPanelFactoryResolver {
   private DatasetPanelFactory getFactory(InstrumentGroupName groupName) {
     Class<?> clazz = switch (groupName) {
       case SUB_BOTTOM, SIDE_SCAN, MULTIBEAM, OTHER, ADCP, XBT, CTD -> DefaultDatasetPanelFactory.class;
-      case DOCUMENTS -> throw new NotImplementedException("Documents dataset panel factory not implemented");
+      case DOCUMENTS, ANCILLARY -> throw new NotImplementedException("Documents dataset panel factory not implemented");
       case NAVIGATION -> NavigationDatasetPanelFactory.class;
       case MAGNETICS -> MagneticsDatasetPanelFactory.class;
       case GRAVITY -> GravityDatasetPanelFactory.class;

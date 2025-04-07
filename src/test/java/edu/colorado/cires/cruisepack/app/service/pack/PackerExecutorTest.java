@@ -93,8 +93,8 @@ public class PackerExecutorTest {
   public void beforeEach() throws Exception {
     FileUtils.deleteQuietly(workDir.toFile());
     Files.createDirectories(workDir.resolve("local-data"));
-    Files.createFile(workDir.resolve("local-data").resolve("people.json"));
-    Files.createFile(workDir.resolve("local-data").resolve("organizations.json"));
+    Files.writeString(workDir.resolve("local-data").resolve("people.json"), "{}");
+    Files.writeString(workDir.resolve("local-data").resolve("organizations.json"), "{}");
     FileUtils.deleteQuietly(mainBagRootDir.toFile());
     Files.createDirectories(mainBagRootDir);
     CruisePackPreSpringStarter.start();
@@ -143,7 +143,7 @@ public class PackerExecutorTest {
             .build()
     );
     instruments.put(new InstrumentDetailPackageKey("MB-BATHY", "EM122"), instrumentDetails);
-    instruments.put(new InstrumentDetailPackageKey("Multibeam Bathymetry Ancillary", "MB"), List.of(
+    instruments.put(new InstrumentDetailPackageKey("ANCILLARY", "MB"), List.of(
         InstrumentDetail.builder()
             .setStatus(InstrumentStatus.RAW)
             .setInstrument("Multibeam Bathymetry Ancillary")
@@ -329,7 +329,13 @@ public class PackerExecutorTest {
         UUID.randomUUID().toString(),
         packJob
     );
-    new Thread(packerExecutor::startPacking).start();
+    new Thread(() -> {
+      try {
+        packerExecutor.startPacking();
+      } catch (PackerExecutorException e) {
+        throw new RuntimeException(e);
+      }
+    }).start();
     Thread.sleep(5);
     packerExecutor.stopPacking();
     Thread.sleep(1000); //TODO be smarter with wait

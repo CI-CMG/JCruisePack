@@ -17,6 +17,11 @@ class PackingJobEventListener implements ApplicationListener<PackingJobEvent> {
 
   @Override
   public void onApplicationEvent(@NonNull PackingJobEvent event) {
-    packingScheduler.scheduleJob(event);
+    try {
+      packingScheduler.scheduleJob(event);
+    } catch (PackerExecutorException e) {
+      //TODO should this be handled better?
+      throw new RuntimeException("An error occurred while packing", e);
+    }
   }
 }
