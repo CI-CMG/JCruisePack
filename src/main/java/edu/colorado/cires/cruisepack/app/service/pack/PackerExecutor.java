@@ -43,6 +43,7 @@ class PackerExecutor {
   private static final String LOCAL_DATA = "local-data";
   private static final String PEOPLE_JSON = "people.json";
   private static final String ORGANIZATIONS_JSON = "organizations.json";
+  private static final String DATA = "data";
 
   private final PackStateModel packStateModel;
   private final PackerFileController packerFileController;
@@ -487,7 +488,7 @@ class PackerExecutor {
    */
 
   private void copyLocalData(Path instrumentBagDataDir) {
-    Path systemLocalData = workDirectory.resolve(LOCAL_DATA);
+    Path systemLocalData = workDirectory.resolve(DATA);
     Path people = systemLocalData.resolve(PEOPLE_JSON);
     Path organizations = systemLocalData.resolve(ORGANIZATIONS_JSON);
     Path localData = instrumentBagDataDir.resolve(LOCAL_DATA);
