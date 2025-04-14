@@ -2,7 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.magnetics;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.MagneticsCorrectionModelDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.data.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.MagneticsDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;

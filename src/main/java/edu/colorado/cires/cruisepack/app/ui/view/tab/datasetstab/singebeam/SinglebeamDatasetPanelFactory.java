@@ -2,7 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.singebeam;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SinglebeamVerticalDatumDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.data.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.SinglebeamDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;

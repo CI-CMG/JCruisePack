@@ -17,7 +17,7 @@ import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ProjectDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.FooterControlController;
 import edu.colorado.cires.cruisepack.app.ui.controller.PackageController;

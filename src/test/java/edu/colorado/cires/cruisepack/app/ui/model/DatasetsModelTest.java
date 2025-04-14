@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
+import edu.colorado.cires.cruisepack.data.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanel;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.DatasetPanelFactoryResolver;

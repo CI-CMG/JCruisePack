@@ -1,8 +1,8 @@
 package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab;
 
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
+import edu.colorado.cires.cruisepack.data.Instrument;
+import edu.colorado.cires.cruisepack.data.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.BaseDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModel;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
-import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.data.MetadataAuthor;
+import edu.colorado.cires.cruisepack.data.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;

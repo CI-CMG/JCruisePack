@@ -2,8 +2,8 @@ package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.OrganizationDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.MetadataAuthor;
-import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.data.MetadataAuthor;
+import edu.colorado.cires.cruisepack.data.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidDropDownItemModel;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidPersonDropDownItem;

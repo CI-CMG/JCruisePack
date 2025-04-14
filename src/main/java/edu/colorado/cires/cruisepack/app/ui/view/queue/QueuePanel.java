@@ -5,7 +5,7 @@ import static edu.colorado.cires.cruisepack.app.ui.util.FieldUtils.updateProgres
 import static edu.colorado.cires.cruisepack.app.ui.util.LayoutUtils.configureLayout;
 
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.controller.ReactiveView;
 import edu.colorado.cires.cruisepack.app.ui.controller.queue.QueueController;

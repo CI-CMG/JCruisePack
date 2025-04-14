@@ -4,14 +4,14 @@ import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
-import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
-import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
-import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
+import edu.colorado.cires.cruisepack.data.CruiseData;
+import edu.colorado.cires.cruisepack.data.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.data.InstrumentData;
+import edu.colorado.cires.cruisepack.data.Omics;
+import edu.colorado.cires.cruisepack.data.OmicsData;
+import edu.colorado.cires.cruisepack.data.OmicsPoc;
+import edu.colorado.cires.cruisepack.data.PeopleOrg;
+import edu.colorado.cires.cruisepack.data.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;
 import edu.colorado.cires.cruisepack.app.ui.model.CruiseInformationModel;
 import edu.colorado.cires.cruisepack.app.ui.model.DatasetsModel;
@@ -184,7 +184,7 @@ public final class PackJobUtils {
     return builder.build();
   }
 
-  private static Map<InstrumentDetailPackageKey, List<InstrumentDetail>> resolveInstruments(List<edu.colorado.cires.cruisepack.app.service.metadata.Instrument> instruments, InstrumentDatastore instrumentDatastore) {
+  private static Map<InstrumentDetailPackageKey, List<InstrumentDetail>> resolveInstruments(List<Instrument> instruments, InstrumentDatastore instrumentDatastore) {
     Map<InstrumentDetailPackageKey, List<InstrumentDetail>> map = new HashMap<>(0);
     instruments.forEach(instrument -> {
       InstrumentDetailPackageKey key;
@@ -219,7 +219,7 @@ public final class PackJobUtils {
     return map;
   }
 
-  private static InstrumentDetail instrumentDetailFromInstrument(edu.colorado.cires.cruisepack.app.service.metadata.Instrument instrument, Instrument xmlInstrument) {
+  private static InstrumentDetail instrumentDetailFromInstrument(Instrument instrument, Instrument xmlInstrument) {
     InstrumentDetail.Builder builder = InstrumentDetail.builder()
         .setStatus(InstrumentStatus.forValue(instrument.getStatus()))
         .setUuid(instrument.getUuid())

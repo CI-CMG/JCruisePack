@@ -1,12 +1,12 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
-import edu.colorado.cires.cruisepack.app.service.metadata.Omics;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
-import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
+import edu.colorado.cires.cruisepack.data.Cruise;
+import edu.colorado.cires.cruisepack.data.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.data.Omics;
+import edu.colorado.cires.cruisepack.data.OmicsData;
+import edu.colorado.cires.cruisepack.data.OmicsPoc;
+import edu.colorado.cires.cruisepack.data.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.ValidOmicsModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;

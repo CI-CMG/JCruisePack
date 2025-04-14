@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.colorado.cires.cruisepack.app.datastore.PersonDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.ExpectedAnalyses;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsData;
-import edu.colorado.cires.cruisepack.app.service.metadata.OmicsPoc;
-import edu.colorado.cires.cruisepack.app.service.metadata.SamplingTypes;
+import edu.colorado.cires.cruisepack.data.CruiseData;
+import edu.colorado.cires.cruisepack.data.ExpectedAnalyses;
+import edu.colorado.cires.cruisepack.data.OmicsData;
+import edu.colorado.cires.cruisepack.data.OmicsPoc;
+import edu.colorado.cires.cruisepack.data.SamplingTypes;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import java.nio.file.Path;

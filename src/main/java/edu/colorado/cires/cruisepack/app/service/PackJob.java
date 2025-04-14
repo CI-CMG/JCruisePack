@@ -1,6 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import edu.colorado.cires.cruisepack.app.service.metadata.PeopleOrg;
+import edu.colorado.cires.cruisepack.data.PeopleOrg;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.EnoughDiskSpace;
 import edu.colorado.cires.cruisepack.data.Person;
 import java.nio.file.Path;

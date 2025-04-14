@@ -7,7 +7,7 @@ import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.PortDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.SeaDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.ShipDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;
 import edu.colorado.cires.cruisepack.app.ui.view.tab.common.DropDownItemPanel;

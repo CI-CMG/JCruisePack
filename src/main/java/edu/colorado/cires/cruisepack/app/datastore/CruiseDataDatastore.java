@@ -6,7 +6,7 @@ import edu.colorado.cires.cruisepack.app.service.ImportRow;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
 import edu.colorado.cires.cruisepack.app.service.ResponseStatus;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.PropertyChangeModel;
 import edu.colorado.cires.cruisepack.app.ui.view.common.DropDownItem;

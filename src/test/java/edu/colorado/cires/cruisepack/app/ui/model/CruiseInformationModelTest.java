@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import edu.colorado.cires.cruisepack.app.config.ServiceProperties;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed.DocumentsUnderMaxAllowedValidator;
 import jakarta.validation.ConstraintValidatorContext;

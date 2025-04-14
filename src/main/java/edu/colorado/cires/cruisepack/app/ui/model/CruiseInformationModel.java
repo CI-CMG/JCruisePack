@@ -1,6 +1,6 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
-import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
+import edu.colorado.cires.cruisepack.data.Cruise;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Component;

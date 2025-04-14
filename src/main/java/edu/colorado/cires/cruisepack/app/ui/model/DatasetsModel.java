@@ -1,9 +1,9 @@
 package edu.colorado.cires.cruisepack.app.ui.model;
 
-import edu.colorado.cires.cruisepack.app.service.metadata.Cruise;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
-import edu.colorado.cires.cruisepack.app.service.metadata.InstrumentData;
+import edu.colorado.cires.cruisepack.data.Cruise;
+import edu.colorado.cires.cruisepack.data.CruiseData;
+import edu.colorado.cires.cruisepack.data.Instrument;
+import edu.colorado.cires.cruisepack.data.InstrumentData;
 import edu.colorado.cires.cruisepack.app.ui.controller.Events;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.DocumentsUnderMaxAllowed;
 import edu.colorado.cires.cruisepack.app.ui.model.validation.PathExists;

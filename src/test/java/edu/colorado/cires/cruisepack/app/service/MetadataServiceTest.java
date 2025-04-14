@@ -3,13 +3,12 @@ package edu.colorado.cires.cruisepack.app.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.data.CruiseMetadata;
+import edu.colorado.cires.cruisepack.data.Instrument;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.LinkedHashMap;

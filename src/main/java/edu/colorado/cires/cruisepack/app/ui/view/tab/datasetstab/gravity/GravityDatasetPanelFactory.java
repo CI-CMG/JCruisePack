@@ -2,7 +2,7 @@ package edu.colorado.cires.cruisepack.app.ui.view.tab.datasetstab.gravity;
 
 import edu.colorado.cires.cruisepack.app.datastore.GravityCorrectionModelDatastore;
 import edu.colorado.cires.cruisepack.app.datastore.InstrumentDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.Instrument;
+import edu.colorado.cires.cruisepack.data.Instrument;
 import edu.colorado.cires.cruisepack.app.ui.controller.dataset.GravityDatasetInstrumentController;
 import edu.colorado.cires.cruisepack.app.ui.model.AdditionalFieldsModelFactory;
 import edu.colorado.cires.cruisepack.app.ui.model.BaseDatasetInstrumentModel;

@@ -4,7 +4,7 @@ import edu.colorado.cires.cruisepack.app.service.CruisePackFileUtils;
 import edu.colorado.cires.cruisepack.app.service.InstrumentDetail;
 import edu.colorado.cires.cruisepack.app.service.MetadataService;
 import edu.colorado.cires.cruisepack.app.service.PackJob;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseMetadata;
+import edu.colorado.cires.cruisepack.data.CruiseMetadata;
 import edu.colorado.cires.cruisepack.app.ui.model.PackStateModel;
 import gov.loc.repository.bagit.creator.BagCreator;
 import gov.loc.repository.bagit.domain.Metadata;

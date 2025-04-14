@@ -1,7 +1,7 @@
 package edu.colorado.cires.cruisepack.app.ui.controller;
 
 import edu.colorado.cires.cruisepack.app.datastore.CruiseDataDatastore;
-import edu.colorado.cires.cruisepack.app.service.metadata.CruiseData;
+import edu.colorado.cires.cruisepack.data.CruiseData;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
