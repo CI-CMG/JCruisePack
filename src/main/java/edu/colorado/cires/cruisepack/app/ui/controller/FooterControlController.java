@@ -158,7 +158,7 @@ public class FooterControlController implements PropertyChangeListener {
         cruiseMetadata.getScientists(),
         personDatastore.getEnabledPersonDropDowns(),
         cruiseMetadata.getFunders(),
-        cruiseMetadata.getSponsors(),
+        cruiseMetadata.getSources(),
         organizationDatastore.getEnabledOrganizationDropDowns(),
         cruiseMetadata.getMetadataAuthor()
     );

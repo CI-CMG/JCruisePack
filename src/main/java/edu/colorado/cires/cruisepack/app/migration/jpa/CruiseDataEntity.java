@@ -4,8 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CRUISE_DATA")
@@ -50,8 +48,8 @@ public class CruiseDataEntity {
   private String scientists;
   @Column(name = "FUNDERS")
   private String funders;
-  @Column(name = "SPONSORS")
-  private String sponsors;
+  @Column(name = "SOURCES")
+  private String sources;
   @Column(name = "MASTER_RELEASE_DATE")
   private String masterReleaseDate;
   @Column(name = "DESTINATION_PATH")
@@ -217,12 +215,12 @@ public class CruiseDataEntity {
     this.funders = funders;
   }
 
-  public String getSponsors() {
-    return sponsors;
+  public String getSources() {
+    return sources;
   }
 
-  public void setSponsors(String sponsors) {
-    this.sponsors = sponsors;
+  public void setSources(String sources) {
+    this.sources = sources;
   }
 
   public String getMasterReleaseDate() {

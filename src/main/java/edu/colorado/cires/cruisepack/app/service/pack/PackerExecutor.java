@@ -639,10 +639,10 @@ class PackerExecutor {
     
     Metadata metadata = new Metadata();
     
-    if (cruiseMetadata.getSponsors() != null && !cruiseMetadata.getSponsors().isEmpty()) {
+    if (cruiseMetadata.getSources() != null && !cruiseMetadata.getSources().isEmpty()) {
       metadata.add("Source-Organization", String.join(
          ", ",
-         cruiseMetadata.getSponsors().stream()
+         cruiseMetadata.getSources().stream()
              .map(Organization::getName)
              .collect(Collectors.toSet())
       ));

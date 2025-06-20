@@ -19,7 +19,7 @@
   },
   "scientists": [{"name": "Debi Palka", "uuid": "21"}],
   "funders": [{"name": "OMAO", "uuid": "20"}],
-  "sponsors": [{"name": "OMAO", "uuid": "20"}],
+  "sources": [{"name": "OMAO", "uuid": "20"}],
   "master_release_date": "2022-01-26",
   "instruments": [{"type": "Multibeam Bathymetry", "instrument": "Simrad ME70", "additional_data": [], "data_comment": "", "data_path": "", "release_date": "2022-01-26", "status": "Raw", "uuid": "26fca400-154a-11e1-be50-0800200c9a66"}],
   "use": true

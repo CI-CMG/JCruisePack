@@ -170,7 +170,7 @@ public final class PackJobUtils {
         .setPackageDirectory(cruiseData.getPackageDirectory() == null ? null : Paths.get(cruiseData.getPackageDirectory()))
         .setScientists(cruiseData.getScientists())
         .setFunders(cruiseData.getFunders())
-        .setSources(cruiseData.getSponsors())
+        .setSources(cruiseData.getSources())
         .setMetadataAuthor(cruiseData.getMetadataAuthor() == null ? null : personDatastore.findByName(cruiseData.getMetadataAuthor().getName()).orElse(null))
         .setCruiseTitle(cruiseData.getCruiseTitle())
         .setCruisePurpose(cruiseData.getCruisePurpose())

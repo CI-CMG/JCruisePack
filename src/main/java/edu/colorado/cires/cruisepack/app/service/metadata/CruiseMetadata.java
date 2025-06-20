@@ -17,10 +17,10 @@ public class CruiseMetadata extends Cruise<Person, Organization, Organization> {
 
   private CruiseMetadata(String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
-      String cruiseDescription, List<Organization> sponsors, List<Organization> funders, List<Person> scientists, List<String> projects, Omics omics,
+      String cruiseDescription, List<Organization> sources, List<Organization> funders, List<Person> scientists, List<String> projects, Omics omics,
       MetadataAuthor metadataAuthor, List<Instrument> instruments, Map<String, PackageInstrument> packageInstruments) {
     super(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate, seaArea,
-        cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
+        cruiseTitle, cruisePurpose, cruiseDescription, sources, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
   }
 
@@ -48,7 +48,7 @@ public class CruiseMetadata extends Cruise<Person, Organization, Organization> {
     private String cruiseTitle;
     private String cruisePurpose;
     private String cruiseDescription;
-    private List<Organization> sponsors = Collections.emptyList();
+    private List<Organization> sources = Collections.emptyList();
     private List<Organization> funders = Collections.emptyList();
     private List<Person> scientists = Collections.emptyList();
     private List<String> projects = Collections.emptyList();
@@ -76,7 +76,7 @@ public class CruiseMetadata extends Cruise<Person, Organization, Organization> {
       cruiseTitle = src.getCruiseTitle();
       cruisePurpose = src.getCruisePurpose();
       cruiseDescription = src.getCruiseDescription();
-      sponsors = src.getSponsors();
+      sources = src.getSources();
       funders = src.getFunders();
       scientists = src.getScientists();
       projects = src.getProjects();
@@ -156,11 +156,11 @@ public class CruiseMetadata extends Cruise<Person, Organization, Organization> {
       return this;
     }
 
-    public Builder withSponsors(List<Organization> sponsors) {
-      if (sponsors == null) {
-        sponsors = new ArrayList<>(0);
+    public Builder withSources(List<Organization> sources) {
+      if (sources == null) {
+        sources = new ArrayList<>(0);
       }
-      this.sponsors = Collections.unmodifiableList(new ArrayList<>(sponsors));
+      this.sources = Collections.unmodifiableList(new ArrayList<>(sources));
       return this;
     }
 
@@ -219,7 +219,7 @@ public class CruiseMetadata extends Cruise<Person, Organization, Organization> {
     public CruiseMetadata build() {
       return new CruiseMetadata(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid,
           departurePort, departureDate, arrivalPort, arrivalDate, seaArea, cruiseTitle, cruisePurpose,
-          cruiseDescription, sponsors, funders, scientists, projects, omics,
+          cruiseDescription, sources, funders, scientists, projects, omics,
           metadataAuthor, instruments, packageInstruments);
     }
   }

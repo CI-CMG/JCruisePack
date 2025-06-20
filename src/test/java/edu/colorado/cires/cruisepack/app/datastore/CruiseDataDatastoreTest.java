@@ -217,7 +217,7 @@ class CruiseDataDatastoreTest extends PropertyChangeModelTest<CruiseDataDatastor
       }
 
       @Override
-      public String getSponsorOrganization() {
+      public String getSourceOrganization() {
         return null;
       }
 

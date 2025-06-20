@@ -124,7 +124,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
             .withName("organization-2")
             .build()
     );
-    List<PeopleOrg> sponsors = List.of(
+    List<PeopleOrg> sources = List.of(
         PeopleOrg.builder()
             .withUuid(UUID.randomUUID().toString())
             .withName("organization-3")
@@ -145,8 +145,8 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
             .map(p -> new DropDownItem(p.getUuid(), p.getName()))
             .toList(),
         funders,
-        sponsors,
-        Stream.concat(funders.stream(), sponsors.stream())
+        sources,
+        Stream.concat(funders.stream(), sources.stream())
             .map(p -> new DropDownItem(p.getUuid(), p.getName()))
             .toList(),
         metadataAuthor
@@ -173,8 +173,8 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
 
     assertChangeEvents(
         Events.ADD_SOURCE_ORGANIZATION,
-        sponsors.stream().map(p -> (DropDownItemPanel) null).toList(),
-        sponsors.stream()
+        sources.stream().map(p -> (DropDownItemPanel) null).toList(),
+        sources.stream()
             .map(p -> createDropDownItemPanel(
                 new DropDownItem(p.getUuid(), p.getName())
             ))
@@ -182,7 +182,7 @@ class PeopleModelTest extends PropertyChangeModelTest<PeopleModel> {
         (p) -> p == null ? null : p.getModel().getItem()
     );
     assertEquals(
-        sponsors.stream()
+        sources.stream()
             .map(p -> new DropDownItem(p.getUuid(), p.getName()))
             .toList(),
         model.getSourceOrganizations().stream()

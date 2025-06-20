@@ -327,7 +327,7 @@ public class SqliteMigrator extends PropertyChangeModel {
         .withCruiseTitle(normalize(db.getCruiseTitle()))
         .withCruisePurpose(normalize(db.getPurposeText()))
         .withCruiseDescription(normalize(db.getAbstractText()))
-        .withSponsors(getOrgs(db.getSponsors()))
+        .withSources(getOrgs(db.getSources()))
         .withFunders(getOrgs(db.getFunders()))
         .withScientists(getPeople(db.getScientists()))
         .withProjects(getProjects(db.getProjects()))

@@ -1,8 +1,6 @@
 package edu.colorado.cires.cruisepack.app.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface ImportRow {
   
@@ -10,7 +8,7 @@ public interface ImportRow {
   String getCruiseID();
   String getLeg();
   String getChiefScientist();
-  String getSponsorOrganization();
+  String getSourceOrganization();
   String getFundingOrganization();
   String getDeparturePort();
   String getStartDate();

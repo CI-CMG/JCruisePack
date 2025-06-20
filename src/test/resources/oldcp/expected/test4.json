@@ -15,7 +15,7 @@
   },
   "scientists": [{"name": "Chuck Anderson", "uuid": "7273deab-88c3-4b1d-9b80-0ee5fbc42a21"}, {"name": "Chris Wilson", "uuid": "53285f5b-6211-4eaf-bcc8-d41ea5a60a3f"}],
   "funders": [{"name": "NWFSC", "uuid": "95bb98c1-36ce-462d-b9aa-2caef4fa0a40"}],
-  "sponsors": [{"name": "OER", "uuid": "08D95C427FB128479945893256DADE37"}],
+  "sources": [{"name": "OER", "uuid": "08D95C427FB128479945893256DADE37"}],
   "master_release_date": "2022-01-26",
   "package_directory": "/Volumes/Fortress",
   "use": true

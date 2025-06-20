@@ -27,11 +27,11 @@ public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
 
   private CruiseData(boolean use, boolean delete, String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid,
       String departurePort, String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
-      String cruiseDescription, List<PeopleOrg> sponsors, List<PeopleOrg> funders, List<PeopleOrg> scientists,
+      String cruiseDescription, List<PeopleOrg> sources, List<PeopleOrg> funders, List<PeopleOrg> scientists,
       List<String> projects, Omics omics, MetadataAuthor metadataAuthor, List<Instrument> instruments,
       Map<String, PackageInstrument> packageInstruments, String documentsPath, String packageDirectory) {
     super(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate, seaArea,
-        cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
+        cruiseTitle, cruisePurpose, cruiseDescription, sources, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
     this.use = use;
     this.delete = delete;
@@ -116,7 +116,7 @@ public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
     private String cruiseTitle;
     private String cruisePurpose;
     private String cruiseDescription;
-    private List<PeopleOrg> sponsors = Collections.emptyList();
+    private List<PeopleOrg> sources = Collections.emptyList();
     private List<PeopleOrg> funders = Collections.emptyList();
     private List<PeopleOrg> scientists = Collections.emptyList();
     private List<String> projects = Collections.emptyList();
@@ -150,7 +150,7 @@ public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
       cruiseTitle = src.getCruiseTitle();
       cruisePurpose = src.getCruisePurpose();
       cruiseDescription = src.getCruiseDescription();
-      sponsors = toPeopleOrg(src.getSponsors(), Organization::getUuid, Organization::getName);
+      sources = toPeopleOrg(src.getSources(), Organization::getUuid, Organization::getName);
       funders = toPeopleOrg(src.getFunders(), Organization::getUuid, Organization::getName);
       scientists = toPeopleOrg(src.getScientists(), Person::getUuid, Person::getName);
       projects = src.getProjects();
@@ -188,7 +188,7 @@ public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
       cruiseTitle = src.getCruiseTitle();
       cruisePurpose = src.getCruisePurpose();
       cruiseDescription = src.getCruiseDescription();
-      sponsors = src.getSponsors();
+      sources = src.getSources();
       funders = src.getFunders();
       scientists = src.getScientists();
       projects = src.getProjects();
@@ -278,11 +278,11 @@ public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
       return this;
     }
 
-    public Builder withSponsors(List<PeopleOrg> sponsors) {
-      if (sponsors == null) {
-        sponsors = new ArrayList<>(0);
+    public Builder withSources(List<PeopleOrg> sources) {
+      if (sources == null) {
+        sources = new ArrayList<>(0);
       }
-      this.sponsors = Collections.unmodifiableList(new ArrayList<>(sponsors));
+      this.sources = Collections.unmodifiableList(new ArrayList<>(sources));
       return this;
     }
 
@@ -351,7 +351,7 @@ public class CruiseData extends Cruise<PeopleOrg, PeopleOrg, PeopleOrg> {
     public CruiseData build() {
       return new CruiseData(use, delete, cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid,
           departurePort, departureDate, arrivalPort, arrivalDate, seaArea, cruiseTitle, cruisePurpose,
-          cruiseDescription, sponsors, funders, scientists, projects, omics,
+          cruiseDescription, sources, funders, scientists, projects, omics,
           metadataAuthor, instruments, packageInstruments, documentsPath, packageDirectory);
     }
   }

@@ -161,7 +161,7 @@ public class ImportService {
       }
 
       @Override
-      public String getSponsorOrganization() {
+      public String getSourceOrganization() {
         return row.getCellText(4);
       }
 

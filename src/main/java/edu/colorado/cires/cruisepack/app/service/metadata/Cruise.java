@@ -26,7 +26,7 @@ public abstract class Cruise<Sci, F, Spo> {
   private final String cruiseTitle;
   private final String cruisePurpose;
   private final String cruiseDescription;
-  private final List<Spo> sponsors;
+  private final List<Spo> sources;
   private final List<F> funders;
   private final List<Sci> scientists;
   private final List<String> projects;
@@ -37,7 +37,7 @@ public abstract class Cruise<Sci, F, Spo> {
 
   protected Cruise(String cruiseId, String segmentId, String packageId, String masterReleaseDate, String ship, String shipUuid, String departurePort,
       String departureDate, String arrivalPort, String arrivalDate, String seaArea, String cruiseTitle, String cruisePurpose,
-      String cruiseDescription, List<Spo> sponsors, List<F> funders, List<Sci> scientists, List<String> projects, Omics omics,
+      String cruiseDescription, List<Spo> sources, List<F> funders, List<Sci> scientists, List<String> projects, Omics omics,
       MetadataAuthor metadataAuthor, List<Instrument> instruments, Map<String, PackageInstrument> packageInstruments) {
     this.cruiseId = cruiseId;
     this.segmentId = segmentId;
@@ -53,7 +53,7 @@ public abstract class Cruise<Sci, F, Spo> {
     this.cruiseTitle = cruiseTitle;
     this.cruisePurpose = cruisePurpose;
     this.cruiseDescription = cruiseDescription;
-    this.sponsors = sponsors;
+    this.sources = sources;
     this.funders = funders;
     this.scientists = scientists;
     this.projects = projects;
@@ -119,8 +119,8 @@ public abstract class Cruise<Sci, F, Spo> {
     return cruiseDescription;
   }
 
-  public List<Spo> getSponsors() {
-    return sponsors;
+  public List<Spo> getSources() {
+    return sources;
   }
 
   public List<F> getFunders() {
@@ -166,7 +166,7 @@ public abstract class Cruise<Sci, F, Spo> {
         && Objects.equals(departureDate, cruise.departureDate) && Objects.equals(arrivalPort, cruise.arrivalPort)
         && Objects.equals(arrivalDate, cruise.arrivalDate) && Objects.equals(seaArea, cruise.seaArea) && Objects.equals(
         cruiseTitle, cruise.cruiseTitle) && Objects.equals(cruisePurpose, cruise.cruisePurpose) && Objects.equals(cruiseDescription,
-        cruise.cruiseDescription) && Objects.equals(sponsors, cruise.sponsors) && Objects.equals(funders, cruise.funders)
+        cruise.cruiseDescription) && Objects.equals(sources, cruise.sources) && Objects.equals(funders, cruise.funders)
         && Objects.equals(scientists, cruise.scientists) && Objects.equals(projects, cruise.projects) && Objects.equals(
         omics, cruise.omics) && Objects.equals(metadataAuthor, cruise.metadataAuthor) && Objects.equals(instruments,
         cruise.instruments) && Objects.equals(packageInstruments, cruise.packageInstruments);
@@ -175,7 +175,7 @@ public abstract class Cruise<Sci, F, Spo> {
   @Override
   public int hashCode() {
     return Objects.hash(cruiseId, segmentId, packageId, masterReleaseDate, ship, shipUuid, departurePort, departureDate, arrivalPort, arrivalDate,
-        seaArea, cruiseTitle, cruisePurpose, cruiseDescription, sponsors, funders, scientists, projects, omics, metadataAuthor, instruments,
+        seaArea, cruiseTitle, cruisePurpose, cruiseDescription, sources, funders, scientists, projects, omics, metadataAuthor, instruments,
         packageInstruments);
   }
 
@@ -196,7 +196,7 @@ public abstract class Cruise<Sci, F, Spo> {
         ", cruiseTitle='" + cruiseTitle + '\'' +
         ", cruisePurpose='" + cruisePurpose + '\'' +
         ", cruiseDescription='" + cruiseDescription + '\'' +
-        ", sponsors=" + sponsors +
+        ", sources=" + sources +
         ", funders=" + funders +
         ", scientists=" + scientists +
         ", projects=" + projects +

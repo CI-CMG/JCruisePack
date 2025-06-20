@@ -79,7 +79,7 @@ public class MetadataService {
         .withCruiseTitle(packJob.getCruiseTitle())
         .withCruisePurpose(packJob.getCruisePurpose())
         .withCruiseDescription(packJob.getCruiseDescription())
-       .withSponsors(inflatePersonOrgList(packJob.getSources(), organizationDatastore::findByUUID))
+       .withSources(inflatePersonOrgList(packJob.getSources(), organizationDatastore::findByUUID))
        .withFunders(inflatePersonOrgList(packJob.getFunders(), organizationDatastore::findByUUID))
        .withMetadataAuthor(packJob.getMetadataAuthor() == null ? null : MetadataAuthor.builder()
        .withUuid(packJob.getMetadataAuthor().getUuid())
@@ -145,7 +145,7 @@ public class MetadataService {
         .withCruiseTitle(packJob.getCruiseTitle())
         .withCruisePurpose(packJob.getCruisePurpose())
         .withCruiseDescription(packJob.getCruiseDescription())
-        .withSponsors(packJob.getSources())
+        .withSources(packJob.getSources())
         .withFunders(packJob.getFunders())
         .withMetadataAuthor(packJob.getMetadataAuthor() == null ? null : MetadataAuthor.builder()
             .withUuid(packJob.getMetadataAuthor().getUuid())
@@ -202,8 +202,8 @@ public class MetadataService {
                 ))
                 .orElse(null)
         )
-        .withSponsors(
-            organizationDatastore.findByName(row.getSponsorOrganization())
+        .withSources(
+            organizationDatastore.findByName(row.getSourceOrganization())
                 .map(o -> Collections.singletonList(
                     PeopleOrg.builder()
                         .withUuid(o.getUuid())

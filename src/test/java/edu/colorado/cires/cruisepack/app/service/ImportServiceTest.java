@@ -169,7 +169,7 @@ class ImportServiceTest {
     assertEquals(expected.getCruiseID(), actual.getCruiseID());
     assertEquals(expected.getLeg(), actual.getLeg());
     assertEquals(expected.getChiefScientist(), actual.getChiefScientist());
-    assertEquals(expected.getSponsorOrganization(), actual.getSponsorOrganization());
+    assertEquals(expected.getSourceOrganization(), actual.getSourceOrganization());
     assertEquals(expected.getFundingOrganization(), actual.getFundingOrganization());
     assertEquals(expected.getDeparturePort(), actual.getDeparturePort());
     assertEquals(expected.getStartDate(), actual.getStartDate());
@@ -207,7 +207,7 @@ class ImportServiceTest {
         worksheet.value(i + 2, 1, row.getCruiseID());
         worksheet.value(i + 2, 2, row.getLeg());
         worksheet.value(i + 2, 3, row.getChiefScientist());
-        worksheet.value(i + 2, 4, row.getSponsorOrganization());
+        worksheet.value(i + 2, 4, row.getSourceOrganization());
         worksheet.value(i + 2, 5, row.getFundingOrganization());
         worksheet.value(i + 2, 6, row.getDeparturePort());
         worksheet.value(i + 2, 7, row.getStartDate());
@@ -270,9 +270,9 @@ class ImportServiceTest {
       }
 
       @Override
-      public String getSponsorOrganization() {
+      public String getSourceOrganization() {
         return String.format(
-            "sponsor-%s", suffix
+            "source-%s", suffix
         );
       }
 
@@ -411,7 +411,7 @@ class ImportServiceTest {
       }
 
       @Override
-      public String getSponsorOrganization() {
+      public String getSourceOrganization() {
         return null;
       }
 
